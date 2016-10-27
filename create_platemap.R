@@ -12,8 +12,13 @@ platemap <-
   select(WellRow, WellCol, well_position, gene_name, pert_name) %>%
   arrange(well_position) 
 
-platemap %>%
-  write_csv("../../metadata/CRISPR_PILOT_B1/platemap/DEPENDENCIES1.csv")
+for (cell_line in c("A549", "ES2", "HCC44")) {
+  platemap %>%
+    mutate(cell_line = cell_line) %>%
+    write_csv(sprintf("../../metadata/CRISPR_PILOT_B1/platemap/DEPENDENCIES1_%s.csv", cell_line))
+  
+  platemap %>%
+    mutate(cell_line = cell_line) %>%
+    write_tsv(sprintf("../../metadata/CRISPR_PILOT_B1/platemap/DEPENDENCIES1_%s.txt", cell_line))
+}
 
-platemap %>%
-  write_tsv("../../metadata/CRISPR_PILOT_B1/platemap/DEPENDENCIES1.txt")
