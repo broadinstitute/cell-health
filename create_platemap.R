@@ -1,4 +1,5 @@
 library(tidyverse)
+library(magrittr)
 library(stringr)
 
 platemap <- 
@@ -11,6 +12,10 @@ platemap <-
   ungroup() %>%
   select(WellRow, WellCol, well_position, gene_name, pert_name) %>%
   arrange(well_position) 
+
+platemap %<>% 
+  left_join(read_csv("../../metadata/CRISPR_PILOT_B1/platemap/broad_sample_map.csv"),
+            by = c("well_position", "pert_name"))
 
 for (cell_line in c("A549", "ES2", "HCC44")) {
   platemap %>%
