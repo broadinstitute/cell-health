@@ -124,7 +124,7 @@ parallel ./audit.R \
   -b ${BATCH_ID} \
   -m {1} \
   -s \"Metadata_broad_sample_type == \'\'\'control\'\'\'\" \
-  -o ../../scratch/${BATCH_ID}/{1}_audit_control.csv \
+  -o ../../scratch/${BATCH_ID}/audit/{1}_audit_control.csv \
   -p Metadata_Well :::: ${PLATE_MAPS}
 
 # collapse
