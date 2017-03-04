@@ -11,7 +11,7 @@ BATCH_ID=CRISPR_PILOT_B1
 SAMPLE_PLATE_ID=SQ00014610
 
 # 
-PROJECT_NAME=2015_07_01_KRAS_Vazquez_Cancer_Broad
+PROJECT_NAME=2015_07_01_Cell_Health_Vazquez_Cancer_Broad
 
 # NFS on Broad cluster
 BROAD_NFS=/imaging/analysis
