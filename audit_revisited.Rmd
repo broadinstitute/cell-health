@@ -1,0 +1,117 @@
+---
+title: "audit_revisited"
+author: "TB"
+date: "4/14/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R 
+
+```{r load libraries, message=FALSE, warning=FALSE}
+library(dplyr)
+library(reshape2)
+library(permute)
+library(tidyr)
+library(tibble)
+library(readr)
+library(stringr)
+```
+
+# Data
+load cell health data 
+```{r load data, message=FALSE, warning=FALSE}
+
+dir.lst <- list.dirs("../../backend/CRISPR_PILOT_B1", recursive = F)
+df.lst <- c()
+
+for (dir.i in dir.lst) {
+  
+  file.lst <- list.files(dir.i)
+  file.name <- file.lst[str_detect(file.lst, "_normalized_variable_selected.csv")]
+  df <- read_csv(sprintf("%s/%s",dir.i, file.name))  
+  df.lst <- c(df.lst, list(df))
+}
+
+df.data <- do.call(rbind, df.lst)
+cl <- colnames(df.data)
+
+meta.cl <- cl[str_detect(cl, "Metadata_")]
+feat.cl <- setdiff(cl, meta.cl)
+
+Pf <- list(data = df.data, feat_cols = feat.cl, meta_cols = meta.cl)
+
+```
+
+# Define functions
+
+```{r define functions}
+
+rep.cor <- function(Pf, grp.var, feat.var) {
+  x <- Pf$data %>% 
+    dplyr::select(one_of(c(grp.var, feat.var))) %>%
+    dplyr::group_by_(grp.var) %>% 
+    do(data.frame(cr = median(as.dist(cor(t(.[,feat.var]))), na.rm = TRUE)))
+  return(x)
+}
+
+non.rep.cor.rob <- function(Pf, grp.var, feat.var) {
+  us <- c()
+  for (i in 1:10) {
+    
+    
+    pr <- permute::shuffle(NROW(Pf$data))
+    
+    Pf$data[,grp.var] <- Pf$data[pr,grp.var]
+    u <- rep.cor(Pf, grp.var, feat.var)
+    us <- rbind(us, u)
+  }
+  return(quantile(us$cr, 0.95, na.rm = TRUE))
+}
+
+non.rep.cor <- function(Pf, grp.var, feat.var) {
+  pr <- permute::shuffle(NROW(Pf$data))
+  Pf$data[,grp.var] <- Pf$data[pr,grp.var]
+  u <- rep.cor(Pf, grp.var, feat.var)
+  return(quantile(u$cr, 0.95, na.rm = TRUE))
+}
+
+```
+
+
+
+```{r, hit ratio}
+
+cell_line_names <- Pf$data$Metadata_cell_line %>% unique()
+
+# new grouping variable needed to distinguish between different cells
+Pf$data <- Pf$data %>% 
+  dplyr::mutate(Metadata_Treatment = paste(Metadata_pert_name, Metadata_cell_line, sep = "_")) %>%
+  as.data.frame()
+Pf$meta_cols <- c(Pf$meta_cols, "Metadata_Treatment")
+
+
+r.cor <- rep.cor(Pf, grp.var = "Metadata_Treatment", feat.var = Pf$feat_cols)
+thr <- non.rep.cor.rob(Pf,  grp.var = "Metadata_Treatment", feat.var = Pf$feat_cols)
+
+n.hits <- r.cor %>%
+  filter(cr > thr) %>%
+  NROW()
+n.trts <- NROW(r.cor)
+
+hit.ratio <- n.hits/n.trts
+
+print(hit.ratio)
+```
+
+
+
+
+
+
+
+
+
