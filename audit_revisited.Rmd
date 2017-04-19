@@ -46,9 +46,9 @@ Pf <- list(data = df.data, feat_cols = feat.cl, meta_cols = meta.cl)
 
 ```
 
-# Define functions
+# Mohammads version to calculate the hit ratio / null distribution 
 
-```{r define functions}
+```{r mohammad style}
 
 rep.cor <- function(Pf, grp.var, feat.var) {
   x <- Pf$data %>% 
@@ -57,6 +57,7 @@ rep.cor <- function(Pf, grp.var, feat.var) {
     do(data.frame(cr = median(as.dist(cor(t(.[,feat.var]))), na.rm = TRUE)))
   return(x)
 }
+
 
 non.rep.cor.rob <- function(Pf, grp.var, feat.var) {
   us <- c()
@@ -72,18 +73,13 @@ non.rep.cor.rob <- function(Pf, grp.var, feat.var) {
   return(quantile(us$cr, 0.95, na.rm = TRUE))
 }
 
+
 non.rep.cor <- function(Pf, grp.var, feat.var) {
   pr <- permute::shuffle(NROW(Pf$data))
   Pf$data[,grp.var] <- Pf$data[pr,grp.var]
   u <- rep.cor(Pf, grp.var, feat.var)
   return(quantile(u$cr, 0.95, na.rm = TRUE))
 }
-
-```
-
-
-
-```{r, hit ratio}
 
 cell_line_names <- Pf$data$Metadata_cell_line %>% unique()
 
@@ -93,20 +89,72 @@ Pf$data <- Pf$data %>%
   as.data.frame()
 Pf$meta_cols <- c(Pf$meta_cols, "Metadata_Treatment")
 
-
 r.cor <- rep.cor(Pf, grp.var = "Metadata_Treatment", feat.var = Pf$feat_cols)
 thr <- non.rep.cor.rob(Pf,  grp.var = "Metadata_Treatment", feat.var = Pf$feat_cols)
 
 n.hits <- r.cor %>%
   filter(cr > thr) %>%
   NROW()
+
 n.trts <- NROW(r.cor)
 
 hit.ratio <- n.hits/n.trts
 
-print(hit.ratio)
-```
+result_mohammad <-  tibble::data_frame(threshold = thr, "   hit ratio" =  hit.ratio)
 
+knitr::kable(result_mohammad)
+
+```
+# audit function (Shantany style)
+
+```{r audit shantanu style }
+
+df <- Pf$data
+plate_map_name <- "dummy_for_all_cell_lines"
+group_by_variable <- "Metadata_Treatment"
+
+median_pairwise_correlation <- function(df, variables, group_by) {
+  df %>% 
+    dplyr::group_by_(.dots = group_by) %>% 
+    do(tibble::data_frame(correlation = median(as.dist(cor(t(as.matrix(.[variables])))))))
+}
+
+estimate_null_threshold <- function(df, feat.cl, group_by_variable, n_fold) {
+  us <- c()
+  u <-  c()
+  for (i in 1:n_fold) {
+    u <- df %>% 
+    tidyr::unite_("group_by_variable", group_by_variable) %>%
+    mutate(group_by_variable = sample(group_by_variable)) %>%
+    median_pairwise_correlation(feat.cl, "group_by_variable") 
+    us <- rbind(us,u)
+  }
+  null_threshold <- us %>%
+    magrittr::extract2("correlation") %>%
+    quantile(0.95, na.rm = TRUE) 
+  
+  return(null_threshold)
+}
+
+
+set.seed(24)
+
+correlations <- Pf$data %>% 
+  median_pairwise_correlation(feat.cl, group_by_variable) 
+
+null_threshold <- estimate_null_threshold(df, feat.cl, group_by_variable,10)
+
+result <- 
+  tibble::data_frame(
+    plate_map_name = plate_map_name,
+    null_threshold = null_threshold,
+    fraction_strong = (sum(correlations$correlation > null_threshold) / nrow(correlations)))
+
+knitr::kable(result)
+
+knitr::kable(correlations)
+
+```
 
 
 
