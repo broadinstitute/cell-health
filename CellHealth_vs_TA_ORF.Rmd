@@ -1,0 +1,125 @@
+---
+title: "CellHealth_vs_TA_ORF"
+author: "TB"
+date: "4/19/2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R 
+
+```{r load libraries, message=FALSE, warning=FALSE}
+library(dplyr)
+library(reshape2)
+library(tidyr)
+library(tibble)
+library(readr)
+library(stringr)
+library(ape)
+library(ggplot2)
+library(corrplot)
+```
+
+# Data
+Load Cell Health data and TA ORF data. 
+
+For TA ORF we load normalized data with selected features only 
+
+For CellHealth we load normalized data 
+
+```{r load data}
+
+read_profiles <- function(data_dir,csv_identifier ) {
+  dir_list <- list.dirs(data_dir, recursive = FALSE)
+  df_profiles <- c()
+
+  for (dir_i in dir_list) {
+    file_lst <- list.files(dir_i)
+    file_name <- file_lst[str_detect(file_lst, csv_identifier)]
+    df <- suppressWarnings(read_csv(sprintf("%s/%s",dir_i, file_name)))
+    df_profiles <- c(df_profiles, list(df))
+  }
+
+  df_profiles <- do.call(rbind, df_profiles)
+  colnames_profiles <- colnames(df_profiles)
+  meta_cols <- colnames_profiles[str_detect(colnames_profiles, "Metadata_")]
+  feat_cols <- setdiff(colnames_profiles, meta_cols)
+  Pf.data <- list(data = df_profiles, feat_cols = feat_cols, meta_cols = meta_cols, backend = data_dir)
+  return(Pf.data)
+}
+
+dir_cell_health <- "../../backend/CRISPR_PILOT_B1"
+csv_identifier_cell_health <- "_normalized_variable_selected.csv"
+Pf.cell_health <- read_profiles(dir_cell_health, csv_identifier_cell_health)
+df_cell_health <- Pf.cell_health$data
+
+dir_ta_orf <- "../../backend/SIGMA2_Pilot_2013_10_11"
+csv_identifier_ta_orf <- "_normalized.csv"
+Pf.ta_orf <- read_profiles(dir_ta_orf, csv_identifier_ta_orf)
+df_ta_orf <- Pf.ta_orf$data
+
+```
+
+```{r common genes and features }
+common_genes <- df_ta_orf %>% 
+  select(Metadata_gene_name) %>%
+  unique %>%
+  intersect(.,df_cell_health %>% 
+    select(Metadata_gene_name) %>%
+    unique) %>%
+  dplyr::filter(Metadata_gene_name != 'EMPTY' )
+
+common_features <- intersect(Pf.ta_orf$feat_cols, Pf.cell_health$feat_cols) 
+
+nan.col <- apply((df_ta_orf),2,function(x) return(all(!is.na(x))))
+common_features <- setdiff(common_features, names(which(!nan.col)))
+
+common_genes %>% 
+  knitr::kable()
+
+```
+
+
+```{r BRAF }
+
+gene_name = "RAF1"
+
+get_correlation_matrix <- function(df_cell_health, df_ta_orf, gene_name){
+  df <- df_cell_health %>% 
+    filter(Metadata_gene_name == gene_name ) %>%
+    select( one_of(c(common_features, "Metadata_cell_line","Metadata_gene_name"))) %>% 
+    mutate(Metadata_experiment = 'CRISPR') %>%
+    rbind( df_ta_orf   %>% 
+      filter(Metadata_gene_name == gene_name ) %>%
+      select( one_of(c(common_features, "Metadata_cell_line","Metadata_gene_name"))) %>% 
+      mutate(Metadata_experiment = 'TA ORF')
+      ) %>%
+    mutate(perturbation = paste(Metadata_experiment, Metadata_cell_line, Metadata_gene_name, sep = "_"))
+  
+  cor_matrix <- df %>%
+    select(one_of(common_features)) %>%
+    t %>%
+    cor
+  
+  labels <- df %>% select(perturbation)
+  rownames(cor_matrix) <- labels[[1]]  
+  
+  return(cor_matrix)
+}
+
+
+for (i_gene_name in common_genes[[1]]) {
+  cm <- get_correlation_matrix(df_cell_health, df_ta_orf, i_gene_name)
+  corrplot(cm,title = i_gene_name, diag = FALSE, mar = c(0,0,1,0))
+  #hc <- hclust(dist(cm))
+  #plot(as.phylo(hc), type = "fan",  label.offset = 0.3)
+}
+
+```
+
+
