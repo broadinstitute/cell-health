@@ -143,6 +143,7 @@ common_features <- setdiff(common_features, names(which(!nan.col)))
 
 common_genes <- intersect(strong_genes, common_genes)
 
+
 common_genes %>% 
   knitr::kable()
 ```
@@ -153,14 +154,16 @@ common_genes %>%
 get_correlation_matrix <- function(df_cell_health, df_ta_orf, gene_name){
   df <- df_cell_health %>% 
     filter(Metadata_gene_name == gene_name ) %>%
-    select( one_of(c(common_features, "Metadata_cell_line","Metadata_gene_name"))) %>% 
+    select( one_of(c(common_features, "Metadata_cell_line","Metadata_pert_name","Metadata_gene_name"))) %>% 
+    arrange(Metadata_cell_line, Metadata_pert_name) %>% 
     mutate(Metadata_experiment = 'CRISPR') %>%
     rbind( df_ta_orf   %>% 
       filter(Metadata_gene_name == gene_name ) %>%
-      select( one_of(c(common_features, "Metadata_cell_line","Metadata_gene_name"))) %>% 
+      select( one_of(c(common_features, "Metadata_cell_line","Metadata_pert_name","Metadata_gene_name"))) %>% 
+      arrange(Metadata_cell_line, Metadata_pert_name) %>% 
       mutate(Metadata_experiment = 'TA ORF')
       ) %>%
-    mutate(perturbation = paste(Metadata_experiment, Metadata_cell_line, Metadata_gene_name, sep = "_"))
+    mutate(perturbation = paste(Metadata_experiment, Metadata_cell_line, Metadata_pert_name, sep = "_"))
   
   cor_matrix <- df %>%
     select(one_of(common_features)) %>%
@@ -172,7 +175,6 @@ get_correlation_matrix <- function(df_cell_health, df_ta_orf, gene_name){
   
   return(cor_matrix)
 }
-
 
 for (i_gene_name in common_genes[[1]]) {
   cm <- get_correlation_matrix(df_cell_health, df_ta_orf, i_gene_name)
