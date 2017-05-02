@@ -39,6 +39,7 @@ read_profiles <- function(data_dir,csv_identifier ) {
   df_profiles <- c()
 
   
+  
   for (dir_i in dir_list) {
     file_lst <- list.files(dir_i)
     file_name <- file_lst[str_detect(file_lst, csv_identifier)]
@@ -54,8 +55,8 @@ read_profiles <- function(data_dir,csv_identifier ) {
   return(Pf.data)
 }
 
-file_name_common_genes_collapsed <- '../../backend/CRISPR_PILOT_B1/CRISPR_LUAD_common_genes_collapsed_normalized_variable_selected.txt'
-file_name_common_genes <- '../../backend/CRISPR_PILOT_B1/CRISPR_LUAD_common_genes_normalized_variable_selected.txt'
+file_name_common_genes_collapsed <- '../../scratch/CRISPR_PILOT_B1/crispr_vs_orf//CRISPR_LUAD_common_genes_collapsed_normalized_variable_selected.txt'
+file_name_common_genes <- '../../scratch/CRISPR_PILOT_B1/crispr_vs_orf/CRISPR_LUAD_common_genes_normalized_variable_selected.txt'
 
 
 dir_cell_health <- "../../backend/CRISPR_PILOT_B1"
@@ -155,7 +156,7 @@ common_genes %>%
 ```{r correlations }
 
 
-combine_matrices <- function(df1, df2, gene_name) {
+combine_matrices <- function(df1, df2, gene_name, common_features) {
   df1 %>% 
     filter(Metadata_gene_name %in% gene_name ) %>%
     select( one_of(c(common_features, "Metadata_cell_line","Metadata_pert_name","Metadata_gene_name"))) %>% 
@@ -171,7 +172,7 @@ combine_matrices <- function(df1, df2, gene_name) {
 }
 
 get_correlation_matrix <- function(df1, df2, gene_name, common_features){
-  df <- combine_matrices(df1, df2, gene_name)
+  df <- combine_matrices(df1, df2, gene_name,common_features)
      
   cor_matrix <- df %>%
     select(one_of(common_features)) %>%
@@ -208,7 +209,8 @@ mypal = c( "#4ECDC4", "#556270", "#1B676B",  "#FF6B6B")
 plot(as.phylo(hc_myc), type = "fan",  label.offset = 0.3, tip.color = mypal[cell_line_index], main = gene_name)
 
 
-df <- combine_matrices(Pf.cell_health$data, Pf.luad$data, common_genes)
+df <- combine_matrices(Pf.cell_health$data, Pf.luad$data, common_genes$Metadata_gene_name, common_features)
+df <- df %>% select(Metadata_cell_line, Metadata_pert_name, Metadata_gene_name, Metadata_experiment, everything() )
 write.table(df, file = file_name_common_genes, quote = FALSE, sep = '\t', row.names = FALSE)
 
 ```
@@ -269,7 +271,9 @@ hc_abs <- hclust(dist(abs(cor_matrix)))
 mypal = c("#FF6B6B", "#4ECDC4", "#556270", "#1B676B" )
 plot(as.phylo(hc_abs), type = "fan",  label.offset = 0.05,tip.color = mypal[cell_line_index] )
 
-  write.table(df_collapsed, file = file_name_common_genes_collapsed, quote = FALSE, sep = '\t', row.names = FALSE)
+df_collapsed <- df_collapsed %>% select(Metadata_cell_line, Metadata_pert_name, Metadata_gene_name, Metadata_experiment, everything() )
+
+write.table(df_collapsed, file = file_name_common_genes_collapsed, quote = FALSE, sep = '\t', row.names = FALSE)
 
 
 ```
