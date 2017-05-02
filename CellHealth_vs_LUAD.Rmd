@@ -54,6 +54,10 @@ read_profiles <- function(data_dir,csv_identifier ) {
   return(Pf.data)
 }
 
+file_name_common_genes_collapsed <- '../../backend/CRISPR_PILOT_B1/CRISPR_LUAD_common_genes_collapsed_normalized_variable_selected.txt'
+file_name_common_genes <- '../../backend/CRISPR_PILOT_B1/CRISPR_LUAD_common_genes_normalized_variable_selected.txt'
+
+
 dir_cell_health <- "../../backend/CRISPR_PILOT_B1"
 csv_identifier_cell_health <- "_normalized_variable_selected.csv"
 Pf.cell_health <- read_profiles(dir_cell_health, csv_identifier_cell_health)
@@ -150,18 +154,25 @@ common_genes %>%
 
 ```{r correlations }
 
-get_correlation_matrix <- function(df1, df2, gene_name){
-  df <- df1 %>% 
-    filter(Metadata_gene_name == gene_name ) %>%
-    select( one_of(c(common_features, "Metadata_cell_line","Metadata_gene_name","Metadata_pert_name"))) %>% 
+
+combine_matrices <- function(df1, df2, gene_name) {
+  df1 %>% 
+    filter(Metadata_gene_name %in% gene_name ) %>%
+    select( one_of(c(common_features, "Metadata_cell_line","Metadata_pert_name","Metadata_gene_name"))) %>% 
+    arrange(Metadata_cell_line, Metadata_pert_name) %>% 
     mutate(Metadata_experiment = 'CRISPR') %>%
     rbind( df2   %>% 
-      filter(Metadata_gene_name == gene_name ) %>%
-      select( one_of(c(common_features, "Metadata_cell_line","Metadata_gene_name","Metadata_pert_name"))) %>% 
-      mutate(Metadata_experiment = 'LUAD')
-      ) %>%
+      filter(Metadata_gene_name %in% gene_name ) %>%
+      select( one_of(c(common_features, "Metadata_cell_line","Metadata_pert_name","Metadata_gene_name"))) %>% 
+      arrange(Metadata_cell_line, Metadata_pert_name) %>% 
+      mutate(Metadata_experiment = 'TA ORF') ) %>%
     mutate(perturbation = paste(Metadata_experiment, Metadata_cell_line, Metadata_pert_name, sep = "_"))
-  
+      
+}
+
+get_correlation_matrix <- function(df1, df2, gene_name, common_features){
+  df <- combine_matrices(df1, df2, gene_name)
+     
   cor_matrix <- df %>%
     select(one_of(common_features)) %>%
     t %>%
@@ -175,13 +186,13 @@ get_correlation_matrix <- function(df1, df2, gene_name){
 
 
 for (i_gene_name in common_genes[[1]]) {
-  cm <- get_correlation_matrix(Pf.cell_health$data, Pf.luad$data, i_gene_name)
-  corrplot(cm,title = i_gene_name, diag = FALSE, mar = c(0,0,1,0))
+  cm <- get_correlation_matrix(Pf.cell_health$data, Pf.luad$data, i_gene_name,common_features)
+  corrplot(cm,title = i_gene_name, diag = TRUE, mar = c(0,0,1,0))
 }
 
 gene_name = 'CCND1'
-cm_myc <- get_correlation_matrix(Pf.cell_health$data, Pf.luad$data, gene_name)
-corrplot(cm_myc, title = gene_name, diag = FALSE, mar = c(0,0,1,0))
+cm_myc <- get_correlation_matrix(Pf.cell_health$data, Pf.luad$data, gene_name,common_features)
+corrplot(cm_myc, title = gene_name, diag = TRUE, mar = c(0,0,1,0))
 
 hc_myc <- cm_myc %>% 
   dist %>%
@@ -195,6 +206,11 @@ cell_line_index <- data.frame(Metadata_cell_line = row.names(cm_myc)) %>%
 
 mypal = c( "#4ECDC4", "#556270", "#1B676B",  "#FF6B6B")
 plot(as.phylo(hc_myc), type = "fan",  label.offset = 0.3, tip.color = mypal[cell_line_index], main = gene_name)
+
+
+df <- combine_matrices(Pf.cell_health$data, Pf.luad$data, common_genes)
+write.table(df, file = file_name_common_genes, quote = FALSE, sep = '\t', row.names = FALSE)
+
 ```
 
 ```{r collapsing the data}
@@ -246,14 +262,15 @@ rownames(cor_matrix) <- labels[[1]]
 cell_line_index <- df_collapsed %>% group_by(Metadata_cell_line, Metadata_experiment) %>% group_indices() 
   
 
-corrplot(cor_matrix,title = "collapsed genes", diag = FALSE, mar = c(0,0,1,0))
+corrplot(cor_matrix,title = "collapsed genes", diag = TRUE, mar = c(0,0,1,0))
 
 
 hc_abs <- hclust(dist(abs(cor_matrix)))
 mypal = c("#FF6B6B", "#4ECDC4", "#556270", "#1B676B" )
 plot(as.phylo(hc_abs), type = "fan",  label.offset = 0.05,tip.color = mypal[cell_line_index] )
 
-  
+  write.table(df_collapsed, file = file_name_common_genes_collapsed, quote = FALSE, sep = '\t', row.names = FALSE)
+
 
 ```
 
@@ -287,7 +304,7 @@ cor_list <- c()
 for (i_gene in as.vector(common_genes$Metadata_gene_name)) {
   i_gene %>% print
   cm <- get_single_gene_cor(df_collapsed_by_gene, i_gene)  
-  corrplot(cm, diag = FALSE, title = i_gene, mar = c(0,0,1,0))
+  corrplot(cm, diag = TRUE, title = i_gene, mar = c(0,0,1,0))
   cor_list <- c(cor_list, c(cm[2:4,1],cm[3:4,2],cm[4,3]))
 }
 
@@ -342,17 +359,6 @@ ggplot(data = df_cor_ext) +
   theme(axis.text.x = element_text(size = 10, angle = 60, hjust = 1))
 
 p.vals %>% arrange(p.value) %>% knitr::kable()
-```
-
-```{r}
-Pf.luad$data %>%  
-  slice(1:10) %>% 
-  select(contains("Metadata")) %>%   
-  mutate(Metadata_gene_name = sapply(Metadata_x_mutation_status, function(st) sub("*_.*", "", st))) %>%
-  print
- 
-  
-
 ```
 
 
