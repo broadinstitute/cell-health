@@ -55,7 +55,7 @@ read_profiles <- function(data_dir,csv_identifier ) {
   return(Pf.data)
 }
 
-file_name_common_genes_collapsed <- '../../scratch/CRISPR_PILOT_B1/crispr_vs_orf//CRISPR_LUAD_common_genes_collapsed_normalized_variable_selected.txt'
+file_name_common_genes_collapsed <- '../../scratch/CRISPR_PILOT_B1/crispr_vs_orf/CRISPR_LUAD_common_genes_collapsed_normalized_variable_selected.txt'
 file_name_common_genes <- '../../scratch/CRISPR_PILOT_B1/crispr_vs_orf/CRISPR_LUAD_common_genes_normalized_variable_selected.txt'
 
 
@@ -88,6 +88,7 @@ median_pairwise_correlation <- function(df, variables, group_by) {
     dplyr::group_by_(.dots = group_by) %>% 
     do(tibble::data_frame(correlation = median(as.dist(cor(t(as.matrix(.[variables])))))))
 }
+
 
 estimate_null_threshold <- function(df, feat.cl, group_by_variable, n_fold) {
   us <- c()
