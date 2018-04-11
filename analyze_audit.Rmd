@@ -64,7 +64,7 @@ corresponds to a well. The colors correspond to an index assigned to a
 guide for a gene (e.g. if a gene has two guides in this expt, they will have 
 indices of 1 and 2, where 1 has a higher average replicate correlation)
 
-```{r}
+```{r fig.width=7}
 
 p <- 
 ggplot(audits %>% filter(Metadata_gene_name != "Chr2"),
@@ -76,12 +76,12 @@ ggplot(audits %>% filter(Metadata_gene_name != "Chr2"),
 
 p
 
-ggsave("all_guides.pdf")
+ggsave("all_guides.pdf", width = 12, height = 6)
 
 ```
 
 Filter down to only those guides that have a Broad ID
-```{r}
+```{r fig.width=7}
 p <- 
 ggplot(audits %>% 
          filter(Metadata_gene_name != "Chr2") %>%
@@ -94,7 +94,7 @@ ggplot(audits %>%
 
 p
 
-ggsave("only_guides_with_barcodes.pdf")
+ggsave("only_guides_with_barcodes.pdf", width = 12, height = 6)
 
 ```
 
