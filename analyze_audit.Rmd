@@ -1,0 +1,104 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r message=FALSE}
+library(tidyverse)
+library(magrittr)
+library(forcats)
+```
+
+
+```{r message=FALSE}
+audits <- 
+  list.files("../../scratch/CRISPR_PILOT_B1/audit/", pattern = "*_audit_detailed.csv", 
+             full.names = TRUE) %>% 
+  map_df(read_csv)
+```
+
+
+```{r}
+audits %<>% 
+  select(Metadata_gene_name,
+         Metadata_pert_name,
+         Metadata_broad_sample,
+         Metadata_cell_line,
+         correlation)
+
+```
+
+
+```{r}
+
+audits %<>%
+  group_by(Metadata_gene_name, Metadata_pert_name) %>%
+  summarise_at("correlation", median) %>%
+  ungroup() %>%
+  group_by(Metadata_gene_name) %>%
+  summarise_at("correlation", median) %>%
+  ungroup() %>%
+  rename(median_correlation = correlation) %>%
+  inner_join(audits, by = c("Metadata_gene_name"))
+
+
+audits %<>% 
+  select(Metadata_gene_name, Metadata_pert_name, correlation) %>% 
+  group_by(Metadata_gene_name, Metadata_pert_name) %>% 
+  summarise_at("correlation", median) %>%
+  ungroup() %>%  
+  group_by(Metadata_gene_name) %>% 
+  arrange(correlation) %>% 
+  ungroup() %>%
+  select(-correlation) %>%
+  group_by(Metadata_gene_name) %>% 
+  mutate(guide_index = row_number()) %>% 
+  ungroup() %>% 
+  inner_join(audits, by = c("Metadata_gene_name", "Metadata_pert_name"))
+```
+
+
+Plot replicate correlation for each guide, grouped by gene, faceted by cell line.
+Order genes by the average replicate correlation across all guides. Each dot
+corresponds to a well. The colors correspond to an index assigned to a 
+guide for a gene (e.g. if a gene has two guides in this expt, they will have 
+indices of 1 and 2, where 1 has a higher average replicate correlation)
+
+```{r}
+
+p <- 
+ggplot(audits %>% filter(Metadata_gene_name != "Chr2"),
+       aes(fct_reorder(Metadata_gene_name, median_correlation),
+           correlation)) + 
+  geom_point(aes(color = as.factor(guide_index))) + 
+  facet_wrap(~Metadata_cell_line, ncol = 1) + 
+  theme(axis.text.x=element_text(angle = 45, hjust = 1))
+
+p
+
+ggsave("all_guides.pdf")
+
+```
+
+Filter down to only those guides that have a Broad ID
+```{r}
+p <- 
+ggplot(audits %>% 
+         filter(Metadata_gene_name != "Chr2") %>%
+         filter(!is.na(Metadata_broad_sample)),
+       aes(fct_reorder(Metadata_gene_name, median_correlation),
+           correlation)) + 
+  geom_point(aes(color = as.factor(guide_index))) + 
+  facet_wrap(~Metadata_cell_line, ncol = 1) + 
+  theme(axis.text.x=element_text(angle = 45, hjust = 1))
+
+p
+
+ggsave("only_guides_with_barcodes.pdf")
+
+```
+
+```{r}
+write_csv(audits, "audits.csv")
+```
+
