@@ -127,6 +127,39 @@ parallel ./audit.R \
   -o ../../scratch/${BATCH_ID}/audit/{1}_audit_control.csv \
   -p Metadata_pert_name :::: ${PLATE_MAPS}
 
+
+# only treatments
+parallel \
+  --no-run-if-empty \
+  --eta \
+  --joblog ../../log/${BATCH_ID}/audit.log \
+  --results ../../log/${BATCH_ID}/audit \
+  --files \
+  --keep-order \
+  ./audit.R \
+  -b ${BATCH_ID} \
+  -m {1} \
+  -f _normalized_variable_selected.csv \
+  -s \"Metadata_broad_sample_type == \'\'\'trt\'\'\'\" \
+  -o ../../scratch/${BATCH_ID}/audit/{1}_audit.csv \
+  -l ../../scratch/${BATCH_ID}/audit/{1}_audit_detailed.csv \
+  -p Metadata_Plate_Map_Name,Metadata_Well,Metadata_gene_name,Metadata_pert_name,Metadata_broad_sample,Metadata_cell_line,Metadata_pert_id,Metadata_pert_mfc_id,Metadata_cell_id,Metadata_broad_sample_type,Metadata_pert_type :::: ${PLATE_MAPS}
+`
+# only controls
+parallel \
+  --no-run-if-empty \
+  --eta \
+  --joblog ../../log/${BATCH_ID}/audit_control.log \
+  --results ../../log/${BATCH_ID}/audit_control \
+  --keep-order \
+  ./audit.R \
+  -b ${BATCH_ID} \
+  -m {1} \
+  -f _normalized_variable_selected.csv \
+  -s \"Metadata_broad_sample_type == \'\'\'control\'\'\'\" \
+  -o ../../scratch/${BATCH_ID}/audit/{1}_audit_control.csv \
+  -p Metadata_Well :::: ${PLATE_MAPS}
+
 # collapse
 mkdir -p ../../scratch/${BATCH_ID}/collapsed
 
