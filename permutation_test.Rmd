@@ -1,0 +1,182 @@
+---
+title: "permutation test"
+author: "TB"
+date: "4/13/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r, message=FALSE, warning=FALSE}
+library(dplyr)
+library(reshape2)
+library(permute)
+library(tidyr)
+library(tibble)
+library(readr)
+library(stringr)
+```
+
+≠
+```{r, message=FALSE, warning=FALSE}
+
+dir.lst <- list.dirs("../../backend/CRISPR_PILOT_B1", recursive = F)
+df.lst <- c()
+
+for (dir.i in dir.lst) {
+  
+  file.lst <- list.files(dir.i)
+  file.name <- file.lst[str_detect(file.lst, "_normalized_variable_selected.csv")]
+  df <- read_csv(sprintf("%s/%s",dir.i, file.name))  
+  df.lst <- c(df.lst, list(df))
+}
+
+df.data <- do.call(rbind, df.lst)
+cl <- colnames(df.data)
+
+meta.cl <- cl[str_detect(cl, "Metadata_")]
+feat.cl <- setdiff(cl, meta.cl)
+
+Pf <- list(data = df.data, feat_cols = feat.cl, meta_cols = meta.cl)
+
+```
+
+# Define functions
+
+```{r, define functions}
+
+rep.cor <- function(Pf, grp.var, feat.var) {
+  x <- Pf$data %>% 
+    dplyr::select(one_of(c(grp.var, feat.var))) %>%
+    dplyr::group_by_(grp.var) %>% 
+    do(data.frame(cr = median(as.dist(cor(t(.[,feat.var]))), na.rm = TRUE)))
+  return(x)
+}
+
+non.rep.cor.rob <- function(Pf, grp.var, feat.var) {
+  us <- c()
+  for (i in 1:10) {
+    pr <- permute::shuffle(NROW(Pf$data)) # in a small group we have a high probability that that a group includes a replicates (contamination)
+    
+    # pr <- permute_groups(Pf$data, grp.var)
+    Pf$data[,grp.var] <- Pf$data[pr,grp.var]
+    u <- rep.cor(Pf, grp.var, feat.var)
+    us <- rbind(us, u)
+  }
+  return(quantile(us$cr, 0.95, na.rm = TRUE))
+}
+
+non.rep.cor <- function(Pf, grp.var, feat.var) {
+  pr <- permute::shuffle(NROW(Pf$data))
+  Pf$data[,grp.var] <- Pf$data[pr,grp.var]
+  u <- rep.cor(Pf, grp.var, feat.var)
+  return(quantile(u$cr, 0.95, na.rm = TRUE))
+}
+
+```
+
+
+
+```{r}
+
+cell_line_names <- Pf$data$Metadata_cell_line %>% unique()
+
+Pf$data <- Pf$data %>% 
+  dplyr::mutate(Metadata_Treatment = paste(Metadata_pert_name, Metadata_cell_line, sep = "_")) %>%
+  as.data.frame()
+Pf$meta_cols <- c(Pf$meta_cols, "Metadata_Treatment")
+
+
+r.cor <- rep.cor(Pf, grp.var = "Metadata_Treatment", feat.var = Pf$feat_cols)
+thr <- non.rep.cor.rob(Pf,  grp.var = "Metadata_Treatment", feat.var = Pf$feat_cols)
+
+n.hits <- r.cor %>%
+  filter(cr > thr) %>%
+  NROW()
+n.trts <- NROW(r.cor)
+
+hit.ratio <- n.hits/n.trts
+
+print(hit.ratio)
+```
+
+```{r}
+# pr <- permute_groups(Pf$data,grp.var = "Metadata_Treatment" )
+df <- Pf$data %>% 
+  select(Metadata_Treatment) %>%
+  n_distinct() %>%
+  print
+
+```
+
+
+
+
+
+```{r, testrun}
+df_input <- data.frame(feature = c(1:200,1:200),gene = c(1:200,1:200)) %>% 
+  print()
+
+col_name <- 'gene'
+pr <- permute_groups(df_input,col_name) %>% print
+
+```
+```{r}
+
+permute_groups <- function(df,grp.var) {
+  
+  df_original <- df %>% 
+    rename_("original_group" = grp.var) %>%
+    select(original_group) %>%
+    mutate(id = 1:nrow(.))
+
+  n_groups <- -2
+  best_n_groups <- 0
+  count <- 0
+  while ((n_groups != nrow(df_original)) & (count < 2000)) {
+    count <- count + 1
+    df_shuffeled <- df_original %>%
+      mutate(shuffeled_index = 1:nrow(.)) %>%
+      rename(shuffeled_group = original_group) %>%
+      select(-id) %>%
+      sample_n(nrow(.)) %>%
+      mutate(id = 1:nrow(.)) %>%
+      full_join(df_original, by = 'id') %>%
+      select(-id)
+    
+    
+    n_groups <- df_shuffeled %>%
+      group_by(original_group) %>%
+      summarise(complete_groups = n_distinct(shuffeled_group)) %>%
+      summarise(s = sum(complete_groups))
+    
+    if (n_groups > best_n_groups ) {
+      best_n_groups <- n_groups
+      best_ind <- df_shuffeled %>% select(shuffeled_index)
+    }
+    
+  
+  }
+  return(c(best_n_groups,best_ind))
+}
+
+```
+
+```{r}
+df <- Pf$data %>% 
+  select(Metadata_Treatment, Metadata_gene_name) %>% 
+  filter(!grepl("EMPT", Metadata_Treatment)) %>%
+  print
+  
+pr <- permute_groups(df,grp.var = "Metadata_Treatment" ) 
+
+```
+

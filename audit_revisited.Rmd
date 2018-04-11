@@ -1,0 +1,165 @@
+---
+title: "audit_revisited"
+author: "TB"
+date: "4/14/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R 
+
+```{r load libraries, message=FALSE, warning=FALSE}
+library(dplyr)
+library(reshape2)
+library(permute)
+library(tidyr)
+library(tibble)
+library(readr)
+library(stringr)
+```
+
+# Data
+load cell health data 
+```{r load data, message=FALSE, warning=FALSE}
+
+dir.lst <- list.dirs("../../backend/CRISPR_PILOT_B1", recursive = F)
+df.lst <- c()
+
+for (dir.i in dir.lst) {
+  
+  file.lst <- list.files(dir.i)
+  file.name <- file.lst[str_detect(file.lst, "_normalized_variable_selected.csv")]
+  df <- read_csv(sprintf("%s/%s",dir.i, file.name))  
+  df.lst <- c(df.lst, list(df))
+}
+
+df.data <- do.call(rbind, df.lst)
+cl <- colnames(df.data)
+
+meta.cl <- cl[str_detect(cl, "Metadata_")]
+feat.cl <- setdiff(cl, meta.cl)
+
+Pf <- list(data = df.data, feat_cols = feat.cl, meta_cols = meta.cl)
+
+```
+
+# Mohammads version to calculate the hit ratio / null distribution 
+
+```{r mohammad style}
+
+rep.cor <- function(Pf, grp.var, feat.var) {
+  x <- Pf$data %>% 
+    dplyr::select(one_of(c(grp.var, feat.var))) %>%
+    dplyr::group_by_(grp.var) %>% 
+    do(data.frame(cr = median(as.dist(cor(t(.[,feat.var]))), na.rm = TRUE)))
+  return(x)
+}
+
+
+non.rep.cor.rob <- function(Pf, grp.var, feat.var) {
+  us <- c()
+  for (i in 1:10) {
+    
+    
+    pr <- permute::shuffle(NROW(Pf$data))
+    
+    Pf$data[,grp.var] <- Pf$data[pr,grp.var]
+    u <- rep.cor(Pf, grp.var, feat.var)
+    us <- rbind(us, u)
+  }
+  return(quantile(us$cr, 0.95, na.rm = TRUE))
+}
+
+
+non.rep.cor <- function(Pf, grp.var, feat.var) {
+  pr <- permute::shuffle(NROW(Pf$data))
+  Pf$data[,grp.var] <- Pf$data[pr,grp.var]
+  u <- rep.cor(Pf, grp.var, feat.var)
+  return(quantile(u$cr, 0.95, na.rm = TRUE))
+}
+
+cell_line_names <- Pf$data$Metadata_cell_line %>% unique()
+
+# new grouping variable needed to distinguish between different cells
+Pf$data <- Pf$data %>% 
+  dplyr::mutate(Metadata_Treatment = paste(Metadata_pert_name, Metadata_cell_line, sep = "_")) %>%
+  as.data.frame()
+Pf$meta_cols <- c(Pf$meta_cols, "Metadata_Treatment")
+
+r.cor <- rep.cor(Pf, grp.var = "Metadata_Treatment", feat.var = Pf$feat_cols)
+thr <- non.rep.cor.rob(Pf,  grp.var = "Metadata_Treatment", feat.var = Pf$feat_cols)
+
+n.hits <- r.cor %>%
+  filter(cr > thr) %>%
+  NROW()
+
+n.trts <- NROW(r.cor)
+
+hit.ratio <- n.hits/n.trts
+
+result_mohammad <-  tibble::data_frame(threshold = thr, "   hit ratio" =  hit.ratio)
+
+knitr::kable(result_mohammad)
+
+```
+# audit function (Shantany style)
+
+```{r audit shantanu style }
+
+df <- Pf$data
+plate_map_name <- "dummy_for_all_cell_lines"
+group_by_variable <- "Metadata_Treatment"
+
+median_pairwise_correlation <- function(df, variables, group_by) {
+  df %>% 
+    dplyr::group_by_(.dots = group_by) %>% 
+    do(tibble::data_frame(correlation = median(as.dist(cor(t(as.matrix(.[variables])))))))
+}
+
+estimate_null_threshold <- function(df, feat.cl, group_by_variable, n_fold) {
+  us <- c()
+  u <-  c()
+  for (i in 1:n_fold) {
+    u <- df %>% 
+    tidyr::unite_("group_by_variable", group_by_variable) %>%
+    mutate(group_by_variable = sample(group_by_variable)) %>%
+    median_pairwise_correlation(feat.cl, "group_by_variable") 
+    us <- rbind(us,u)
+  }
+  null_threshold <- us %>%
+    magrittr::extract2("correlation") %>%
+    quantile(0.95, na.rm = TRUE) 
+  
+  return(null_threshold)
+}
+
+
+set.seed(24)
+
+correlations <- Pf$data %>% 
+  median_pairwise_correlation(feat.cl, group_by_variable) 
+
+null_threshold <- estimate_null_threshold(df, feat.cl, group_by_variable,10)
+
+result <- 
+  tibble::data_frame(
+    plate_map_name = plate_map_name,
+    null_threshold = null_threshold,
+    fraction_strong = (sum(correlations$correlation > null_threshold) / nrow(correlations)))
+
+knitr::kable(result)
+
+knitr::kable(correlations)
+
+```
+
+
+
+
+
+
+
+

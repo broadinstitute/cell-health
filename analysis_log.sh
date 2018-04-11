@@ -117,7 +117,7 @@ parallel ./audit.R \
   -m {1} \
   -s \"Metadata_broad_sample_type == \'\'\'trt\'\'\'\" \
   -o ../../scratch/${BATCH_ID}/audit/{1}_audit.csv \
-  -p Metadata_Well :::: ${PLATE_MAPS}
+  -p Metadata_pert_name :::: ${PLATE_MAPS}
 
 # only controls
 parallel ./audit.R \
@@ -125,7 +125,7 @@ parallel ./audit.R \
   -m {1} \
   -s \"Metadata_broad_sample_type == \'\'\'control\'\'\'\" \
   -o ../../scratch/${BATCH_ID}/audit/{1}_audit_control.csv \
-  -p Metadata_Well :::: ${PLATE_MAPS}
+  -p Metadata_pert_name :::: ${PLATE_MAPS}
 
 # collapse
 mkdir -p ../../scratch/${BATCH_ID}/collapsed
