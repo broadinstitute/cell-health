@@ -1,6 +1,7 @@
 # History files
 .Rhistory
 .Rapp.history
+.DS_Store
 # Session Data files
 .RData
 # Example code in package build process
@@ -23,3 +24,5 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 .Rproj.user
+# Jupyter Notebook files
+.ipynb_checkpoints
