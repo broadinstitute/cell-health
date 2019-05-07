@@ -197,8 +197,8 @@ for extension in ['.png', '.pdf']:
     gg.ggsave(cor_density_gg,
               filename='{}{}'.format(file, extension),
               dpi=300,
-              height=6.4,
-              width=4.8,
+              height=4.8,
+              width=6.4,
               units='in')
 
 
