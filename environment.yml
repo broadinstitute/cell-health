@@ -20,8 +20,8 @@ dependencies:
 - conda-forge::r-dplyr=0.7.6
 - conda-forge::r-tidyr=0.8.1
 - conda-forge::r-magrittr=1.5
-- conda-forge::r-tibble=1.4.2
-- conda-forge::r-docopt=0.4.5
+- conda-forge::r-tibble=2.1.1
+- conda-forge::r-docopt=0.6
 - conda-forge::r-purrr=0.2.5
 - conda-forge::r-readr=1.1.1
 - conda-forge::r-readxl=1.1.0
@@ -29,8 +29,9 @@ dependencies:
 - conda-forge::r-cowplot=0.9.3
 - conda-forge::r-ggrepel=0.8.0
 - conda-forge::r-svglite=1.2.1
-- conda-forge::r-irkernel=0.8.12
+- conda-forge::r-irkernel=1.0.1
 - conda-forge::r-optparse=1.6.0
+- conda-forge::r-platetools=0.1.2
 - conda-forge::r-curl=3.2
 - conda-forge::r-futile.logger=1.4.3
 - conda-forge::r-knitr=1.20
