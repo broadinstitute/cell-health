@@ -2,6 +2,7 @@
 .Rhistory
 .Rapp.history
 .DS_Store
+Rplots.pdf
 # Session Data files
 .RData
 # Example code in package build process
