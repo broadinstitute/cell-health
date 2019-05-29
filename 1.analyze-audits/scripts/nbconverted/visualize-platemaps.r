@@ -61,5 +61,3 @@ for (plate_file in list.files(platemap_dir, pattern = "_detailed.csv")) {
         print(p)
     }
 }
-
-
