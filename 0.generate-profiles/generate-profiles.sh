@@ -232,6 +232,20 @@ csvstack \
   ../../scratch/${BATCH_ID}/${BATCH_ID}_collapsed.csv \
   -o ../../scratch/${BATCH_ID}/${BATCH_ID}_collapsed.gct
 
+########################################
+# Generate Heterogeneity Features
+########################################
+parallel \
+  --no-run-if-empty \
+  --eta \
+  --joblog ../../log/${BATCH_ID}/audit_control.log \
+  --results ../../log/${BATCH_ID}/audit_control \
+  --keep-order \
+  ./capture_heterogeneity.R \
+  --sqlite_file ../../backend/${BATCH_ID}/{1}/{1}.sqlite \
+  --num_comp 3000 {1} \
+  --output ../../backend/${BATCH_ID}/{1}/{1}_heterogeneity_feature.csv :::: ${PLATE_MAPS}
+
 # sync up to S3 from EC2 instance
 # on ec2
 aws s3 sync \
