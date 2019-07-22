@@ -45,6 +45,7 @@ class CellHealthPredict:
         self.n_folds = n_folds
         self.cv_scoring = cv_scoring
         self.return_train_score = return_train_score
+        self.profile_ids = self.x_df.index.tolist()
         self.is_fit = False
         self.kmeans_fit = False
         self.cv_pipeline = GridSearchCV(
@@ -88,6 +89,10 @@ class CellHealthPredict:
         self.x_realigned_df, self.y_scaled_df, self.n_samples_removed = self.realign_missing_data(
             self.x_df, self.y
         )
+
+        # Update the profile IDs
+        self.profile_ids = self.x_realigned_df.index
+
         # Transform the target variable
         self.y_scaled_df = self.recode_y(y=self.y_scaled_df)
 
@@ -154,20 +159,25 @@ class CellHealthPredict:
             y = y.loc[:, target]
 
         if y_transform == "zero-one":
-            y = minmax_scale(y)
+            y_scale = minmax_scale(y)
         elif y_transform == "z-score":
-            y = scale(y)
+            y_scale = scale(y)
         elif y_transform == "binarize":
             if not self.kmeans_fit:
                 self.kmeans = KMeans(n_clusters=2, random_state=0).fit(
                     np.reshape(y.values, (-1, 1))
                 )
                 self.kmeans_fit = True
-                y = self.kmeans.labels_
+                y_scale = self.kmeans.labels_
             else:
-                y = self.kmeans.predict(np.reshape(y.values, (-1, 1)))
+                y_scale = self.kmeans.predict(np.reshape(y.values, (-1, 1)))
+        else:
+            y_scale = y
 
-        return pd.Series(y, name=target)
+        y_scale = pd.Series(y_scale, name=target)
+        y_scale.index = y.index
+
+        return y
 
     def get_cv_results(self):
         assert (
@@ -223,7 +233,8 @@ class CellHealthPredict:
             y_pred = self.pipeline_fit.decision_function(x)
         else:
             y_pred = self.pipeline_fit.predict(x)
-        return y_pred
+
+        return pd.Series(y_pred, name=self.target)
 
     def get_coefficients(self, save_model=False, model_file="tmp.joblib"):
         """
@@ -298,12 +309,15 @@ class CellHealthPredict:
             # Get predicted values from trained model
             y_pred = self.predict(x_test, decision_function=decision_function)
             data_fit_type = "test"
+            profile_ids = x_test.index.tolist()
+
         else:
             y_pred = self.predict(
                 self.x_realigned_df, decision_function=decision_function
             )
             y_true = self.y_scaled_df
             data_fit_type = "train"
+            profile_ids = self.x_realigned_df.index.tolist()
 
         if self.y_transform != "binarize":
             mse = mean_squared_error(y_true, y_pred)
@@ -365,7 +379,29 @@ class CellHealthPredict:
             output = [roc_df, pr_df]
 
         if return_y:
-            output += [y_true]
+
+            y_true = (
+                pd.DataFrame(y_true)
+                .rename({self.target: "recode_target_value"}, axis='columns')
+                .assign(target=self.target,
+                        data_type=data_fit_type,
+                        shuffle=self.shuffle_key,
+                        y_transform=self.y_transform,
+                        recoded="y_true")
+            )
+
+            y_pred = (
+                pd.DataFrame(y_pred)
+                .rename({self.target: "recode_target_value"}, axis='columns')
+                .assign(target=self.target,
+                        data_type=data_fit_type,
+                        shuffle=self.shuffle_key,
+                        y_transform=self.y_transform,
+                        recoded="y_pred")
+            )
+            y_pred.index = profile_ids
+            y_pred.index.name = "Metadata_profile_id"
+            output += [y_true, y_pred]
 
         return output
 
@@ -390,10 +426,10 @@ def load_train_test(data_dir="data", drop_metadata=False, output_metadata_only=F
     x_test_file = os.path.join(data_dir, "x_test.tsv.gz")
     y_test_file = os.path.join(data_dir, "y_test.tsv.gz")
 
-    x_train_df = pd.read_csv(x_train_file, sep="\t")
-    y_train_df = pd.read_csv(y_train_file, sep="\t")
-    x_test_df = pd.read_csv(x_test_file, sep="\t")
-    y_test_df = pd.read_csv(y_test_file, sep="\t")
+    x_train_df = pd.read_csv(x_train_file, index_col=0, sep="\t")
+    y_train_df = pd.read_csv(y_train_file, index_col=0, sep="\t")
+    x_test_df = pd.read_csv(x_test_file, index_col=0, sep="\t")
+    y_test_df = pd.read_csv(y_test_file, index_col=0, sep="\t")
 
     x_train_metadata = x_train_df.columns.str.startswith("Metadata_")
     x_test_metadata = x_test_df.columns.str.startswith("Metadata_")
