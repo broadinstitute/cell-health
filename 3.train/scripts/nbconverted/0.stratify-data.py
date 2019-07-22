@@ -71,7 +71,7 @@ x_meta_df = (
 )
 
 print(x_meta_df.shape)
-x_meta_df.head(2)
+x_meta_df.head(3)
 
 
 # In[7]:
@@ -108,10 +108,19 @@ all_measurements_df = (
         right_on=["guide", "cell_id"],
         suffixes=["_paint", "_health"],
         how="inner")
+    .sort_values(by=["Metadata_cell_line", "Metadata_pert_name"])
+    .reset_index(drop=True)
+    .reset_index()
+    .rename({"index": "Metadata_profile_id"}, axis='columns')
 )
 
+all_measurements_df.Metadata_profile_id = ["profile_{}".format(x) for x in all_measurements_df.Metadata_profile_id]
+
+file = os.path.join("results", "all_profile_metadata.tsv")
+all_measurements_df.to_csv(file, sep='\t', index=False)
+
 print(all_measurements_df.shape)
-all_measurements_df.head(2)
+all_measurements_df.head()
 
 
 # ## Aggregate Profiles and Outcomes Further
@@ -138,10 +147,14 @@ x_agg_df = (
     .query("Metadata_cell_line in @all_measurements_df.Metadata_cell_line.unique()")
     .sort_values(by=["Metadata_cell_line", "Metadata_pert_name"])
     .reset_index(drop=True)
+    .merge(all_measurements_df.loc[:, ["Metadata_profile_id"] + x_groupby_cols],
+           left_on=x_groupby_cols,
+           right_on=x_groupby_cols)
+    .loc[:, ["Metadata_profile_id"] + x_columns]
 )
 
 print(x_agg_df.shape)
-x_agg_df.head(2)
+x_agg_df.head(5)
 
 
 # In[12]:
@@ -156,6 +169,10 @@ y_agg_df = (
     .query("cell_id in @all_measurements_df.Metadata_cell_line.unique()")
     .sort_values(by=["cell_id", "guide"])
     .reset_index(drop=True)
+    .merge(all_measurements_df.loc[:, ["Metadata_profile_id"] + y_groupby_cols],
+           left_on=y_groupby_cols,
+           right_on=y_groupby_cols)
+    .loc[:, ["Metadata_profile_id"] + y_df.columns.tolist()]
 )
 
 print(y_agg_df.shape)
@@ -166,6 +183,7 @@ y_agg_df.head(2)
 
 
 # Confirm that matrices are aligned
+pd.testing.assert_series_equal(x_agg_df.Metadata_profile_id, y_agg_df.Metadata_profile_id, check_names=False)
 
 # Are the guides aligned?
 pd.testing.assert_series_equal(x_agg_df.Metadata_pert_name, y_agg_df.guide, check_names=False)
@@ -174,30 +192,15 @@ pd.testing.assert_series_equal(x_agg_df.Metadata_pert_name, y_agg_df.guide, chec
 pd.testing.assert_series_equal(x_agg_df.Metadata_cell_line, y_agg_df.cell_id, check_names=False)
 
 
-# ## Scale Target Variables
-# 
-# This will help with model and loss function interpretation.
-
-# In[14]:
-
-
-scaler = StandardScaler()
-y_agg_transformed_df = pd.DataFrame(scaler.fit_transform(y_agg_df.drop(["guide", "cell_id"], axis="columns")))
-y_agg_transformed_df = pd.concat([y_agg_df.loc[:, ["guide", "cell_id"]], y_agg_transformed_df], axis="columns")
-y_agg_transformed_df.columns = y_agg_df.columns
-
-y_agg_transformed_df.head(2)
-
-
 # ## Split into Training and Testing
 
-# In[15]:
+# In[14]:
 
 
 test_proportion = 0.15
 
 
-# In[16]:
+# In[15]:
 
 
 x_train_df, x_test_df, y_train_df, y_test_df = train_test_split(
@@ -207,14 +210,14 @@ x_train_df, x_test_df, y_train_df, y_test_df = train_test_split(
     random_state=42)
 
 
-# In[17]:
+# In[16]:
 
 
 print(x_train_df.shape)
 print(x_test_df.shape)
 
 
-# In[18]:
+# In[17]:
 
 
 file = os.path.join("data", "x_train.tsv.gz")
