@@ -1,5 +1,5 @@
 language: python
-install:
+before_install:
   - sudo apt-get update
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   - bash miniconda.sh -b -p $HOME/miniconda
@@ -8,8 +8,7 @@ install:
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
-  - conda env create --force --file environment.yml
-  - conda init bash
-  - source activate cell-health
+  - conda env create -n testenv -f environment.yml
+  - source activate testenv
 script:
   - pytest
