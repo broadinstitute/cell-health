@@ -177,7 +177,13 @@ class CellHealthPredict:
         y_scale = pd.Series(y_scale, name=target)
         y_scale.index = y.index
 
-        return y
+        return y_scale
+
+    def set_y_transform(self, y_transform):
+        self.y_transform = y_transform
+
+    def set_target(self, target):
+        self.target = target
 
     def get_cv_results(self):
         assert (
@@ -225,7 +231,7 @@ class CellHealthPredict:
         """
         If decision_function, output continuous label
         """
-        assert self.is_fit, "The model is not yet fit! Run fit_guide() first"
+        assert self.is_fit, "The model is not yet fit! Run fit_cell_health_target() first"
         if decision_function:
             assert (
                 self.y_transform == "binarize"
@@ -287,7 +293,7 @@ class CellHealthPredict:
 
         # Make sure the model has been fit first!
         if not self.is_fit:
-            ValueError("The model is not yet fit! Run fit_guide() first")
+            ValueError("The model is not yet fit! Run fit_cell_health_target() first")
 
         # If the input is a dataframe, make sure columns are aligned to training data
         if isinstance(x_test, pd.DataFrame):
@@ -387,8 +393,10 @@ class CellHealthPredict:
                         data_type=data_fit_type,
                         shuffle=self.shuffle_key,
                         y_transform=self.y_transform,
-                        recoded="y_true")
+                        y_type="y_true")
             )
+            y_true.index.name = "Metadata_profile_id"
+            y_true = y_true.reset_index()
 
             y_pred = (
                 pd.DataFrame(y_pred)
@@ -397,10 +405,12 @@ class CellHealthPredict:
                         data_type=data_fit_type,
                         shuffle=self.shuffle_key,
                         y_transform=self.y_transform,
-                        recoded="y_pred")
+                        y_type="y_pred")
             )
             y_pred.index = profile_ids
             y_pred.index.name = "Metadata_profile_id"
+            y_pred = y_pred.reset_index()
+
             output += [y_true, y_pred]
 
         return output
