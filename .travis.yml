@@ -8,7 +8,6 @@ before_install:
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
-  - conda env create -n testenv -f environment.yml
-  - source activate testenv
+  - conda env create --force --file environment.yml
 script:
-  - pytest
+  - source activate cell-health && pytest
