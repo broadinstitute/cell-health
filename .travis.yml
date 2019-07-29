@@ -10,4 +10,4 @@ before_install:
   - conda info -a
   - conda env create --force --file environment.yml
 script:
-  - source activate cell-health && pytest
+  - conda activate cell-health && pytest
