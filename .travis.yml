@@ -9,5 +9,6 @@ before_install:
   - conda update -q conda
   - conda info -a
   - conda env create --force --file environment.yml
+  - conda init bash
 script:
   - conda activate cell-health && pytest
