@@ -229,7 +229,9 @@ class TestCellHealthPredict(object):
             "shuffle",
         ]
 
-        pd.testing.assert_frame_equal(coef, coef_exp)
+        pd.testing.assert_frame_equal(
+            coef.sort_values(by="feature"), coef_exp.sort_values(by="feature")
+        )
 
     def test_binarize_get_performance(self):
         output = chp.fit_cell_health_target(target="target_zz", y_transform="binarize")
