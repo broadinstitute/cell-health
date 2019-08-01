@@ -10,6 +10,6 @@ install:
   - conda info -a
   - conda create -q -n test-env python=$TRAVIS_PYTHON_VERSION
   - source activate test-env
-  - conda install -c conda-forge pytest numpy pandas sklearn
+  - conda install -c conda-forge pytest numpy pandas scikit-learn
 script:
   - pytest
