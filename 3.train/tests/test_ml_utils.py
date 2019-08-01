@@ -230,7 +230,8 @@ class TestCellHealthPredict(object):
         ]
 
         pd.testing.assert_frame_equal(
-            coef.sort_values(by="feature"), coef_exp.sort_values(by="feature")
+            coef.sort_values(by="feature").reset_index(drop=True),
+            coef_exp.sort_values(by="feature").reset_index(drop=True),
         )
 
     def test_binarize_get_performance(self):
