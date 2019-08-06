@@ -3,7 +3,7 @@ import sys
 import pytest
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import SGDRegressor, SGDClassifier
+from sklearn.linear_model import ElasticNet, SGDClassifier
 from sklearn.pipeline import Pipeline
 
 abs_path = os.path.dirname(os.path.abspath(__file__))
@@ -48,12 +48,7 @@ alphas = [0.01]
 l1_ratios = [0.1]
 n_folds = 2
 
-regression_parameters = {
-    "regress__loss": ["squared_loss"],
-    "regress__penalty": ["elasticnet"],
-    "regress__alpha": alphas,
-    "regress__l1_ratio": l1_ratios,
-}
+regression_parameters = {"regress__alpha": alphas, "regress__l1_ratio": l1_ratios}
 
 clf_parameters = {
     "classify__loss": ["log"],
@@ -61,8 +56,9 @@ clf_parameters = {
     "classify__alpha": alphas,
     "classify__l1_ratio": l1_ratios,
 }
+
 estimator_regressor = Pipeline(
-    steps=[("regress", SGDRegressor(max_iter=2000, random_state=42, tol=1e-3))]
+    steps=[("regress", ElasticNet(random_state=42, max_iter=2000, tol=1e-3))]
 )
 
 estimator_classifier = Pipeline(
@@ -70,7 +66,11 @@ estimator_classifier = Pipeline(
         (
             "classify",
             SGDClassifier(
-                random_state=0, class_weight="balanced", max_iter=2000, tol=1e-3
+                random_state=0,
+                class_weight="balanced",
+                max_iter=2000,
+                shuffle=True,
+                tol=1e-3,
             ),
         )
     ]
@@ -85,8 +85,17 @@ chp = CellHealthPredict(
     cv_scoring="roc_auc",
 )
 
+chp_reg = CellHealthPredict(
+    x_df=x_df,
+    y_df=y_df,
+    parameters=regression_parameters,
+    estimator=estimator_regressor,
+    n_folds=n_folds,
+    cv_scoring="r2",
+)
 
-class TestCellHealthPredict(object):
+
+class TestCellHealthPredictClassify(object):
     def test_attr(self):
         assert hasattr(chp, "x_df")
         assert hasattr(chp, "y_df")
@@ -117,14 +126,16 @@ class TestCellHealthPredict(object):
         assert hasattr(chp, "y_transform")
 
     def test_raw_recode(self):
-        y = chp.recode_y(y=chp.y_df, target="target_zz", y_transform="raw")
+        chp.set_target(target="target_zz")
+        chp.set_y_transform(y_transform="raw")
+        y = chp.recode_y(y=chp.y_df)
 
         y_expect = pd.Series(
             [0.005, 0.011, 0.002, 0.01, 0.5, 1.2, 0.7, 1], name="target_zz", dtype=float
         )
         y_expect.index = ["a", "b", "c", "d", "e", "f", "g", "h"]
 
-        pd.testing.assert_series_equal(y, y_expect)
+        pd.testing.assert_series_equal(y, y_expect, check_dtype=False)
 
     def test_binarize_recode(self):
         y = chp.recode_y(y=chp.y_df, target="target_zz", y_transform="binarize")
@@ -229,10 +240,7 @@ class TestCellHealthPredict(object):
             "shuffle",
         ]
 
-        pd.testing.assert_frame_equal(
-            coef.sort_values(by="feature").reset_index(drop=True),
-            coef_exp.sort_values(by="feature").reset_index(drop=True),
-        )
+        pd.testing.assert_frame_equal(coef, coef_exp)
 
     def test_binarize_get_performance(self):
         output = chp.fit_cell_health_target(target="target_zz", y_transform="binarize")
@@ -359,4 +367,123 @@ class TestCellHealthPredict(object):
         )
         pd.testing.assert_frame_equal(
             y_expect.assign(y_type="y_pred"), y_pred, check_dtype=False
+        )
+
+
+class TestCellHealthPredictRegression(object):
+    def test_attr(self):
+        assert hasattr(chp_reg, "x_df")
+        assert hasattr(chp_reg, "y_df")
+        assert hasattr(chp_reg, "parameters")
+        assert hasattr(chp_reg, "estimator")
+        assert hasattr(chp_reg, "n_folds")
+        assert hasattr(chp_reg, "cv_scoring")
+        assert hasattr(chp_reg, "shuffle_key")
+        assert hasattr(chp_reg, "named_step")
+        assert hasattr(chp_reg, "return_train_score")
+        assert hasattr(chp_reg, "profile_ids")
+        assert hasattr(chp_reg, "is_fit")
+        assert hasattr(chp_reg, "kmeans_fit")
+        assert hasattr(chp_reg, "cv_pipeline")
+
+    def test_fit_cell_health_target(self):
+        output = chp_reg.fit_cell_health_target(
+            target="target_zz", y_transform="binarize"
+        )
+
+        assert chp_reg.is_fit
+        assert output
+
+    def test_binarize_get_coefficients(self):
+        output = chp_reg.fit_cell_health_target(target="target_zz", y_transform="raw")
+
+        coef = chp_reg.get_coefficients().round(2)
+
+        coef_exp = pd.DataFrame(
+            [
+                ["x", 0.09, 0.09, "target_zz", "raw", "shuffle_false"],
+                ["zz", -0.04, 0.04, "target_zz", "raw", "shuffle_false"],
+                ["z", -0.03, 0.03, "target_zz", "raw", "shuffle_false"],
+                ["p", 0.02, 0.02, "target_zz", "raw", "shuffle_false"],
+                ["y", -0.00, 0.00, "target_zz", "raw", "shuffle_false"],
+                ["xx", 0.00, 0.00, "target_zz", "raw", "shuffle_false"],
+                ["yy", -0.00, 0.00, "target_zz", "raw", "shuffle_false"],
+            ]
+        )
+        coef_exp.columns = [
+            "feature",
+            "weight",
+            "abs_weight",
+            "target",
+            "y_transform",
+            "shuffle",
+        ]
+
+        pd.testing.assert_frame_equal(coef, coef_exp)
+
+    def test_raw_recode(self):
+        y = chp_reg.recode_y(y=chp_reg.y_df, target="target_zz", y_transform="raw")
+
+        pd.testing.assert_series_equal(y, chp_reg.y_df.target_zz)
+
+    def test_reg_get_performance(self):
+        output = chp_reg.fit_cell_health_target(target="target_p", y_transform="raw")
+
+        mse_df, r2_df, y_true, y_pred = chp_reg.get_performance(return_y=True)
+
+        mse_df_expect = pd.DataFrame(
+            [0.08, "mse", "target_p", "train", "shuffle_false", "raw"]
+        ).transpose()
+        mse_df_expect.columns = [
+            "mse",
+            "metric",
+            "target",
+            "data_fit",
+            "shuffle",
+            "y_transform",
+        ]
+
+        pd.testing.assert_frame_equal(mse_df.round(2), mse_df_expect, check_dtype=False)
+
+        r2_df_expect = pd.DataFrame(
+            [0.61, "r_two", "target_p", "train", "shuffle_false", "raw"]
+        ).transpose()
+        r2_df_expect.columns = [
+            "mse",
+            "metric",
+            "target",
+            "data_fit",
+            "shuffle",
+            "y_transform",
+        ]
+
+        pd.testing.assert_frame_equal(r2_df.round(2), r2_df_expect, check_dtype=False)
+
+        y_expect = pd.DataFrame(
+            [
+                ["a", "b", "c", "e", "f", "g", "h"],
+                [0.005, 0.011, 0.002, 0.5, 1.2, 0.7, 1.0],
+            ]
+        ).transpose()
+        y_expect = y_expect.assign(
+            target="target_p",
+            data_type="train",
+            shuffle="shuffle_false",
+            y_transform="raw",
+        )
+        y_expect.columns = [
+            "Metadata_profile_id",
+            "recode_target_value",
+            "target",
+            "data_type",
+            "shuffle",
+            "y_transform",
+        ]
+        pd.testing.assert_frame_equal(
+            y_expect.assign(y_type="y_true"), y_true, check_dtype=False
+        )
+
+        y_expect.recode_target_value = [-0.15, 0.36, 0.23, 0.53, 0.59, 0.85, 1.01]
+        pd.testing.assert_frame_equal(
+            y_expect.assign(y_type="y_pred"), y_pred.round(2), check_dtype=False
         )
