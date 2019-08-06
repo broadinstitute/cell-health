@@ -29,7 +29,8 @@ np.random.seed(123)
 # In[3]:
 
 
-profile_dir = os.path.join("..", "0.generate-profiles", "data", "profiles")
+data_dir = os.path.join("..", "0.generate-profiles", "data")
+profile_dir = os.path.join(data_dir, "profiles")
 
 x_df = pd.concat([pd.read_csv(os.path.join(profile_dir, x)) for x in os.listdir(profile_dir)])
 
@@ -42,7 +43,7 @@ x_df.head(2)
 # In[4]:
 
 
-file = os.path.join("data", "cell_health_labels.tsv")
+file = os.path.join(data_dir, "labels", "normalized_cell_health_labels.tsv")
 y_df = pd.read_csv(file, sep='\t').drop(["plate_name", "well_col", "well_row"], axis="columns")
 
 print(y_df.shape)
@@ -68,10 +69,13 @@ x_meta_df = (
     .count()
     .reset_index()
     .assign(data_type="cell_painting")
+    .merge(x_df.loc[:, x_groupby_cols + ["Metadata_Well"]],
+           how="left",
+           on=x_groupby_cols)
 )
 
 print(x_meta_df.shape)
-x_meta_df.head(3)
+x_meta_df.head(8)
 
 
 # In[7]:
@@ -94,7 +98,7 @@ y_meta_df = (
 )
 
 print(y_meta_df.shape)
-y_meta_df.head(2)
+y_meta_df.head(8)
 
 
 # In[9]:
@@ -110,11 +114,7 @@ all_measurements_df = (
         how="inner")
     .sort_values(by=["Metadata_cell_line", "Metadata_pert_name"])
     .reset_index(drop=True)
-    .reset_index()
-    .rename({"index": "Metadata_profile_id"}, axis='columns')
 )
-
-all_measurements_df.Metadata_profile_id = ["profile_{}".format(x) for x in all_measurements_df.Metadata_profile_id]
 
 file = os.path.join("results", "all_profile_metadata.tsv")
 all_measurements_df.to_csv(file, sep='\t', index=False)
@@ -147,11 +147,12 @@ x_agg_df = (
     .query("Metadata_cell_line in @all_measurements_df.Metadata_cell_line.unique()")
     .sort_values(by=["Metadata_cell_line", "Metadata_pert_name"])
     .reset_index(drop=True)
-    .merge(all_measurements_df.loc[:, ["Metadata_profile_id"] + x_groupby_cols],
-           left_on=x_groupby_cols,
-           right_on=x_groupby_cols)
-    .loc[:, ["Metadata_profile_id"] + x_columns]
+    .reset_index()
+    .rename({"index": "Metadata_profile_id"}, axis='columns')
 )
+
+x_agg_df.Metadata_profile_id = ["profile_{}".format(x) for x in x_agg_df.Metadata_profile_id]
+
 
 print(x_agg_df.shape)
 x_agg_df.head(5)
@@ -159,6 +160,8 @@ x_agg_df.head(5)
 
 # In[12]:
 
+
+y_meta_cols = ["Metadata_profile_id", "Metadata_gene_name", "Metadata_pert_name", "Metadata_cell_line"]
 
 y_agg_df = (
     y_df
@@ -169,11 +172,15 @@ y_agg_df = (
     .query("cell_id in @all_measurements_df.Metadata_cell_line.unique()")
     .sort_values(by=["cell_id", "guide"])
     .reset_index(drop=True)
-    .merge(all_measurements_df.loc[:, ["Metadata_profile_id"] + y_groupby_cols],
-           left_on=y_groupby_cols,
-           right_on=y_groupby_cols)
-    .loc[:, ["Metadata_profile_id"] + y_df.columns.tolist()]
+    .merge(
+        x_agg_df.loc[:, y_meta_cols],
+        left_on=["guide", "cell_id"],
+        right_on=["Metadata_pert_name", "Metadata_cell_line"]
+    )
 )
+
+y_columns = y_meta_cols + y_agg_df.loc[:, ~y_agg_df.columns.str.startswith("Metadata_")].columns.tolist()
+y_agg_df = y_agg_df.loc[:, y_columns].drop(["guide", "cell_id"], axis="columns")
 
 print(y_agg_df.shape)
 y_agg_df.head(2)
@@ -186,10 +193,10 @@ y_agg_df.head(2)
 pd.testing.assert_series_equal(x_agg_df.Metadata_profile_id, y_agg_df.Metadata_profile_id, check_names=False)
 
 # Are the guides aligned?
-pd.testing.assert_series_equal(x_agg_df.Metadata_pert_name, y_agg_df.guide, check_names=False)
+pd.testing.assert_series_equal(x_agg_df.Metadata_pert_name, y_agg_df.Metadata_pert_name, check_names=False)
 
 # Are the cells aligned?
-pd.testing.assert_series_equal(x_agg_df.Metadata_cell_line, y_agg_df.cell_id, check_names=False)
+pd.testing.assert_series_equal(x_agg_df.Metadata_cell_line, y_agg_df.Metadata_cell_line, check_names=False)
 
 
 # ## Split into Training and Testing

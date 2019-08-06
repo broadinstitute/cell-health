@@ -13,6 +13,9 @@ import os
 import numpy as np
 import pandas as pd
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 # In[2]:
 
@@ -136,6 +139,9 @@ for file in files:
     # Load Data
     df = pd.read_excel(os.path.join(data_dir, file))
     
+    # Drop duplicates in df
+    df = df.drop_duplicates()
+    
     # Extract info from the file name
     cell_line = file.split("_")[0]
    
@@ -222,7 +228,7 @@ all_df = (
         vb_df,
         left_on=merge_ids,
         right_on=merge_ids,
-        how='outer'
+        how='inner'
     )
 )
 

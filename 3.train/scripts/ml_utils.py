@@ -57,7 +57,7 @@ class CellHealthPredict:
             return_train_score=self.return_train_score,
         )
 
-    def fit_cell_health_target(self, target, y_transform="raw"):
+    def fit_cell_health_target(self, target, y_transform="raw", binarize_fit="kmeans"):
         """
         Fit the cross validation pipeline to obtain an optimal model
 
@@ -94,7 +94,7 @@ class CellHealthPredict:
         self.profile_ids = self.x_realigned_df.index
 
         # Transform the target variable
-        self.y_scaled_df = self.recode_y(y=self.y_scaled_df)
+        self.y_scaled_df = self.recode_y(y=self.y_scaled_df, binarize_fit=binarize_fit)
 
         # The model can proceed only if there are enough representation across classes
         if y_transform == "binarize":
@@ -136,7 +136,7 @@ class CellHealthPredict:
 
         return x_df, y, num_samples_removed
 
-    def recode_y(self, y, target="None", y_transform="None"):
+    def recode_y(self, y, target="None", y_transform="None", binarize_fit="kmeans"):
         """
         Recode y using a specific transformation. Note: if no arguments are passed, the
         function will use elements stored in self.
@@ -163,14 +163,24 @@ class CellHealthPredict:
         elif y_transform == "z-score":
             y_scale = scale(y)
         elif y_transform == "binarize":
-            if not self.kmeans_fit:
-                self.kmeans = KMeans(n_clusters=2, random_state=0).fit(
-                    np.reshape(y.values, (-1, 1))
-                )
-                self.kmeans_fit = True
-                y_scale = self.kmeans.labels_
+            if binarize_fit == "kmeans":
+                if not self.kmeans_fit:
+                    self.kmeans = KMeans(n_clusters=2, random_state=0).fit(
+                        np.reshape(y.values, (-1, 1))
+                    )
+                    self.kmeans_fit = True
+                    y_scale = self.kmeans.labels_
+                else:
+                    y_scale = self.kmeans.predict(np.reshape(y.values, (-1, 1)))
             else:
-                y_scale = self.kmeans.predict(np.reshape(y.values, (-1, 1)))
+                feature_median = y.median()
+                y_neg = y < feature_median
+                y_pos = y >= feature_median
+                y_scale = y.copy()
+
+                y_scale.loc[y_neg] = 0
+                y_scale.loc[y_pos] = 1
+                y_scale = y_scale.astype(int)
         else:
             y_scale = y
 
@@ -231,7 +241,9 @@ class CellHealthPredict:
         """
         If decision_function, output continuous label
         """
-        assert self.is_fit, "The model is not yet fit! Run fit_cell_health_target() first"
+        assert (
+            self.is_fit
+        ), "The model is not yet fit! Run fit_cell_health_target() first"
         if decision_function:
             assert (
                 self.y_transform == "binarize"
@@ -256,8 +268,13 @@ class CellHealthPredict:
         final_pipeline = self.cv_pipeline.best_estimator_
         final_classifier = final_pipeline.named_steps[self.named_step]
 
+        if self.named_step == "classify":
+            weights = final_classifier.coef_[0]
+        else:
+            weights = final_classifier.coef_
+
         coef_df = pd.DataFrame.from_dict(
-            {"feature": self.x_df.columns, "weight": final_classifier.coef_[0]}
+            {"feature": self.x_df.columns, "weight": weights}
         )
 
         coef_df = coef_df.assign(
@@ -276,7 +293,12 @@ class CellHealthPredict:
         return coef_df
 
     def get_performance(
-        self, decision_function=False, x_test=None, y_test=None, return_y=False
+        self,
+        decision_function=False,
+        x_test=None,
+        y_test=None,
+        return_y=False,
+        binarize_fit="kmeans",
     ):
         """
         Get the classifier or regression performance of the fit classifier
@@ -286,6 +308,7 @@ class CellHealthPredict:
         x_test - "None" or pandas DataFrame. If None, get training performance [Default: "None"]
         y_test - "None" or pandas DataFrame indicating status labels. [Default: "None"]
         return_y - boolean if the transformed y variable should be output [Default: False]
+        binarize_fit - string indicating how the binary recoding is performed
 
         Output:
         Performanc metrics for regression or classification (depends on y_transform)
@@ -310,7 +333,7 @@ class CellHealthPredict:
             )
 
             # Transform the target variable
-            y_true = self.recode_y(y=y_true)
+            y_true = self.recode_y(y=y_true, binarize_fit=binarize_fit)
 
             # Get predicted values from trained model
             y_pred = self.predict(x_test, decision_function=decision_function)
@@ -388,24 +411,28 @@ class CellHealthPredict:
 
             y_true = (
                 pd.DataFrame(y_true)
-                .rename({self.target: "recode_target_value"}, axis='columns')
-                .assign(target=self.target,
-                        data_type=data_fit_type,
-                        shuffle=self.shuffle_key,
-                        y_transform=self.y_transform,
-                        y_type="y_true")
+                .rename({self.target: "recode_target_value"}, axis="columns")
+                .assign(
+                    target=self.target,
+                    data_type=data_fit_type,
+                    shuffle=self.shuffle_key,
+                    y_transform=self.y_transform,
+                    y_type="y_true",
+                )
             )
             y_true.index.name = "Metadata_profile_id"
             y_true = y_true.reset_index()
 
             y_pred = (
                 pd.DataFrame(y_pred)
-                .rename({self.target: "recode_target_value"}, axis='columns')
-                .assign(target=self.target,
-                        data_type=data_fit_type,
-                        shuffle=self.shuffle_key,
-                        y_transform=self.y_transform,
-                        y_type="y_pred")
+                .rename({self.target: "recode_target_value"}, axis="columns")
+                .assign(
+                    target=self.target,
+                    data_type=data_fit_type,
+                    shuffle=self.shuffle_key,
+                    y_transform=self.y_transform,
+                    y_type="y_pred",
+                )
             )
             y_pred.index = profile_ids
             y_pred.index.name = "Metadata_profile_id"
@@ -444,21 +471,22 @@ def load_train_test(data_dir="data", drop_metadata=False, output_metadata_only=F
     x_train_metadata = x_train_df.columns.str.startswith("Metadata_")
     x_test_metadata = x_test_df.columns.str.startswith("Metadata_")
 
-    y_metadata = ["guide", "cell_id"]
+    y_train_metadata = y_train_df.columns.str.startswith("Metadata_")
+    y_test_metadata = y_test_df.columns.str.startswith("Metadata_")
 
     if drop_metadata:
         x_train_df = x_train_df.loc[:, ~x_train_metadata]
         x_test_df = x_test_df.loc[:, ~x_test_metadata]
 
-        y_train_df = y_train_df.drop(y_metadata, axis="columns")
-        y_test_df = y_test_df.drop(y_metadata, axis="columns")
+        y_train_df = y_train_df.loc[:, ~y_train_metadata]
+        y_test_df = y_test_df.loc[:, ~y_test_metadata]
 
     elif output_metadata_only:
         x_train_df = x_train_df.loc[:, x_train_metadata]
         x_test_df = x_test_df.loc[:, x_test_metadata]
 
-        y_train_df = y_train_df.loc[:, y_metadata]
-        y_test_df = y_test_df.loc[:, y_metadata]
+        y_train_df = y_train_df.loc[:, y_train_metadata]
+        y_test_df = y_test_df.loc[:, y_test_metadata]
 
     return x_train_df, x_test_df, y_train_df, y_test_df
 
