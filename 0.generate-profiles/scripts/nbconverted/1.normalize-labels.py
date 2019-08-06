@@ -10,6 +10,7 @@
 
 import os
 import numpy as np
+from scipy.stats import median_absolute_deviation
 import pandas as pd
 
 
@@ -25,7 +26,7 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 # Function to scale cell health target variables
 def mad_scale(x):
     x_median = np.nanmedian(x)
-    x_mad = x.mad()
+    x_mad = median_absolute_deviation(x, nan_policy="omit")
     x_mad_scale = (x - x_median) / x_mad
     return x_mad_scale
 
