@@ -28,9 +28,11 @@ dependencies:
 - conda-forge::r-purrr=0.2.5
 - conda-forge::r-readr=1.1.1
 - conda-forge::r-readxl=1.1.0
-- conda-forge::r-ggplot2=3.0.0
+- conda-forge::r-ggplot2=3.1.0
 - conda-forge::r-cowplot=0.9.3
+- conda-forge::r-ggpmisc=0.3.1
 - conda-forge::r-ggrepel=0.8.0
+- conda-forge::r-gridextra=2.3
 - conda-forge::r-svglite=1.2.1
 - conda-forge::r-irkernel=1.0.1
 - conda-forge::r-optparse=1.6.0
