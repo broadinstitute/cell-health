@@ -487,3 +487,16 @@ class TestCellHealthPredictRegression(object):
         pd.testing.assert_frame_equal(
             y_expect.assign(y_type="y_pred"), y_pred.round(2), check_dtype=False
         )
+
+    def test_reg_get_performance_test_set(self):
+        output = chp_reg.fit_cell_health_target(target="target_p", y_transform="raw")
+
+        mse_df, r2_df, y_true, y_pred = chp_reg.get_performance(return_y=True)
+        mse_test_df, r2_test_df, y_test_true, y_test_pred = chp_reg.get_performance(
+            return_y=True, x_test=x_df, y_test=y_test_df
+        )
+
+        pd.testing.assert_frame_equal(mse_df, mse_test_df)
+        pd.testing.assert_frame_equal(r2_df, r2_test_df)
+        pd.testing.assert_frame_equal(y_true, y_test_true)
+        pd.testing.assert_frame_equal(y_pred, y_test_pred)
