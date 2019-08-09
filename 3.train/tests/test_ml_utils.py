@@ -493,7 +493,7 @@ class TestCellHealthPredictRegression(object):
 
         mse_df, r2_df, y_true, y_pred = chp_reg.get_performance(return_y=True)
         mse_test_df, r2_test_df, y_test_true, y_test_pred = chp_reg.get_performance(
-            return_y=True, x_test=x_df, y_test=y_test_df
+            return_y=True, x_test=x_df, y_test=y_df
         )
 
         pd.testing.assert_frame_equal(mse_df, mse_test_df)
