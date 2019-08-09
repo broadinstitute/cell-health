@@ -496,6 +496,12 @@ class TestCellHealthPredictRegression(object):
             return_y=True, x_test=x_df, y_test=y_df
         )
 
+        # Recode "train" to "test"
+        mse_df.data_fit = "test"
+        r_two_df.data_fit = "test"
+        y_true.data_type = "test"
+        y_pred.data_type = "test"
+
         pd.testing.assert_frame_equal(mse_df, mse_test_df)
         pd.testing.assert_frame_equal(r2_df, r2_test_df)
         pd.testing.assert_frame_equal(y_true, y_test_true)
