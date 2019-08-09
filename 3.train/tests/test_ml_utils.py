@@ -498,7 +498,7 @@ class TestCellHealthPredictRegression(object):
 
         # Recode "train" to "test"
         mse_df.data_fit = "test"
-        r_two_df.data_fit = "test"
+        r2_df.data_fit = "test"
         y_true.data_type = "test"
         y_pred.data_type = "test"
 
