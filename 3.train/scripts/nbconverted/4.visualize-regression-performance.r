@@ -46,6 +46,10 @@ regression_metrics_df$data_fit <- dplyr::recode(regression_metrics_df$data_fit,
                                                 "train" = "Train",
                                                 "test" = "Test")
 
+regression_metrics_df$shuffle <- dplyr::recode(regression_metrics_df$shuffle,
+                                                "shuffle_true" = "Shuffle",
+                                                "shuffle_false" = "Real")
+
 regression_metrics_df <- regression_metrics_df %>%
     dplyr::rename(data_type = data_fit)
 
@@ -53,6 +57,45 @@ regression_metrics_df$mse <- round(regression_metrics_df$mse, 2)
 
 print(dim(regression_metrics_df))
 head(regression_metrics_df, 3)
+
+mse_df <- regression_metrics_df %>%
+    dplyr::filter(metric == "mse",
+                  y_transform == "raw",
+                  data_type == "Test")
+
+# Take absolute value of mean squared error
+# see https://github.com/scikit-learn/scikit-learn/issues/2439
+mse_df$mse = abs(mse_df$mse)
+
+# Sort mse by minimum MSE in test set
+target_order <- mse_df %>%
+    dplyr::filter(data_type == "Test",
+                  shuffle == "Real") %>%
+    dplyr::arrange(desc(mse)) %>%
+    dplyr::select(target)
+
+mse_df$target <- factor(mse_df$target, levels=target_order$target)
+
+head(mse_df, 4)
+
+ggplot(mse_df,
+       aes(x = target,
+           y = mse)) +
+    geom_bar(stat = "identity",
+             alpha = 0.5,
+             position = position_dodge()) +
+    facet_grid(~shuffle, scales="free_y") +
+    coord_flip() +
+    theme_bw() +
+    geom_hline(yintercept = 1, linetype = "dashed") +
+    ylab("Mean Squared Error") +
+    xlab("Cell Health Target") +
+    theme(legend.position = "none",
+          strip.background = element_rect(colour = "black",
+                                          fill = "#fdfff4"))
+
+file <- file.path("figures", "mse_test_summary.png")
+ggsave(file, dpi = 300, width = 7, height = 9)
 
 label_thresh_value = 0.90
 
@@ -120,6 +163,8 @@ for (target in unique(y_plot_df$target)) {
         mse_df <- metrics_subset_transform_df %>%
             dplyr::filter(metric == "mse") %>%
             dplyr::select(-metric)
+        mse_df$mse = abs(mse_df$mse)
+
         r2_df <- metrics_subset_transform_df %>%
             dplyr::filter(metric == "r_two") %>%
             dplyr::rename(r2 = mse) %>%
@@ -132,8 +177,8 @@ for (target in unique(y_plot_df$target)) {
             dplyr::arrange(shuffle)
 
         metric_table_df$shuffle <- dplyr::recode(metric_table_df$shuffle,
-                                              shuffle_true = "True",
-                                              shuffle_false = "False")
+                                                 shuffle_true = "True",
+                                                 shuffle_false = "False")
 
         # Plot all performance metrics together with cowplot
         table_theme <- gridExtra::ttheme_default(
