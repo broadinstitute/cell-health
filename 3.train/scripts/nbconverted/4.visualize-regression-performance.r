@@ -88,8 +88,8 @@ ggplot(mse_df,
     coord_flip() +
     theme_bw() +
     geom_hline(yintercept = 1, linetype = "dashed") +
-    xlab("Mean Squared Error") +
-    ylab("Cell Health Target") +
+    ylab("Mean Squared Error") +
+    xlab("Cell Health Target") +
     theme(legend.position = "none",
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
