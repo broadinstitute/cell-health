@@ -1,4 +1,3 @@
-
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(ggrepel))
@@ -95,6 +94,41 @@ ggplot(mse_df,
                                           fill = "#fdfff4"))
 
 file <- file.path("figures", "mse_test_summary.png")
+ggsave(file, dpi = 300, width = 7, height = 9)
+
+r2_df <- regression_metrics_df %>%
+    dplyr::filter(metric == "r_two",
+                  y_transform == "raw",
+                  shuffle == "Real")
+
+# Sort mse by minimum MSE in test set
+target_order <- r2_df %>%
+    dplyr::filter(data_type == "Test",
+                  shuffle == "Real") %>%
+    dplyr::arrange(mse) %>%
+    dplyr::select(target)
+
+r2_df$target <- factor(r2_df$target, levels=rev(target_order$target))
+
+head(r2_df, 4)
+
+ggplot(r2_df,
+       aes(x = target,
+           y = mse)) +
+    geom_bar(stat = "identity",
+             alpha = 0.5,
+             position = position_dodge()) +
+    facet_grid(~data_type, scales="free_y") +
+    coord_flip() +
+    theme_bw() +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    ylab(bquote(R^2)) +
+    xlab("Cell Health Target") +
+    theme(legend.position = "none",
+          strip.background = element_rect(colour = "black",
+                                          fill = "#fdfff4"))
+
+file <- file.path("figures", "r_squared_model_summary.png")
 ggsave(file, dpi = 300, width = 7, height = 9)
 
 label_thresh_value = 0.90
