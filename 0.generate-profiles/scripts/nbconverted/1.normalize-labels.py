@@ -24,11 +24,11 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 
 
 # Function to scale cell health target variables
-def mad_scale(x):
+def scale(x):
     x_median = np.nanmedian(x)
-    x_mad = median_absolute_deviation(x, nan_policy="omit")
-    x_mad_scale = (x - x_median) / x_mad
-    return x_mad_scale
+    x_std = np.nanstd(x)
+    x_scale = (x - x_median) / x_std
+    return x_scale
 
 
 # In[4]:
@@ -44,12 +44,15 @@ label_df.head(2)
 # In[5]:
 
 
+# Some infinite values are present, replace them with NA
+label_df = label_df.replace([np.inf, -np.inf], np.nan)
+
 # Apply normalization by plate
 normalized_label_df = (
     label_df
     .drop(["guide", "well_col", "well_row"], axis="columns")
     .groupby(["cell_id", "plate_name"])
-    .transform(mad_scale)
+    .transform(scale)
 )
 
 normalized_label_df = pd.concat(
