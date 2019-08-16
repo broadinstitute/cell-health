@@ -108,7 +108,7 @@ target_order <- r2_df %>%
     dplyr::arrange(mse) %>%
     dplyr::select(target)
 
-r2_df$target <- factor(r2_df$target, levels=rev(target_order$target))
+r2_df$target <- factor(r2_df$target, levels=target_order$target)
 
 head(r2_df, 4)
 
