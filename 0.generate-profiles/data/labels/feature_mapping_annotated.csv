@@ -12,7 +12,7 @@ Inf %,cc_infection_percentage,cell_cycle,,,
 % Late Apop,vb_percent_all_late_apoptosis,viability,apoptosis,0,"fraction of both, casp and DRAQ7 positive cells"
 % Dead Only,vb_percent_dead_only,viability,death,0,fraction of DRAQ7 positive / Casp negative cells
 # Live Cells,vb_num_live_cells,viability,cell_viability,1,number of live cells
-ROS Mean,vb_ros_mean,viability,,1,mean intensity of ROS marker per cell
+ROS Mean,vb_ros_mean,viability,cell_viability,1,mean intensity of ROS marker per cell
 ROS-back Mean,vb_ros_back_mean,viability,,0,Background
 Live Cell Area [¬µm¬≤],vb_live_cell_area,viability,,0,cell size
 Live Cell Roundness,vb_live_cell_roundness,viability,,0,cell roundness
