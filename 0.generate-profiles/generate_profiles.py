@@ -58,7 +58,7 @@ for plate in os.listdir(backend_dir):
     cell_count_df.to_csv(cell_count_file, sep="\t", index=False)
 
     # Being processing profiles
-    output_dir = os.path.join("data", batch, plate)
+    output_dir = os.path.join("data", "profiles", batch, plate)
     os.makedirs(output_dir, exist_ok=True)
 
     # Aggregate single cells into well profiles
