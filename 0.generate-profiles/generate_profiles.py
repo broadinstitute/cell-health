@@ -7,6 +7,8 @@ Do not perform feature selection since downstream analysis include feature selec
 import os
 import numpy as np
 import pandas as pd
+import multiprocessing
+from joblib import Parallel, delayed
 
 from pycytominer.aggregate import AggregateProfiles
 from pycytominer.annotate import annotate
@@ -14,25 +16,14 @@ from pycytominer.normalize import normalize
 from pycytominer.feature_select import feature_select
 from pycytominer.audit import audit
 
-batch = "CRISPR_PILOT_B1"
-bucket_dir = os.path.join(
-    "/home",
-    "ubuntu",
-    "bucket",
-    "projects",
-    "2015_07_01_Cell_Health_Vazquez_Cancer_Broad",
-    "workspace",
-)
 
-backend_dir = os.path.join(bucket_dir, "backend", batch)
-metadata_dir = os.path.join(bucket_dir, "metadata", batch)
+def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
+    """
+    Apply all profiling steps for a given plate. To be applied in parallel.
 
-# Load Barcode Platemap
-barcode_platemap_file = os.path.join(metadata_dir, "barcode_platemap.csv")
-barcode_platemap_df = pd.read_csv(barcode_platemap_file)
-
-# Perform analysis for each plate
-for plate in os.listdir(backend_dir):
+    Output:
+    Will write a series of processed files to disk
+    """
     print("Processing {}.....".format(plate))
     plate_dir = os.path.join(backend_dir, plate)
     sqlite_file = "sqlite:////{}/{}.sqlite".format(plate_dir, plate)
@@ -75,7 +66,7 @@ for plate in os.listdir(backend_dir):
     )
 
     # Extract features to normalize
-    # currently a bug in inferring cell painting features from metadata, use a workaround for now
+    # Currently a bug in inferring features from metadata, use a workaround for now
     # https://github.com/cytomining/pycytominer/issues/39
     features = pd.read_csv(anno_file).columns.tolist()
     features = [
@@ -127,4 +118,34 @@ for plate in os.listdir(backend_dir):
         groups=["Metadata_gene_name", "Metadata_cell_line"],
         iterations=10,
         output_file=audit_file,
+    )
+
+
+num_cores = multiprocessing.cpu_count() - 1
+
+batch = "CRISPR_PILOT_B1"
+bucket_dir = os.path.join(
+    "/home",
+    "ubuntu",
+    "bucket",
+    "projects",
+    "2015_07_01_Cell_Health_Vazquez_Cancer_Broad",
+    "workspace",
+)
+
+backend_dir = os.path.join(bucket_dir, "backend", batch)
+metadata_dir = os.path.join(bucket_dir, "metadata", batch)
+
+# Load Barcode Platemap
+barcode_platemap_file = os.path.join(metadata_dir, "barcode_platemap.csv")
+barcode_platemap_df = pd.read_csv(barcode_platemap_file)
+
+# Perform analysis for each plate
+if __name__ == "__main__":
+    all_plates = os.listdir(backend_dir)
+    Parallel(n_jobs=num_cores)(
+        delayed(
+            get_profiles(x, backend_dir, metadata_dir, barcode_platemap_df)
+            for x in all_plates
+        )
     )
