@@ -143,9 +143,13 @@ barcode_platemap_df = pd.read_csv(barcode_platemap_file)
 # Perform analysis for each plate
 if __name__ == "__main__":
     all_plates = os.listdir(backend_dir)
+
     Parallel(n_jobs=num_cores)(
-        delayed(
-            get_profiles(x, backend_dir, metadata_dir, barcode_platemap_df)
-            for x in all_plates
+        delayed(get_profiles)(
+            plate=x,
+            backend_dir=backend_dir,
+            metadata_dir=metadata_dir,
+            barcode_platemap_df=barcode_platemap_df,
         )
+        for x in all_plates
     )
