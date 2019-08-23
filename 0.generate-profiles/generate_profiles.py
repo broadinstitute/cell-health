@@ -7,6 +7,7 @@ Do not perform feature selection since downstream analysis include feature selec
 import os
 import numpy as np
 import pandas as pd
+import argparse
 import multiprocessing
 from joblib import Parallel, delayed
 
@@ -121,6 +122,17 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     )
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-p",
+    "--parallel",
+    action="store_true",
+    help="decision to perform computation in parallel or not",
+)
+args = parser.parse_args()
+
+parallel = args.parallel
+
 num_cores = multiprocessing.cpu_count() - 1
 
 batch = "CRISPR_PILOT_B1"
@@ -144,12 +156,22 @@ barcode_platemap_df = pd.read_csv(barcode_platemap_file)
 if __name__ == "__main__":
     all_plates = os.listdir(backend_dir)
 
-    Parallel(n_jobs=num_cores)(
-        delayed(get_profiles)(
-            plate=x,
-            backend_dir=backend_dir,
-            metadata_dir=metadata_dir,
-            barcode_platemap_df=barcode_platemap_df,
+    if parallel:
+        Parallel(n_jobs=num_cores)(
+            delayed(get_profiles)(
+                plate=x,
+                backend_dir=backend_dir,
+                metadata_dir=metadata_dir,
+                barcode_platemap_df=barcode_platemap_df,
+            )
+            for x in all_plates
         )
-        for x in all_plates
-    )
+
+    else:
+        for plate in all_plates:
+            get_profiles(
+                plate=plate,
+                backend_dir=backend_dir,
+                metadata_dir=metadata_dir,
+                barcode_platemap_df=barcode_platemap_df,
+            )
