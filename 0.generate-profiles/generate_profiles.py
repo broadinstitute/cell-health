@@ -33,7 +33,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     platemap = barcode_platemap_df.query(
         "Assay_Plate_Barcode == @plate"
     ).Plate_Map_Name.values[0]
-    platemap_file = os.path.join(metadata_dir, "platemap", "{}.csv.gz".format(platemap))
+    platemap_file = os.path.join(metadata_dir, "platemap", "{}.csv".format(platemap))
     platemap_df = pd.read_csv(platemap_file)
 
     # Prepare sql file for processing
