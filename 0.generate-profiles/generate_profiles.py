@@ -33,7 +33,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     platemap = barcode_platemap_df.query(
         "Assay_Plate_Barcode == @plate"
     ).Plate_Map_Name.values[0]
-    platemap_file = os.path.join(metadata_dir, "platemap", "{}.csv".format(platemap))
+    platemap_file = os.path.join(metadata_dir, "platemap", "{}.csv.gz".format(platemap))
     platemap_df = pd.read_csv(platemap_file)
 
     # Prepare sql file for processing
@@ -54,16 +54,17 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     os.makedirs(output_dir, exist_ok=True)
 
     # Aggregate single cells into well profiles
-    out_file = os.path.join(output_dir, "{}.csv".format(plate))
-    ap.aggregate_profiles(output_file=out_file)
+    out_file = os.path.join(output_dir, "{}.csv.gz".format(plate))
+    ap.aggregate_profiles(output_file=out_file, how="gzip")
 
     # Annotate Profiles
-    anno_file = os.path.join(output_dir, "{}_augmented.csv".format(plate))
+    anno_file = os.path.join(output_dir, "{}_augmented.csv.gz".format(plate))
     annotate(
         profiles=out_file,
         platemap=platemap_df,
         join_on=["Metadata_well_position", "Image_Metadata_Well"],
         output_file=anno_file,
+        how="gzip",
     )
 
     # Extract features to normalize
@@ -81,14 +82,14 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     ]
 
     # Normalize Profiles
-    norm_file = os.path.join(output_dir, "{}_normalized.csv".format(plate))
+    norm_file = os.path.join(output_dir, "{}_normalized.csv.gz".format(plate))
     normalize(
-        profiles=anno_file, features=features, samples="all", output_file=norm_file
+        profiles=anno_file, features=features, samples="Metadata_pert_name == 'EMPTY'", output_file=norm_file, how='gzip'
     )
 
     # Perform feature selection (just drop columns with high number of missingness)
     feat_file = os.path.join(
-        output_dir, "{}_normalized_feature_select.csv".format(plate)
+        output_dir, "{}_normalized_feature_select.csv.gz".format(plate)
     )
     feature_select(
         profiles=norm_file,
@@ -96,6 +97,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
         samples="none",
         operation="drop_na_columns",
         output_file=feat_file,
+        how="gzip"
     )
 
     # Perform audits
