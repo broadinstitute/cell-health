@@ -84,7 +84,11 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     # Normalize Profiles
     norm_file = os.path.join(output_dir, "{}_normalized.csv.gz".format(plate))
     normalize(
-        profiles=anno_file, features=features, samples="Metadata_pert_name == 'EMPTY'", output_file=norm_file, how='gzip'
+        profiles=anno_file,
+        features=features,
+        samples="Metadata_pert_name == 'EMPTY'",
+        output_file=norm_file,
+        how="gzip",
     )
 
     # Perform feature selection (just drop columns with high number of missingness)
@@ -97,7 +101,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
         samples="none",
         operation=["drop_na_columns", "blacklist"],
         output_file=feat_file,
-        how="gzip"
+        how="gzip",
     )
 
     # Perform audits
