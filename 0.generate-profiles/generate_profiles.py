@@ -95,7 +95,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
         profiles=norm_file,
         features=features,
         samples="none",
-        operation="drop_na_columns",
+        operation=["drop_na_columns", "blacklist"],
         output_file=feat_file,
         how="gzip"
     )
