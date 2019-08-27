@@ -39,4 +39,4 @@ dependencies:
 - conda-forge::r-futile.logger=1.4.3
 - conda-forge::r-knitr=1.20
 - pip:
-  - git+https://github.com/cytomining/pycytominer@d1752a968ccaffe65c62a8dddfa328805206d201
+  - git+https://github.com/cytomining/pycytominer@f4a2225cd7daaf9f3d16000581ad9538efd1a6a6
