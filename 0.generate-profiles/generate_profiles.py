@@ -49,7 +49,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     ).drop(["WellRow", "WellCol", "well_position"], axis="columns")
     cell_count_df.to_csv(cell_count_file, sep="\t", index=False)
 
-    # Being processing profiles
+    # Begin processing profiles
     output_dir = os.path.join("data", "profiles", batch, plate)
     os.makedirs(output_dir, exist_ok=True)
 
