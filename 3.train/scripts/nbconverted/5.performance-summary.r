@@ -246,7 +246,7 @@ all_classification_df <- auc_df %>%
 
 head(all_classification_df, 2)
 
-metric = "AUROC"
+metric <- "AUROC"
 
 label_logic <- abs(all_classification_df$auroc_diff) > 0.08
 
@@ -284,11 +284,10 @@ ggplot(all_classification_df,
                         y = AUROC_cytominer)) +
     theme_bw()
 
-
 outfile <- file.path("figures", paste0("compare_pycytominer_cytominer_", metric, ".png"))
 ggsave(outfile, height = 3, width = 3, dpi = 300)
 
-metric = "AUPR"
+metric <- "AUPR"
 
 label_logic <- abs(all_classification_df$aupr_diff) > 0.08
 
