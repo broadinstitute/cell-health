@@ -17,6 +17,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
+from pycytominer.get_na_columns import get_na_columns
+
 
 # In[2]:
 
@@ -29,10 +31,37 @@ np.random.seed(123)
 # In[3]:
 
 
+batch = "CRISPR_PILOT_B1"
 data_dir = os.path.join("..", "0.generate-profiles", "data")
-profile_dir = os.path.join(data_dir, "profiles")
+profile_dir = os.path.join(data_dir, "profiles", batch)
 
-x_df = pd.concat([pd.read_csv(os.path.join(profile_dir, x)) for x in os.listdir(profile_dir)])
+all_profile_files = []
+for plates in os.listdir(profile_dir):
+    plate_dir = os.path.join(profile_dir, plates)
+    for profile_file in os.listdir(plate_dir):
+        if "feature_select" in profile_file:
+            all_profile_files.append(os.path.join(plate_dir, profile_file))
+
+
+# In[4]:
+
+
+x_df = (
+    pd.concat(
+        [pd.read_csv(x) for x in all_profile_files],
+        sort=True
+    )
+    .rename(
+        {
+            "Image_Metadata_Plate": "Metadata_Plate",
+            "Image_Metadata_Well": "Metadata_Well"
+        },
+        axis="columns")
+)
+
+# Drop all features that have missing values
+additional_exclude_features = get_na_columns(x_df, features="infer", cutoff=0)
+x_df = x_df.drop(additional_exclude_features, axis="columns")
 
 print(x_df.shape)
 x_df.head(2)
@@ -40,7 +69,7 @@ x_df.head(2)
 
 # ## Load Y Matrix
 
-# In[4]:
+# In[5]:
 
 
 file = os.path.join(data_dir, "labels", "normalized_cell_health_labels.tsv")
@@ -52,13 +81,13 @@ y_df.head(2)
 
 # ## Determine how many profiles have status labels
 
-# In[5]:
+# In[6]:
 
 
 x_groupby_cols = ["Metadata_gene_name", "Metadata_pert_name", "Metadata_cell_line"]
 
 
-# In[6]:
+# In[7]:
 
 
 x_meta_df = (
@@ -69,7 +98,7 @@ x_meta_df = (
     .count()
     .reset_index()
     .assign(data_type="cell_painting")
-    .merge(x_df.loc[:, x_groupby_cols + ["Metadata_Well"]],
+    .merge(x_df.loc[:, x_groupby_cols + ["Metadata_Well", "Metadata_Plate"]],
            how="left",
            on=x_groupby_cols)
 )
@@ -78,13 +107,13 @@ print(x_meta_df.shape)
 x_meta_df.head(8)
 
 
-# In[7]:
+# In[8]:
 
 
 y_groupby_cols = ["guide", "cell_id"]
 
 
-# In[8]:
+# In[9]:
 
 
 y_meta_df = (
@@ -101,7 +130,7 @@ print(y_meta_df.shape)
 y_meta_df.head(8)
 
 
-# In[9]:
+# In[10]:
 
 
 all_measurements_df = (
@@ -127,13 +156,13 @@ all_measurements_df.head()
 # 
 # Because the plates do not match (no way to map wells across experiments), we must aggregate the ~6 cell painting replicates per guide and ~4 cell health replicates per guide together to form a single profile and single outcome.
 
-# In[10]:
+# In[11]:
 
 
 x_columns = x_groupby_cols + x_df.loc[:, ~x_df.columns.str.startswith("Metadata_")].columns.tolist()
 
 
-# In[11]:
+# In[12]:
 
 
 x_agg_df = (
@@ -158,7 +187,7 @@ print(x_agg_df.shape)
 x_agg_df.head(5)
 
 
-# In[12]:
+# In[13]:
 
 
 y_meta_cols = ["Metadata_profile_id", "Metadata_gene_name", "Metadata_pert_name", "Metadata_cell_line"]
@@ -186,7 +215,7 @@ print(y_agg_df.shape)
 y_agg_df.head(2)
 
 
-# In[13]:
+# In[14]:
 
 
 # Confirm that matrices are aligned
@@ -201,13 +230,13 @@ pd.testing.assert_series_equal(x_agg_df.Metadata_cell_line, y_agg_df.Metadata_ce
 
 # ## Split into Training and Testing
 
-# In[14]:
+# In[15]:
 
 
 test_proportion = 0.15
 
 
-# In[15]:
+# In[16]:
 
 
 x_train_df, x_test_df, y_train_df, y_test_df = train_test_split(
@@ -217,14 +246,14 @@ x_train_df, x_test_df, y_train_df, y_test_df = train_test_split(
     random_state=42)
 
 
-# In[16]:
+# In[17]:
 
 
 print(x_train_df.shape)
 print(x_test_df.shape)
 
 
-# In[17]:
+# In[18]:
 
 
 file = os.path.join("data", "x_train.tsv.gz")
