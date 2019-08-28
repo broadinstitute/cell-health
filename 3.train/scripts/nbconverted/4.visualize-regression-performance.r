@@ -1,7 +1,6 @@
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(ggrepel))
-suppressPackageStartupMessages(library(ggpmisc))
 
 results_dir <- "results"
 regression_file <- file.path(results_dir, "full_cell_health_regression_results.tsv.gz")

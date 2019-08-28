@@ -1,7 +1,6 @@
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(ggrepel))
-suppressPackageStartupMessages(library(ggpmisc))
 
 results_dir <- "results"
 
@@ -75,14 +74,23 @@ metric_df$maria_thumbs_up <- tidyr::replace_na(metric_df$maria_thumbs_up, 0)
 metric_df$measurement <- tidyr::replace_na(metric_df$measurement, "other")
 
 metric_df$measurement <- factor(metric_df$measurement,
-                                levels = c("apoptosis", "death", "cell_viability", "toxicity", "dna_damage",
-                                           "cell_cycle_arrest", "g1_arrest", "g2_arrest", "g2_m_arrest",
-                                           "s_arrest", "other"))
+                                levels = c("apoptosis",
+                                           "death",
+                                           "cell_viability",
+                                           "toxicity",
+                                           "dna_damage",
+                                           "cell_cycle_arrest",
+                                           "g1_arrest",
+                                           "g2_arrest",
+                                           "g2_m_arrest",
+                                           "s_arrest",
+                                           "other"))
 print(dim(metric_df))
 head(metric_df, 3)
 
 ggplot(metric_df, aes(x = AUROC, y = mse)) +
-    geom_point(alpha = 0.7,
+    geom_point(alpha = 0.95,
+               size = 2,
                aes(color = measurement,
                    shape = as.factor(maria_thumbs_up))) +
     xlab("Classification\nAUROC (Test Set)") +
@@ -93,17 +101,17 @@ ggplot(metric_df, aes(x = AUROC, y = mse)) +
     scale_shape_manual(name = "Maria :+1:",
                        values = c(16, 3)) +
     scale_color_manual(name = "Measurement",
-                       values = c("apoptosis" = "#ff0000",
-                                  "cell_cycle_arrest" = "#ff5900",
-                                  "cell_viability" = "#ff9900",
-                                  "death" = "#ffcc00",
-                                  "dna_damage" = "#E8B360", 
-                                  "g1_arrest" = "#00c20d",
-                                  "g2_arrest" = "#008f4c",
+                       values = c("apoptosis" = "#a6cee3",
+                                  "cell_cycle_arrest" = "#1f78b4",
+                                  "cell_viability" = "#b2df8a",
+                                  "death" = "#33a02c",
+                                  "dna_damage" = "#fb9a99", 
+                                  "g1_arrest" = "#fdbf6f",
+                                  "g2_arrest" = "#ff7f00",
                                   "g2_m_arrest" = "#005c8c",
                                   "other" = "black",
-                                  "s_arrest" = "#0033bf",
-                                  "toxicity" = "#feab00"),
+                                  "s_arrest" = "#cab2d6",
+                                  "toxicity" = "#6a3d9a"),
                        labels = c("apoptosis" = "Apoptosis",
                                   "cell_cycle_arrest" = "Cell Cycle Arrest",
                                   "cell_viability" = "Cell Viability",
