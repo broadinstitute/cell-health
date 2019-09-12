@@ -187,6 +187,21 @@ print(x_agg_df.shape)
 x_agg_df.head(5)
 
 
+# In[14]:
+
+
+profile_id_mapping_df = x_agg_df.loc[:,
+                                     ["Metadata_profile_id",
+                                      "Metadata_gene_name",
+                                      "Metadata_pert_name",
+                                     "Metadata_cell_line"]]
+
+file = os.path.join("data", "profile_id_metadata_mapping.tsv")
+profile_id_mapping_df.to_csv(file, sep='\t', index=False)
+
+profile_id_mapping_df.head()
+
+
 # In[13]:
 
 
