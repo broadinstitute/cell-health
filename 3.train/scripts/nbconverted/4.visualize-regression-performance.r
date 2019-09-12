@@ -74,6 +74,7 @@ target_order <- mse_df %>%
 
 mse_df$target <- factor(mse_df$target, levels=target_order$target)
 
+print(dim(mse_df))
 head(mse_df, 4)
 
 ggplot(mse_df,
@@ -94,6 +95,82 @@ ggplot(mse_df,
 
 file <- file.path("figures", "mse_test_summary.png")
 ggsave(file, dpi = 300, width = 7, height = 9)
+
+# Label variables with specific cell health classes
+label_file <- file.path("..", "0.generate-profiles", "data", "labels", "feature_mapping_annotated.csv")
+label_df <- readr::read_csv(label_file, col_types = readr::cols())
+
+print(dim(label_df))
+tail(label_df, 5)
+
+# Merge table with target labels
+mse_summary_df <- mse_df %>%
+    dplyr::left_join(label_df, by = c("target" = "updated_name")) %>%
+    dplyr::filter(!is.na(measurement))
+
+# Split shuffle column for scatter plot
+mse_spread_df <- mse_summary_df %>% tidyr::spread(shuffle, mse)
+
+head(mse_spread_df, 2)
+
+ggplot(mse_spread_df,
+       aes(x = Real,
+           y = Shuffle,
+           color = measurement,)) +
+    geom_abline(intercept = 0,
+                lwd = 0.1,
+                slope = 1,
+                linetype = "solid",
+                color = "red") +
+    geom_point(size = 0.4,
+               alpha = 0.7,
+               pch = 16) +
+    xlim(c(0, 0.7)) +
+    ylim(c(0, 1.7)) +
+    xlab("Real Data (Mean Squared Error)") +
+    ylab("Permuted Data (Mean Squared Error)") +
+    ggtitle("Regression Performance") +
+    theme_bw() +
+    theme(axis.title = element_text(size = 4),
+          axis.title.x = element_text(margin = margin(0, 0, 0, 0)),
+          axis.title.y = element_text(margin = margin(0, 0, 0, 0)),
+          axis.text = element_text(size = 4),
+          axis.ticks = element_line(size = 0.1),
+          axis.ticks.length = unit(0.05, "cm"),
+          plot.title = element_text(size = 5, margin = margin(0, 0, 0, 0)),
+          plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "mm"),
+          legend.title = element_text(size = 3.5),
+          legend.text = element_text(size = 3.5), 
+          legend.key.height = unit(0.2, "line"),
+          legend.key.width = unit(-0.2, "line"),
+          panel.grid.minor = element_line(size = 0.1),
+          panel.grid.major = element_line(size = 0.2),
+          legend.margin = margin(-5, 7, 0, 0),
+          legend.box.margin=margin(0, -5, 5, -5)) +
+    scale_color_manual(name = "Cell Health\nPhenotypes",
+                       values = c("apoptosis" = "#a6cee3",
+                                  "cell_cycle_arrest" = "#1f78b4",
+                                  "cell_viability" = "#b2df8a",
+                                  "death" = "#33a02c",
+                                  "dna_damage" = "#fb9a99", 
+                                  "g1_arrest" = "#fdbf6f",
+                                  "g2_arrest" = "#ff7f00",
+                                  "g2_m_arrest" = "#005c8c",
+                                  "s_arrest" = "#cab2d6",
+                                  "toxicity" = "#6a3d9a"),
+                       labels = c("apoptosis" = "Apoptosis",
+                                  "cell_cycle_arrest" = "Cell Cycle Arrest",
+                                  "cell_viability" = "Cell Viability",
+                                  "death" = "Death",
+                                  "dna_damage" = "DNA Damage", 
+                                  "g1_arrest" = "G1 Arrest",
+                                  "g2_arrest" = "G2 Arrest",
+                                  "g2_m_arrest" = "G2/M Arrest",
+                                  "s_arrest" = "S Arrest",
+                                  "toxicity" = "Toxicity"))
+
+output_file <- file.path("figures", "mse_comparison_scatter.png")
+ggsave(output_file, width = 2, height = 1.5, dpi = 300, units = "in")
 
 r2_df <- regression_metrics_df %>%
     dplyr::filter(metric == "r_two",
