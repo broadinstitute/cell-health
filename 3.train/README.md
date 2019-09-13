@@ -7,7 +7,8 @@ In the following module, we test the ability of Cell Painting ([Bray et al. 2016
 Cell health assays represent 70 image based assays that use various dyes to capture important phenotypes in cell lines.
 These phenotypes include proportion of cells in specific cell cycle stages, the kind of apoptosis initiated, cellular proliferation rates, reactive oxygen species (ROS) present, and many more.
 
-The `3.train` analysis module stores all data, software, results, figures, interpretations, and computational infrastructure to reproduce the analysis.
+The `3.train` analysis module trains all models to predict cell health readouts.
+The module stores data, software, results, figures, interpretations, and computational infrastructure to reproduce the analysis.
 
 ## Data
 
