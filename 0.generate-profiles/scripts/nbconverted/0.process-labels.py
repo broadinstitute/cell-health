@@ -410,8 +410,25 @@ guide_count_df = (
     .reset_index(drop=True)
 )
 
+guide_count_df = (
+    guide_count_df
+    .assign(gene=[x[0] for x in guide_count_df.guide.str.split("-")])
+)
+
 file = os.path.join("data", "labels", "num_guides_cell_health.tsv")
 guide_count_df.to_csv(file, sep='\t', index=False)
 
 guide_count_df.head(2)
+
+
+# In[17]:
+
+
+pd.crosstab(guide_count_df.gene, guide_count_df.cell_id).head()
+
+
+# In[18]:
+
+
+len(guide_count_df.gene.unique())
 
