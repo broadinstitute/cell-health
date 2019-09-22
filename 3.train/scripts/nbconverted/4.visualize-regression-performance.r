@@ -10,6 +10,9 @@ coef_file <- file.path(results_dir, "full_cell_health_coefficients.tsv.gz")
 full_coef_df <- readr::read_tsv(coef_file, col_types = readr::cols()) %>%
     dplyr::filter(y_transform %in% c("raw", "zero-one"))
 
+metadata_file <- file.path("data", "profile_id_metadata_mapping.tsv")
+metadata_df <- readr::read_tsv(metadata_file, col_types = readr::cols())
+
 y_file <- file.path(results_dir, "full_cell_health_y_labels.tsv.gz")
 y_df <- readr::read_tsv(y_file, col_types = readr::cols()) %>%
     dplyr::filter(y_transform %in% c("raw", "zero-one"))
@@ -31,7 +34,8 @@ y_plot_df <- y_binary_subset_true_df %>%
                              "data_type",
                              "shuffle",
                              "y_transform"),
-                      suffix = c("_true", "_pred"))
+                      suffix = c("_true", "_pred")) %>%
+    dplyr::left_join(metadata_df, by = "Metadata_profile_id")
 
 y_plot_df$data_type <- dplyr::recode(y_plot_df$data_type,
                                      "train" = "Train",
@@ -120,7 +124,8 @@ ggplot(mse_spread_df,
     geom_abline(intercept = 0,
                 lwd = 0.1,
                 slope = 1,
-                linetype = "solid",
+                linetype = "dotted",
+                alpha = 0.7,
                 color = "red") +
     geom_point(size = 0.4,
                alpha = 0.7,
@@ -170,7 +175,7 @@ ggplot(mse_spread_df,
                                   "toxicity" = "Toxicity"))
 
 output_file <- file.path("figures", "mse_comparison_scatter.png")
-ggsave(output_file, width = 2, height = 1.5, dpi = 300, units = "in")
+ggsave(output_file, width = 2, height = 1.5, dpi = 600, units = "in")
 
 r2_df <- regression_metrics_df %>%
     dplyr::filter(metric == "r_two",
@@ -215,13 +220,18 @@ pdf(pdf_file, width = 6, height = 8, onefile = TRUE)
 for (target in unique(y_plot_df$target)) {
     # Subset all dataframes
     y_subset_df <- y_plot_df %>% dplyr::filter(target == !!target)
+    
+    y_subset_df$shuffle <- y_subset_df$shuffle %>%
+        dplyr::recode_factor("shuffle_false" = "Real",
+                             "shuffle_true" = "Permuted")
+    
     coef_subset_df <- full_coef_df %>% dplyr::filter(target == !!target)
     metrics_subset_df <- regression_metrics_df %>% dplyr::filter(target == !!target)
     
     for (y_transform in unique(y_subset_df$y_transform)) {
         y_subset_transform_df <- y_subset_df %>%
             dplyr::filter(y_transform == !!y_transform)
-       
+        
         coef_subset_transform_df <- coef_subset_df %>%
             dplyr::filter(y_transform == !!y_transform,
                           shuffle == "shuffle_false") %>%
@@ -232,12 +242,21 @@ for (target in unique(y_plot_df$target)) {
         
         pred_scatter_gg <-
            ggplot(y_subset_transform_df,
-                  aes(x = recode_target_value_true, y = recode_target_value_pred)) +
-                geom_point(size = 0.5, alpha = 0.7) +
+                  aes(x = recode_target_value_true,
+                      y = recode_target_value_pred)) +
+                geom_point(aes(color = Metadata_cell_line),
+                           size = 0.5, alpha = 0.8) +
                 facet_grid(data_type~shuffle) +
                 theme_bw() +
                 xlab("True Values") +
                 ylab("Predicted Values") +
+                scale_color_manual(name = "Cell Line",
+                                   labels = c("A549" = "A549",
+                                              "ES2" = "ES2",
+                                              "HCC44" = "HCC44"),
+                                   values = c("A549" = "#7fc97f",
+                                              "ES2" = "#beaed4",
+                                              "HCC44" = "#fdc086")) +
                 geom_smooth(method='lm', formula=y~x) +
                 theme(strip.text = element_text(size = 10),
                       strip.background = element_rect(colour = "black",
@@ -335,14 +354,14 @@ for (target in unique(y_plot_df$target)) {
         cowplot_file <- file.path("figures",
                                   "target_performance",
                                   "regression",
+                                  y_transform,
                                   paste0(target, "_", y_transform, "_performance.png"))
 
         cowplot::save_plot(filename = cowplot_file,
                            plot = regression_perf_gg,
                            base_height = 6,
-                           base_width = 8)
+                           base_width = 6)
 
-        print(regression_perf_gg)
     }
 }
 
