@@ -39,23 +39,37 @@ jupyter nbconvert --to=html \
         --ExecutePreprocessor.timeout=10000000 \
         --execute 3.visualize-classification-performance.ipynb
 
-# Step 4B: Visualize Performance (Classification)
+# Step 4B: Visualize Performance (Regression)
 jupyter nbconvert --to=html \
         --FilesWriter.build_directory=scripts/html \
         --ExecutePreprocessor.kernel_name=ir \
         --ExecutePreprocessor.timeout=10000000 \
         --execute 4.visualize-regression-performance.ipynb
 
-# Step 5: Visualize Performance (Classification)
+# Step 5: Summarize model performance
 jupyter nbconvert --to=html \
         --FilesWriter.build_directory=scripts/html \
         --ExecutePreprocessor.kernel_name=ir \
         --ExecutePreprocessor.timeout=10000000 \
         --execute 5.performance-summary.ipynb
 
-# Step 6: Visualize Performance (Classification)
+# Step 6: Apply models to full dataset
 jupyter nbconvert --to=html \
         --FilesWriter.build_directory=scripts/html \
         --ExecutePreprocessor.kernel_name=python3 \
         --ExecutePreprocessor.timeout=10000000 \
         --execute 6.apply-models.ipynb
+
+# Step 7: Visualize model coefficients
+jupyter nbconvert --to=html \
+        --FilesWriter.build_directory=scripts/html \
+        --ExecutePreprocessor.kernel_name=ir \
+        --ExecutePreprocessor.timeout=10000000 \
+        --execute 7.visualize-coefficients.ipynb
+
+# Step 8: Cell line specific performance
+jupyter nbconvert --to=html \
+        --FilesWriter.build_directory=scripts/html \
+        --ExecutePreprocessor.kernel_name=ir \
+        --ExecutePreprocessor.timeout=10000000 \
+        --execute 8.visualize-cell-line.ipynb
