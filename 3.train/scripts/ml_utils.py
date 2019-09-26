@@ -499,3 +499,35 @@ def shuffle_columns(cp_feature):
     import numpy as np
 
     return np.random.permutation(cp_feature.tolist())
+
+
+def load_models(model_dir="models", shuffle=False, transform="raw"):
+    """
+    Load models and model coefficients
+    """
+    if shuffle:
+        model_string = "shuffle_True"
+    else:
+        model_string = "shuffle_False"
+    model_string = "{}_transform_{}".format(model_string, transform)
+
+    model_dict = {}
+    model_coef = {}
+    for model_file in os.listdir(model_dir):
+
+        if model_string not in model_file:
+            continue
+
+        model_file_full = os.path.join(model_dir, model_file)
+        cell_health_var = (
+            model_file
+            .replace("cell_health_target_", "")
+            .replace("_{}.joblib".format(model_string), "")
+        )
+
+        model_ = load(model_file_full)
+
+        model_dict[cell_health_var] = model_
+        model_coef[cell_health_var] = model_.coef_
+
+    return model_dict, model_coef
