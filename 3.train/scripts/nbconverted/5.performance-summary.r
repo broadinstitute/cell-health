@@ -241,6 +241,10 @@ ggplot(metric_df, aes(x = AUROC_test,
 file <- file.path("figures", "performance_summary_assay_classification_vs_regression.png")
 ggsave(file, dpi = 300, width = 6, height = 4.5)
 
+metric_df %>%
+    dplyr::filter(r_two < 0.1, AUROC_test > 0.7) %>%
+    dplyr::arrange(desc(AUROC_test))
+
 r_two_df <- regression_metrics_df %>%
     dplyr::filter(metric == "r_two",
                   shuffle == "shuffle_false",
