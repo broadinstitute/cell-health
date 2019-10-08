@@ -48,8 +48,7 @@ aupr_df <- full_pr_df %>%
                     shuffle, y_transform, min_class_count)
 
 auc_df <- dplyr::bind_rows(auroc_df, aupr_df) %>%
-    dplyr::filter(shuffle == "shuffle_false",
-                  data_fit == "test")
+    dplyr::filter(shuffle == "shuffle_false")
 
 auc_df$metric <- dplyr::recode_factor(
     auc_df$metric,
@@ -61,12 +60,24 @@ auc_df <- auc_df %>%
     tidyr::spread(key = "metric", value = "auc") %>%
     dplyr::select(-y_transform)
 
+test_auc_df <- auc_df %>%
+    dplyr::filter(data_fit == "test")
+
+train_auc_df <- auc_df %>%
+    dplyr::filter(data_fit == "train") %>%
+    dplyr::select(-data_fit)
+
+auc_df <- train_auc_df %>%
+    dplyr::full_join(test_auc_df,
+                     by = c("target", "shuffle", "min_class_count"),
+                     suffix = c("_train", "_test"))
+
 print(dim(auc_df))
 head(auc_df, 2)
 
 metric_df <- regression_subset_df %>%
-    dplyr::inner_join(auc_df, by=c("target", "data_fit", "shuffle")) %>%
-    dplyr::left_join(label_df, by=c("target" = "updated_name"))
+    dplyr::inner_join(auc_df, by = c("target", "data_fit", "shuffle")) %>%
+    dplyr::left_join(label_df, by = c("target" = "updated_name"))
 
 metric_df$mse = abs(metric_df$mse)
 
@@ -85,10 +96,83 @@ metric_df$measurement <- factor(metric_df$measurement,
                                            "g2_m_arrest",
                                            "s_arrest",
                                            "other"))
+
+metric_df$assay <- factor(metric_df$assay,
+                          levels = c("hoechst",
+                                     "edu",
+                                     "gh2ax",
+                                     "ph3",
+                                     "hoechst_gh2ax",
+                                     "hoechst_edu",
+                                     "edu_gh2ax",
+                                     "caspase",
+                                     "draq",
+                                     "draq_caspase",
+                                     "many_cell_cycle",
+                                     "crispr_efficiency"))
 print(dim(metric_df))
 head(metric_df, 3)
 
-ggplot(metric_df, aes(x = AUROC, y = mse)) +
+# Set some plotting defaults
+measurement_colors <- c(
+    "apoptosis" = "#a6cee3",
+    "cell_cycle_arrest" = "#1f78b4",
+    "cell_viability" = "#b2df8a",
+    "death" = "#33a02c",
+    "dna_damage" = "#fb9a99", 
+    "g1_arrest" = "#fdbf6f",
+    "g2_arrest" = "#ff7f00",
+    "g2_m_arrest" = "#005c8c",
+    "other" = "black",
+    "s_arrest" = "#cab2d6",
+    "toxicity" = "#6a3d9a"
+)
+
+measurement_labels <- c(
+    "apoptosis" = "Apoptosis",
+    "cell_cycle_arrest" = "Cell Cycle Arrest",
+    "cell_viability" = "Cell Viability",
+    "death" = "Death",
+    "dna_damage" = "DNA Damage", 
+    "g1_arrest" = "G1 Arrest",
+    "g2_arrest" = "G2 Arrest",
+    "g2_m_arrest" = "G2/M Arrest",
+    "other" = "Other",
+    "s_arrest" = "S Arrest",
+    "toxicity" = "Toxicity"
+)
+
+dye_colors <- c(
+    "hoechst" = "#639B94",
+    "edu" = "#E45242",
+    "gh2ax" = "#E2C552",
+    "ph3" = "#7B9C32",
+    "hoechst_gh2ax" = "#535f52",
+    "hoechst_edu" = "#73414b",
+    "edu_gh2ax" = "#e37a48",
+    "caspase" = "#F7B1C1",
+    "draq" = "#FF6699",
+    "draq_caspase" = "#7f4a72",
+    "many_cell_cycle" = "#E9DFC3",
+    "crispr_efficiency" = "black"
+)
+
+dye_labels <- c(
+    "hoechst" = "Hoechst",
+    "edu" = "EdU",
+    "gh2ax" = "gH2AX",
+    "ph3" = "pH3",
+    "hoechst_gh2ax" = "Hoechst + gH2AX",
+    "hoechst_edu" = "Hoechst + EdU",
+    "edu_gh2ax" = "EdU + gH2AX",
+    "caspase" = "Caspase 3/7",
+    "draq" = "DRAQ7",
+    "draq_caspase" = "DRAQ7 + Caspase 3/7",
+    "many_cell_cycle" = "Cell Cycle (Many Dyes)",
+    "crispr_efficiency" = "CRISPR Efficiency"
+)
+
+ggplot(metric_df, aes(x = AUROC_test, y = mse)) +
     geom_point(alpha = 0.95,
                size = 2,
                aes(color = measurement,
@@ -101,32 +185,153 @@ ggplot(metric_df, aes(x = AUROC, y = mse)) +
     scale_shape_manual(name = "Maria :+1:",
                        values = c(16, 3)) +
     scale_color_manual(name = "Measurement",
-                       values = c("apoptosis" = "#a6cee3",
-                                  "cell_cycle_arrest" = "#1f78b4",
-                                  "cell_viability" = "#b2df8a",
-                                  "death" = "#33a02c",
-                                  "dna_damage" = "#fb9a99", 
-                                  "g1_arrest" = "#fdbf6f",
-                                  "g2_arrest" = "#ff7f00",
-                                  "g2_m_arrest" = "#005c8c",
-                                  "other" = "black",
-                                  "s_arrest" = "#cab2d6",
-                                  "toxicity" = "#6a3d9a"),
-                       labels = c("apoptosis" = "Apoptosis",
-                                  "cell_cycle_arrest" = "Cell Cycle Arrest",
-                                  "cell_viability" = "Cell Viability",
-                                  "death" = "Death",
-                                  "dna_damage" = "DNA Damage", 
-                                  "g1_arrest" = "G1 Arrest",
-                                  "g2_arrest" = "G2 Arrest",
-                                  "g2_m_arrest" = "G2/M Arrest",
-                                  "other" = "Other",
-                                  "s_arrest" = "S Arrest",
-                                  "toxicity" = "Toxicity")) +
+                       values = measurement_colors,
+                       labels = measurement_labels) +
     theme_bw()
 
 file <- file.path("figures", "performance_summary.png")
+ggsave(file, dpi = 300, width = 6, height = 4.25)
+
+ggplot(metric_df, aes(x = AUROC_test, y = AUROC_train)) +
+    geom_point(alpha = 0.95,
+               size = 1.7,
+               aes(color = assay)) +
+    xlab("Test Set - AUROC") +
+    ylab("Training Set - AUROC") +
+    geom_vline(xintercept = 0.5,
+               alpha = 0.5, 
+               linetype = "dashed") +
+    geom_hline(yintercept = 0.5,
+               alpha = 0.5, 
+               linetype = "dashed") +
+    geom_abline(slope = 1,
+                intercept = 0, 
+                color = "red",
+                linetype = "dashed") +
+    xlim(c(0.3, 1.01)) +
+    ylim(c(0.3, 1.01)) +
+    coord_fixed() +
+    scale_color_manual(name = "Assay",
+                       values = dye_colors,
+                       labels = dye_labels) +
+    theme_bw()
+
+file <- file.path("figures", "performance_summary_assay.png")
 ggsave(file, dpi = 300, width = 6, height = 4.5)
+
+ggplot(metric_df, aes(x = AUROC_test,
+                      y = r_two)) +
+    geom_point(alpha = 0.95,
+               size = 1.7,
+               aes(color = assay)) +
+    xlab("Test Set - AUROC") +
+    ylab("Test Set - R Squared") +
+    geom_vline(xintercept = 0.5,
+               alpha = 0.5, 
+               linetype = "dashed") +
+    geom_hline(yintercept = 0,
+               alpha = 0.5, 
+               linetype = "dashed") +
+    coord_fixed() +
+    scale_color_manual(name = "Assay",
+                       values = dye_colors,
+                       labels = dye_labels) +
+    theme_bw()
+
+file <- file.path("figures", "performance_summary_assay_classification_vs_regression.png")
+ggsave(file, dpi = 300, width = 6, height = 4.5)
+
+metric_df %>%
+    dplyr::filter(r_two < 0.1, AUROC_test > 0.7) %>%
+    dplyr::arrange(desc(AUROC_test))
+
+r_two_df <- regression_metrics_df %>%
+    dplyr::filter(metric == "r_two",
+                  shuffle == "shuffle_false",
+                  y_transform == "raw") %>%
+    tidyr::spread(data_fit, mse) %>%
+    dplyr::left_join(label_df, by=c("target" = "updated_name"))
+
+r_two_df$measurement <- tidyr::replace_na(r_two_df$measurement, "other")
+r_two_df$measurement <- factor(r_two_df$measurement,
+                               levels = c("apoptosis",
+                                          "death",
+                                          "cell_viability",
+                                          "toxicity",
+                                          "dna_damage",
+                                          "cell_cycle_arrest",
+                                          "g1_arrest",
+                                          "g2_arrest",
+                                          "g2_m_arrest",
+                                          "s_arrest",
+                                          "other"))
+
+r_two_df$assay <- factor(r_two_df$assay,
+                          levels = c("hoechst",
+                                     "edu",
+                                     "gh2ax",
+                                     "ph3",
+                                     "hoechst_gh2ax",
+                                     "hoechst_edu",
+                                     "edu_gh2ax",
+                                     "caspase",
+                                     "draq",
+                                     "draq_caspase",
+                                     "many_cell_cycle",
+                                     "crispr_efficiency"))
+print(dim(r_two_df))
+head(r_two_df, 2)
+
+ggplot(r_two_df %>%
+       dplyr::filter(measurement != "other"),
+       aes(y = train, x = test)) +
+    geom_point(alpha = 0.95,
+               size = 2,
+               aes(color = measurement)) +
+    coord_fixed() +
+    ylab("Training R squared") +
+    xlab("Testing R squared") +
+    geom_abline(intercept = 0,
+            slope = 1,
+            linetype = "dashed",
+            color = "black",
+            alpha = 0.7) +
+    xlim(c(-0.4, 1.1)) +
+    ylim(c(-0.4, 1.1)) +
+    scale_color_manual(name = "Measurement",
+                       values = measurement_colors,
+                       labels = measurement_labels) +
+    theme_bw()
+
+file <- file.path("figures", "performance_summary_rsquared.png")
+ggsave(file, dpi = 300, width = 6, height = 4.25)
+
+ggplot(r_two_df, aes(y = train, x = test)) +
+    geom_point(alpha = 0.95,
+               size = 1.7,
+               aes(color = assay)) +
+    ylab("Training -  R squared") +
+    xlab("Test Set - R squared") +
+    geom_vline(xintercept = 0,
+               alpha = 0.5, 
+               linetype = "dashed") +
+    geom_hline(yintercept = 0,
+               alpha = 0.5, 
+               linetype = "dashed") +
+    geom_abline(slope = 1,
+                intercept = 0, 
+                color = "red",
+                linetype = "dashed") +
+    xlim(c(-0.4, 1.1)) +
+    ylim(c(-0.4, 1.1)) +
+    coord_fixed() +
+    scale_color_manual(name = "Assay",
+                       values = dye_colors,
+                       labels = dye_labels) +
+    theme_bw()
+
+file <- file.path("figures", "performance_summary_rsquared_assay.png")
+ggsave(file, dpi = 300, width = 6, height = 4.25)
 
 # Cytominer results are archived on github
 hash = "26d1095c209d402102494c0c28e978476643e572"
@@ -239,8 +444,8 @@ all_classification_df <- auc_df %>%
     dplyr::inner_join(cyto_auc_df,
                       by = c("target", "data_fit", "shuffle", "min_class_count"),
                       suffix = c("_pycytominer", "_cytominer")) %>%
-    dplyr::mutate(auroc_diff = AUROC_pycytominer - AUROC_cytominer,
-                  aupr_diff = AUPR_pycytominer - AUPR_cytominer) %>%
+    dplyr::mutate(auroc_diff = AUROC - AUROC_test,
+                  aupr_diff = AUPR - AUPR_test) %>%
     dplyr::filter(data_fit == "test",
                   shuffle == "shuffle_false") 
 
@@ -251,8 +456,8 @@ metric <- "AUROC"
 label_logic <- abs(all_classification_df$auroc_diff) > 0.08
 
 ggplot(all_classification_df,
-       aes(x=AUROC_pycytominer, 
-           y=AUROC_cytominer)) +
+       aes(x=AUROC_test, 
+           y=AUROC)) +
     geom_point(alpha = 0.7,
                size = 0.8) +
     xlab("pycytominer") +
@@ -280,8 +485,8 @@ ggplot(all_classification_df,
                     size = 1.2,
                     fontface = "italic",
                     aes(label = target,
-                        x = AUROC_pycytominer,
-                        y = AUROC_cytominer)) +
+                        x = AUROC,
+                        y = AUROC_test)) +
     theme_bw()
 
 outfile <- file.path("figures", paste0("compare_pycytominer_cytominer_", metric, ".png"))
@@ -292,8 +497,8 @@ metric <- "AUPR"
 label_logic <- abs(all_classification_df$aupr_diff) > 0.08
 
 ggplot(all_classification_df,
-       aes(x=AUPR_pycytominer, 
-           y=AUPR_cytominer)) +
+       aes(x=AUPR_test, 
+           y=AUPR)) +
     geom_point(alpha = 0.7,
                size = 0.8) +
     xlab("pycytominer") +
@@ -313,8 +518,8 @@ ggplot(all_classification_df,
                         size = 1.2,
                         fontface = "italic",
                         aes(label = target,
-                            x = AUPR_pycytominer,
-                            y = AUPR_cytominer)) +
+                            x = AUPR_test,
+                            y = AUPR)) +
     theme_bw()
 
 outfile <- file.path("figures", paste0("compare_pycytominer_cytominer_", metric, ".png"))
