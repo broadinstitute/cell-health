@@ -29,7 +29,7 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 
 plate = "SQ00014612"
 
-cyto_file = os.path.join("data", "profiles", "{}_normalized_variable_selected.csv".format(plate))
+cyto_file = os.path.join("profiles", "{}_normalized_variable_selected.csv".format(plate))
 cyto_df = pd.read_csv(cyto_file)
 
 print(cyto_df.shape)
@@ -42,7 +42,8 @@ cyto_df.head(2)
 
 
 batch = "CRISPR_PILOT_B1"
-pycyto_file = os.path.join("data", "profiles", batch, plate, "{}_normalized_feature_select.csv.gz".format(plate))
+pycyto_base = os.path.join("..", "..", "1.generate-profiles", "data", "profiles", batch, plate)
+pycyto_file = os.path.join(pycyto_base, "{}_normalized_feature_select.csv.gz".format(plate))
 pycyto_df = pd.read_csv(pycyto_file).rename({"Image_Metadata_Plate": "Metadata_Plate",
                                              "Image_Metadata_Well": "Metadata_Well"},
                                             axis='columns')
@@ -168,7 +169,7 @@ full_df.head(2)
 
 cor_gg = gg.ggplot(full_df, gg.aes(x="correlation")) +     gg.geom_density(gg.aes(fill="across_package"), alpha=0.8) +     gg.theme_bw() +     gg.scale_fill_discrete(name="") +     gg.facet_wrap("across_package", scales='free_y', nrow=4)
 
-fig_file = os.path.join("figures", "compare_cytominer_pycytominer_pearson.png")
+fig_file = os.path.join("compare_cytominer_pycytominer_pearson.png")
 cor_gg.save(filename=fig_file, dpi=300, width=5, height=5)
 
 cor_gg
@@ -233,7 +234,7 @@ all_mse_df.head()
 
 mse_gg = gg.ggplot(all_mse_df, gg.aes(x="mse")) +     gg.geom_density(gg.aes(fill="across_package"), alpha=0.2) +     gg.theme_bw() +     gg.scale_fill_discrete(name="") +     gg.xlim([0, 5])
 
-fig_file = os.path.join("figures", "compare_cytominer_pycytominer_mse.png")
+fig_file = os.path.join("compare_cytominer_pycytominer_mse.png")
 mse_gg.save(filename=fig_file, dpi=300, width=5, height=5)
 
 mse_gg
