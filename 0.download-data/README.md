@@ -16,7 +16,7 @@ We provide documentation here to access, if there are specific questions that on
 
 Instead, all processed data used for all downstream analyses is located in [1.generate-profiles/data/profiles/CRISPR_PILOT_B1/](https://github.com/broadinstitute/cell-health/tree/master/1.generate-profiles/data/profiles/CRISPR_PILOT_B1).
 
-## Reproduce Pipeline
+## Download
 
 To download the single cell profiles, perform the following in your terminal:
 
