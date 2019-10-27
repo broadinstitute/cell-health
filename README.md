@@ -26,7 +26,7 @@ We collected Cell Painting measurements on a CRISPR experiment.
 The experiment targeted 59 genes, which included 119 unique guides (~2 per gene), across 3 cell lines.
 The cell lines included A549, ES2, and HCC44.
 
-![CRISPR Correlation](https://raw.githubusercontent.com/broadinstitute/cell-health/master/1.analyze-audits/figures/guide_correlation.png)
+![CRISPR Correlation](https://raw.githubusercontent.com/broadinstitute/cell-health/master/2.replicate-reproducibility/figures/guide_correlation.png)
 
 About 40% of all CRISPR guides were reproducible.
 This is ok since we are not actually interested in the CRISPR treatment specifically, but instead, just its corresponding readout in each cell health assay.
