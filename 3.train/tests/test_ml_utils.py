@@ -260,6 +260,7 @@ class TestCellHealthPredictClassify(object):
                     "shuffle_false",
                     "binarize",
                     4,
+                    "all",
                 ],
                 [
                     0.0,
@@ -272,6 +273,7 @@ class TestCellHealthPredictClassify(object):
                     "shuffle_false",
                     "binarize",
                     4,
+                    "all",
                 ],
                 [
                     1.0,
@@ -284,6 +286,7 @@ class TestCellHealthPredictClassify(object):
                     "shuffle_false",
                     "binarize",
                     4,
+                    "all",
                 ],
             ]
         )
@@ -298,6 +301,7 @@ class TestCellHealthPredictClassify(object):
             "shuffle",
             "y_transform",
             "min_class_count",
+            "cell_line"
         ]
 
         pd.testing.assert_frame_equal(roc_df, roc_df_expect, check_dtype=False)
@@ -315,6 +319,7 @@ class TestCellHealthPredictClassify(object):
                     "shuffle_false",
                     "binarize",
                     4,
+                    "all",
                 ],
                 [
                     1.0,
@@ -327,6 +332,7 @@ class TestCellHealthPredictClassify(object):
                     "shuffle_false",
                     "binarize",
                     4,
+                    "all",
                 ],
             ]
         )
@@ -341,6 +347,7 @@ class TestCellHealthPredictClassify(object):
             "shuffle",
             "y_transform",
             "min_class_count",
+            "cell_line"
         ]
 
         pd.testing.assert_frame_equal(pr_df, pr_df_expect)
@@ -432,29 +439,31 @@ class TestCellHealthPredictRegression(object):
         mse_df, r2_df, y_true, y_pred = chp_reg.get_performance(return_y=True)
 
         mse_df_expect = pd.DataFrame(
-            [0.08, "mse", "target_p", "train", "shuffle_false", "raw"]
+            [0.08, "mse", "target_p", "train", "shuffle_false", "raw", "all"]
         ).transpose()
         mse_df_expect.columns = [
-            "mse",
+            "value",
             "metric",
             "target",
             "data_fit",
             "shuffle",
             "y_transform",
+            "cell_line",
         ]
 
         pd.testing.assert_frame_equal(mse_df.round(2), mse_df_expect, check_dtype=False)
 
         r2_df_expect = pd.DataFrame(
-            [0.61, "r_two", "target_p", "train", "shuffle_false", "raw"]
+            [0.61, "r_two", "target_p", "train", "shuffle_false", "raw", "all"]
         ).transpose()
         r2_df_expect.columns = [
-            "mse",
+            "value",
             "metric",
             "target",
             "data_fit",
             "shuffle",
             "y_transform",
+            "cell_line",
         ]
 
         pd.testing.assert_frame_equal(r2_df.round(2), r2_df_expect, check_dtype=False)
@@ -493,7 +502,7 @@ class TestCellHealthPredictRegression(object):
 
         mse_df, r2_df, y_true, y_pred = chp_reg.get_performance(return_y=True)
         mse_test_df, r2_test_df, y_test_true, y_test_pred = chp_reg.get_performance(
-            return_y=True, x_test=x_df, y_test=y_df
+            return_y=True, x_test=x_df, y_test=y_df, data_fit_type="test"
         )
 
         # Recode "train" to "test"
