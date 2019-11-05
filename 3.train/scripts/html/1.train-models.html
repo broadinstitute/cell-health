@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>1.train-model</title>
+<title>1.train-models</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13129,9 +13129,44 @@ div#notebook {
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_train_df</span><span class="p">,</span> <span class="n">x_test_df</span><span class="p">,</span> <span class="n">y_train_df</span><span class="p">,</span> <span class="n">y_test_df</span> <span class="o">=</span> <span class="n">load_train_test</span><span class="p">(</span><span class="n">drop_metadata</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">x_meta_train_df</span><span class="p">,</span> <span class="n">x_meta_test_df</span><span class="p">,</span> <span class="n">y_meta_train_df</span><span class="p">,</span> <span class="n">y_meta_test_df</span> <span class="o">=</span> <span class="n">load_train_test</span><span class="p">(</span><span class="n">output_metadata_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cell_lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">x_meta_train_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">))</span>
+<span class="n">cell_lines</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[4]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&#39;A549&#39;, &#39;HCC44&#39;, &#39;ES2&#39;]</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -13145,7 +13180,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">alphas</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]</span>
@@ -13160,7 +13195,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">regression_parameters</span> <span class="o">=</span> <span class="p">{</span>
@@ -13183,7 +13218,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">estimator_regressor</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
@@ -13219,12 +13254,12 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Y labels and transform instructions</span>
 <span class="n">cell_health_targets</span> <span class="o">=</span> <span class="n">y_train_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="n">y_transforms</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="s2">&quot;zero-one&quot;</span><span class="p">,</span> <span class="s2">&quot;binarize&quot;</span><span class="p">]</span>
+<span class="n">y_transforms</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="s2">&quot;binarize&quot;</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -13241,7 +13276,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
@@ -13303,16 +13338,62 @@ div#notebook {
                 <span class="n">y_test</span><span class="o">=</span><span class="n">y_test_df</span><span class="p">,</span>
                 <span class="n">decision_function</span><span class="o">=</span><span class="n">decision_function</span><span class="p">,</span>
                 <span class="n">return_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">binarize_fit</span><span class="o">=</span><span class="s2">&quot;median&quot;</span>
+                <span class="n">binarize_fit</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">,</span>
+                <span class="n">data_fit_type</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
             <span class="p">)</span>
+
+            <span class="c1"># Get Cell Line Specific Performance</span>
+            <span class="n">cell_line_metrics_a</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">cell_line_metrics_b</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">cell_line</span> <span class="ow">in</span> <span class="n">cell_lines</span><span class="p">:</span>
+                <span class="n">meta_train_subset_df</span> <span class="o">=</span> <span class="n">x_meta_train_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Metadata_cell_line == @cell_line&quot;</span><span class="p">)</span>
+                <span class="n">meta_test_subset_df</span> <span class="o">=</span> <span class="n">x_meta_test_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Metadata_cell_line == @cell_line&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Get Cell Line Specific Training Performance</span>
+                <span class="n">x_cell_line_df</span> <span class="o">=</span> <span class="n">x_train_df</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">meta_train_subset_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;rows&quot;</span><span class="p">)</span>
+                <span class="n">y_cell_line_df</span> <span class="o">=</span> <span class="n">y_train_df</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">meta_train_subset_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;rows&quot;</span><span class="p">)</span>
+
+                <span class="n">metric_cell_train_a</span><span class="p">,</span> <span class="n">metric_cell_train_b</span><span class="p">,</span> <span class="n">y_cell_train_true</span><span class="p">,</span> <span class="n">y_cell_train_pred</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">chp</span><span class="o">.</span><span class="n">get_performance</span><span class="p">(</span>
+                        <span class="n">x_test</span><span class="o">=</span><span class="n">x_cell_line_df</span><span class="p">,</span>
+                        <span class="n">y_test</span><span class="o">=</span><span class="n">y_cell_line_df</span><span class="p">,</span>
+                        <span class="n">decision_function</span><span class="o">=</span><span class="n">decision_function</span><span class="p">,</span>
+                        <span class="n">return_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">binarize_fit</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">,</span>
+                        <span class="n">cell_line</span><span class="o">=</span><span class="n">cell_line</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Get Cell Line Specific Test Performance</span>
+                <span class="n">x_cell_line_df</span> <span class="o">=</span> <span class="n">x_test_df</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">meta_test_subset_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;rows&quot;</span><span class="p">)</span>
+                <span class="n">y_cell_line_df</span> <span class="o">=</span> <span class="n">y_test_df</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">meta_test_subset_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;rows&quot;</span><span class="p">)</span>
+
+                <span class="n">metric_cell_test_a</span><span class="p">,</span> <span class="n">metric_cell_test_b</span><span class="p">,</span> <span class="n">y_cell_test_true</span><span class="p">,</span> <span class="n">y_cell_test_pred</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">chp</span><span class="o">.</span><span class="n">get_performance</span><span class="p">(</span>
+                        <span class="n">x_test</span><span class="o">=</span><span class="n">x_cell_line_df</span><span class="p">,</span>
+                        <span class="n">y_test</span><span class="o">=</span><span class="n">y_cell_line_df</span><span class="p">,</span>
+                        <span class="n">decision_function</span><span class="o">=</span><span class="n">decision_function</span><span class="p">,</span>
+                        <span class="n">return_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">binarize_fit</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">,</span>
+                        <span class="n">data_fit_type</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
+                        <span class="n">cell_line</span><span class="o">=</span><span class="n">cell_line</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+                <span class="n">cell_line_metrics_a</span> <span class="o">+=</span> <span class="p">[</span><span class="n">metric_cell_train_a</span><span class="p">,</span> <span class="n">metric_cell_test_a</span><span class="p">]</span>
+                <span class="n">cell_line_metrics_b</span> <span class="o">+=</span> <span class="p">[</span><span class="n">metric_cell_train_b</span><span class="p">,</span> <span class="n">metric_cell_test_b</span><span class="p">]</span>
 
             <span class="c1"># Combine training and testing results</span>
             <span class="k">if</span> <span class="n">y_transform</span> <span class="o">==</span> <span class="s2">&quot;binarize&quot;</span><span class="p">:</span>
                 <span class="n">roc_results_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">metric_a</span><span class="p">,</span> <span class="n">metric_test_a</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;rows&#39;</span><span class="p">))</span>
+                <span class="n">roc_results_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">cell_line_metrics_a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;rows&quot;</span><span class="p">))</span>
                 <span class="n">pr_results_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">metric_b</span><span class="p">,</span> <span class="n">metric_test_b</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;rows&#39;</span><span class="p">))</span>
+                <span class="n">pr_results_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">cell_line_metrics_b</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;rows&quot;</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">regression_results_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">metric_a</span><span class="p">,</span> <span class="n">metric_test_a</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;rows&#39;</span><span class="p">))</span>
                 <span class="n">regression_results_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">metric_b</span><span class="p">,</span> <span class="n">metric_test_b</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;rows&#39;</span><span class="p">))</span>
+                <span class="n">regression_results_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">cell_line_metrics_a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;rows&#39;</span><span class="p">))</span>
+                <span class="n">regression_results_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">cell_line_metrics_b</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;rows&quot;</span><span class="p">))</span>
 
             <span class="c1"># Save cross validation results</span>
             <span class="n">cv_results_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chp</span><span class="o">.</span><span class="n">get_cv_results</span><span class="p">())</span>
@@ -13478,14 +13559,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -13508,32 +13581,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -13836,6 +13883,10 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -13943,30 +13994,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -13989,14 +14016,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -14225,6 +14244,12 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -14247,12 +14272,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -14544,6 +14563,8 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -14671,14 +14692,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -14701,6 +14714,12 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -14941,6 +14960,14 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -14963,6 +14990,10 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -15165,18 +15196,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -15199,10 +15218,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -15411,18 +15426,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -15534,6 +15537,8 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -15556,16 +15561,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -15802,24 +15797,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -15842,10 +15819,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -16094,12 +16067,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -16203,40 +16170,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -16259,28 +16192,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -16495,12 +16406,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -16523,18 +16428,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -16721,12 +16614,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -16749,24 +16636,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -17017,18 +16886,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -17128,16 +16985,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -17160,6 +17007,8 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -17418,10 +17267,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -17444,28 +17289,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -17807,6 +17630,14 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -17934,14 +17765,14 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
 </pre>
 </div>
 </div>
@@ -17964,34 +17795,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -18226,34 +18029,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -18276,48 +18051,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -18512,14 +18245,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -18542,18 +18267,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -18987,30 +18700,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -19140,30 +18829,14 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
 </pre>
 </div>
 </div>
@@ -19301,6 +18974,20 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
 </pre>
 </div>
 </div>
@@ -19382,10 +19069,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -19408,40 +19091,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -19678,46 +19327,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -19851,24 +19460,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -19891,28 +19482,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -20165,36 +19734,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -20217,20 +19756,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -20455,26 +19980,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -20497,20 +20002,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -20771,24 +20262,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -20902,12 +20375,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -20930,26 +20397,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -21174,12 +20621,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -21202,6 +20643,12 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -21388,6 +20835,10 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -21410,12 +20861,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -21604,22 +21049,6 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -21642,12 +21071,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -21862,30 +21285,10 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
 </pre>
 </div>
 </div>
@@ -21999,6 +21402,14 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/metrics/ranking.py:648: UndefinedMetricWarning: No negative samples in y_true, false positive value should be meaningless
+  UndefinedMetricWarning)
 </pre>
 </div>
 </div>
@@ -22021,52 +21432,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -22273,10 +21638,6 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
-  ConvergenceWarning)
-/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
@@ -22578,6 +21939,18 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -22709,6 +22082,34 @@ div#notebook {
   ConvergenceWarning)
 /Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
   ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/sklearn/linear_model/coordinate_descent.py:492: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
 </pre>
 </div>
 </div>
@@ -22719,8 +22120,8 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 9h 20min 56s, sys: 30min 57s, total: 9h 51min 53s
-Wall time: 58min 54s
+<pre>CPU times: user 7h 43min 18s, sys: 23min 45s, total: 8h 7min 4s
+Wall time: 46min 28s
 </pre>
 </div>
 </div>
@@ -22731,7 +22132,7 @@ Wall time: 58min 54s
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Acquire output metrics</span>
@@ -22750,7 +22151,7 @@ Wall time: 58min 54s
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Save all results</span>

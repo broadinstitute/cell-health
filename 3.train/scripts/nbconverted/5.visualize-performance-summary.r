@@ -6,34 +6,37 @@ results_dir <- "results"
 
 # Regression Results
 regression_file <- file.path(results_dir, "full_cell_health_regression_results.tsv.gz")
-regression_metrics_df <- readr::read_tsv(regression_file, col_types = readr::cols())
+regression_metrics_df <- readr::read_tsv(regression_file, col_types = readr::cols()) %>%
+    dplyr::filter(cell_line == "all")
 
 # Classification Results
 roc_file <- file.path(results_dir, "full_cell_health_roc_results.tsv.gz")
-full_roc_df <- readr::read_tsv(roc_file, col_types = readr::cols())
+full_roc_df <- readr::read_tsv(roc_file, col_types = readr::cols()) %>%
+    dplyr::filter(cell_line == "all")
 
 pr_file <- file.path(results_dir, "full_cell_health_pr_results.tsv.gz")
-full_pr_df <- readr::read_tsv(pr_file, col_types = readr::cols())
+full_pr_df <- readr::read_tsv(pr_file, col_types = readr::cols()) %>%
+    dplyr::filter(cell_line == "all")
 
 # Model Coefficients
 coef_file <- file.path(results_dir, "full_cell_health_coefficients.tsv.gz")
 full_coef_df <- readr::read_tsv(coef_file, col_types = readr::cols()) %>%
-    dplyr::filter(y_transform %in% c("raw", "zero-one"))
+    dplyr::filter(y_transform == "raw")
 
 # Model Predictions
 y_file <- file.path(results_dir, "full_cell_health_y_labels.tsv.gz")
 y_df <- readr::read_tsv(y_file, col_types = readr::cols()) %>%
-    dplyr::filter(y_transform %in% c("raw", "zero-one"))
+    dplyr::filter(y_transform == "raw")
 
 # Annotated Cell Health Features
-feat_file <- file.path("..", "0.generate-profiles", "data", "labels", "feature_mapping_annotated.csv")
+feat_file <- file.path("..", "1.generate-profiles", "data", "labels", "feature_mapping_annotated.csv")
 label_df <- readr::read_csv(feat_file, col_types = readr::cols())
 
 regression_subset_df <- regression_metrics_df %>%
     dplyr::filter(y_transform == "raw",
                   data_fit == "test",
                   shuffle == "shuffle_false") %>%
-    tidyr::spread(key = "metric", value = "mse") %>%
+    tidyr::spread(key = "metric", value = "value") %>%
     dplyr::select(-y_transform)
 
 print(dim(regression_subset_df))
@@ -94,6 +97,7 @@ metric_df$measurement <- factor(metric_df$measurement,
                                            "g1_arrest",
                                            "g2_arrest",
                                            "g2_m_arrest",
+                                           "mitosis",
                                            "s_arrest",
                                            "other"))
 
@@ -123,6 +127,7 @@ measurement_colors <- c(
     "g1_arrest" = "#fdbf6f",
     "g2_arrest" = "#ff7f00",
     "g2_m_arrest" = "#005c8c",
+    "mitosis" = "green",
     "other" = "black",
     "s_arrest" = "#cab2d6",
     "toxicity" = "#6a3d9a"
@@ -137,6 +142,7 @@ measurement_labels <- c(
     "g1_arrest" = "G1 Arrest",
     "g2_arrest" = "G2 Arrest",
     "g2_m_arrest" = "G2/M Arrest",
+    "mitosis" = "Mitosis",
     "other" = "Other",
     "s_arrest" = "S Arrest",
     "toxicity" = "Toxicity"
@@ -249,7 +255,7 @@ r_two_df <- regression_metrics_df %>%
     dplyr::filter(metric == "r_two",
                   shuffle == "shuffle_false",
                   y_transform == "raw") %>%
-    tidyr::spread(data_fit, mse) %>%
+    tidyr::spread(data_fit, value) %>%
     dplyr::left_join(label_df, by=c("target" = "updated_name"))
 
 r_two_df$measurement <- tidyr::replace_na(r_two_df$measurement, "other")
@@ -263,6 +269,7 @@ r_two_df$measurement <- factor(r_two_df$measurement,
                                           "g1_arrest",
                                           "g2_arrest",
                                           "g2_m_arrest",
+                                          "mitosis",
                                           "s_arrest",
                                           "other"))
 
@@ -348,11 +355,12 @@ regression_metrics_df <- regression_metrics_df %>%
 
 head(regression_metrics_df, 2)
 
+# Note that mse_diff is coded as "value" in pycytominer and "mse" in cytominer
 all_regression_df <- regression_metrics_df %>%
     dplyr::inner_join(cyto_regression_df,
                       by = c("metric", "target", "data_fit", "shuffle", "y_transform"),
                       suffix = c("_pycytominer", "_cytominer")) %>%
-    dplyr::mutate(mse_diff = mse_pycytominer - mse_cytominer)
+    dplyr::mutate(mse_diff = value - mse)
 
 head(all_regression_df, 2)
 
@@ -361,13 +369,13 @@ for (metric in unique(all_regression_df$metric)) {
         dplyr::filter(metric == metric)
     
     if (metric == "mse") {
-        all_regression_subset_df$mse_pycytominer <- abs(all_regression_subset_df$mse_pycytominer)
-        all_regression_subset_df$mse_cytominer <- abs(all_regression_subset_df$mse_cytominer)
+        all_regression_subset_df$value <- abs(all_regression_subset_df$value)
+        all_regression_subset_df$mse <- abs(all_regression_subset_df$mse)
     }
     
     mse_gg <- ggplot(all_regression_subset_df,
-       aes(x=mse_pycytominer, 
-           y=mse_cytominer)) +
+       aes(x=value, 
+           y=mse)) +
     geom_point(aes(color = data_fit),
                alpha = 0.7,
                size = 0.8) +

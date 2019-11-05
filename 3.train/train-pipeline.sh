@@ -23,7 +23,7 @@ jupyter nbconvert --to=html \
         --FilesWriter.build_directory=scripts/html \
         --ExecutePreprocessor.kernel_name=python3 \
         --ExecutePreprocessor.timeout=10000000 \
-        --execute 1.train-model.ipynb
+        --execute 1.train-models.ipynb
 
 # Step 3: Visualize distribution of features
 jupyter nbconvert --to=html \
@@ -51,25 +51,25 @@ jupyter nbconvert --to=html \
         --FilesWriter.build_directory=scripts/html \
         --ExecutePreprocessor.kernel_name=ir \
         --ExecutePreprocessor.timeout=10000000 \
-        --execute 5.performance-summary.ipynb
+        --execute 5.visualize-performance-summary.ipynb
 
-# Step 6: Apply models to full dataset
+# Step 6: Visualize model coefficients
+jupyter nbconvert --to=html \
+        --FilesWriter.build_directory=scripts/html \
+        --ExecutePreprocessor.kernel_name=ir \
+        --ExecutePreprocessor.timeout=10000000 \
+        --execute 6.visualize-coefficients.ipynb
+
+# Step 8: Visualize cell line specific performance
+jupyter nbconvert --to=html \
+        --FilesWriter.build_directory=scripts/html \
+        --ExecutePreprocessor.kernel_name=ir \
+        --ExecutePreprocessor.timeout=10000000 \
+        --execute 7.visualize-cell-line-performance.ipynb
+
+# Step 9: Apply models to full dataset
 jupyter nbconvert --to=html \
         --FilesWriter.build_directory=scripts/html \
         --ExecutePreprocessor.kernel_name=python3 \
         --ExecutePreprocessor.timeout=10000000 \
-        --execute 6.apply-models.ipynb
-
-# Step 7: Visualize model coefficients
-jupyter nbconvert --to=html \
-        --FilesWriter.build_directory=scripts/html \
-        --ExecutePreprocessor.kernel_name=ir \
-        --ExecutePreprocessor.timeout=10000000 \
-        --execute 7.visualize-coefficients.ipynb
-
-# Step 8: Cell line specific performance
-jupyter nbconvert --to=html \
-        --FilesWriter.build_directory=scripts/html \
-        --ExecutePreprocessor.kernel_name=ir \
-        --ExecutePreprocessor.timeout=10000000 \
-        --execute 8.visualize-cell-line.ipynb
+        --execute 8.apply-models.ipynb

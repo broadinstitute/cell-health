@@ -4,27 +4,26 @@ suppressPackageStartupMessages(library(ggrepel))
 
 results_dir <- "results"
 regression_file <- file.path(results_dir, "full_cell_health_regression_results.tsv.gz")
-regression_metrics_df <- readr::read_tsv(regression_file, col_types = readr::cols())
+regression_metrics_df <- readr::read_tsv(regression_file, col_types = readr::cols()) %>%
+    dplyr::filter(cell_line == "all")
 
 coef_file <- file.path(results_dir, "full_cell_health_coefficients.tsv.gz")
 full_coef_df <- readr::read_tsv(coef_file, col_types = readr::cols()) %>%
-    dplyr::filter(y_transform %in% c("raw", "zero-one"))
+    dplyr::filter(y_transform == "raw")
 
 metadata_file <- file.path("data", "profile_id_metadata_mapping.tsv")
 metadata_df <- readr::read_tsv(metadata_file, col_types = readr::cols())
 
 y_file <- file.path(results_dir, "full_cell_health_y_labels.tsv.gz")
 y_df <- readr::read_tsv(y_file, col_types = readr::cols()) %>%
-    dplyr::filter(y_transform %in% c("raw", "zero-one"))
+    dplyr::filter(y_transform == "raw")
 
 # Combine data for downstream processing
 y_binary_subset_true_df <- y_df %>%
-    dplyr::filter(y_transform %in% c("raw", "zero-one"),
-                  y_type == "y_true")
+    dplyr::filter(y_type == "y_true")
 
 y_binary_subset_pred_df <- y_df %>%
-    dplyr::filter(y_transform %in% c("raw", "zero-one"),
-                  y_type == "y_pred")
+    dplyr::filter(y_type == "y_pred")
 
 # Process data for plotting
 y_plot_df <- y_binary_subset_true_df %>%
@@ -55,7 +54,7 @@ regression_metrics_df$shuffle <- dplyr::recode(regression_metrics_df$shuffle,
 regression_metrics_df <- regression_metrics_df %>%
     dplyr::rename(data_type = data_fit)
 
-regression_metrics_df$mse <- round(regression_metrics_df$mse, 2)
+regression_metrics_df$value <- round(regression_metrics_df$value, 2)
 
 print(dim(regression_metrics_df))
 head(regression_metrics_df, 3)
@@ -67,13 +66,13 @@ mse_df <- regression_metrics_df %>%
 
 # Take absolute value of mean squared error
 # see https://github.com/scikit-learn/scikit-learn/issues/2439
-mse_df$mse = abs(mse_df$mse)
+mse_df$value = abs(mse_df$value)
 
 # Sort mse by minimum MSE in test set
 target_order <- mse_df %>%
     dplyr::filter(data_type == "Test",
                   shuffle == "Real") %>%
-    dplyr::arrange(desc(mse)) %>%
+    dplyr::arrange(desc(value)) %>%
     dplyr::select(target)
 
 mse_df$target <- factor(mse_df$target, levels=target_order$target)
@@ -83,7 +82,7 @@ head(mse_df, 4)
 
 ggplot(mse_df,
        aes(x = target,
-           y = mse)) +
+           y = value)) +
     geom_bar(stat = "identity",
              alpha = 0.5,
              position = position_dodge()) +
@@ -101,7 +100,7 @@ file <- file.path("figures", "mse_test_summary.png")
 ggsave(file, dpi = 300, width = 7, height = 9)
 
 # Label variables with specific cell health classes
-label_file <- file.path("..", "0.generate-profiles", "data", "labels", "feature_mapping_annotated.csv")
+label_file <- file.path("..", "1.generate-profiles", "data", "labels", "feature_mapping_annotated.csv")
 label_df <- readr::read_csv(label_file, col_types = readr::cols())
 
 print(dim(label_df))
@@ -113,14 +112,14 @@ mse_summary_df <- mse_df %>%
     dplyr::filter(!is.na(measurement))
 
 # Split shuffle column for scatter plot
-mse_spread_df <- mse_summary_df %>% tidyr::spread(shuffle, mse)
+mse_spread_df <- mse_summary_df %>% tidyr::spread(shuffle, value)
 
 head(mse_spread_df, 2)
 
 ggplot(mse_spread_df,
        aes(x = Real,
            y = Shuffle,
-           color = measurement,)) +
+           color = measurement)) +
     geom_abline(intercept = 0,
                 lwd = 0.1,
                 slope = 1,
@@ -161,6 +160,7 @@ ggplot(mse_spread_df,
                                   "g1_arrest" = "#fdbf6f",
                                   "g2_arrest" = "#ff7f00",
                                   "g2_m_arrest" = "#005c8c",
+                                  "mitosis" = "green",
                                   "s_arrest" = "#cab2d6",
                                   "toxicity" = "#6a3d9a"),
                        labels = c("apoptosis" = "Apoptosis",
@@ -171,6 +171,7 @@ ggplot(mse_spread_df,
                                   "g1_arrest" = "G1 Arrest",
                                   "g2_arrest" = "G2 Arrest",
                                   "g2_m_arrest" = "G2/M Arrest",
+                                  "mitosis" = "Mitosis",
                                   "s_arrest" = "S Arrest",
                                   "toxicity" = "Toxicity"))
 
@@ -186,7 +187,7 @@ r2_df <- regression_metrics_df %>%
 target_order <- r2_df %>%
     dplyr::filter(data_type == "Test",
                   shuffle == "Real") %>%
-    dplyr::arrange(mse) %>%
+    dplyr::arrange(value) %>%
     dplyr::select(target)
 
 r2_df$target <- factor(r2_df$target, levels=target_order$target)
@@ -195,7 +196,7 @@ head(r2_df, 4)
 
 ggplot(r2_df,
        aes(x = target,
-           y = mse)) +
+           y = value)) +
     geom_bar(stat = "identity",
              alpha = 0.5,
              position = position_dodge()) +
@@ -292,16 +293,16 @@ for (target in unique(y_plot_df$target)) {
         mse_df <- metrics_subset_transform_df %>%
             dplyr::filter(metric == "mse") %>%
             dplyr::select(-metric)
-        mse_df$mse = abs(mse_df$mse)
+        mse_df$value = abs(mse_df$value)
 
         r2_df <- metrics_subset_transform_df %>%
             dplyr::filter(metric == "r_two") %>%
-            dplyr::rename(r2 = mse) %>%
+            dplyr::rename(r2 = value) %>%
             dplyr::select(-metric)
 
         metric_table_df <- r2_df %>%
             dplyr::inner_join(mse_df, by=c("target", "data_type", "shuffle", "y_transform")) %>%
-            dplyr::select(data_type, shuffle, y_transform, r2, mse) %>%
+            dplyr::select(data_type, shuffle, y_transform, r2, value) %>%
             dplyr::rename(fit = data_type, transform = y_transform) %>%
             dplyr::arrange(shuffle)
 

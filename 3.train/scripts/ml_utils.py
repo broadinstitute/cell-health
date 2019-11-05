@@ -299,6 +299,8 @@ class CellHealthPredict:
         y_test=None,
         return_y=False,
         binarize_fit="kmeans",
+        data_fit_type="train",
+        cell_line="all",
     ):
         """
         Get the classifier or regression performance of the fit classifier
@@ -337,7 +339,6 @@ class CellHealthPredict:
 
             # Get predicted values from trained model
             y_pred = self.predict(x_test, decision_function=decision_function)
-            data_fit_type = "test"
             profile_ids = x_test.index.tolist()
 
         else:
@@ -345,36 +346,47 @@ class CellHealthPredict:
                 self.x_realigned_df, decision_function=decision_function
             )
             y_true = self.y_scaled_df
-            data_fit_type = "train"
             profile_ids = self.x_realigned_df.index.tolist()
 
         if self.y_transform != "binarize":
-            mse = mean_squared_error(y_true, y_pred)
-            r_two = r2_score(y_true, y_pred)
+            try:
+                mse = mean_squared_error(y_true, y_pred)
+                r_two = r2_score(y_true, y_pred)
+            except ValueError:
+                mse = np.nan
+                r_two = np.nan
 
-            mse_df = pd.DataFrame([mse], columns=["mse"])
+            mse_df = pd.DataFrame([mse], columns=["value"])
             mse_df = mse_df.assign(
                 metric="mse",
                 target=self.target,
                 data_fit=data_fit_type,
                 shuffle=self.shuffle_key,
                 y_transform=self.y_transform,
+                cell_line=cell_line,
             )
 
-            r_two_df = pd.DataFrame([r_two], columns=["mse"])
+            r_two_df = pd.DataFrame([r_two], columns=["value"])
             r_two_df = r_two_df.assign(
                 metric="r_two",
                 target=self.target,
                 data_fit=data_fit_type,
                 shuffle=self.shuffle_key,
                 y_transform=self.y_transform,
+                cell_line=cell_line,
             )
 
             output = [mse_df, r_two_df]
 
         else:
-            auroc_weighted = roc_auc_score(y_true, y_pred, average="weighted")
-            aupr_weighted = average_precision_score(y_true, y_pred, average="weighted")
+            try:
+                auroc_weighted = roc_auc_score(y_true, y_pred, average="weighted")
+                aupr_weighted = average_precision_score(
+                    y_true, y_pred, average="weighted"
+                )
+            except ValueError:
+                auroc_weighted = np.nan
+                aupr_weighted = np.nan
 
             roc_columns = ["fpr", "tpr", "threshold"]
             pr_columns = ["precision", "recall", "threshold"]
@@ -389,6 +401,7 @@ class CellHealthPredict:
                 shuffle=self.shuffle_key,
                 y_transform=self.y_transform,
                 min_class_count=self.min_class_count,
+                cell_line=cell_line,
             )
 
             prec, rec, thresh = precision_recall_curve(y_true, y_pred)
@@ -403,6 +416,7 @@ class CellHealthPredict:
                 shuffle=self.shuffle_key,
                 y_transform=self.y_transform,
                 min_class_count=self.min_class_count,
+                cell_line=cell_line,
             )
 
             output = [roc_df, pr_df]
@@ -519,10 +533,8 @@ def load_models(model_dir="models", shuffle=False, transform="raw"):
             continue
 
         model_file_full = os.path.join(model_dir, model_file)
-        cell_health_var = (
-            model_file
-            .replace("cell_health_target_", "")
-            .replace("_{}.joblib".format(model_string), "")
+        cell_health_var = model_file.replace("cell_health_target_", "").replace(
+            "_{}.joblib".format(model_string), ""
         )
 
         model_ = load(model_file_full)

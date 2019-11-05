@@ -13129,12 +13129,16 @@ div#notebook {
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">batch</span> <span class="o">=</span> <span class="s2">&quot;CRISPR_PILOT_B1&quot;</span>
-<span class="n">data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;0.generate-profiles&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+<span class="n">data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;1.generate-profiles&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
 <span class="n">profile_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;profiles&quot;</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
 
 <span class="n">all_profile_files</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">plates</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">profile_dir</span><span class="p">):</span>
-    <span class="n">plate_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">profile_dir</span><span class="p">,</span> <span class="n">plates</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">plate</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">profile_dir</span><span class="p">):</span>
+    <span class="n">plate_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">profile_dir</span><span class="p">,</span> <span class="n">plate</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">plate</span> <span class="o">==</span> <span class="s1">&#39;.DS_Store&#39;</span><span class="p">:</span>
+        <span class="k">continue</span>
+
     <span class="k">for</span> <span class="n">profile_file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">plate_dir</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;feature_select&quot;</span> <span class="ow">in</span> <span class="n">profile_file</span><span class="p">:</span>
             <span class="n">all_profile_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plate_dir</span><span class="p">,</span> <span class="n">profile_file</span><span class="p">))</span>
