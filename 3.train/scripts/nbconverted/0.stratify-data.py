@@ -32,12 +32,16 @@ np.random.seed(123)
 
 
 batch = "CRISPR_PILOT_B1"
-data_dir = os.path.join("..", "0.generate-profiles", "data")
+data_dir = os.path.join("..", "1.generate-profiles", "data")
 profile_dir = os.path.join(data_dir, "profiles", batch)
 
 all_profile_files = []
-for plates in os.listdir(profile_dir):
-    plate_dir = os.path.join(profile_dir, plates)
+for plate in os.listdir(profile_dir):
+    plate_dir = os.path.join(profile_dir, plate)
+    
+    if plate == '.DS_Store':
+        continue
+
     for profile_file in os.listdir(plate_dir):
         if "feature_select" in profile_file:
             all_profile_files.append(os.path.join(plate_dir, profile_file))
@@ -187,7 +191,7 @@ print(x_agg_df.shape)
 x_agg_df.head(5)
 
 
-# In[14]:
+# In[13]:
 
 
 profile_id_mapping_df = x_agg_df.loc[:,
@@ -202,7 +206,7 @@ profile_id_mapping_df.to_csv(file, sep='\t', index=False)
 profile_id_mapping_df.head()
 
 
-# In[13]:
+# In[14]:
 
 
 y_meta_cols = ["Metadata_profile_id", "Metadata_gene_name", "Metadata_pert_name", "Metadata_cell_line"]
@@ -230,7 +234,7 @@ print(y_agg_df.shape)
 y_agg_df.head(2)
 
 
-# In[14]:
+# In[15]:
 
 
 # Confirm that matrices are aligned
@@ -245,13 +249,13 @@ pd.testing.assert_series_equal(x_agg_df.Metadata_cell_line, y_agg_df.Metadata_ce
 
 # ## Split into Training and Testing
 
-# In[15]:
+# In[16]:
 
 
 test_proportion = 0.15
 
 
-# In[16]:
+# In[17]:
 
 
 x_train_df, x_test_df, y_train_df, y_test_df = train_test_split(
@@ -261,14 +265,14 @@ x_train_df, x_test_df, y_train_df, y_test_df = train_test_split(
     random_state=42)
 
 
-# In[17]:
+# In[18]:
 
 
 print(x_train_df.shape)
 print(x_test_df.shape)
 
 
-# In[18]:
+# In[19]:
 
 
 file = os.path.join("data", "x_train.tsv.gz")

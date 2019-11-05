@@ -6,10 +6,12 @@ suppressPackageStartupMessages(library(cowplot))
 
 results_dir <- "results"
 roc_file <- file.path(results_dir, "full_cell_health_roc_results.tsv.gz")
-full_roc_df <- readr::read_tsv(roc_file, col_types = readr::cols())
+full_roc_df <- readr::read_tsv(roc_file, col_types = readr::cols()) %>%
+    dplyr::filter(cell_line == "all")
 
 pr_file <- file.path(results_dir, "full_cell_health_pr_results.tsv.gz")
-full_pr_df <- readr::read_tsv(pr_file, col_types = readr::cols())
+full_pr_df <- readr::read_tsv(pr_file, col_types = readr::cols()) %>%
+    dplyr::filter(cell_line == "all")
 
 coef_file <- file.path(results_dir, "full_cell_health_coefficients.tsv.gz")
 full_coef_df <- readr::read_tsv(coef_file, col_types = readr::cols())
@@ -116,7 +118,7 @@ ggplot(auc_diff_df,
                                           fill = "#fdfff4"))
 
 file <- file.path("figures", "cell_health_metric_shuffle_difference_summary.png")
-ggsave(file, dpi = 300, width = 9, height = 6)
+#ggsave(file, dpi = 300, width = 9, height = 6)
 
 ggplot(full_roc_df, aes(x = fpr, y = tpr)) +
     coord_fixed() +

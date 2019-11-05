@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>6.apply-models</title>
+<title>8.apply-models</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13091,7 +13091,7 @@ div#notebook {
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="k">import</span> <span class="n">load</span>
 
-<span class="kn">from</span> <span class="nn">scripts.ml_utils</span> <span class="k">import</span> <span class="n">load_train_test</span>
+<span class="kn">from</span> <span class="nn">scripts.ml_utils</span> <span class="k">import</span> <span class="n">load_train_test</span><span class="p">,</span> <span class="n">load_models</span>
 </pre></div>
 
     </div>
@@ -13117,25 +13117,42 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Load all models</span>
-<span class="n">model_dir</span> <span class="o">=</span> <span class="s2">&quot;models&quot;</span>
-<span class="n">model_string</span> <span class="o">=</span> <span class="s2">&quot;shuffle_False_transform_raw&quot;</span>
-
-<span class="n">model_dict</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">for</span> <span class="n">model_file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">model_dir</span><span class="p">):</span>
-
-    <span class="k">if</span> <span class="n">model_string</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_file</span><span class="p">:</span>
-        <span class="k">continue</span>
-
-    <span class="n">model_file_full</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_dir</span><span class="p">,</span> <span class="n">model_file</span><span class="p">)</span>
-    <span class="n">cell_health_var</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">model_file_full</span>
-        <span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;cell_health_target_&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.joblib&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_string</span><span class="p">),</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">apply_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">feature</span><span class="p">,</span> <span class="n">train_x</span><span class="p">,</span> <span class="n">test_x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply model to training and testing matrix</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pred_train_df</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train_x</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">profiles</span><span class="o">=</span><span class="n">train_x</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                <span class="n">Metadata_data_type</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">,</span>
+                <span class="n">model</span><span class="o">=</span><span class="n">feature</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">pred_test_df</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">profiles</span><span class="o">=</span><span class="n">test_x</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                <span class="n">Metadata_data_type</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
+                <span class="n">model</span><span class="o">=</span><span class="n">feature</span><span class="p">)</span>
     <span class="p">)</span>
 
-    <span class="n">model_dict</span><span class="p">[</span><span class="n">cell_health_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">model_file_full</span><span class="p">)</span>
+    <span class="n">pred_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">pred_train_df</span><span class="p">,</span> <span class="n">pred_test_df</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pred_df</span>
+
+<span class="k">def</span> <span class="nf">sample_squared_error</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the squared error per sample depending on model scores</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">metadata_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">scores</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Metadata_&quot;</span><span class="p">)]</span>
+    <span class="n">scores_values</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">metadata_cols</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+    
+    <span class="n">all_squared_error</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">cell_health_feature</span> <span class="ow">in</span> <span class="n">scores_values</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">y_subset_df</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cell_health_feature</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">scores_subset</span> <span class="o">=</span> <span class="n">scores_values</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cell_health_feature</span><span class="p">]</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">y_subset_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="n">squared_error</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_subset_df</span> <span class="o">-</span> <span class="n">scores_subset</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">all_squared_error</span><span class="p">[</span><span class="n">cell_health_feature</span><span class="p">]</span> <span class="o">=</span> <span class="n">squared_error</span>
+    
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_squared_error</span><span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13143,13 +13160,21 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1)-Load-Models-and-Model-Coefficients">1) Load Models and Model Coefficients<a class="anchor-link" href="#1)-Load-Models-and-Model-Coefficients">&#182;</a></h2><p>For real data and shuffled model data.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Load training and testing matrices</span>
-<span class="n">x_train_df</span><span class="p">,</span> <span class="n">x_test_df</span><span class="p">,</span> <span class="n">y_train_df</span><span class="p">,</span> <span class="n">y_test_df</span> <span class="o">=</span> <span class="n">load_train_test</span><span class="p">(</span><span class="n">drop_metadata</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model_dict</span><span class="p">,</span> <span class="n">model_coef</span> <span class="o">=</span> <span class="n">load_models</span><span class="p">()</span>
+<span class="n">shuffle_model_dict</span><span class="p">,</span> <span class="n">shuffle_model_coef</span> <span class="o">=</span> <span class="n">load_models</span><span class="p">(</span><span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13162,43 +13187,11 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Apply the models</span>
-<span class="n">all_scores</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">cell_health_feature</span> <span class="ow">in</span> <span class="n">model_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-    
-    <span class="n">model_clf</span> <span class="o">=</span> <span class="n">model_dict</span><span class="p">[</span><span class="n">cell_health_feature</span><span class="p">]</span>
-    <span class="n">pred_train_df</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">model_clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_train_df</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">])</span>
-        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">profiles</span><span class="o">=</span><span class="n">x_train_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-            <span class="n">data_type</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">,</span>
-                <span class="n">model</span><span class="o">=</span><span class="n">cell_health_feature</span><span class="p">)</span>
-    <span class="p">)</span>
-    <span class="n">pred_test_df</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">model_clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test_df</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">])</span>
-        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">profiles</span><span class="o">=</span><span class="n">x_test_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-                <span class="n">data_type</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
-                <span class="n">model</span><span class="o">=</span><span class="n">cell_health_feature</span><span class="p">)</span>
-    <span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Load Metadata Mapping File</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;profile_id_metadata_mapping.tsv&quot;</span><span class="p">)</span>
+<span class="n">metadata_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
 
-    <span class="n">pred_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">pred_train_df</span><span class="p">,</span> <span class="n">pred_test_df</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">all_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pred_df</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Concatenate scores</span>
-<span class="n">all_scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">all_scores</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">all_scores</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">all_scores</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">metadata_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -13211,18 +13204,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(24990, 4)
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[6]:</div>
+    <div class="prompt output_prompt">Out[5]:</div>
 
 
 
@@ -13245,26 +13227,47 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>score</th>
-      <th>profiles</th>
-      <th>data_type</th>
-      <th>model</th>
+      <th>Metadata_profile_id</th>
+      <th>Metadata_gene_name</th>
+      <th>Metadata_pert_name</th>
+      <th>Metadata_cell_line</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.047601</td>
-      <td>profile_346</td>
-      <td>train</td>
-      <td>cc_cc_g1_mean_</td>
+      <td>profile_0</td>
+      <td>AKT1</td>
+      <td>AKT1-1</td>
+      <td>A549</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.334152</td>
-      <td>profile_185</td>
-      <td>train</td>
-      <td>cc_cc_g1_mean_</td>
+      <td>profile_1</td>
+      <td>AKT1</td>
+      <td>AKT1-2</td>
+      <td>A549</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>profile_2</td>
+      <td>ARID1B</td>
+      <td>ARID1B-1</td>
+      <td>A549</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>profile_3</td>
+      <td>ARID1B</td>
+      <td>ARID1B-2</td>
+      <td>A549</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>profile_4</td>
+      <td>ATF4</td>
+      <td>ATF4-1</td>
+      <td>A549</td>
     </tr>
   </tbody>
 </table>
@@ -13277,21 +13280,48 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2)-Load-Training-and-Testing-Data">2) Load Training and Testing Data<a class="anchor-link" href="#2)-Load-Training-and-Testing-Data">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_train_df</span><span class="p">,</span> <span class="n">x_test_df</span><span class="p">,</span> <span class="n">y_train_df</span><span class="p">,</span> <span class="n">y_test_df</span> <span class="o">=</span> <span class="n">load_train_test</span><span class="p">(</span><span class="n">drop_metadata</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="3)-Output-Model-Coefficients">3) Output Model Coefficients<a class="anchor-link" href="#3)-Output-Model-Coefficients">&#182;</a></h2>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Spread data into wide format</span>
-<span class="n">all_scores</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">all_scores</span>
-    <span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;profiles&quot;</span><span class="p">,</span> <span class="s2">&quot;data_type&quot;</span><span class="p">],</span>
-                 <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span>
-                 <span class="n">values</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Extract all model coefficients and output to file</span>
+<span class="n">coef_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">model_coef</span><span class="p">)</span>
+<span class="n">coef_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">x_test_df</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">coef_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;features&quot;</span>
 
-<span class="n">all_scores</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="s2">&quot;all_model_coefficients.tsv&quot;</span><span class="p">)</span>
+<span class="n">coef_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">coef_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">coef_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13301,6 +13331,17 @@ div#notebook {
 <div class="output_wrapper">
 <div class="output">
 
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(1281, 70)
+</pre>
+</div>
+</div>
 
 <div class="output_area">
 
@@ -13326,82 +13367,106 @@ div#notebook {
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>model</th>
-      <th>profiles</th>
-      <th>data_type</th>
-      <th>cc_all_high_n_spots_h2ax_mean_</th>
-      <th>cc_all_large_notround_polynuclear_mean_</th>
-      <th>cc_all_large_round_polyploid_mean_</th>
-      <th>cc_all_n_objects_</th>
-      <th>cc_all_n_spots_mean_</th>
-      <th>cc_all_n_spots_per_nucleus_area_mean_</th>
-      <th>cc_all_nucleus_area_mean_</th>
-      <th>cc_all_nucleus_roundness_mean_</th>
+      <th></th>
+      <th>cc_cc_g1_mean</th>
+      <th>cc_mitosis_ph3_neg_n_spots_mean</th>
+      <th>cc_edu_pos_high_n_spots_h2ax_mean</th>
+      <th>cc_polyploid_n_spots_mean</th>
+      <th>vb_live_cell_roundness</th>
+      <th>cc_g2_ph3_neg_n_spots_mean</th>
+      <th>cc_polyploid_high_n_spots_h2ax_mean</th>
+      <th>vb_ros_mean</th>
+      <th>cc_cc_n_spots_per_nucleus_area_mean</th>
+      <th>cc_mitosis_ph3_neg_high_n_spots_h2ax_mean</th>
       <th>...</th>
-      <th>vb_num_live_cells_</th>
-      <th>vb_percent_all_apoptosis_</th>
-      <th>vb_percent_all_early_apoptosis_</th>
-      <th>vb_percent_all_late_apoptosis_</th>
-      <th>vb_percent_caspase_dead_only_</th>
-      <th>vb_percent_dead_</th>
-      <th>vb_percent_dead_only_</th>
-      <th>vb_percent_live_</th>
-      <th>vb_ros_back_mean_</th>
-      <th>vb_ros_mean_</th>
+      <th>cc_all_nucleus_area_mean</th>
+      <th>cc_cc_n_spots_mean</th>
+      <th>vb_ros_back_mean</th>
+      <th>cc_g1_n_objects</th>
+      <th>vb_percent_all_apoptosis</th>
+      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_large_round_polyploid_mean</th>
+      <th>cc_edu_pos_n_objects</th>
+      <th>cc_all_n_objects</th>
+      <th>cc_g1_n_spots_per_nucleus_area_mean</th>
+    </tr>
+    <tr>
+      <th>features</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>profile_0</td>
-      <td>train</td>
-      <td>0.143341</td>
-      <td>0.446032</td>
-      <td>0.094610</td>
-      <td>0.085508</td>
-      <td>0.289411</td>
-      <td>0.264312</td>
-      <td>-0.124119</td>
-      <td>-0.060475</td>
+      <th>Cells_AreaShape_Area</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.077788</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>...</td>
-      <td>-0.069560</td>
-      <td>0.062529</td>
-      <td>0.113555</td>
-      <td>0.054362</td>
-      <td>0.070312</td>
-      <td>0.113467</td>
-      <td>0.086319</td>
-      <td>-0.114478</td>
-      <td>0.412711</td>
-      <td>0.740138</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>profile_1</td>
-      <td>train</td>
-      <td>-0.083619</td>
-      <td>0.336090</td>
-      <td>-0.114656</td>
-      <td>0.307962</td>
-      <td>-0.096816</td>
-      <td>-0.113923</td>
-      <td>-0.263247</td>
-      <td>-0.228549</td>
+      <th>Cells_AreaShape_Center_X</th>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
       <td>...</td>
-      <td>0.197695</td>
-      <td>0.006167</td>
-      <td>0.113555</td>
-      <td>-0.004837</td>
-      <td>0.070426</td>
-      <td>0.060157</td>
-      <td>0.244093</td>
-      <td>-0.060248</td>
-      <td>0.222378</td>
-      <td>0.522029</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
 </table>
-<p>2 rows × 72 columns</p>
+<p>2 rows × 70 columns</p>
 </div>
 </div>
 
@@ -13416,11 +13481,16 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Load Metadata Mapping File</span>
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;profile_id_metadata_mapping.tsv&quot;</span><span class="p">)</span>
-<span class="n">metadata_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Extract all model coefficients and output to file</span>
+<span class="n">shuffle_coef_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">shuffle_model_coef</span><span class="p">)</span>
+<span class="n">shuffle_coef_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">x_test_df</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">shuffle_coef_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;features&quot;</span>
 
-<span class="n">metadata_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="s2">&quot;all_model_coefficients_shuffled.tsv&quot;</span><span class="p">)</span>
+<span class="n">shuffle_coef_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">shuffle_coef_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">shuffle_coef_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13430,6 +13500,17 @@ div#notebook {
 <div class="output_wrapper">
 <div class="output">
 
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(1281, 70)
+</pre>
+</div>
+</div>
 
 <div class="output_area">
 
@@ -13456,50 +13537,105 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Metadata_profile_id</th>
-      <th>Metadata_gene_name</th>
-      <th>Metadata_pert_name</th>
-      <th>Metadata_cell_line</th>
+      <th>cc_mitosis_ph3_pos_n_spots_mean</th>
+      <th>vb_percent_caspase_dead_only</th>
+      <th>vb_infection_percentage</th>
+      <th>cc_g2_ph3_pos_n_objects</th>
+      <th>cc_g2_ph3_pos_high_n_spots_h2ax_mean</th>
+      <th>cc_all_nucleus_roundness_mean</th>
+      <th>cc_edu_pos_n_spots_mean</th>
+      <th>vb_percent_all_early_apoptosis</th>
+      <th>vb_live_cell_width_length</th>
+      <th>cc_cc_ph3_pos_hoechst_mitosis_mean</th>
+      <th>...</th>
+      <th>cc_polynuclear_n_spots_mean</th>
+      <th>cc_edu_pos_n_objects</th>
+      <th>cc_g1_n_objects</th>
+      <th>cc_all_n_objects</th>
+      <th>cc_cc_g2_ph3_neg_mean</th>
+      <th>cc_g1_high_n_spots_h2ax_mean</th>
+      <th>cc_polynuclear_n_spots_per_nucleus_area_mean</th>
+      <th>cc_polynuclear_n_objects</th>
+      <th>cc_mitosis_ph3_pos_high_n_spots_h2ax_mean</th>
+      <th>cc_g2_ph3_neg_n_objects</th>
+    </tr>
+    <tr>
+      <th>features</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>profile_0</td>
-      <td>AKT1</td>
-      <td>AKT1-1</td>
-      <td>A549</td>
+      <th>Cells_AreaShape_Area</th>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.000000</td>
+      <td>-0.0</td>
+      <td>0.026582</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>profile_1</td>
-      <td>AKT1</td>
-      <td>AKT1-2</td>
-      <td>A549</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>profile_2</td>
-      <td>ARID1B</td>
-      <td>ARID1B-1</td>
-      <td>A549</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>profile_3</td>
-      <td>ARID1B</td>
-      <td>ARID1B-2</td>
-      <td>A549</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>profile_4</td>
-      <td>ATF4</td>
-      <td>ATF4-1</td>
-      <td>A549</td>
+      <th>Cells_AreaShape_Center_X</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>-0.011746</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>-0.0</td>
+      <td>...</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
     </tr>
   </tbody>
 </table>
+<p>2 rows × 70 columns</p>
 </div>
 </div>
 
@@ -13508,13 +13644,67 @@ div#notebook {
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="4)-Apply-all-models">4) Apply all models<a class="anchor-link" href="#4)-Apply-all-models">&#182;</a></h2><p>For real and shuffled data.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Merge together</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_scores</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">all_shuffle_scores</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">cell_health_feature</span> <span class="ow">in</span> <span class="n">model_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="c1"># Apply Real Model Classifiers</span>
+    <span class="n">model_clf</span> <span class="o">=</span> <span class="n">model_dict</span><span class="p">[</span><span class="n">cell_health_feature</span><span class="p">]</span>
+    <span class="n">pred_df</span> <span class="o">=</span> <span class="n">apply_model</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model_clf</span><span class="p">,</span>
+                          <span class="n">feature</span><span class="o">=</span><span class="n">cell_health_feature</span><span class="p">,</span>
+                          <span class="n">train_x</span><span class="o">=</span><span class="n">x_train_df</span><span class="p">,</span>
+                          <span class="n">test_x</span><span class="o">=</span><span class="n">x_test_df</span><span class="p">)</span>
+    <span class="n">all_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pred_df</span><span class="p">)</span>
+    
+    <span class="c1"># Apply Shuffled Model Classifiers</span>
+    <span class="n">shuffle_model_clf</span> <span class="o">=</span> <span class="n">shuffle_model_dict</span><span class="p">[</span><span class="n">cell_health_feature</span><span class="p">]</span>
+    <span class="n">shuffle_pred_df</span> <span class="o">=</span> <span class="n">apply_model</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">shuffle_model_clf</span><span class="p">,</span>
+                                  <span class="n">feature</span><span class="o">=</span><span class="n">cell_health_feature</span><span class="p">,</span>
+                                  <span class="n">train_x</span><span class="o">=</span><span class="n">x_train_df</span><span class="p">,</span>
+                                  <span class="n">test_x</span><span class="o">=</span><span class="n">x_test_df</span><span class="p">)</span>
+    <span class="n">all_shuffle_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shuffle_pred_df</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="5)-Concatenate-scores-with-Metadata">5) Concatenate scores with Metadata<a class="anchor-link" href="#5)-Concatenate-scores-with-Metadata">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Concatenate real data scores</span>
+<span class="n">all_scores</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">all_scores</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;profiles&quot;</span><span class="p">,</span> <span class="s2">&quot;Metadata_data_type&quot;</span><span class="p">],</span>
+                 <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span>
+                 <span class="n">values</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="p">)</span>
+
 <span class="n">all_scores</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">metadata_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">all_scores</span><span class="p">,</span>
                       <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">,</span>
@@ -13522,7 +13712,15 @@ div#notebook {
     <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;profiles&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="n">all_scores</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">all_scores</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">all_scores</span><span class="o">.</span><span class="n">Metadata_profile_id</span>
+<span class="n">all_scores</span> <span class="o">=</span> <span class="n">all_scores</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+
+<span class="c1"># Output file</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="s2">&quot;all_model_predictions.tsv&quot;</span><span class="p">)</span>
+<span class="n">all_scores</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">all_scores</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">all_scores</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13535,7 +13733,547 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[9]:</div>
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(357, 74)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[10]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Metadata_gene_name</th>
+      <th>Metadata_pert_name</th>
+      <th>Metadata_cell_line</th>
+      <th>Metadata_data_type</th>
+      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_large_notround_polynuclear_mean</th>
+      <th>cc_all_large_round_polyploid_mean</th>
+      <th>cc_all_n_objects</th>
+      <th>cc_all_n_spots_mean</th>
+      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>...</th>
+      <th>vb_num_live_cells</th>
+      <th>vb_percent_all_apoptosis</th>
+      <th>vb_percent_all_early_apoptosis</th>
+      <th>vb_percent_all_late_apoptosis</th>
+      <th>vb_percent_caspase_dead_only</th>
+      <th>vb_percent_dead</th>
+      <th>vb_percent_dead_only</th>
+      <th>vb_percent_live</th>
+      <th>vb_ros_back_mean</th>
+      <th>vb_ros_mean</th>
+    </tr>
+    <tr>
+      <th>Metadata_profile_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>profile_0</th>
+      <td>AKT1</td>
+      <td>AKT1-1</td>
+      <td>A549</td>
+      <td>train</td>
+      <td>0.143341</td>
+      <td>0.446032</td>
+      <td>0.094610</td>
+      <td>0.085508</td>
+      <td>0.289411</td>
+      <td>0.264312</td>
+      <td>...</td>
+      <td>-0.069560</td>
+      <td>0.062529</td>
+      <td>0.113555</td>
+      <td>0.054362</td>
+      <td>0.070312</td>
+      <td>0.113467</td>
+      <td>0.086319</td>
+      <td>-0.114478</td>
+      <td>0.412711</td>
+      <td>0.740138</td>
+    </tr>
+    <tr>
+      <th>profile_1</th>
+      <td>AKT1</td>
+      <td>AKT1-2</td>
+      <td>A549</td>
+      <td>train</td>
+      <td>-0.083619</td>
+      <td>0.336090</td>
+      <td>-0.114656</td>
+      <td>0.307962</td>
+      <td>-0.096816</td>
+      <td>-0.113923</td>
+      <td>...</td>
+      <td>0.197695</td>
+      <td>0.006167</td>
+      <td>0.113555</td>
+      <td>-0.004837</td>
+      <td>0.070426</td>
+      <td>0.060157</td>
+      <td>0.244093</td>
+      <td>-0.060248</td>
+      <td>0.222378</td>
+      <td>0.522029</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 74 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Concatenate shuffled data scores</span>
+<span class="n">all_shuffle_scores</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">all_shuffle_scores</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;profiles&quot;</span><span class="p">,</span> <span class="s2">&quot;Metadata_data_type&quot;</span><span class="p">],</span>
+                 <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span>
+                 <span class="n">values</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">all_shuffle_scores</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">metadata_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">all_shuffle_scores</span><span class="p">,</span>
+                      <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">,</span>
+                      <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;profiles&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;profiles&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">all_shuffle_scores</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">all_shuffle_scores</span><span class="o">.</span><span class="n">Metadata_profile_id</span>
+<span class="n">all_shuffle_scores</span> <span class="o">=</span> <span class="n">all_shuffle_scores</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+
+<span class="c1"># Output file</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="s2">&quot;all_model_predictions_shuffled.tsv&quot;</span><span class="p">)</span>
+<span class="n">all_shuffle_scores</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">all_shuffle_scores</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">all_shuffle_scores</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(357, 74)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[11]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Metadata_gene_name</th>
+      <th>Metadata_pert_name</th>
+      <th>Metadata_cell_line</th>
+      <th>Metadata_data_type</th>
+      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_large_notround_polynuclear_mean</th>
+      <th>cc_all_large_round_polyploid_mean</th>
+      <th>cc_all_n_objects</th>
+      <th>cc_all_n_spots_mean</th>
+      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>...</th>
+      <th>vb_num_live_cells</th>
+      <th>vb_percent_all_apoptosis</th>
+      <th>vb_percent_all_early_apoptosis</th>
+      <th>vb_percent_all_late_apoptosis</th>
+      <th>vb_percent_caspase_dead_only</th>
+      <th>vb_percent_dead</th>
+      <th>vb_percent_dead_only</th>
+      <th>vb_percent_live</th>
+      <th>vb_ros_back_mean</th>
+      <th>vb_ros_mean</th>
+    </tr>
+    <tr>
+      <th>Metadata_profile_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>profile_0</th>
+      <td>AKT1</td>
+      <td>AKT1-1</td>
+      <td>A549</td>
+      <td>train</td>
+      <td>0.239382</td>
+      <td>0.242889</td>
+      <td>0.176490</td>
+      <td>-0.131763</td>
+      <td>0.101561</td>
+      <td>0.182740</td>
+      <td>...</td>
+      <td>-0.186363</td>
+      <td>0.201906</td>
+      <td>0.113555</td>
+      <td>0.171163</td>
+      <td>0.047833</td>
+      <td>0.314661</td>
+      <td>0.184641</td>
+      <td>-0.176141</td>
+      <td>-0.036435</td>
+      <td>0.073917</td>
+    </tr>
+    <tr>
+      <th>profile_1</th>
+      <td>AKT1</td>
+      <td>AKT1-2</td>
+      <td>A549</td>
+      <td>train</td>
+      <td>0.242489</td>
+      <td>0.242889</td>
+      <td>0.183545</td>
+      <td>-0.140382</td>
+      <td>0.101365</td>
+      <td>0.166273</td>
+      <td>...</td>
+      <td>-0.193941</td>
+      <td>0.201906</td>
+      <td>0.113555</td>
+      <td>0.161325</td>
+      <td>0.048488</td>
+      <td>0.213885</td>
+      <td>0.166135</td>
+      <td>-0.267769</td>
+      <td>-0.052313</td>
+      <td>0.073917</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 74 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="6)-Calculate-the-Squared-Error-of-Individual-Samples">6) Calculate the Squared Error of Individual Samples<a class="anchor-link" href="#6)-Calculate-the-Squared-Error-of-Individual-Samples">&#182;</a></h2><p>For real and shuffled data</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">y_train_df</span><span class="p">,</span> <span class="n">y_test_df</span><span class="p">])</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">all_scores</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">y_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">y_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(357, 70)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[12]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_large_notround_polynuclear_mean</th>
+      <th>cc_all_large_round_polyploid_mean</th>
+      <th>cc_all_n_objects</th>
+      <th>cc_all_n_spots_mean</th>
+      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>cc_all_nucleus_area_mean</th>
+      <th>cc_all_nucleus_roundness_mean</th>
+      <th>cc_cc_edu_pos_mean</th>
+      <th>cc_cc_g1_mean</th>
+      <th>...</th>
+      <th>vb_num_live_cells</th>
+      <th>vb_percent_all_apoptosis</th>
+      <th>vb_percent_all_early_apoptosis</th>
+      <th>vb_percent_all_late_apoptosis</th>
+      <th>vb_percent_caspase_dead_only</th>
+      <th>vb_percent_dead</th>
+      <th>vb_percent_dead_only</th>
+      <th>vb_percent_live</th>
+      <th>vb_ros_back_mean</th>
+      <th>vb_ros_mean</th>
+    </tr>
+    <tr>
+      <th>Metadata_profile_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>profile_0</th>
+      <td>0.008156</td>
+      <td>0.587977</td>
+      <td>0.01882</td>
+      <td>0.381501</td>
+      <td>0.176564</td>
+      <td>0.187675</td>
+      <td>-0.170616</td>
+      <td>0.039147</td>
+      <td>0.085392</td>
+      <td>0.040949</td>
+      <td>...</td>
+      <td>0.399842</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-0.118976</td>
+      <td>-0.132871</td>
+      <td>-0.121090</td>
+      <td>0.132882</td>
+      <td>0.806970</td>
+      <td>1.293984</td>
+    </tr>
+    <tr>
+      <th>profile_1</th>
+      <td>0.056667</td>
+      <td>1.264627</td>
+      <td>0.24145</td>
+      <td>0.568443</td>
+      <td>0.235304</td>
+      <td>0.372684</td>
+      <td>-0.276888</td>
+      <td>-0.183445</td>
+      <td>0.883316</td>
+      <td>-1.024142</td>
+      <td>...</td>
+      <td>0.101670</td>
+      <td>0.318027</td>
+      <td>0.132751</td>
+      <td>0.467027</td>
+      <td>0.621374</td>
+      <td>0.100032</td>
+      <td>0.074036</td>
+      <td>-0.099917</td>
+      <td>0.558041</td>
+      <td>1.151867</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 70 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_score_error</span> <span class="o">=</span> <span class="n">sample_squared_error</span><span class="p">(</span><span class="n">scores</span><span class="o">=</span><span class="n">all_scores</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_df</span><span class="p">)</span>
+
+<span class="n">all_score_error</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">metadata_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">all_score_error</span><span class="p">,</span>
+                      <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">,</span>
+                      <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Output file</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="s2">&quot;all_model_sample_squared_error.tsv&quot;</span><span class="p">)</span>
+<span class="n">all_score_error</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">all_score_error</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">all_score_error</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(357, 74)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[13]:</div>
 
 
 
@@ -13562,23 +14300,23 @@ div#notebook {
       <th>Metadata_gene_name</th>
       <th>Metadata_pert_name</th>
       <th>Metadata_cell_line</th>
-      <th>data_type</th>
-      <th>cc_all_high_n_spots_h2ax_mean_</th>
-      <th>cc_all_large_notround_polynuclear_mean_</th>
-      <th>cc_all_large_round_polyploid_mean_</th>
-      <th>cc_all_n_objects_</th>
-      <th>cc_all_n_spots_mean_</th>
+      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_large_notround_polynuclear_mean</th>
+      <th>cc_all_large_round_polyploid_mean</th>
+      <th>cc_all_n_objects</th>
+      <th>cc_all_n_spots_mean</th>
+      <th>cc_all_n_spots_per_nucleus_area_mean</th>
       <th>...</th>
-      <th>vb_num_live_cells_</th>
-      <th>vb_percent_all_apoptosis_</th>
-      <th>vb_percent_all_early_apoptosis_</th>
-      <th>vb_percent_all_late_apoptosis_</th>
-      <th>vb_percent_caspase_dead_only_</th>
-      <th>vb_percent_dead_</th>
-      <th>vb_percent_dead_only_</th>
-      <th>vb_percent_live_</th>
-      <th>vb_ros_back_mean_</th>
-      <th>vb_ros_mean_</th>
+      <th>vb_num_live_cells</th>
+      <th>vb_percent_all_apoptosis</th>
+      <th>vb_percent_all_early_apoptosis</th>
+      <th>vb_percent_all_late_apoptosis</th>
+      <th>vb_percent_caspase_dead_only</th>
+      <th>vb_percent_dead</th>
+      <th>vb_percent_dead_only</th>
+      <th>vb_percent_live</th>
+      <th>vb_ros_back_mean</th>
+      <th>vb_ros_mean</th>
     </tr>
   </thead>
   <tbody>
@@ -13588,23 +14326,23 @@ div#notebook {
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>train</td>
-      <td>0.143341</td>
-      <td>0.446032</td>
-      <td>0.094610</td>
-      <td>0.085508</td>
-      <td>0.289411</td>
+      <td>0.018275</td>
+      <td>0.020149</td>
+      <td>0.005744</td>
+      <td>0.087612</td>
+      <td>0.012734</td>
+      <td>0.005873</td>
       <td>...</td>
-      <td>-0.069560</td>
-      <td>0.062529</td>
-      <td>0.113555</td>
-      <td>0.054362</td>
-      <td>0.070312</td>
-      <td>0.113467</td>
-      <td>0.086319</td>
-      <td>-0.114478</td>
-      <td>0.412711</td>
-      <td>0.740138</td>
+      <td>0.220338</td>
+      <td>0.003910</td>
+      <td>0.012895</td>
+      <td>0.002955</td>
+      <td>0.035830</td>
+      <td>0.060682</td>
+      <td>0.043019</td>
+      <td>0.061187</td>
+      <td>0.15544</td>
+      <td>0.306745</td>
     </tr>
     <tr>
       <th>1</th>
@@ -13612,99 +14350,27 @@ div#notebook {
       <td>AKT1</td>
       <td>AKT1-2</td>
       <td>A549</td>
-      <td>train</td>
-      <td>-0.083619</td>
-      <td>0.336090</td>
-      <td>-0.114656</td>
-      <td>0.307962</td>
-      <td>-0.096816</td>
+      <td>0.019680</td>
+      <td>0.862180</td>
+      <td>0.126811</td>
+      <td>0.067850</td>
+      <td>0.110304</td>
+      <td>0.236787</td>
       <td>...</td>
-      <td>0.197695</td>
-      <td>0.006167</td>
-      <td>0.113555</td>
-      <td>-0.004837</td>
-      <td>0.070426</td>
-      <td>0.060157</td>
-      <td>0.244093</td>
-      <td>-0.060248</td>
-      <td>0.222378</td>
-      <td>0.522029</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>profile_2</td>
-      <td>ARID1B</td>
-      <td>ARID1B-1</td>
-      <td>A549</td>
-      <td>train</td>
-      <td>0.119751</td>
-      <td>0.588489</td>
-      <td>0.066686</td>
-      <td>0.218016</td>
-      <td>0.148074</td>
-      <td>...</td>
-      <td>0.138779</td>
-      <td>0.086691</td>
-      <td>0.113555</td>
-      <td>0.094341</td>
-      <td>0.066244</td>
-      <td>-0.009957</td>
-      <td>-0.044788</td>
-      <td>0.009996</td>
-      <td>-0.083336</td>
-      <td>-0.191892</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>profile_3</td>
-      <td>ARID1B</td>
-      <td>ARID1B-2</td>
-      <td>A549</td>
-      <td>train</td>
-      <td>0.195636</td>
-      <td>0.534554</td>
-      <td>0.197059</td>
-      <td>0.046870</td>
-      <td>0.168220</td>
-      <td>...</td>
-      <td>0.029458</td>
-      <td>0.204262</td>
-      <td>0.113555</td>
-      <td>0.201743</td>
-      <td>0.090637</td>
-      <td>0.052019</td>
-      <td>-0.043981</td>
-      <td>-0.052339</td>
-      <td>-0.101968</td>
-      <td>-0.179666</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>profile_4</td>
-      <td>ATF4</td>
-      <td>ATF4-1</td>
-      <td>A549</td>
-      <td>train</td>
-      <td>1.263739</td>
-      <td>0.124262</td>
-      <td>2.116508</td>
-      <td>-1.830519</td>
-      <td>1.068879</td>
-      <td>...</td>
-      <td>-2.380564</td>
-      <td>0.588663</td>
-      <td>0.113555</td>
-      <td>0.575612</td>
-      <td>0.105472</td>
-      <td>0.768809</td>
-      <td>0.728644</td>
-      <td>-0.768476</td>
-      <td>-0.882329</td>
-      <td>-0.069890</td>
+      <td>0.009221</td>
+      <td>0.097256</td>
+      <td>0.000369</td>
+      <td>0.222656</td>
+      <td>0.303544</td>
+      <td>0.001590</td>
+      <td>0.028920</td>
+      <td>0.001574</td>
+      <td>0.11267</td>
+      <td>0.396697</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 75 columns</p>
+<p>2 rows × 74 columns</p>
 </div>
 </div>
 
@@ -13716,15 +14382,221 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Output file</span>
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="s2">&quot;all_model_predictions.tsv&quot;</span><span class="p">)</span>
-<span class="n">all_scores</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_shuffle_score_error</span> <span class="o">=</span> <span class="n">sample_squared_error</span><span class="p">(</span><span class="n">scores</span><span class="o">=</span><span class="n">all_shuffle_scores</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_df</span><span class="p">)</span>
+
+<span class="n">all_shuffle_score_error</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">metadata_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">all_shuffle_score_error</span><span class="p">,</span>
+                      <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">,</span>
+                      <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Output file</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="s2">&quot;all_model_sample_squared_error_shuffled.tsv&quot;</span><span class="p">)</span>
+<span class="n">all_shuffle_score_error</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">all_shuffle_score_error</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">all_shuffle_score_error</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(357, 74)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[14]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Metadata_profile_id</th>
+      <th>Metadata_gene_name</th>
+      <th>Metadata_pert_name</th>
+      <th>Metadata_cell_line</th>
+      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_large_notround_polynuclear_mean</th>
+      <th>cc_all_large_round_polyploid_mean</th>
+      <th>cc_all_n_objects</th>
+      <th>cc_all_n_spots_mean</th>
+      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>...</th>
+      <th>vb_num_live_cells</th>
+      <th>vb_percent_all_apoptosis</th>
+      <th>vb_percent_all_early_apoptosis</th>
+      <th>vb_percent_all_late_apoptosis</th>
+      <th>vb_percent_caspase_dead_only</th>
+      <th>vb_percent_dead</th>
+      <th>vb_percent_dead_only</th>
+      <th>vb_percent_live</th>
+      <th>vb_ros_back_mean</th>
+      <th>vb_ros_mean</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>profile_0</td>
+      <td>AKT1</td>
+      <td>AKT1-1</td>
+      <td>A549</td>
+      <td>0.053465</td>
+      <td>0.119086</td>
+      <td>0.024860</td>
+      <td>0.263440</td>
+      <td>0.005625</td>
+      <td>0.000024</td>
+      <td>...</td>
+      <td>0.343635</td>
+      <td>0.040766</td>
+      <td>0.012895</td>
+      <td>0.029297</td>
+      <td>0.027825</td>
+      <td>0.200285</td>
+      <td>0.093472</td>
+      <td>0.095495</td>
+      <td>0.711332</td>
+      <td>1.488563</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>profile_1</td>
+      <td>AKT1</td>
+      <td>AKT1-2</td>
+      <td>A549</td>
+      <td>0.034530</td>
+      <td>1.043949</td>
+      <td>0.003353</td>
+      <td>0.502432</td>
+      <td>0.017940</td>
+      <td>0.042606</td>
+      <td>...</td>
+      <td>0.087386</td>
+      <td>0.013484</td>
+      <td>0.000369</td>
+      <td>0.093453</td>
+      <td>0.328199</td>
+      <td>0.012962</td>
+      <td>0.008482</td>
+      <td>0.028174</td>
+      <td>0.372532</td>
+      <td>1.161977</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>profile_2</td>
+      <td>ARID1B</td>
+      <td>ARID1B-1</td>
+      <td>A549</td>
+      <td>0.034627</td>
+      <td>0.722627</td>
+      <td>0.001149</td>
+      <td>0.205119</td>
+      <td>0.023502</td>
+      <td>0.056427</td>
+      <td>...</td>
+      <td>0.046204</td>
+      <td>0.018822</td>
+      <td>0.002663</td>
+      <td>0.002386</td>
+      <td>0.273628</td>
+      <td>0.020284</td>
+      <td>0.003024</td>
+      <td>0.017699</td>
+      <td>0.152970</td>
+      <td>0.000858</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>profile_3</td>
+      <td>ARID1B</td>
+      <td>ARID1B-2</td>
+      <td>A549</td>
+      <td>0.101952</td>
+      <td>0.006075</td>
+      <td>0.069894</td>
+      <td>0.094534</td>
+      <td>0.409254</td>
+      <td>0.344512</td>
+      <td>...</td>
+      <td>0.177358</td>
+      <td>0.010652</td>
+      <td>0.000630</td>
+      <td>0.049614</td>
+      <td>0.113358</td>
+      <td>0.083677</td>
+      <td>0.024870</td>
+      <td>0.039940</td>
+      <td>0.034283</td>
+      <td>0.000347</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>profile_4</td>
+      <td>ATF4</td>
+      <td>ATF4-1</td>
+      <td>A549</td>
+      <td>13.186057</td>
+      <td>0.057355</td>
+      <td>9.498539</td>
+      <td>3.254429</td>
+      <td>5.888370</td>
+      <td>3.803059</td>
+      <td>...</td>
+      <td>4.892744</td>
+      <td>0.040766</td>
+      <td>0.012895</td>
+      <td>0.124154</td>
+      <td>0.000697</td>
+      <td>0.069706</td>
+      <td>0.000009</td>
+      <td>0.525371</td>
+      <td>0.606134</td>
+      <td>0.001060</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 74 columns</p>
+</div>
+</div>
+
+</div>
+
 </div>
 </div>
 
