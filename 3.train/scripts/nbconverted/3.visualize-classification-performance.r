@@ -118,7 +118,7 @@ ggplot(auc_diff_df,
                                           fill = "#fdfff4"))
 
 file <- file.path("figures", "cell_health_metric_shuffle_difference_summary.png")
-#ggsave(file, dpi = 300, width = 9, height = 6)
+ggsave(file, dpi = 300, width = 9, height = 6)
 
 ggplot(full_roc_df, aes(x = fpr, y = tpr)) +
     coord_fixed() +
