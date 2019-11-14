@@ -66,13 +66,16 @@ x_df = (
         axis="columns")
 )
 
+# Realign metadata column names
 x_metadata_cols = x_df.columns[x_df.columns.str.startswith("Metadata")]
 x_metadata_df = x_df.loc[:, x_metadata_cols]
+
 x_df = x_df.drop(x_metadata_cols, axis="columns")
 x_df = pd.concat([x_metadata_df, x_df], axis="columns")
 
 # Drop all features that have missing values
 additional_exclude_features = get_na_columns(x_df, features="infer", cutoff=0)
+print("Drop {} features for missing values".format(len(additional_exclude_features)))
 x_df = x_df.drop(additional_exclude_features, axis="columns")
 
 print(x_df.shape)
@@ -183,6 +186,7 @@ x_consensus_df = (
     .reset_index()
     .query("Metadata_pert_name in @all_measurements_df.Metadata_pert_name.unique()")
     .query("Metadata_cell_line in @all_measurements_df.Metadata_cell_line.unique()")
+    .reset_index(drop=True)
     .reset_index()
     .rename({"index": "Metadata_profile_id"}, axis='columns')
 )
@@ -221,6 +225,7 @@ y_consensus_df = modz(
     replicate_columns=cell_health_meta_features,
     precision=5)
 
+print(y_consensus_df.shape)
 y_consensus_df.head()
 
 
@@ -232,18 +237,29 @@ y_meta_cols = ["Metadata_profile_id", "Metadata_pert_name", "Metadata_cell_line"
 y_consensus_df = (
     y_consensus_df
     .reset_index()
-    .query("guide in @all_measurements_df.Metadata_pert_name.unique()")
-    .query("cell_id in @all_measurements_df.Metadata_cell_line.unique()")
     .reset_index(drop=True)
     .merge(
         x_consensus_df.loc[:, y_meta_cols],
         left_on=["guide", "cell_id"],
-        right_on=["Metadata_pert_name", "Metadata_cell_line"]
+        right_on=["Metadata_pert_name", "Metadata_cell_line"],
+        how="right"
     )
 )
 
-y_columns = y_meta_cols + y_consensus_df.loc[:, ~y_consensus_df.columns.str.startswith("Metadata_")].columns.tolist()
-y_consensus_df = y_consensus_df.loc[:, y_columns].drop(["guide", "cell_id"], axis="columns")
+# Get columns in correct order
+y_columns = (
+    y_meta_cols +
+    y_consensus_df
+    .loc[:, ~y_consensus_df.columns.str.startswith("Metadata_")]
+    .columns
+    .tolist()
+)
+
+y_consensus_df = (
+    y_consensus_df
+    .loc[:, y_columns]
+    .drop(["guide", "cell_id"], axis="columns")
+)
 
 print(y_consensus_df.shape)
 y_consensus_df.head(5)
@@ -254,15 +270,15 @@ y_consensus_df.head(5)
 
 # Confirm that matrices are aligned
 pd.testing.assert_series_equal(x_consensus_df.Metadata_profile_id,
-                               y_consensus_df.Metadata_profile_id, check_names=False)
+                               y_consensus_df.Metadata_profile_id, check_names=True)
 
 # Are the guides aligned?
 pd.testing.assert_series_equal(x_consensus_df.Metadata_pert_name,
-                               y_consensus_df.Metadata_pert_name, check_names=False)
+                               y_consensus_df.Metadata_pert_name, check_names=True)
 
 # Are the cells aligned?
 pd.testing.assert_series_equal(x_consensus_df.Metadata_cell_line,
-                               y_consensus_df.Metadata_cell_line, check_names=False)
+                               y_consensus_df.Metadata_cell_line, check_names=True)
 
 
 # ## Output Consensus Signatures
