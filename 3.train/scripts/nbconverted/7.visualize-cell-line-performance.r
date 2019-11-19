@@ -135,7 +135,7 @@ ggplot(results_df %>%
     scale_color_manual(name = "Measurement",
                        values = dye_colors,
                        labels = dye_labels) +
-    facet_wrap(shuffle~metric, scales = "free") +
+    facet_wrap(metric~shuffle, scales = "free") +
     theme_bw() +
     theme(axis.text = element_text(size = 10),
           axis.title = element_text(size = 12),
@@ -155,10 +155,11 @@ ggplot(results_df %>%
     geom_jitter(aes(color = assay), width = 0.01) +
     geom_line(aes(color = assay),
               alpha = 0.5) +
+    ylab("value (-1 set as min value)") +
     scale_color_manual(name = "Measurement",
                        values = dye_colors,
                        labels = dye_labels) +
-    facet_wrap(shuffle~metric, scales = "free") +
+    facet_wrap(metric~shuffle, scales = "free") +
     theme_bw() +
     theme(axis.text = element_text(size = 10),
           axis.title = element_text(size = 12),

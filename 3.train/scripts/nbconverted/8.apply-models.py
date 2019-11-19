@@ -77,7 +77,8 @@ shuffle_model_dict, shuffle_model_coef = load_models(shuffle=True)
 
 
 # Load Metadata Mapping File
-file = os.path.join("data", "profile_id_metadata_mapping.tsv")
+data_dir = os.path.join("..", "1.generate-profiles", "data")
+file = os.path.join(data_dir, "profile_id_metadata_mapping.tsv")
 metadata_df = pd.read_csv(file, sep='\t')
 
 metadata_df.head()

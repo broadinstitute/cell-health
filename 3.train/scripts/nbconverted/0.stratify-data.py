@@ -5,7 +5,7 @@
 # 
 # **Gregory Way, 2019**
 # 
-# Split the input data into training and testing sets balanced by guide infection.
+# Split the input data into training and testing sets balanced by cell line.
 
 # In[1]:
 
@@ -26,253 +26,125 @@ from pycytominer.get_na_columns import get_na_columns
 np.random.seed(123)
 
 
-# ## Load X Matrices
-
 # In[3]:
 
 
-batch = "CRISPR_PILOT_B1"
+test_proportion = 0.15
 data_dir = os.path.join("..", "1.generate-profiles", "data")
-profile_dir = os.path.join(data_dir, "profiles", batch)
 
-all_profile_files = []
-for plate in os.listdir(profile_dir):
-    plate_dir = os.path.join(profile_dir, plate)
-    
-    if plate == '.DS_Store':
-        continue
 
-    for profile_file in os.listdir(plate_dir):
-        if "feature_select" in profile_file:
-            all_profile_files.append(os.path.join(plate_dir, profile_file))
-
+# ## Load Data
 
 # In[4]:
 
 
-x_df = (
-    pd.concat(
-        [pd.read_csv(x) for x in all_profile_files],
-        sort=True
-    )
-    .rename(
-        {
-            "Image_Metadata_Plate": "Metadata_Plate",
-            "Image_Metadata_Well": "Metadata_Well"
-        },
-        axis="columns")
-)
+file = os.path.join(data_dir, "consensus", "cell_painting_modz.tsv.gz")
+x_consensus_df = pd.read_csv(file, sep="\t")
 
-# Drop all features that have missing values
-additional_exclude_features = get_na_columns(x_df, features="infer", cutoff=0)
-x_df = x_df.drop(additional_exclude_features, axis="columns")
+num_original_features = x_consensus_df.shape[1]
 
-print(x_df.shape)
-x_df.head(2)
+print(x_consensus_df.shape)
+x_consensus_df.head(2)
 
-
-# ## Load Y Matrix
 
 # In[5]:
 
 
-file = os.path.join(data_dir, "labels", "normalized_cell_health_labels.tsv")
-y_df = pd.read_csv(file, sep='\t').drop(["plate_name", "well_col", "well_row"], axis="columns")
+file = os.path.join(data_dir, "consensus", "cell_health_modz.tsv.gz")
+y_consensus_df = pd.read_csv(file, sep="\t")
 
-print(y_df.shape)
-y_df.head(2)
+print(y_consensus_df.shape)
+y_consensus_df.head(2)
 
 
-# ## Determine how many profiles have status labels
+# ## Subset Features into those acquired in Repurposing Data
 
 # In[6]:
 
 
-x_groupby_cols = ["Metadata_gene_name", "Metadata_pert_name", "Metadata_cell_line"]
+# Note, these files are not yet public!
+repurposing_project_id = "2015_10_05_DrugRepurposing_AravindSubramanian_GolubLab_Broad"
+example_plate = "SQ00015058"
+
+repurposing_profile_dir = os.path.join(
+    "/Users",
+    "gway",
+    "work",
+    "projects",
+    repurposing_project_id,
+    "workspace",
+    "software",
+    repurposing_project_id,
+    "subsampling",
+    "data",
+    "profiles"
+)
+
+plate_dir = os.path.join(repurposing_profile_dir, example_plate, "n_all")
+example_plate_file = os.path.join(plate_dir, "{}_subsample_all_normalized.csv".format(example_plate))
+repurposing_df = pd.read_csv(example_plate_file)
+
+print(repurposing_df.shape)
+repurposing_df.head()
 
 
 # In[7]:
 
 
-x_meta_df = (
-    x_df
-    .loc[:, x_groupby_cols]
-    .assign(n_measurements=1)
-    .groupby(x_groupby_cols)
-    .count()
-    .reset_index()
-    .assign(data_type="cell_painting")
-    .merge(x_df.loc[:, x_groupby_cols + ["Metadata_Well", "Metadata_Plate"]],
-           how="left",
-           on=x_groupby_cols)
+cp_features = set(repurposing_df.columns[~repurposing_df.columns.str.startswith("Metadata")])
+cp_features = sorted(
+    list(
+        cp_features
+        .intersection(
+            set(
+                x_consensus_df.columns[~x_consensus_df.columns.str.startswith("Metadata")]
+            )
+        )
+    )
 )
 
-print(x_meta_df.shape)
-x_meta_df.head(8)
+len(cp_features)
 
 
 # In[8]:
 
 
-y_groupby_cols = ["guide", "cell_id"]
+meta_cols = x_consensus_df.columns[x_consensus_df.columns.str.startswith("Metadata")].tolist()
+x_consensus_df = x_consensus_df.loc[:, meta_cols + cp_features]
+num_subset_features = x_consensus_df.shape[1]
+
+print(x_consensus_df.shape)
+x_consensus_df.head()
 
 
 # In[9]:
 
 
-y_meta_df = (
-    y_df
-    .loc[:, y_groupby_cols]
-    .assign(n_measurements=1)
-    .groupby(y_groupby_cols)
-    .count()
-    .reset_index()
-    .assign(data_type="cell_health")
-)
-
-print(y_meta_df.shape)
-y_meta_df.head(8)
-
-
-# In[10]:
-
-
-all_measurements_df = (
-    x_meta_df
-    .merge(
-        y_meta_df,
-        left_on=["Metadata_pert_name", "Metadata_cell_line"],
-        right_on=["guide", "cell_id"],
-        suffixes=["_paint", "_health"],
-        how="inner")
-    .sort_values(by=["Metadata_cell_line", "Metadata_pert_name"])
-    .reset_index(drop=True)
-)
-
-file = os.path.join("results", "all_profile_metadata.tsv")
-all_measurements_df.to_csv(file, sep='\t', index=False)
-
-print(all_measurements_df.shape)
-all_measurements_df.head()
-
-
-# ## Aggregate Profiles and Outcomes Further
-# 
-# Because the plates do not match (no way to map wells across experiments), we must aggregate the ~6 cell painting replicates per guide and ~4 cell health replicates per guide together to form a single profile and single outcome.
-
-# In[11]:
-
-
-x_columns = x_groupby_cols + x_df.loc[:, ~x_df.columns.str.startswith("Metadata_")].columns.tolist()
-
-
-# In[12]:
-
-
-x_agg_df = (
-    x_df
-    .loc[:, x_columns]
-    .groupby(x_groupby_cols)
-    .median()
-    .reset_index()
-    .query("Metadata_gene_name in @all_measurements_df.Metadata_gene_name.unique()")
-    .query("Metadata_pert_name in @all_measurements_df.Metadata_pert_name.unique()")
-    .query("Metadata_cell_line in @all_measurements_df.Metadata_cell_line.unique()")
-    .sort_values(by=["Metadata_cell_line", "Metadata_pert_name"])
-    .reset_index(drop=True)
-    .reset_index()
-    .rename({"index": "Metadata_profile_id"}, axis='columns')
-)
-
-x_agg_df.Metadata_profile_id = ["profile_{}".format(x) for x in x_agg_df.Metadata_profile_id]
-
-
-print(x_agg_df.shape)
-x_agg_df.head(5)
-
-
-# In[13]:
-
-
-profile_id_mapping_df = x_agg_df.loc[:,
-                                     ["Metadata_profile_id",
-                                      "Metadata_gene_name",
-                                      "Metadata_pert_name",
-                                     "Metadata_cell_line"]]
-
-file = os.path.join("data", "profile_id_metadata_mapping.tsv")
-profile_id_mapping_df.to_csv(file, sep='\t', index=False)
-
-profile_id_mapping_df.head()
-
-
-# In[14]:
-
-
-y_meta_cols = ["Metadata_profile_id", "Metadata_gene_name", "Metadata_pert_name", "Metadata_cell_line"]
-
-y_agg_df = (
-    y_df
-    .groupby(y_groupby_cols)
-    .median()
-    .reset_index()
-    .query("guide in @all_measurements_df.Metadata_pert_name.unique()")
-    .query("cell_id in @all_measurements_df.Metadata_cell_line.unique()")
-    .sort_values(by=["cell_id", "guide"])
-    .reset_index(drop=True)
-    .merge(
-        x_agg_df.loc[:, y_meta_cols],
-        left_on=["guide", "cell_id"],
-        right_on=["Metadata_pert_name", "Metadata_cell_line"]
-    )
-)
-
-y_columns = y_meta_cols + y_agg_df.loc[:, ~y_agg_df.columns.str.startswith("Metadata_")].columns.tolist()
-y_agg_df = y_agg_df.loc[:, y_columns].drop(["guide", "cell_id"], axis="columns")
-
-print(y_agg_df.shape)
-y_agg_df.head(2)
-
-
-# In[15]:
-
-
-# Confirm that matrices are aligned
-pd.testing.assert_series_equal(x_agg_df.Metadata_profile_id, y_agg_df.Metadata_profile_id, check_names=False)
-
-# Are the guides aligned?
-pd.testing.assert_series_equal(x_agg_df.Metadata_pert_name, y_agg_df.Metadata_pert_name, check_names=False)
-
-# Are the cells aligned?
-pd.testing.assert_series_equal(x_agg_df.Metadata_cell_line, y_agg_df.Metadata_cell_line, check_names=False)
+print("subsetting by repurposing features removed {} features".format(num_original_features - num_subset_features))
 
 
 # ## Split into Training and Testing
 
-# In[16]:
-
-
-test_proportion = 0.15
-
-
-# In[17]:
+# In[10]:
 
 
 x_train_df, x_test_df, y_train_df, y_test_df = train_test_split(
-    x_agg_df,
-    y_agg_df,
+    x_consensus_df,
+    y_consensus_df,
     test_size=test_proportion,
-    random_state=42)
+    stratify=y_consensus_df.Metadata_cell_line,
+    random_state=42
+)
 
 
-# In[18]:
+# In[11]:
 
 
 print(x_train_df.shape)
 print(x_test_df.shape)
 
 
-# In[19]:
+# In[12]:
 
 
 file = os.path.join("data", "x_train.tsv.gz")

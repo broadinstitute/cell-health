@@ -148,4 +148,3 @@ cowplot::save_plot(filename = cowplot_file,
                            plot = all_coef_gg,
                            base_height = 6,
                            base_width = 8)
-
