@@ -155,7 +155,7 @@ ggplot(results_df %>%
     geom_jitter(aes(color = assay), width = 0.01) +
     geom_line(aes(color = assay),
               alpha = 0.5) +
-    ylab("value (-1 to 1 range)") +
+    ylab("value (-1 set as min value)") +
     scale_color_manual(name = "Measurement",
                        values = dye_colors,
                        labels = dye_labels) +
