@@ -11,7 +11,7 @@ coef_file <- file.path(results_dir, "full_cell_health_coefficients.tsv.gz")
 full_coef_df <- readr::read_tsv(coef_file, col_types = readr::cols()) %>%
     dplyr::filter(y_transform == "raw")
 
-metadata_file <- file.path("data", "profile_id_metadata_mapping.tsv")
+metadata_file <- file.path("..", "1.generate-profiles", "data", "profile_id_metadata_mapping.tsv")
 metadata_df <- readr::read_tsv(metadata_file, col_types = readr::cols())
 
 y_file <- file.path(results_dir, "full_cell_health_y_labels.tsv.gz")
