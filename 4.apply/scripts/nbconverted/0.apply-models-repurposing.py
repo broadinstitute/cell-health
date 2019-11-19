@@ -20,6 +20,8 @@ import pandas as pd
 from joblib import load
 import umap
 
+from pycytominer.consensus import modz
+
 sys.path.append("../3.train")
 from scripts.ml_utils import load_train_test, load_models
 
@@ -27,12 +29,18 @@ from scripts.ml_utils import load_train_test, load_models
 # In[2]:
 
 
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+
+# In[3]:
+
+
 np.random.seed(123)
 
 
 # ## 1) Load Models and Training Data
 
-# In[3]:
+# In[4]:
 
 
 model_dir = os.path.join("..", "3.train", "models")
@@ -41,7 +49,7 @@ model_dict, model_coef = load_models(model_dir=model_dir)
 shuffle_model_dict, shuffle_model_coef = load_models(model_dir=model_dir, shuffle=True)
 
 
-# In[4]:
+# In[5]:
 
 
 data_dir = os.path.join("..", "3.train", "data")
@@ -49,54 +57,43 @@ x_train_df, x_test_df, y_train_df, y_test_df = load_train_test(data_dir=data_dir
 
 
 # ## 2) Extract Repurposing Data Files
+# 
+# **NOTE** - these files are not yet public!
 
-# In[5]:
+# In[6]:
 
 
 # List drug repurposing data
+repurposing_project_id = "2015_10_05_DrugRepurposing_AravindSubramanian_GolubLab_Broad"
+
 repurposing_profile_dir = os.path.join(
     "/Users",
     "gway",
     "work",
     "projects",
-    "2015_10_05_DrugRepurposing_AravindSubramanian_GolubLab_Broad",
+    repurposing_project_id,
     "workspace",
     "software",
-    "2015_10_05_DrugRepurposing_AravindSubramanian_GolubLab_Broad",
+    repurposing_project_id,
     "subsampling",
     "data",
     "profiles"
 )
 
 
-# In[6]:
+# In[7]:
 
 
+# Build a single data frame that holds all profiles
 plate_info = {}
+all_dfs = []
+all_metadata_dfs = []
 all_plates = os.listdir(repurposing_profile_dir)
 for plate in all_plates:
     plate_dir = os.path.join(repurposing_profile_dir, plate, "n_all")
     norm_file = os.path.join(plate_dir, "{}_subsample_all_normalized.csv".format(plate))
     plate_info[plate] = norm_file
-
-
-# ## 3) Apply all real and shuffled Models to all Repurposing Plates
-
-# In[7]:
-
-
-output_dir = os.path.join("data", "repurposing_transformed")
-
-
-# In[8]:
-
-
-real_models = []
-shuffled_models = []
-all_dfs = []
-all_metadata_dfs = []
-for plate in all_plates:
-    norm_file = plate_info[plate]
+    
     if os.path.exists(norm_file):
         df = pd.read_csv(norm_file)
 
@@ -105,50 +102,12 @@ for plate in all_plates:
         
         all_dfs.append(feature_df)
         all_metadata_dfs.append(metadata_df)
-        
-        all_scores = {}
-        all_shuffle_scores = {}
-        for cell_health_feature in model_dict.keys():
-            # Apply Real Model Classifiers
-            model_clf = model_dict[cell_health_feature]
-            pred_df = model_clf.predict(feature_df)
-            all_scores[cell_health_feature] = pred_df
-
-            # Apply Shuffled Model Classifiers
-            shuffle_model_clf = shuffle_model_dict[cell_health_feature]
-            shuffle_pred_df = shuffle_model_clf.predict(feature_df)
-            all_shuffle_scores[cell_health_feature] = shuffle_pred_df
-    
-        # Output scores
-        all_score_df = pd.DataFrame.from_dict(all_scores)
-        full_df = (
-            metadata_df
-            .merge(all_score_df,
-                   left_index=True,
-                   right_index=True)
-            .assign(Metadata_plate=plate)
-        )
-        real_models.append(full_df)
-            
-        shuff_score_df = pd.DataFrame.from_dict(all_shuffle_scores)
-        full_shuff_df = (
-            metadata_df
-            .merge(shuff_score_df,
-                   left_index=True,
-                   right_index=True)
-            .assign(Metadata_plate=plate)
-        )
-        shuffled_models.append(full_shuff_df)
-        
-    else:
-        print(plate)
 
 
-# ## 4) Output Results
-
-# In[9]:
+# In[8]:
 
 
+# Merge feature data and metadata
 all_df = pd.concat(all_dfs)
 all_metadata_df = pd.concat(all_metadata_dfs)
 
@@ -158,55 +117,147 @@ print(complete_df.shape)
 complete_df.head()
 
 
+# In[9]:
+
+
+# Round dose information and remove samples with low dose representation
+# Note: Need to revisit this, perhaps there is a better way.
+# (Hamdah and I chatted about alternative strategies)
+complete_df.Metadata_mmoles_per_liter = complete_df.Metadata_mmoles_per_liter.fillna(0).round(1)
+
+doses = complete_df.Metadata_mmoles_per_liter.value_counts()
+doses = doses[doses > 100].index.tolist()
+
+complete_df = complete_df.query("Metadata_mmoles_per_liter in @doses")
+
+# Also fill in NaN in Metadata_broad_sample as DMSO
+complete_df.Metadata_broad_sample = complete_df.Metadata_broad_sample.fillna("DMSO")
+
+print(complete_df.shape)
+complete_df.head()
+
+
 # In[10]:
 
 
-full_real_df = pd.concat(real_models)
+# Create consensus profiles
+replicate_cols = ["Metadata_broad_sample", "Metadata_mmoles_per_liter"]
 
-# Determine proper alignment of columns
-output_cols = full_real_df.columns.tolist()
-output_cols.insert(0, output_cols.pop(output_cols.index("Metadata_plate")))
-full_real_df = full_real_df.loc[:, output_cols].reset_index(drop=True)
+complete_consensus_df = modz(
+    complete_df,
+    features="infer",
+    replicate_columns=replicate_cols,
+    precision=5
+)
 
-output_real_file = os.path.join(output_dir, "repurposing_transformed_real_models.tsv.gz")
-full_real_df.to_csv(output_real_file, sep="\t", index=False, compression="gzip")
+complete_consensus_df = complete_consensus_df.reset_index()
 
-print(full_real_df.shape)
-full_real_df.head()
+print(complete_consensus_df.shape)
+complete_consensus_df.head()
 
 
 # In[11]:
 
 
-full_shuffled_df = pd.concat(shuffled_models)
-full_shuffled_df = full_shuffled_df.loc[:, output_cols].reset_index(drop=True)
+# Output consensus profiles
+output_file = os.path.join("data", "repurposing_modz_consensus.tsv.gz")
+complete_consensus_df.to_csv(output_file, sep='\t', compression="gzip", index=False)
+
+
+# In[12]:
+
+
+# Extract cell profiler and metadata features
+cp_features = x_test_df.columns[~x_test_df.columns.str.startswith("Metadata")].tolist()
+meta_cols = complete_consensus_df.columns[complete_consensus_df.columns.str.startswith("Metadata")].tolist()
+
+
+# ## 3) Apply all real and shuffled Models to all Repurposing Plates
+
+# In[13]:
+
+
+feature_df = complete_consensus_df.reindex(x_test_df.columns, axis="columns")
+metadata_df = complete_consensus_df.loc[:, meta_cols]
+
+all_scores = {}
+all_shuffle_scores = {}
+for cell_health_feature in model_dict.keys():
+    # Apply Real Model Classifiers
+    model_clf = model_dict[cell_health_feature]
+    pred_df = model_clf.predict(feature_df)
+    all_scores[cell_health_feature] = pred_df
+
+    # Apply Shuffled Model Classifiers
+    shuffle_model_clf = shuffle_model_dict[cell_health_feature]
+    shuffle_pred_df = shuffle_model_clf.predict(feature_df)
+    all_shuffle_scores[cell_health_feature] = shuffle_pred_df
+
+
+# ## 4) Output Results
+
+# In[14]:
+
+
+output_dir = os.path.join("data", "repurposing_transformed")
+
+
+# In[15]:
+
+
+# Output scores
+all_score_df = pd.DataFrame.from_dict(all_scores)
+full_df = (
+    metadata_df
+    .merge(all_score_df,
+           left_index=True,
+           right_index=True)
+)
+
+output_real_file = os.path.join(output_dir, "repurposing_transformed_real_models.tsv.gz")
+full_df.to_csv(output_real_file, sep="\t", index=False, compression="gzip")
+
+print(full_df.shape)
+full_df.head()
+
+
+# In[16]:
+
+
+shuff_score_df = pd.DataFrame.from_dict(all_shuffle_scores)
+full_shuff_df = (
+    metadata_df
+    .merge(shuff_score_df,
+           left_index=True,
+           right_index=True)
+)
 
 output_real_file = os.path.join(output_dir, "repurposing_transformed_shuffled_models.tsv.gz")
-full_shuffled_df.to_csv(output_real_file, sep="\t", index=False, compression="gzip")
+full_shuff_df.to_csv(output_real_file, sep="\t", index=False, compression="gzip")
 
-print(full_shuffled_df.shape)
-full_shuffled_df.head()
+print(full_shuff_df.shape)
+full_shuff_df.head()
 
 
 # ## 5) Apply UMAP
 # 
 # ### Part 1: Apply UMAP to Cell Health Transformed Repurposing Hub Features
 
-# In[12]:
+# In[17]:
 
 
 cell_health_features = list(model_dict.keys())
 
 
-# In[13]:
+# In[18]:
 
 
 reducer = umap.UMAP(random_state=1234, n_components=2)
 
-metadata_df = full_real_df.drop(cell_health_features, axis="columns")
+metadata_df = full_df.drop(cell_health_features, axis="columns")
 
 real_embedding_df = pd.DataFrame(
-    reducer.fit_transform(full_real_df.loc[:, cell_health_features]),
+    reducer.fit_transform(full_df.loc[:, cell_health_features]),
     columns=["umap_x", "umap_y"]
 )
 
@@ -223,21 +274,15 @@ real_embedding_df.to_csv(output_real_file, sep="\t", index=False, compression="g
 
 # ### Part 2: Apply UMAP to All Repurposing Hub Cell Painting Profiles
 
-# In[14]:
-
-
-cell_painting_features = [x for x in complete_df.columns if not x.startswith("Metadata_") ]
-
-
-# In[15]:
+# In[19]:
 
 
 reducer = umap.UMAP(random_state=1234, n_components=2)
 
-complete_metadata_df = complete_df.drop(cell_painting_features, axis="columns")
+complete_metadata_df = complete_consensus_df.drop(cp_features, axis="columns")
 
 complete_embedding_df = pd.DataFrame(
-    reducer.fit_transform(complete_df.loc[:, cell_painting_features]),
+    reducer.fit_transform(complete_consensus_df.loc[:, cp_features]),
     columns=["umap_x", "umap_y"]
 )
 
