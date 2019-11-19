@@ -493,8 +493,8 @@ ggplot(all_classification_df,
                     size = 1.2,
                     fontface = "italic",
                     aes(label = target,
-                        x = AUROC,
-                        y = AUROC_test)) +
+                        x = AUROC_test,
+                        y = AUROC)) +
     theme_bw()
 
 outfile <- file.path("figures", paste0("compare_pycytominer_cytominer_", metric, ".png"))
