@@ -31,7 +31,7 @@ ggplot(cp_embedding_df,
 output_file <- file.path("figures", "umap_repurposing_cell_painting_dose_consensus.png")
 ggsave(output_file, height = 5, width = 6, dpi = 500)
 
-visualize_model <- function(target_variable, title, save_figure = TRUE) {
+visualize_model <- function(target_variable, title, dpi = 500, save_figure = TRUE) {
     plot_gg <- ggplot(cp_embedding_df, aes(x = umap_x, y = umap_y)) +
         geom_point(aes_string(color = target_variable),
                    size = 0.5,
@@ -47,7 +47,7 @@ visualize_model <- function(target_variable, title, save_figure = TRUE) {
                                  paste0("umap_repurposing_cell_painting_",
                                         target_variable,
                                         "_consensus.png"))
-        ggsave(output_file, height = 5, width = 6, dpi = 500)
+        ggsave(output_file, height = 5, width = 6, dpi = dpi)
     }
     
     print(plot_gg)
@@ -128,6 +128,7 @@ pdf(pdf_file, width = 5, height = 5, onefile = TRUE)
 for (cell_health_variable in cell_health_variables) {
     umap_gg <- visualize_model(target_variable = cell_health_variable,
                                title = "Prediction",
+                               dpi = 200,
                                save_figure = FALSE)
     
     print(umap_gg)
