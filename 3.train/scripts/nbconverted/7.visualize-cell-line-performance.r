@@ -169,3 +169,58 @@ ggplot(results_df %>%
 
 output_file <- file.path("figures", "cell_line_differences_target_linked_subset.png")
 ggsave(output_file, height = 5, width = 5, dpi = 500)
+
+filtered_results_df <- results_df %>%
+    dplyr::filter(cell_line == "A549",
+                  data_fit == "test",
+                  metric == "r_two") %>%
+    dplyr::select(value, metric, shuffle, target, original_name,
+                  feature_type, measurement, assay, description) %>%
+    tidyr::spread(shuffle, value) %>%
+    dplyr::arrange(desc(shuffle_false))
+
+filtered_results_df$target <- factor(filtered_results_df$target,
+                                     levels = rev(unique(filtered_results_df$target)))
+filtered_results_df$original_name <- factor(filtered_results_df$original_name,
+                                            levels = rev(unique(filtered_results_df$original_name)))
+
+
+print(dim(filtered_results_df))
+head(filtered_results_df, 10)
+
+ggplot(filtered_results_df, aes(x = shuffle_true, y = shuffle_false)) +
+    geom_point(aes(color = assay),
+               size = 0.5,
+               alpha = 0.8) +
+    xlab("Random Shuffle Regression Performance (Test Set)") +
+    ylab("Real Values Regression Performance (Test Set)") +
+    ggtitle("A549 Cell Line") +
+    theme_bw() +
+    theme(axis.text.y = element_text(size = 6),
+          axis.text.x = element_text(size = 7, angle = 90),
+          axis.title = element_text(size = 8),
+          legend.title = element_text(size = 7),
+          legend.text = element_text(size = 6),
+          legend.key.size = unit(0.3, "cm"))
+
+output_file = file.path("figures", "ranked_models_A549_with_shuffle.png")
+ggsave(output_file, dpi = 300, height = 3.5, width = 4)
+
+ggplot(filtered_results_df %>% dplyr::filter(shuffle_false > 0),
+       aes(x = original_name, y = shuffle_false)) +
+    geom_bar(aes(fill = assay), stat="identity") +
+    ylab("Test Set Regression Performance") +
+    xlab("") +
+    ggtitle("A549 Cell Line") +
+    coord_flip() +
+    ylim(c(0, 1)) +
+    theme_bw() +
+    theme(axis.text.y = element_text(size = 6),
+          axis.text.x = element_text(size = 7, angle = 90),
+          axis.title = element_text(size = 8),
+          legend.title = element_text(size = 7),
+          legend.text = element_text(size = 6),
+          legend.key.size = unit(0.3, "cm"))
+
+output_file = file.path("figures", "ranked_models_A549.png")
+ggsave(output_file, dpi = 300, height = 6, width = 6)
