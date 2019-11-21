@@ -10,12 +10,17 @@ process_coefficients <- function(coef_file) {
                                    features = readr::col_character())
                               )
     
+    number_models_per_feature <- rowSums(coef_df > 0) %>% tibble::as_tibble()
+    number_models_per_feature <- cbind(coef_df$features, number_models_per_feature)
+    colnames(number_models_per_feature) <- c("features", "num_models_above_zero")
+    
     coef_sums_df <- abs(coef_df %>% dplyr::select(-features)) %>%
         base::rowSums() %>% tibble::enframe() %>%
         dplyr::mutate(features = coef_df$features) %>%
         dplyr::select(-name) %>%
         dplyr::rename(value_sum = value) %>%
-        dplyr::arrange(desc(value_sum))
+        dplyr::arrange(desc(value_sum)) %>%
+        dplyr::left_join(number_models_per_feature, by = "features")
     
     split_coef_df <- coef_sums_df %>%
         tidyr::separate(features,
@@ -43,7 +48,7 @@ coef_shuffle_df <- process_coefficients(coef_file)
 head(coef_shuffle_df, 2)
 
 real_hist_gg <- ggplot(coef_df,
-                       aes(x=value_sum)) +
+                       aes(x = value_sum)) +
     geom_histogram(bins = 100) +
     theme_bw() +
     xlab("Coefficient Sum (Real)") +
@@ -148,3 +153,46 @@ cowplot::save_plot(filename = cowplot_file,
                            plot = all_coef_gg,
                            base_height = 6,
                            base_width = 8)
+
+coef_all_df <- coef_df %>%
+    dplyr::mutate(shuffle = "shuffle_false") %>%
+    dplyr::bind_rows(
+        coef_shuffle_df %>%
+        dplyr::mutate(shuffle = "shuffle_true")
+    )
+
+print(dim(coef_all_df))
+head(coef_all_df, 3)
+
+all_feature_gg <- ggplot(coef_all_df,
+       aes(x = feature_id,
+           y = value_sum)) +
+    geom_bar(aes(fill = num_models_above_zero), stat="identity") +
+    scale_fill_continuous(name = "Number of Models") +
+    theme_bw() + 
+    facet_wrap(~shuffle, ncol = 1) +
+    theme(axis.text.x = element_text(size = 5, angle = 90),
+          strip.background = element_rect(colour = "black",
+                                          fill = "#fdfff4"))
+
+output_file <- file.path("figures", "coefficient_sum_full.png")
+ggsave(output_file, all_feature_gg, height = 10, width = 18)
+
+all_feature_gg
+
+subset_feature_gg <- ggplot(coef_all_df %>%
+                            dplyr::top_n(50, value_sum),
+       aes(x = feature_id,
+           y = value_sum)) +
+    geom_bar(aes(fill = num_models_above_zero), stat="identity") +
+    scale_fill_continuous(name = "Number of Models") +
+    theme_bw() + 
+    theme(axis.text.x = element_text(size = 5, angle = 90),
+          strip.background = element_rect(colour = "black",
+                                          fill = "#fdfff4")) +
+    coord_flip()
+
+output_file <- file.path("figures", "coefficient_sum_subset.png")
+ggsave(output_file, subset_feature_gg, height = 8, width = 8)
+
+subset_feature_gg
