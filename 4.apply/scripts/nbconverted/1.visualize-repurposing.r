@@ -166,3 +166,131 @@ for (cell_health_variable in cell_health_variables) {
 }
 
 dev.off()
+
+# Set some plotting defaults
+measurement_colors <- c(
+    "apoptosis" = "#a6cee3",
+    "cell_cycle_arrest" = "#1f78b4",
+    "cell_viability" = "#b2df8a",
+    "death" = "#33a02c",
+    "dna_damage" = "#fb9a99", 
+    "g1_arrest" = "#fdbf6f",
+    "g2_arrest" = "#ff7f00",
+    "g2_m_arrest" = "#005c8c",
+    "mitosis" = "green",
+    "other" = "black",
+    "s_arrest" = "#cab2d6",
+    "toxicity" = "#6a3d9a"
+)
+
+measurement_labels <- c(
+    "apoptosis" = "Apoptosis",
+    "cell_cycle_arrest" = "Cell Cycle Arrest",
+    "cell_viability" = "Cell Viability",
+    "death" = "Death",
+    "dna_damage" = "DNA Damage", 
+    "g1_arrest" = "G1 Arrest",
+    "g2_arrest" = "G2 Arrest",
+    "g2_m_arrest" = "G2/M Arrest",
+    "mitosis" = "Mitosis",
+    "other" = "Other",
+    "s_arrest" = "S Arrest",
+    "toxicity" = "Toxicity"
+)
+
+dye_colors <- c(
+    "hoechst" = "#639B94",
+    "edu" = "#E45242",
+    "gh2ax" = "#E2C552",
+    "ph3" = "#7B9C32",
+    "hoechst_gh2ax" = "#535f52",
+    "hoechst_edu" = "#73414b",
+    "edu_gh2ax" = "#e37a48",
+    "caspase" = "#F7B1C1",
+    "draq" = "#FF6699",
+    "draq_caspase" = "#7f4a72",
+    "many_cell_cycle" = "#E9DFC3",
+    "crispr_efficiency" = "black"
+)
+
+dye_labels <- c(
+    "hoechst" = "Hoechst",
+    "edu" = "EdU",
+    "gh2ax" = "gH2AX",
+    "ph3" = "pH3",
+    "hoechst_gh2ax" = "Hoechst + gH2AX",
+    "hoechst_edu" = "Hoechst + EdU",
+    "edu_gh2ax" = "EdU + gH2AX",
+    "caspase" = "Caspase 3/7",
+    "draq" = "DRAQ7",
+    "draq_caspase" = "DRAQ7 + Caspase 3/7",
+    "many_cell_cycle" = "Cell Cycle (Many Dyes)",
+    "crispr_efficiency" = "CRISPR Efficiency"
+)
+
+col_types <- readr::cols(
+    .default = readr::col_character(),
+    shuffle_false = readr::col_double(),
+    shuffle_true = readr::col_double()
+)
+
+rank_file <- file.path("..", "3.train", "results", "A549_ranked_models.tsv")
+model_rank_df <- readr::read_tsv(rank_file, col_types = col_types)
+
+head(model_rank_df, 3)
+
+dmso_embeddings_df <- cp_embedding_df %>%
+    dplyr::filter(Metadata_Treatment == "DMSO")
+
+non_dmso_embeddings_df <- cp_embedding_df %>%
+    dplyr::filter(Metadata_Treatment != "DMSO")
+
+std_dev_dmso_features <- apply(dmso_embeddings_df %>% dplyr::select(matches("cc_|vb_")), 2, sd)
+std_dev_compound_features <- apply(non_dmso_embeddings_df %>% dplyr::select(matches("cc_|vb_")), 2, sd)
+
+std_dev_all_df <- dplyr::bind_cols(as.data.frame(std_dev_dmso_features),
+                                   as.data.frame(std_dev_compound_features)) %>%
+    dplyr::mutate(features = colnames(dmso_embeddings_df %>% dplyr::select(matches("cc_|vb_")))) %>%
+    dplyr::left_join(model_rank_df, by = c("features" = "target")) 
+
+good_performing <- std_dev_all_df %>%
+    dplyr::filter(shuffle_false > 0)
+
+bad_performing <- std_dev_all_df %>%
+    dplyr::filter(shuffle_false <= 0)
+
+std_dev_good_df <- good_performing %>%
+    dplyr::mutate(performance_scaled = (
+        good_performing$shuffle_false - min(good_performing$shuffle_false)
+    ) / (
+        max(good_performing$shuffle_false) - min(good_performing$shuffle_false)
+    )
+                  )
+
+print(dim(std_dev_good_df))
+head(std_dev_good_df, 2)
+
+ggplot(std_dev_good_df, aes(x = std_dev_dmso_features, y = std_dev_compound_features)) +
+    geom_point(aes(color = assay, size = performance_scaled),
+               alpha = 0.8) +
+    geom_point(data = bad_performing,
+               aes(color = assay),
+               size = 1,
+               alpha = 0.2) +
+    theme_bw() +
+    geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red") +
+    scale_color_manual(name = "Assay",
+                       values = dye_colors,
+                       labels = dye_labels) +
+    scale_size_continuous(name = "Performance Scaled") + 
+    xlab("Standard Deviation across DMSO Well Consensus") +
+    ylab("Standard Deviation across all Consensus Compound Treatments") +
+    theme(axis.text = element_text(size = 8),
+          axis.title = element_text(size = 10),
+          strip.text = element_text(size = 6),
+          legend.text = element_text(size = 6),
+          legend.title = element_text(size = 8),
+         legend.key.size = unit(0.4, "cm"))
+
+output_file <- file.path("figures", "dmso_vs_compound_standard_deviation.png")
+ggsave(output_file, height = 5, width = 6, dpi = 500)
