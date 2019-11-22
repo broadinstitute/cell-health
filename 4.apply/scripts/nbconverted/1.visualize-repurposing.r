@@ -12,36 +12,66 @@ cell_health_df <- readr::read_tsv(cell_health_file, col_types = readr::cols())
 
 # Merge data together
 cp_embedding_df <- cp_embedding_df %>%
-    dplyr::bind_cols(cell_health_df)
+    dplyr::left_join(cell_health_df,
+                     by = c("Metadata_broad_sample", "Metadata_dose_recode", "Image_Metadata_Well")) %>%
+    dplyr::mutate(Metadata_Treatment = cp_embedding_df$Image_Metadata_Well)
+
+cp_embedding_df$Metadata_Treatment[cp_embedding_df$Image_Metadata_Well == "collapsed"] = "Compound"
+cp_embedding_df$Metadata_Treatment[cp_embedding_df$Image_Metadata_Well != "collapsed"] = "DMSO"
 
 print(dim(cp_embedding_df))
 head(cp_embedding_df, 3)
 
+table(cp_embedding_df$Metadata_dose_recode, cp_embedding_df$Metadata_Treatment)
+
 ggplot(cp_embedding_df,
        aes(x = umap_x, y = umap_y)) +
-    geom_point(aes(color = log10(Metadata_mmoles_per_liter)),
-               size = 0.5,
+    geom_point(aes(color = Metadata_dose_recode,
+                   size = paste(Metadata_Treatment)),
                pch = 16,
                alpha = 0.6) +
     theme_bw() +
     scale_color_viridis_c(name = "log(dose)") +
+    xlim(c(-7.75, 6)) +
+    ylim(c(-6.75, 5)) +
+    scale_size_discrete("Treatment",
+                        range = c(0.5, 3)) +
     xlab("UMAP 1") +
     ylab("UMAP 2")
 
 output_file <- file.path("figures", "umap_repurposing_cell_painting_dose_consensus.png")
 ggsave(output_file, height = 5, width = 6, dpi = 500)
 
-visualize_model <- function(target_variable, title, dpi = 500, save_figure = TRUE) {
+ggplot(cp_embedding_df %>% dplyr::filter(Metadata_Treatment == "DMSO"),
+       aes(x = umap_x, y = umap_y)) +
+    geom_point(aes(color = Image_Metadata_Well),
+               pch = 16,
+               size = 3,
+               alpha = 0.6) +
+    geom_point(data = cp_embedding_df, color = "grey", alpha = 0.1, size = 0.5) +
+    xlim(c(-7.75, 6)) +
+    ylim(c(-6.75, 5)) +
+    theme_bw() +
+    xlab("UMAP 1") +
+    ylab("UMAP 2")
+
+output_file <- file.path("figures", "umap_repurposing_cell_painting_dose_consensus_dmso.png")
+ggsave(output_file, height = 5, width = 6, dpi = 500)
+
+visualize_model <- function(target_variable, legend_title, title = "none", dpi = 500, save_figure = TRUE) {
     plot_gg <- ggplot(cp_embedding_df, aes(x = umap_x, y = umap_y)) +
         geom_point(aes_string(color = target_variable),
                    size = 0.5,
                    pch = 16,
                    alpha = 0.6) +
         theme_bw() +
-        scale_color_viridis_c(name = title) +
+        scale_color_viridis_c(name = legend_title) +
         xlab("UMAP 1") +
         ylab("UMAP 2")
     
+    if (title != "none") {
+        plot_gg <- plot_gg + ggtitle(title)
+    }
     if (save_figure) {
         output_file <- file.path("figures",
                                  paste0("umap_repurposing_cell_painting_",
@@ -62,58 +92,58 @@ map_df <- readr::read_csv(mapping_file,
 print(dim(map_df))
 head(map_df, 3)
 
-visualize_model(target_variable = "log(Metadata_mmoles_per_liter)",
-                title = "Compound\nDose (log)") 
+visualize_model(target_variable = "Metadata_dose_recode",
+                legend_title = "Compound\nDose (log)") 
 
 map_df %>% filter(original_name == "# Live Cells")
 
 visualize_model(target_variable = "vb_num_live_cells",
-                title = "Num Live Cells\n(DRAQ7)")
+                legend_title = "Num Live Cells\n(DRAQ7)")
 
 map_df %>% filter(original_name == "Live Width:Length")
 
 visualize_model(target_variable = "vb_live_cell_width_length",
-                title = "Live Cell\n(Width:Length)\n(DRAQ7)")
+                legend_title = "Live Cell\n(Width:Length)\n(DRAQ7)")
 
 map_df %>% filter(original_name == "Live Cell Roundness")
 
 visualize_model(target_variable = "vb_live_cell_roundness",
-                title = "Live Cell Roundness\n(DRAQ7)")
+                legend_title = "Live Cell Roundness\n(DRAQ7)")
 
 map_df %>% filter(original_name == "ALL - Number of Objects")
 
 visualize_model(target_variable = "cc_all_n_objects",
-                title = "Number of Objects\n(Hoechst)")
+                legend_title = "Number of Objects\n(Hoechst)")
 
 map_df %>% filter(original_name == "Live Cell Area")
 
 visualize_model(target_variable = "vb_live_cell_area",
-                title = "Live Cell Area\n(DRAQ7)")
+                legend_title = "Live Cell Area\n(DRAQ7)")
 
 map_df %>% filter(original_name == "CC - Number of Objects")
 
 visualize_model(target_variable = "cc_cc_n_objects",
-                title = "Num Cell\nCycle Objects\n(Hoechst)")
+                legend_title = "Num Cell\nCycle Objects\n(Hoechst)")
 
 map_df %>% filter(original_name == "G1 - Number of Objects")
 
 visualize_model(target_variable = "cc_g1_n_objects",
-                title = "G1 Objects\n(Many Dyes)")
+                legend_title = "G1 Objects\n(Many Dyes)")
 
 map_df %>% filter(original_name == "edu positive - Intensity Nucleus Alexa 647 Sum - Sum per Well")
 
 visualize_model(target_variable = "cc_edu_pos_alexa647_intensity_nucleus_area_sum",
-                title = "Sum S phase\n(EdU)")
+                legend_title = "Sum S phase\n(EdU)")
 
 map_df %>% filter(original_name == "edu positive - Number of Objects")
 
 visualize_model(target_variable = "cc_edu_pos_n_objects",
-                title = "Number of\nS-phase Cells\n(EdU)")
+                legend_title = "Number of\nS-phase Cells\n(EdU)")
 
 map_df %>% filter(original_name == "ROS-back Mean")
 
 visualize_model(target_variable = "vb_ros_back_mean",
-                title = "ROS Background\n(Caspase)")
+                legend_title = "ROS Background\n(Caspase)")
 
 cell_health_variables <- colnames(
     cp_embedding_df %>%
@@ -127,7 +157,8 @@ pdf(pdf_file, width = 5, height = 5, onefile = TRUE)
 
 for (cell_health_variable in cell_health_variables) {
     umap_gg <- visualize_model(target_variable = cell_health_variable,
-                               title = "Prediction",
+                               legend_title = "Prediction:",
+                               title = cell_health_variable,
                                dpi = 200,
                                save_figure = FALSE)
     
