@@ -161,8 +161,6 @@ for (cell_health_variable in cell_health_variables) {
                                title = cell_health_variable,
                                dpi = 200,
                                save_figure = FALSE)
-    
-    print(umap_gg)
 }
 
 dev.off()
