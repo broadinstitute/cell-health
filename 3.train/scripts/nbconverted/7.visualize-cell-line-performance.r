@@ -185,6 +185,10 @@ filtered_results_df$original_name <- factor(filtered_results_df$original_name,
                                             levels = rev(unique(filtered_results_df$original_name)))
 
 
+# Output ranked models
+output_file <- file.path("..", "4.apply", "repurposing_cellhealth_shiny", "data", "A549_ranked_models.tsv")
+readr::write_tsv(filtered_results_df, output_file)
+
 print(dim(filtered_results_df))
 head(filtered_results_df, 10)
 
