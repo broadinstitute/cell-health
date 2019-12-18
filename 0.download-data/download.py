@@ -22,18 +22,28 @@ Processed data for all downstream analysis is available here:
 """
 
 import os
-from urllib.request import urlretrieve
+import requests
+
+
+def download_sqllite_file(filename, url):
+    with requests.get(url, stream=True) as sql_request:
+        sql_request.raise_for_status()
+        with open(filename, 'wb') as sql_fh:
+            for chunk in sql_request.iter_content(chunk_size=819200000):
+                if chunk:
+                    assert isinstance(chunk, object)
+                    sql_fh.write(chunk)
 
 file_info = {
     "SQ00014610": "18028784",
-    "SQ00014611": "",
-    "SQ00014612": "",
-    "SQ00014613": "",
+    "SQ00014611": "18508583",
+    "SQ00014612": "18505937",
+    "SQ00014613": "18506036",
     "SQ00014614": "18031619",
-    "SQ00014615": "",
-    "SQ00014616": "",
-    "SQ00014617": "",
-    "SQ00014618": "",
+    "SQ00014615": "18506108",
+    "SQ00014616": "18506912",
+    "SQ00014617": "18508316",
+    "SQ00014618": "18508421",
 }
 
 download_dir = "data"
@@ -41,6 +51,8 @@ os.makedirs(download_dir, exist_ok=True)
 
 for plate in file_info:
     figshare_id = file_info[plate]
-    filename = os.path.join(download_dir, ".sqlite".format(plate))
+    filename = os.path.join(download_dir, "{}.sqlite".format(plate))
+    print("Now downloading... {}".format(filename))
     url = "https://nih.figshare.com/ndownloader/files/{}".format(figshare_id)
-    urlretrieve(url, filename)
+    download_sqllite_file(filename, url)
+    print("Done...\n\n")
