@@ -98,7 +98,7 @@ for plate in all_plates:
         df = pd.read_csv(norm_file)
 
         feature_df = df.reindex(x_test_df.columns, axis="columns").fillna(0)
-        metadata_df = df.loc[:, df.columns.str.startswith("Metadata_")]
+        metadata_df = df.loc[:, df.columns.str.contains("Metadata_")]
         
         all_dfs.append(feature_df)
         all_metadata_dfs.append(metadata_df)
@@ -107,56 +107,146 @@ for plate in all_plates:
 # In[8]:
 
 
+metadata_df.head()
+
+
+# In[9]:
+
+
 # Merge feature data and metadata
 all_df = pd.concat(all_dfs)
 all_metadata_df = pd.concat(all_metadata_dfs)
 
 complete_df = pd.concat([all_metadata_df, all_df], axis="columns").reset_index(drop=True)
 
-print(complete_df.shape)
-complete_df.head()
-
-
-# In[9]:
-
-
-# Round dose information and remove samples with low dose representation
-# Note: Need to revisit this, perhaps there is a better way.
-# (Hamdah and I chatted about alternative strategies)
-complete_df.Metadata_mmoles_per_liter = complete_df.Metadata_mmoles_per_liter.fillna(0).round(1)
-
-doses = complete_df.Metadata_mmoles_per_liter.value_counts()
-doses = doses[doses > 100].index.tolist()
-
-complete_df = complete_df.query("Metadata_mmoles_per_liter in @doses")
-
-# Also fill in NaN in Metadata_broad_sample as DMSO
+# Fill in NaN in Metadata_broad_sample as DMSO
 complete_df.Metadata_broad_sample = complete_df.Metadata_broad_sample.fillna("DMSO")
 
 print(complete_df.shape)
 complete_df.head()
 
 
+# ## Recode Dose Information
+
 # In[10]:
 
 
-# Create consensus profiles
-replicate_cols = ["Metadata_broad_sample", "Metadata_mmoles_per_liter"]
+def recode_dose(x, doses, return_level=False):
+    closest_index = np.argmin([np.abs(dose - x) for dose in doses])
+    if np.isnan(x):
+        return 0
+    if return_level:
+        return closest_index + 1
+    else:
+        return doses[closest_index]
+
+
+# In[11]:
+
+
+primary_dose_mapping = [0.04, 0.12, 0.37, 1.11, 3.33, 10, 20]
+
+
+# In[12]:
+
+
+complete_df = complete_df.assign(
+    Metadata_dose_recode=(
+        complete_df
+        .Metadata_mmoles_per_liter
+        .apply(
+            lambda x: recode_dose(x, primary_dose_mapping, return_level=True)
+        )
+    )
+)
+
+print(complete_df.shape)
+complete_df.head()
+
+
+# In[13]:
+
+
+complete_df.Metadata_dose_recode.value_counts()
+
+
+# ## Create Consensus Profiles
+# 
+# ### a) Generate different consensus profiles for DMSO
+# 
+# Include Well Level Information
+
+# In[14]:
+
+
+replicate_cols = ["Metadata_broad_sample", "Metadata_dose_recode", "Image_Metadata_Well"]
+
+dmso_consensus_df = modz(
+    complete_df.query("Metadata_broad_sample == 'DMSO'"),
+    features="infer",
+    replicate_columns=replicate_cols,
+    precision=5
+)
+
+dmso_consensus_df = dmso_consensus_df.reset_index()
+
+print(dmso_consensus_df.shape)
+dmso_consensus_df.head(2)
+
+
+# ### b) Generate consensus profiles for all treatments
+
+# In[15]:
+
+
+replicate_cols = ["Metadata_broad_sample", "Metadata_dose_recode"]
 
 complete_consensus_df = modz(
-    complete_df,
+    complete_df.query("Metadata_broad_sample != 'DMSO'"),
     features="infer",
     replicate_columns=replicate_cols,
     precision=5
 )
 
 complete_consensus_df = complete_consensus_df.reset_index()
+complete_consensus_df = complete_consensus_df.assign(Image_Metadata_Well="collapsed")
+
+print(complete_consensus_df.shape)
+complete_consensus_df.head(2)
+
+
+# ### c) Merge Together
+
+# In[16]:
+
+
+repurp_cp_cols = complete_consensus_df.columns[~complete_consensus_df.columns.str.contains("Metadata")].tolist()
+meta_cols = complete_consensus_df.drop(repurp_cp_cols, axis="columns").columns.tolist()
+
+
+# In[17]:
+
+
+complete_consensus_df = (
+    pd.concat(
+        [
+            complete_consensus_df,
+            dmso_consensus_df
+        ],
+        sort=True
+    )
+    .reset_index(drop=True)
+)
+
+complete_consensus_df = complete_consensus_df.loc[:, meta_cols + repurp_cp_cols]
 
 print(complete_consensus_df.shape)
 complete_consensus_df.head()
 
 
-# In[11]:
+# ### d) Output Profiles
+
+# In[18]:
 
 
 # Output consensus profiles
@@ -164,17 +254,16 @@ output_file = os.path.join("data", "repurposing_modz_consensus.tsv.gz")
 complete_consensus_df.to_csv(output_file, sep='\t', compression="gzip", index=False)
 
 
-# In[12]:
+# In[19]:
 
 
 # Extract cell profiler and metadata features
 cp_features = x_test_df.columns[~x_test_df.columns.str.startswith("Metadata")].tolist()
-meta_cols = complete_consensus_df.columns[complete_consensus_df.columns.str.startswith("Metadata")].tolist()
 
 
 # ## 3) Apply all real and shuffled Models to all Repurposing Plates
 
-# In[13]:
+# In[20]:
 
 
 feature_df = complete_consensus_df.reindex(x_test_df.columns, axis="columns")
@@ -196,13 +285,13 @@ for cell_health_feature in model_dict.keys():
 
 # ## 4) Output Results
 
-# In[14]:
+# In[21]:
 
 
 output_dir = os.path.join("data", "repurposing_transformed")
 
 
-# In[15]:
+# In[22]:
 
 
 # Output scores
@@ -221,7 +310,7 @@ print(full_df.shape)
 full_df.head()
 
 
-# In[16]:
+# In[23]:
 
 
 shuff_score_df = pd.DataFrame.from_dict(all_shuffle_scores)
@@ -243,13 +332,13 @@ full_shuff_df.head()
 # 
 # ### Part 1: Apply UMAP to Cell Health Transformed Repurposing Hub Features
 
-# In[17]:
+# In[24]:
 
 
 cell_health_features = list(model_dict.keys())
 
 
-# In[18]:
+# In[25]:
 
 
 reducer = umap.UMAP(random_state=1234, n_components=2)
@@ -274,7 +363,7 @@ real_embedding_df.to_csv(output_real_file, sep="\t", index=False, compression="g
 
 # ### Part 2: Apply UMAP to All Repurposing Hub Cell Painting Profiles
 
-# In[19]:
+# In[26]:
 
 
 reducer = umap.UMAP(random_state=1234, n_components=2)
