@@ -52,6 +52,8 @@ os.makedirs(download_dir, exist_ok=True)
 for plate in file_info:
     figshare_id = file_info[plate]
     filename = os.path.join(download_dir, "{}.sqlite".format(plate))
+    if os.path.exists(filename):
+        continue
     print("Now downloading... {}".format(filename))
     url = "https://nih.figshare.com/ndownloader/files/{}".format(figshare_id)
     download_sqllite_file(filename, url)
