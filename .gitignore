@@ -3,6 +3,7 @@
 .Rapp.history
 .DS_Store
 Rplots.pdf
+.idea
 # Session Data files
 .RData
 # Example code in package build process
@@ -29,3 +30,5 @@ vignettes/*.pdf
 .ipynb_checkpoints
 # Python files
 __pycache__/
+# SQLite Single Cell Profiles
+0.download-data/data/*
