@@ -7,6 +7,8 @@
 # 1) Aggregate and Normalize Single Cell Data
 # 2) Curate and Normalize Cell Health Assay Data
 
+set -e
+
 # Step 0: Convert all notebooks to scripts
 jupyter nbconvert --to=script \
         --FilesWriter.build_directory=scripts/nbconverted \
