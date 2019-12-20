@@ -52,7 +52,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
 
     # Aggregate single cells into well profiles
     out_file = os.path.join(output_dir, "{}.csv.gz".format(plate))
-    ap.aggregate_profiles(output_file=out_file, how="gzip")
+    ap.aggregate_profiles(output_file=out_file, compression="gzip")
 
     # Annotate Profiles
     anno_file = os.path.join(output_dir, "{}_augmented.csv.gz".format(plate))
@@ -61,7 +61,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
         platemap=platemap_df,
         join_on=["Metadata_well_position", "Image_Metadata_Well"],
         output_file=anno_file,
-        how="gzip",
+        compression="gzip",
     )
 
     # Normalize Profiles
@@ -71,7 +71,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
         features="infer",
         samples="Metadata_pert_name == 'EMPTY'",
         output_file=norm_file,
-        how="gzip",
+        compression="gzip",
     )
 
     # Perform feature selection (just drop columns with high number of missingness)
@@ -84,7 +84,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
         samples="none",
         operation=["drop_na_columns", "blacklist"],
         output_file=feat_file,
-        how="gzip",
+        compression="gzip",
     )
 
     # Perform audits
@@ -96,7 +96,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     audit_file = os.path.join("results", "{}_audit_guide.csv".format(plate))
     audit(
         profiles=profile_df,
-        groups=["Metadata_pert_name", "Metadata_gene_name", "Metadata_cell_line"],
+        audit_groups=["Metadata_pert_name", "Metadata_gene_name", "Metadata_cell_line"],
         iterations=10,
         output_file=audit_file,
     )
@@ -105,7 +105,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     audit_file = os.path.join("results", "{}_audit_gene.csv".format(plate))
     audit(
         profiles=profile_df,
-        groups=["Metadata_gene_name", "Metadata_cell_line"],
+        audit_groups=["Metadata_gene_name", "Metadata_cell_line"],
         iterations=10,
         output_file=audit_file,
     )
