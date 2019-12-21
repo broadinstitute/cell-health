@@ -34,6 +34,13 @@ jupyter nbconvert --to=html \
 # Step 4: Generate .gct files for cell health assay data for heatmap visualizations
 jupyter nbconvert --to=html \
         --FilesWriter.build_directory=scripts/html \
-        --ExecutePreprocessor.kernel_name=python3 \
+        --ExecutePreprocessor.kernel_name=ir \
         --ExecutePreprocessor.timeout=10000000 \
         --execute 2.cell-health-gct.ipynb
+
+# Step 5: Build consensus signatures for downstream processing
+jupyter nbconvert --to=html \
+        --FilesWriter.build_directory=scripts/html \
+        --ExecutePreprocessor.kernel_name=python \
+        --ExecutePreprocessor.timeout=10000000 \
+        --execute 3.consensus-signatures.ipynb
