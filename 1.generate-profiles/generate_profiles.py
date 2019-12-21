@@ -12,10 +12,7 @@ import multiprocessing
 from joblib import Parallel, delayed
 
 from pycytominer.aggregate import AggregateProfiles
-from pycytominer.annotate import annotate
-from pycytominer.normalize import normalize
-from pycytominer.feature_select import feature_select
-from pycytominer.audit import audit
+from pycytominer import annotate, normalize, feature_select, audit
 
 
 def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
@@ -55,7 +52,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
 
     # Aggregate single cells into well profiles
     out_file = os.path.join(output_dir, "{}.csv.gz".format(plate))
-    ap.aggregate_profiles(output_file=out_file, how="gzip")
+    ap.aggregate_profiles(output_file=out_file, compression="gzip")
 
     # Annotate Profiles
     anno_file = os.path.join(output_dir, "{}_augmented.csv.gz".format(plate))
@@ -64,31 +61,17 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
         platemap=platemap_df,
         join_on=["Metadata_well_position", "Image_Metadata_Well"],
         output_file=anno_file,
-        how="gzip",
+        compression="gzip",
     )
-
-    # Extract features to normalize
-    # Currently a bug in inferring features from metadata, use a workaround for now
-    # https://github.com/cytomining/pycytominer/issues/39
-    features = pd.read_csv(anno_file).columns.tolist()
-    features = [
-        x
-        for x in features
-        if (
-            x.startswith("Cells_")
-            | x.startswith("Nuclei_")
-            | x.startswith("Cytoplasm_")
-        )
-    ]
 
     # Normalize Profiles
     norm_file = os.path.join(output_dir, "{}_normalized.csv.gz".format(plate))
     normalize(
         profiles=anno_file,
-        features=features,
+        features="infer",
         samples="Metadata_pert_name == 'EMPTY'",
         output_file=norm_file,
-        how="gzip",
+        compression="gzip",
     )
 
     # Perform feature selection (just drop columns with high number of missingness)
@@ -97,11 +80,11 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     )
     feature_select(
         profiles=norm_file,
-        features=features,
+        features="infer",
         samples="none",
         operation=["drop_na_columns", "blacklist"],
         output_file=feat_file,
-        how="gzip",
+        compression="gzip",
     )
 
     # Perform audits
@@ -113,7 +96,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     audit_file = os.path.join("results", "{}_audit_guide.csv".format(plate))
     audit(
         profiles=profile_df,
-        groups=["Metadata_pert_name", "Metadata_gene_name", "Metadata_cell_line"],
+        audit_groups=["Metadata_pert_name", "Metadata_gene_name", "Metadata_cell_line"],
         iterations=10,
         output_file=audit_file,
     )
@@ -122,7 +105,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     audit_file = os.path.join("results", "{}_audit_gene.csv".format(plate))
     audit(
         profiles=profile_df,
-        groups=["Metadata_gene_name", "Metadata_cell_line"],
+        audit_groups=["Metadata_gene_name", "Metadata_cell_line"],
         iterations=10,
         output_file=audit_file,
     )
