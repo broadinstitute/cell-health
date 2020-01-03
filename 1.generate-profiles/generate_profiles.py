@@ -1,15 +1,13 @@
 """
 Generate morphological profiles from cell painting data using pycytominer.
 
-Do not perform feature selection since downstream analysis include feature selection
+Do not perform redundancy feature selection since downstream analysis uses models that induce sparsity.
 """
 
 import os
-import numpy as np
 import pandas as pd
 import argparse
 import multiprocessing
-from joblib import Parallel, delayed
 
 from pycytominer.aggregate import AggregateProfiles
 from pycytominer import annotate, normalize, feature_select, audit
@@ -17,7 +15,7 @@ from pycytominer import annotate, normalize, feature_select, audit
 
 def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     """
-    Apply all profiling steps for a given plate. To be applied in parallel.
+    Apply all profiling steps for a given plate.
 
     Output:
     Will write a series of processed files to disk
@@ -47,7 +45,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     cell_count_df.to_csv(cell_count_file, sep="\t", index=False)
 
     # Begin processing profiles
-    output_dir = os.path.join("data", "profiles", batch, plate)
+    output_dir = os.path.join("data", "profiles", plate)
     os.makedirs(output_dir, exist_ok=True)
 
     # Aggregate single cells into well profiles
@@ -70,6 +68,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
         profiles=anno_file,
         features="infer",
         samples="Metadata_pert_name == 'EMPTY'",
+        method="robustize",
         output_file=norm_file,
         compression="gzip",
     )
@@ -82,7 +81,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
         profiles=norm_file,
         features="infer",
         samples="none",
-        operation=["drop_na_columns", "blacklist"],
+        operation=["drop_na_columns", "blacklist", "variance_threshold"],
         output_file=feat_file,
         compression="gzip",
     )
@@ -111,31 +110,8 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     )
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "-p",
-    "--parallel",
-    action="store_true",
-    help="decision to perform computation in parallel or not",
-)
-args = parser.parse_args()
-
-parallel = args.parallel
-
-num_cores = multiprocessing.cpu_count() - 1
-
-batch = "CRISPR_PILOT_B1"
-bucket_dir = os.path.join(
-    "/home",
-    "ubuntu",
-    "bucket",
-    "projects",
-    "2015_07_01_Cell_Health_Vazquez_Cancer_Broad",
-    "workspace",
-)
-
-backend_dir = os.path.join(bucket_dir, "backend", batch)
-metadata_dir = os.path.join(bucket_dir, "metadata", batch)
+backend_dir = os.path.join("..", "0.download-data", "data")
+metadata_dir = os.path.join("data", "metadata")
 
 # Load Barcode Platemap
 barcode_platemap_file = os.path.join(metadata_dir, "barcode_platemap.csv")
@@ -143,24 +119,12 @@ barcode_platemap_df = pd.read_csv(barcode_platemap_file)
 
 # Perform analysis for each plate
 if __name__ == "__main__":
-    all_plates = os.listdir(backend_dir)
+    all_plates = [x.strip(".sqlite") for x in os.listdir(backend_dir) if x != ".DS_Store"]
 
-    if parallel:
-        Parallel(n_jobs=num_cores)(
-            delayed(get_profiles)(
-                plate=x,
-                backend_dir=backend_dir,
-                metadata_dir=metadata_dir,
-                barcode_platemap_df=barcode_platemap_df,
-            )
-            for x in all_plates
+    for plate in all_plates:
+        get_profiles(
+            plate=plate,
+            backend_dir=backend_dir,
+            metadata_dir=metadata_dir,
+            barcode_platemap_df=barcode_platemap_df,
         )
-
-    else:
-        for plate in all_plates:
-            get_profiles(
-                plate=plate,
-                backend_dir=backend_dir,
-                metadata_dir=metadata_dir,
-                barcode_platemap_df=barcode_platemap_df,
-            )
