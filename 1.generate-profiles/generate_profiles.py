@@ -21,8 +21,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     Will write a series of processed files to disk
     """
     print("Processing {}.....".format(plate))
-    plate_dir = os.path.join(backend_dir, plate)
-    sqlite_file = "sqlite:////{}/{}.sqlite".format(plate_dir, plate)
+    sqlite_file = "sqlite:///{}/{}.sqlite".format(backend_dir, plate)
 
     # Load specific platemap
     platemap = barcode_platemap_df.query(
