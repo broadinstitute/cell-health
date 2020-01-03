@@ -3,41 +3,48 @@ suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(cowplot))
 suppressPackageStartupMessages(library(ggrepel))
 
+consensus <- "median"
+
 process_coefficients <- function(coef_file) {
-    coef_df <- readr::read_tsv(coef_file,
-                               col_types=readr::cols(
-                                   .default = readr::col_double(),
-                                   features = readr::col_character())
-                              )
+    coef_df <- readr::read_tsv(
+        coef_file,
+        col_types=readr::cols(
+            .default = readr::col_double(),
+            feature = readr::col_character(),
+            target = readr::col_character(),
+            y_transform = readr::col_character(),
+            shuffle = readr::col_character())
+    )
     
     number_models_per_feature <- rowSums(coef_df > 0) %>% tibble::as_tibble()
-    number_models_per_feature <- cbind(coef_df$features, number_models_per_feature)
-    colnames(number_models_per_feature) <- c("features", "num_models_above_zero")
+    number_models_per_feature <- cbind(coef_df$feature, number_models_per_feature)
+    colnames(number_models_per_feature) <- c("feature", "num_models_above_zero")
     
-    coef_sums_df <- abs(coef_df %>% dplyr::select(-features)) %>%
+    coef_sums_df <- abs(coef_df %>% dplyr::select(-feature, -target, -y_transform, -shuffle)) %>%
         base::rowSums() %>% tibble::enframe() %>%
-        dplyr::mutate(features = coef_df$features) %>%
+        dplyr::mutate(feature = coef_df$feature) %>%
         dplyr::select(-name) %>%
         dplyr::rename(value_sum = value) %>%
         dplyr::arrange(desc(value_sum)) %>%
-        dplyr::left_join(number_models_per_feature, by = "features")
+        dplyr::left_join(number_models_per_feature, by = "feature")
     
     split_coef_df <- coef_sums_df %>%
-        tidyr::separate(features,
+        tidyr::separate(feature,
                         into=c("compartment",
                                "feature_group",
                                "measurement",
                                "channel", 
                                "parameter1", 
                                "parameter2"), sep="_") %>%
-        dplyr::mutate(feature_id = coef_sums_df$features)
+        dplyr::mutate(feature_id = coef_sums_df$feature)
 
     split_coef_df$feature_id <- factor(split_coef_df$feature_id, levels=split_coef_df$feature_id)
     
     return(split_coef_df)
 }
 
-coef_file <- file.path("results", "all_model_coefficients.tsv")
+coef_file <- file.path("results",
+                       paste0("full_cell_health_coefficients_", consensus, ".tsv.gz"))
 coef_df <- process_coefficients(coef_file)
 
 head(coef_df, 10)

@@ -3,28 +3,33 @@ suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(ggrepel))
 
 results_dir <- "results"
+consensus <- "median"
 
 # Regression Results
-regression_file <- file.path(results_dir, "full_cell_health_regression_results.tsv.gz")
+regression_file <- file.path(results_dir, 
+                             paste0("full_cell_health_regression_", consensus, ".tsv.gz"))
 regression_metrics_df <- readr::read_tsv(regression_file, col_types = readr::cols()) %>%
     dplyr::filter(cell_line == "all")
 
 # Classification Results
-roc_file <- file.path(results_dir, "full_cell_health_roc_results.tsv.gz")
+roc_file <- file.path(results_dir,
+                      paste0("full_cell_health_roc_results_", consensus, ".tsv.gz"))
 full_roc_df <- readr::read_tsv(roc_file, col_types = readr::cols()) %>%
     dplyr::filter(cell_line == "all")
 
-pr_file <- file.path(results_dir, "full_cell_health_pr_results.tsv.gz")
+pr_file <- file.path(results_dir,
+                     paste0("full_cell_health_pr_results_", consensus, ".tsv.gz"))
 full_pr_df <- readr::read_tsv(pr_file, col_types = readr::cols()) %>%
     dplyr::filter(cell_line == "all")
 
 # Model Coefficients
-coef_file <- file.path(results_dir, "full_cell_health_coefficients.tsv.gz")
-full_coef_df <- readr::read_tsv(coef_file, col_types = readr::cols()) %>%
-    dplyr::filter(y_transform == "raw")
+coef_file <- file.path(results_dir,
+                       paste0("full_cell_health_coefficients_", consensus, ".tsv.gz"))
+full_coef_df <- readr::read_tsv(coef_file, col_types = readr::cols())
 
 # Model Predictions
-y_file <- file.path(results_dir, "full_cell_health_y_labels.tsv.gz")
+y_file <- file.path(results_dir,
+                    paste0("full_cell_health_y_labels_", consensus, ".tsv.gz"))
 y_df <- readr::read_tsv(y_file, col_types = readr::cols()) %>%
     dplyr::filter(y_transform == "raw")
 
@@ -195,7 +200,8 @@ ggplot(metric_df, aes(x = AUROC_test, y = mse)) +
                        labels = measurement_labels) +
     theme_bw()
 
-file <- file.path("figures", "performance_summary.png")
+file <- file.path("figures",
+                  paste("performance_summary_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 6, height = 4.25)
 
 ggplot(metric_df, aes(x = AUROC_test, y = AUROC_train)) +
@@ -222,7 +228,8 @@ ggplot(metric_df, aes(x = AUROC_test, y = AUROC_train)) +
                        labels = dye_labels) +
     theme_bw()
 
-file <- file.path("figures", "performance_summary_assay.png")
+file <- file.path("figures",
+                  paste("performance_summary_assay_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 6, height = 4.5)
 
 ggplot(metric_df, aes(x = AUROC_test,
@@ -244,7 +251,8 @@ ggplot(metric_df, aes(x = AUROC_test,
                        labels = dye_labels) +
     theme_bw()
 
-file <- file.path("figures", "performance_summary_assay_classification_vs_regression.png")
+file <- file.path("figures",
+                  paste0("performance_summary_assay_classification_vs_regression_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 6, height = 4.5)
 
 metric_df %>%
@@ -310,7 +318,8 @@ ggplot(r_two_df %>%
                        labels = measurement_labels) +
     theme_bw()
 
-file <- file.path("figures", "performance_summary_rsquared.png")
+file <- file.path("figures",
+                  paste0("performance_summary_rsquared_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 6, height = 4.25)
 
 ggplot(r_two_df, aes(y = train, x = test)) +
@@ -337,7 +346,8 @@ ggplot(r_two_df, aes(y = train, x = test)) +
                        labels = dye_labels) +
     theme_bw()
 
-file <- file.path("figures", "performance_summary_rsquared_assay.png")
+file <- file.path("figures",
+                  paste("performance_summary_rsquared_assay_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 6, height = 4.25)
 
 # Cytominer results are archived on github
@@ -393,7 +403,8 @@ for (metric in unique(all_regression_df$metric)) {
                                           fill = "#fdfff4"))
     
     print(mse_gg)
-    outfile <- file.path("figures", paste0("compare_pycytominer_cytominer_", metric, ".png"))
+    outfile <- file.path("figures",
+                         paste0("compare_pycytominer_cytominer_", metric, "_", consensus, ".png"))
     ggsave(outfile, height = 5, width = 6, dpi = 300)
 }
 
@@ -497,7 +508,8 @@ ggplot(all_classification_df,
                         y = AUROC)) +
     theme_bw()
 
-outfile <- file.path("figures", paste0("compare_pycytominer_cytominer_", metric, ".png"))
+outfile <- file.path("figures",
+                     paste0("compare_pycytominer_cytominer_", metric, "_", consensus, ".png"))
 ggsave(outfile, height = 3, width = 3, dpi = 300)
 
 metric <- "AUPR"
@@ -530,7 +542,8 @@ ggplot(all_classification_df,
                             y = AUPR)) +
     theme_bw()
 
-outfile <- file.path("figures", paste0("compare_pycytominer_cytominer_", metric, ".png"))
+outfile <- file.path("figures",
+                     paste0("compare_pycytominer_cytominer_", metric, "_", consensus, ".png"))
 ggsave(outfile, height = 3, width = 3, dpi = 300)
 
 all_classification_df %>%

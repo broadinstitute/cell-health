@@ -1,6 +1,8 @@
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(dplyr))
 
+consensus <- "median"
+
 # Load Data
 y_cols <- readr::cols(
     Metadata_profile_id = readr::col_character(),
@@ -12,7 +14,8 @@ y_cols <- readr::cols(
     y_type = readr::col_character()
 )
 
-y_file <- file.path("results", "full_cell_health_y_labels.tsv.gz")
+y_file <- file.path("results",
+                    paste0("full_cell_health_y_labels_", consensus, ".tsv.gz"))
 y_df <- readr::read_tsv(y_file,
                         col_types = y_cols)
 

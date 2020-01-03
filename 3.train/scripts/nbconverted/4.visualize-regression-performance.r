@@ -3,18 +3,23 @@ suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(ggrepel))
 
 results_dir <- "results"
-regression_file <- file.path(results_dir, "full_cell_health_regression_results.tsv.gz")
+consensus <- "median"
+
+regression_file <- file.path(results_dir, 
+                             paste0("full_cell_health_regression_", consensus, ".tsv.gz"))
 regression_metrics_df <- readr::read_tsv(regression_file, col_types = readr::cols()) %>%
     dplyr::filter(cell_line == "all")
 
-coef_file <- file.path(results_dir, "full_cell_health_coefficients.tsv.gz")
+coef_file <- file.path(results_dir,
+                       paste0("full_cell_health_coefficients_", consensus, ".tsv.gz"))
 full_coef_df <- readr::read_tsv(coef_file, col_types = readr::cols()) %>%
     dplyr::filter(y_transform == "raw")
 
 metadata_file <- file.path("..", "1.generate-profiles", "data", "profile_id_metadata_mapping.tsv")
 metadata_df <- readr::read_tsv(metadata_file, col_types = readr::cols())
 
-y_file <- file.path(results_dir, "full_cell_health_y_labels.tsv.gz")
+y_file <- file.path(results_dir,
+                    paste0("full_cell_health_y_labels_", consensus, ".tsv.gz"))
 y_df <- readr::read_tsv(y_file, col_types = readr::cols()) %>%
     dplyr::filter(y_transform == "raw")
 
@@ -96,7 +101,8 @@ ggplot(mse_df,
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-file <- file.path("figures", "mse_test_summary.png")
+file <- file.path("figures",
+                  paste0("mse_test_summary", consensus, ".png"))
 ggsave(file, dpi = 300, width = 7, height = 9)
 
 # Label variables with specific cell health classes
@@ -175,7 +181,8 @@ ggplot(mse_spread_df,
                                   "s_arrest" = "S Arrest",
                                   "toxicity" = "Toxicity"))
 
-output_file <- file.path("figures", "mse_comparison_scatter.png")
+output_file <- file.path("figures",
+                         paste0("mse_comparison_scatter_", consensus, ".png"))
 ggsave(output_file, width = 2, height = 1.5, dpi = 600, units = "in")
 
 r2_df <- regression_metrics_df %>%
@@ -210,12 +217,14 @@ ggplot(r2_df,
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-file <- file.path("figures", "r_squared_model_summary.png")
+file <- file.path("figures",
+                  paste0("r_squared_model_summary_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 7, height = 9)
 
 label_thresh_value = 0.90
 
-pdf_file <- file.path("figures", "all_regression_performance_metrics.pdf")
+pdf_file <- file.path("figures",
+                      paste0("all_regression_performance_metrics_", consensus, ".pdf"))
 pdf(pdf_file, width = 6, height = 8, onefile = TRUE)
 
 for (target in unique(y_plot_df$target)) {
