@@ -32,7 +32,6 @@ We then independently trained three different models to predict each of the 70 c
 | :-----| :------------------ |
 | Classification | Binarize Cell Health Data by Median (after z-scoring) |
 | Regression | Raw Cell Health Data (after z-scoring) |
-| Regression | Zero-One Transform Cell Health Data (after z-scoring) |
 
 We also trained all of these models again using randomly permuted cell painting data.
 
