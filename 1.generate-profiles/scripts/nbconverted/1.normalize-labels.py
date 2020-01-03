@@ -13,6 +13,8 @@ import numpy as np
 from scipy.stats import median_absolute_deviation
 import pandas as pd
 
+from pycytominer import write_gct
+
 
 # In[2]:
 
@@ -73,4 +75,60 @@ normalized_label_df.head(2)
 # Write to file
 file = os.path.join("data", "labels", "normalized_cell_health_labels.tsv")
 normalized_label_df.to_csv(file, index=False, sep='\t')
+
+
+# ## Build Cell Health Target Variable GCT Files
+# 
+# For viewing heatmaps in Morpheus.
+
+# In[7]:
+
+
+# Recode metadata variables
+normalized_label_df = (
+    normalized_label_df
+    .rename(
+        {
+            "cell_id": "Metadata_cell_id",
+            "guide": "Metadata_guide",
+            "plate_name": "Metadata_plate_name",
+            "well_col": "Metadata_well_col",
+            "well_row": "Metadata_well_row"
+        },
+        axis="columns"
+    )
+)
+
+print(normalized_label_df.shape)
+normalized_label_df.head(2)
+
+
+# In[8]:
+
+
+# Load feature map
+file = os.path.join("data", "labels", "feature_mapping_annotated.csv")
+feature_map = (
+    pd.read_csv(file, index_col=1)
+    .transpose()
+    .reset_index()
+    .transpose()
+    .rename({"index": "id"}, axis="rows")
+)
+
+feature_map.head()
+
+
+# In[9]:
+
+
+# Build and output gct file
+cell_health_features = [x for x in normalized_label_df.columns if not x.startswith("Metadata_")]
+output_file = os.path.join("data", "labels", "normalized_cell_health_labels.gct")
+
+write_gct(profiles=normalized_label_df,
+          output_file=output_file,
+          features=cell_health_features,
+          meta_features="infer",
+          feature_metadata=feature_map)
 
