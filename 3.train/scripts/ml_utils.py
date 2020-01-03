@@ -457,12 +457,15 @@ class CellHealthPredict:
         return output
 
 
-def load_train_test(data_dir="data", drop_metadata=False, output_metadata_only=False):
+def load_train_test(
+    data_dir="data", consensus="modz", drop_metadata=False, output_metadata_only=False
+):
     """
     Load training and testing data
 
     Arguments:
     data_dir - a string indicating the location of the files
+    consensus - a string indicating which consensus signature type to load
     drop_metadata - boolean if the metadata should be striped before input
                     [default: False]
     output_metadata_only - boolean if metadata columns are only output
@@ -472,10 +475,11 @@ def load_train_test(data_dir="data", drop_metadata=False, output_metadata_only=F
     A list storing training and testing x and y matrices
     """
 
-    x_train_file = os.path.join(data_dir, "x_train.tsv.gz")
-    y_train_file = os.path.join(data_dir, "y_train.tsv.gz")
-    x_test_file = os.path.join(data_dir, "x_test.tsv.gz")
-    y_test_file = os.path.join(data_dir, "y_test.tsv.gz")
+    assert consensus in ["modz", "median"], "consensus must be either `modz or `median`"
+    x_train_file = os.path.join(data_dir, "x_train_{}.tsv.gz".format(consensus))
+    y_train_file = os.path.join(data_dir, "y_train_{}.tsv.gz".format(consensus))
+    x_test_file = os.path.join(data_dir, "x_test_{}.tsv.gz".format(consensus))
+    y_test_file = os.path.join(data_dir, "y_test_{}.tsv.gz".format(consensus))
 
     x_train_df = pd.read_csv(x_train_file, index_col=0, sep="\t")
     y_train_df = pd.read_csv(y_train_file, index_col=0, sep="\t")
