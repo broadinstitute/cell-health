@@ -9,9 +9,12 @@
 # Therefore, we cannot map to cell painting replicates.
 # 
 # Instead, we generate consensus signatures for each treatment.
-# We will use the MODZ (moderated z-score) transform used in the L1000 analysis paper ([Subramanian et al. 2017](https://doi.org/10.1016/j.cell.2017.10.049)).
+# We generate consensus signatures in two ways.
 # 
-# We apply this transformation to both:
+# 1. Median consensus
+# 2. MODZ (moderated z-score) transform used in the L1000 analysis paper ([Subramanian et al. 2017](https://doi.org/10.1016/j.cell.2017.10.049)).
+# 
+# We apply these transformations to both:
 # 
 # * Cell Painting Data
 # * Cell Health Assay Readout Data
@@ -24,7 +27,7 @@ import numpy as np
 import pandas as pd
 
 from pycytominer.consensus import modz
-from pycytominer.get_na_columns import get_na_columns
+from pycytominer import get_na_columns, aggregate
 
 
 # ## Load Cell Painting Data
@@ -52,6 +55,12 @@ for plate in os.listdir(profile_dir):
 # In[3]:
 
 
+all_profile_files
+
+
+# In[4]:
+
+
 # Concatentate all cell painting datasets
 x_df = (
     pd.concat(
@@ -64,6 +73,7 @@ x_df = (
             "Image_Metadata_Well": "Metadata_Well"
         },
         axis="columns")
+    .drop(["Metadata_broad_sample"], axis="columns")
 )
 
 # Realign metadata column names
@@ -73,11 +83,6 @@ x_metadata_df = x_df.loc[:, x_metadata_cols]
 x_df = x_df.drop(x_metadata_cols, axis="columns")
 x_df = pd.concat([x_metadata_df, x_df], axis="columns")
 
-# Drop all features that have missing values
-additional_exclude_features = get_na_columns(x_df, features="infer", cutoff=0)
-print("Drop {} features for missing values".format(len(additional_exclude_features)))
-x_df = x_df.drop(additional_exclude_features, axis="columns")
-
 print(x_df.shape)
 x_df.head(2)
 
@@ -86,7 +91,7 @@ x_df.head(2)
 # 
 # This will be the y matrix in machine learning applications.
 
-# In[4]:
+# In[5]:
 
 
 file = os.path.join("data", "labels", "normalized_cell_health_labels.tsv")
@@ -98,7 +103,7 @@ y_df.head(2)
 
 # ## Determine how many Cell Painting profiles have Cell Health status labels
 
-# In[5]:
+# In[6]:
 
 
 x_groupby_cols = ["Metadata_gene_name", "Metadata_pert_name", "Metadata_cell_line"]
@@ -120,7 +125,7 @@ print(x_metacount_df.shape)
 x_metacount_df.head(2)
 
 
-# In[6]:
+# In[7]:
 
 
 y_groupby_cols = ["guide", "cell_id"]
@@ -139,7 +144,7 @@ print(y_metacount_df.shape)
 y_metacount_df.head(2)
 
 
-# In[7]:
+# In[8]:
 
 
 all_measurements_df = (
@@ -162,11 +167,124 @@ print(all_measurements_df.shape)
 all_measurements_df.head()
 
 
-# ## Apply the MODZ Consensus Aggregation
+# ## A. Apply Median Consensus Aggregation
 # 
 # ### 1) To the Cell Painting Data
 
-# In[8]:
+# In[9]:
+
+
+x_median_df = aggregate(
+    x_df,
+    strata=["Metadata_cell_line", "Metadata_pert_name"],
+    features="infer",
+    operation="median"
+)
+
+
+x_median_df = (
+    x_median_df
+    .query("Metadata_pert_name in @all_measurements_df.Metadata_pert_name.unique()")
+    .query("Metadata_cell_line in @all_measurements_df.Metadata_cell_line.unique()")
+    .reset_index(drop=True)
+    .reset_index()
+    .rename({"index": "Metadata_profile_id"}, axis='columns')
+)
+x_median_df.Metadata_profile_id = ["profile_{}".format(x) for x in x_median_df.Metadata_profile_id]
+
+print(x_median_df.shape)
+x_median_df.head()
+
+
+# In[10]:
+
+
+# Output Profile Mapping for Downstream Analysis
+profile_id_mapping_df = x_median_df.loc[:, x_median_df.columns.str.startswith("Metadata")]
+file = os.path.join("data", "profile_id_metadata_mapping.tsv")
+profile_id_mapping_df.to_csv(file, sep='\t', index=False)
+
+profile_id_mapping_df.head()
+
+
+# ### 2) To the Cell Health Assay Data
+
+# In[11]:
+
+
+cell_health_meta_features = ["cell_id", "guide"]
+cell_health_features = y_df.drop(cell_health_meta_features, axis="columns").columns.tolist()
+y_meta_merge_cols = ["Metadata_profile_id", "Metadata_pert_name", "Metadata_cell_line"]
+
+
+# In[12]:
+
+
+y_median_df = aggregate(
+    y_df,
+    strata=cell_health_meta_features,
+    features=cell_health_features,
+    operation="median"
+)
+
+print(y_median_df.shape)
+y_median_df.head()
+
+
+# In[13]:
+
+
+y_median_df = (
+    y_median_df
+    .reset_index(drop=True)
+    .merge(
+        x_median_df.loc[:, y_meta_merge_cols],
+        left_on=["guide", "cell_id"],
+        right_on=["Metadata_pert_name", "Metadata_cell_line"],
+        how="right"
+    )
+)
+
+# Get columns in correct order
+y_columns = (
+    y_meta_merge_cols +
+    y_median_df
+    .loc[:, ~y_median_df.columns.str.startswith("Metadata_")]
+    .columns
+    .tolist()
+)
+
+y_median_df = (
+    y_median_df
+    .loc[:, y_columns]
+    .drop(["guide", "cell_id"], axis="columns")
+)
+
+print(y_median_df.shape)
+y_median_df.head(5)
+
+
+# In[14]:
+
+
+# Confirm that matrices are aligned
+pd.testing.assert_series_equal(x_median_df.Metadata_profile_id,
+                               y_median_df.Metadata_profile_id, check_names=True)
+
+# Are the guides aligned?
+pd.testing.assert_series_equal(x_median_df.Metadata_pert_name,
+                               y_median_df.Metadata_pert_name, check_names=True)
+
+# Are the cells aligned?
+pd.testing.assert_series_equal(x_median_df.Metadata_cell_line,
+                               y_median_df.Metadata_cell_line, check_names=True)
+
+
+# ## B. Apply the MODZ Consensus Aggregation
+# 
+# ### 1) To the Cell Painting Data
+
+# In[15]:
 
 
 x_consensus_df = modz(
@@ -178,7 +296,7 @@ x_consensus_df = modz(
 x_consensus_df.head()
 
 
-# In[9]:
+# In[16]:
 
 
 x_consensus_df = (
@@ -196,27 +314,9 @@ print(x_consensus_df.shape)
 x_consensus_df.head(5)
 
 
-# In[10]:
-
-
-# Output Profile Mapping for Downstream Analysis
-profile_id_mapping_df = x_consensus_df.loc[:, x_consensus_df.columns.str.startswith("Metadata")]
-file = os.path.join("data", "profile_id_metadata_mapping.tsv")
-profile_id_mapping_df.to_csv(file, sep='\t', index=False)
-
-profile_id_mapping_df.head()
-
-
 # ### 2) To the Cell Health Assay Data
 
-# In[11]:
-
-
-cell_health_meta_features = ["cell_id", "guide"]
-cell_health_features = y_df.drop(cell_health_meta_features, axis="columns").columns.tolist()
-
-
-# In[12]:
+# In[17]:
 
 
 y_consensus_df = modz(
@@ -229,34 +329,19 @@ print(y_consensus_df.shape)
 y_consensus_df.head()
 
 
-# In[13]:
+# In[18]:
 
-
-y_meta_cols = ["Metadata_profile_id", "Metadata_pert_name", "Metadata_cell_line"]
 
 y_consensus_df = (
     y_consensus_df
     .reset_index()
     .reset_index(drop=True)
     .merge(
-        x_consensus_df.loc[:, y_meta_cols],
+        x_consensus_df.loc[:, y_meta_merge_cols],
         left_on=["guide", "cell_id"],
         right_on=["Metadata_pert_name", "Metadata_cell_line"],
         how="right"
     )
-)
-
-# Get columns in correct order
-y_columns = (
-    y_meta_cols +
-    y_consensus_df
-    .loc[:, ~y_consensus_df.columns.str.startswith("Metadata_")]
-    .columns
-    .tolist()
-)
-
-y_consensus_df = (
-    y_consensus_df
     .loc[:, y_columns]
     .drop(["guide", "cell_id"], axis="columns")
 )
@@ -265,7 +350,7 @@ print(y_consensus_df.shape)
 y_consensus_df.head(5)
 
 
-# In[14]:
+# In[19]:
 
 
 # Confirm that matrices are aligned
@@ -283,8 +368,14 @@ pd.testing.assert_series_equal(x_consensus_df.Metadata_cell_line,
 
 # ## Output Consensus Signatures
 
-# In[15]:
+# In[20]:
 
+
+file = os.path.join("data", "consensus", "cell_painting_median.tsv.gz")
+x_median_df.to_csv(file, sep="\t", index=False)
+
+file = os.path.join("data", "consensus", "cell_health_median.tsv.gz")
+y_median_df.to_csv(file, sep="\t", index=False)
 
 file = os.path.join("data", "consensus", "cell_painting_modz.tsv.gz")
 x_consensus_df.to_csv(file, sep="\t", index=False)
