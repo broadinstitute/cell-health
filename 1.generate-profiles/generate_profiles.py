@@ -6,8 +6,6 @@ Do not perform redundancy feature selection since downstream analysis uses model
 
 import os
 import pandas as pd
-import argparse
-import multiprocessing
 
 from pycytominer.aggregate import AggregateProfiles
 from pycytominer import annotate, normalize, feature_select, audit
@@ -61,11 +59,24 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
         compression="gzip",
     )
 
+    # Define metadata features
+    meta_features = [
+        "Image_Metadata_Plate",
+        "Image_Metadata_Well",
+        "Metadata_WellRow",
+        "Metadata_WellCol",
+        "Metadata_gene_name",
+        "Metadata_pert_name",
+        "Metadata_broad_sample",
+        "Metadata_cell_line",
+    ]
+
     # Normalize Profiles
     norm_file = os.path.join(output_dir, "{}_normalized.csv.gz".format(plate))
     normalize(
         profiles=anno_file,
         features="infer",
+        meta_features=meta_features,
         samples="Metadata_pert_name == 'EMPTY'",
         method="robustize",
         output_file=norm_file,
@@ -79,6 +90,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     feature_select(
         profiles=norm_file,
         features="infer",
+        meta_features=meta_features,
         samples="none",
         operation=["drop_na_columns", "blacklist", "variance_threshold"],
         output_file=feat_file,
@@ -118,7 +130,9 @@ barcode_platemap_df = pd.read_csv(barcode_platemap_file)
 
 # Perform analysis for each plate
 if __name__ == "__main__":
-    all_plates = [x.strip(".sqlite") for x in os.listdir(backend_dir) if x != ".DS_Store"]
+    all_plates = [
+        x.strip(".sqlite") for x in os.listdir(backend_dir) if x != ".DS_Store"
+    ]
 
     for plate in all_plates:
         get_profiles(
