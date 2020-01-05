@@ -31,7 +31,24 @@ The cell lines included A549, ES2, and HCC44.
 About 40% of all CRISPR guides were reproducible.
 This is ok since we are not actually interested in the CRISPR treatment specifically, but instead, just its corresponding readout in each cell health assay.
 
-## Approach
+## Pipeline
+
+The full analysis pipeline consists of the following steps:
+
+| Order | Module | Description |
+| :---- | :----- | :---------- | 
+| 0 | Download cell painting data | Retrieve single cell profiles archived on Figshare |
+| 1 | Generate profiles | Generate and process cell painting and cell health assay readouts |
+| 2 | Determine replicate reproducibility | Determine the extent to which the CRISPR perturbations result in reproducible signatures |
+| 3 | Train machine learning models to predict cell health assays | Train regression and classification models using cell painting data to predict cell health assay readouts |
+| 4 | Apply the models | Apply the trained models to the Drug Repurposing Hub data to predict drug perturbation effect |
+
+Each analysis module should be run in order.
+View each module for specific instructions on how to reproduce results.
+
+[`analysis-pipeline.sh`](analysis-pipeline.sh) stores information on how to reproduce all analysis modules.
+
+## Machine Learning Approach
 
 We performed the following approach:
 
@@ -62,8 +79,3 @@ To create the computational environment, run the following:
 conda env create --force --file environment.yml
 conda activate cell-health
 ```
-
-## Analysis Modules
-
-Each analysis module should be run in order.
-View each module for specific instructions on how to reproduce results.
