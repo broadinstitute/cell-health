@@ -90,7 +90,6 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     feature_select(
         profiles=norm_file,
         features="infer",
-        meta_features=meta_features,
         samples="none",
         operation=["drop_na_columns", "blacklist", "variance_threshold"],
         output_file=feat_file,
