@@ -5,18 +5,24 @@ suppressPackageStartupMessages(library(ggrepel))
 suppressPackageStartupMessages(library(cowplot))
 
 results_dir <- "results"
-roc_file <- file.path(results_dir, "full_cell_health_roc_results.tsv.gz")
+consensus <- "median"
+
+roc_file <- file.path(results_dir,
+                      paste0("full_cell_health_roc_results_", consensus, ".tsv.gz"))
 full_roc_df <- readr::read_tsv(roc_file, col_types = readr::cols()) %>%
     dplyr::filter(cell_line == "all")
 
-pr_file <- file.path(results_dir, "full_cell_health_pr_results.tsv.gz")
+pr_file <- file.path(results_dir,
+                     paste0("full_cell_health_pr_results_", consensus, ".tsv.gz"))
 full_pr_df <- readr::read_tsv(pr_file, col_types = readr::cols()) %>%
     dplyr::filter(cell_line == "all")
 
-coef_file <- file.path(results_dir, "full_cell_health_coefficients.tsv.gz")
+coef_file <- file.path(results_dir,
+                       paste0("full_cell_health_coefficients_", consensus, ".tsv.gz"))
 full_coef_df <- readr::read_tsv(coef_file, col_types = readr::cols())
 
-y_file <- file.path(results_dir, "full_cell_health_y_labels.tsv.gz")
+y_file <- file.path(results_dir,
+                    paste0("full_cell_health_y_labels_", consensus, ".tsv.gz"))
 y_df <- readr::read_tsv(y_file, col_types = readr::cols())
 
 auroc_df <- full_roc_df %>%
@@ -117,7 +123,8 @@ ggplot(auc_diff_df,
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-file <- file.path("figures", "cell_health_metric_shuffle_difference_summary.png")
+file <- file.path("figures",
+                  paste0("cell_health_metric_shuffle_difference_summary_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 9, height = 6)
 
 ggplot(full_roc_df, aes(x = fpr, y = tpr)) +
@@ -150,7 +157,7 @@ ggplot(full_roc_df, aes(x = fpr, y = tpr)) +
                                           fill = "#fdfff4")
     )
 
-file <- file.path("figures", "roc_curves.png")
+file <- file.path("figures", paste0("roc_curves_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 9, height = 9)
 
 ggplot(full_pr_df, aes(x = recall, y = precision)) +
@@ -179,12 +186,13 @@ ggplot(full_pr_df, aes(x = recall, y = precision)) +
                                           fill = "#fdfff4")
     )
 
-file <- file.path("figures", "pr_curves.png")
+file <- file.path("figures", paste0("pr_curves_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 9, height = 9)
 
 label_thresh_value = 0.90
 
-pdf_file <- file.path("figures", "all_classification_performance_metrics.pdf")
+pdf_file <- file.path("figures",
+                      paste0("all_classification_performance_metrics_", consensus, ".pdf"))
 pdf(pdf_file, width = 6, height = 8, onefile = TRUE)
 
 for (target in unique(full_roc_df$target)) {
@@ -402,7 +410,7 @@ for (target in unique(full_roc_df$target)) {
     cowplot_file <- file.path("figures",
                               "target_performance",
                               "binary",
-                              paste0(target, "_performance.png"))
+                              paste0(target, "_performance_", consensus, ".png"))
     
     cowplot::save_plot(filename = cowplot_file,
                        plot = performance_gg,

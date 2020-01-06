@@ -13099,30 +13099,23 @@ Basically, asking if there are any plate effects or other potential technical ar
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>Warning message:
-“As of rlang 0.4.0, dplyr must be at least version 0.8.0.
-<span class="ansi-red-fg">✖</span> dplyr 0.7.6 is too old for rlang 0.4.1.
-<span class="ansi-blue-fg">ℹ</span> Please update dplyr with `install.packages(&#34;dplyr&#34;)`.”</pre>
 </div>
-</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-r"><pre><span></span><span class="n">consensus</span> <span class="o">&lt;-</span> <span class="s">&quot;median&quot;</span>
+</pre></div>
 
+    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="c1"># Load Data</span>
@@ -13136,7 +13129,8 @@ Basically, asking if there are any plate effects or other potential technical ar
     <span class="n">y_type</span> <span class="o">=</span> <span class="n">readr</span><span class="o">::</span><span class="nf">col_character</span><span class="p">()</span>
 <span class="p">)</span>
 
-<span class="n">y_file</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="s">&quot;results&quot;</span><span class="p">,</span> <span class="s">&quot;full_cell_health_y_labels.tsv.gz&quot;</span><span class="p">)</span>
+<span class="n">y_file</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="s">&quot;results&quot;</span><span class="p">,</span>
+                    <span class="nf">paste0</span><span class="p">(</span><span class="s">&quot;full_cell_health_y_labels_&quot;</span><span class="p">,</span> <span class="n">consensus</span><span class="p">,</span> <span class="s">&quot;.tsv.gz&quot;</span><span class="p">))</span>
 <span class="n">y_df</span> <span class="o">&lt;-</span> <span class="n">readr</span><span class="o">::</span><span class="nf">read_tsv</span><span class="p">(</span><span class="n">y_file</span><span class="p">,</span>
                         <span class="n">col_types</span> <span class="o">=</span> <span class="n">y_cols</span><span class="p">)</span>
 
@@ -13158,7 +13152,7 @@ Basically, asking if there are any plate effects or other potential technical ar
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="c1"># Process data for plotting</span>
@@ -13191,18 +13185,6 @@ Basically, asking if there are any plate effects or other potential technical ar
     <div class="prompt"></div>
 
 
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>Warning message:
-“`chr_along()` is deprecated as of rlang 0.2.0.
-<span class="ansi-black-intense-fg">This warning is displayed once per session.</span>”</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
 
 <div class="output_html rendered_html output_subarea ">
 <table>
@@ -13212,9 +13194,9 @@ Basically, asking if there are any plate effects or other potential technical ar
 	<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th></tr>
 </thead>
 <tbody>
-	<tr><td>profile_340</td><td>0.46560759</td><td>cc_all_high_n_spots_h2ax_mean</td><td>Train</td><td>shuffle_false</td><td>raw</td><td>y_true</td><td>1</td><td>binarize</td></tr>
-	<tr><td>profile_6  </td><td>0.08417835</td><td>cc_all_high_n_spots_h2ax_mean</td><td>Train</td><td>shuffle_false</td><td>raw</td><td>y_true</td><td>0</td><td>binarize</td></tr>
-	<tr><td>profile_79 </td><td>0.15562496</td><td>cc_all_high_n_spots_h2ax_mean</td><td>Train</td><td>shuffle_false</td><td>raw</td><td>y_true</td><td>1</td><td>binarize</td></tr>
+	<tr><td>profile_340</td><td>0.43434296</td><td>cc_all_high_n_spots_h2ax_mean</td><td>Train</td><td>shuffle_false</td><td>raw</td><td>y_true</td><td>1</td><td>binarize</td></tr>
+	<tr><td>profile_6  </td><td>0.07824167</td><td>cc_all_high_n_spots_h2ax_mean</td><td>Train</td><td>shuffle_false</td><td>raw</td><td>y_true</td><td>0</td><td>binarize</td></tr>
+	<tr><td>profile_79 </td><td>0.15273802</td><td>cc_all_high_n_spots_h2ax_mean</td><td>Train</td><td>shuffle_false</td><td>raw</td><td>y_true</td><td>1</td><td>binarize</td></tr>
 </tbody>
 </table>
 
@@ -13228,11 +13210,12 @@ Basically, asking if there are any plate effects or other potential technical ar
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="c1"># Generate and save figures</span>
-<span class="n">pdf_file</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="s">&quot;figures&quot;</span><span class="p">,</span> <span class="s">&quot;all_binary_distributions.pdf&quot;</span><span class="p">)</span>
+<span class="n">pdf_file</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="s">&quot;figures&quot;</span><span class="p">,</span>
+                      <span class="nf">paste0</span><span class="p">(</span><span class="s">&quot;all_binary_distributions_&quot;</span><span class="p">,</span> <span class="n">consensus</span><span class="p">,</span> <span class="s">&quot;.pdf&quot;</span><span class="p">))</span>
 <span class="nf">pdf</span><span class="p">(</span><span class="n">pdf_file</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">3.5</span><span class="p">,</span> <span class="n">onefile</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
 
 <span class="nf">for </span><span class="p">(</span><span class="n">target</span> <span class="n">in</span> <span class="nf">unique</span><span class="p">(</span><span class="n">y_plot_df</span><span class="o">$</span><span class="n">target</span><span class="p">))</span> <span class="p">{</span>
@@ -13263,7 +13246,7 @@ Basically, asking if there are any plate effects or other potential technical ar
 
     <span class="n">output_file</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="s">&quot;figures&quot;</span><span class="p">,</span>
                              <span class="s">&quot;feature_distribution&quot;</span><span class="p">,</span>
-                             <span class="nf">paste0</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s">&quot;_dist.png&quot;</span><span class="p">))</span>
+                             <span class="nf">paste0</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s">&quot;_dist_&quot;</span><span class="p">,</span> <span class="n">consensus</span><span class="p">,</span> <span class="s">&quot;.png&quot;</span><span class="p">))</span>
     
     <span class="nf">ggsave</span><span class="p">(</span><span class="n">filename</span> <span class="o">=</span> <span class="n">output_file</span><span class="p">,</span>
            <span class="n">plot</span> <span class="o">=</span> <span class="n">target_gg</span><span class="p">,</span>
@@ -13292,7 +13275,7 @@ Basically, asking if there are any plate effects or other potential technical ar
 
 
 <div class="output_html rendered_html output_subarea ">
-<strong>png:</strong> 2
+<strong>pdf:</strong> 2
 </div>
 
 </div>

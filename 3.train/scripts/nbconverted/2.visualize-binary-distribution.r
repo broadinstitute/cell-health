@@ -1,6 +1,8 @@
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(dplyr))
 
+consensus <- "median"
+
 # Load Data
 y_cols <- readr::cols(
     Metadata_profile_id = readr::col_character(),
@@ -12,7 +14,8 @@ y_cols <- readr::cols(
     y_type = readr::col_character()
 )
 
-y_file <- file.path("results", "full_cell_health_y_labels.tsv.gz")
+y_file <- file.path("results",
+                    paste0("full_cell_health_y_labels_", consensus, ".tsv.gz"))
 y_df <- readr::read_tsv(y_file,
                         col_types = y_cols)
 
@@ -43,7 +46,8 @@ y_plot_df$data_type <- dplyr::recode(y_plot_df$data_type,
 head(y_plot_df, 3)
 
 # Generate and save figures
-pdf_file <- file.path("figures", "all_binary_distributions.pdf")
+pdf_file <- file.path("figures",
+                      paste0("all_binary_distributions_", consensus, ".pdf"))
 pdf(pdf_file, width = 5, height = 3.5, onefile = TRUE)
 
 for (target in unique(y_plot_df$target)) {
@@ -74,7 +78,7 @@ for (target in unique(y_plot_df$target)) {
 
     output_file <- file.path("figures",
                              "feature_distribution",
-                             paste0(target, "_dist.png"))
+                             paste0(target, "_dist_", consensus, ".png"))
     
     ggsave(filename = output_file,
            plot = target_gg,

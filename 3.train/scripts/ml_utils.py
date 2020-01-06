@@ -457,12 +457,15 @@ class CellHealthPredict:
         return output
 
 
-def load_train_test(data_dir="data", drop_metadata=False, output_metadata_only=False):
+def load_train_test(
+    data_dir="data", consensus="median", drop_metadata=False, output_metadata_only=False
+):
     """
     Load training and testing data
 
     Arguments:
     data_dir - a string indicating the location of the files
+    consensus - a string indicating which consensus signature type to load
     drop_metadata - boolean if the metadata should be striped before input
                     [default: False]
     output_metadata_only - boolean if metadata columns are only output
@@ -472,10 +475,11 @@ def load_train_test(data_dir="data", drop_metadata=False, output_metadata_only=F
     A list storing training and testing x and y matrices
     """
 
-    x_train_file = os.path.join(data_dir, "x_train.tsv.gz")
-    y_train_file = os.path.join(data_dir, "y_train.tsv.gz")
-    x_test_file = os.path.join(data_dir, "x_test.tsv.gz")
-    y_test_file = os.path.join(data_dir, "y_test.tsv.gz")
+    assert consensus in ["modz", "median"], "consensus must be either `modz or `median`"
+    x_train_file = os.path.join(data_dir, "x_train_{}.tsv.gz".format(consensus))
+    y_train_file = os.path.join(data_dir, "y_train_{}.tsv.gz".format(consensus))
+    x_test_file = os.path.join(data_dir, "x_test_{}.tsv.gz".format(consensus))
+    y_test_file = os.path.join(data_dir, "y_test_{}.tsv.gz".format(consensus))
 
     x_train_df = pd.read_csv(x_train_file, index_col=0, sep="\t")
     y_train_df = pd.read_csv(y_train_file, index_col=0, sep="\t")
@@ -515,10 +519,13 @@ def shuffle_columns(cp_feature):
     return np.random.permutation(cp_feature.tolist())
 
 
-def load_models(model_dir="models", shuffle=False, transform="raw"):
+def load_models(model_dir="models", consensus="median", shuffle=False, transform="raw"):
     """
     Load models and model coefficients
     """
+
+    assert consensus in ["median", "modz"], "consensus must be either median or modz"
+
     if shuffle:
         model_string = "shuffle_True"
     else:
@@ -530,6 +537,10 @@ def load_models(model_dir="models", shuffle=False, transform="raw"):
     for model_file in os.listdir(model_dir):
 
         if model_string not in model_file:
+            continue
+
+        consensus_transform = model_file.split("_")[2]
+        if consensus_transform != consensus:
             continue
 
         model_file_full = os.path.join(model_dir, model_file)
