@@ -49,7 +49,8 @@ coef_df <- process_coefficients(coef_file)
 
 head(coef_df, 10)
 
-coef_file <- file.path("results", "all_model_coefficients_shuffled.tsv")
+coef_file <- file.path("results",
+                       paste0("all_model_coefficients_shuffled", consensus, ".tsv"))
 coef_shuffle_df <- process_coefficients(coef_file)
 
 head(coef_shuffle_df, 2)
@@ -154,7 +155,8 @@ all_coef_gg <- cowplot::plot_grid(
 
 all_coef_gg
 
-cowplot_file <- file.path("figures", "model_coefficient_summary.png")
+cowplot_file <- file.path("figures",
+                          paste0("model_coefficient_summary_", consensus, ".png"))
 
 cowplot::save_plot(filename = cowplot_file,
                            plot = all_coef_gg,
@@ -182,7 +184,8 @@ all_feature_gg <- ggplot(coef_all_df,
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-output_file <- file.path("figures", "coefficient_sum_full.png")
+output_file <- file.path("figures",
+                         paste0("coefficient_sum_full_", consensus, ".png"))
 ggsave(output_file, all_feature_gg, height = 10, width = 18)
 
 all_feature_gg
@@ -199,7 +202,8 @@ subset_feature_gg <- ggplot(coef_all_df %>%
                                           fill = "#fdfff4")) +
     coord_flip()
 
-output_file <- file.path("figures", "coefficient_sum_subset.png")
+output_file <- file.path("figures",
+                         paste0("coefficient_sum_subset_", consensus, ".png"))
 ggsave(output_file, subset_feature_gg, height = 8, width = 8)
 
 subset_feature_gg

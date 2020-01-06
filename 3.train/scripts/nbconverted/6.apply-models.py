@@ -69,11 +69,17 @@ def sample_squared_error(scores, y):
 # In[4]:
 
 
-model_dict, model_coef = load_models()
-shuffle_model_dict, shuffle_model_coef = load_models(shuffle=True)
+consensus = "median"
 
 
 # In[5]:
+
+
+model_dict, model_coef = load_models(consensus=consensus)
+shuffle_model_dict, shuffle_model_coef = load_models(shuffle=True, consensus=consensus)
+
+
+# In[6]:
 
 
 # Load Metadata Mapping File
@@ -86,15 +92,15 @@ metadata_df.head()
 
 # ## 2) Load Training and Testing Data
 
-# In[6]:
+# In[7]:
 
 
-x_train_df, x_test_df, y_train_df, y_test_df = load_train_test(drop_metadata=True)
+x_train_df, x_test_df, y_train_df, y_test_df = load_train_test(drop_metadata=True, consensus=consensus)
 
 
 # ## 3) Output Model Coefficients
 
-# In[7]:
+# In[8]:
 
 
 # Extract all model coefficients and output to file
@@ -102,14 +108,15 @@ coef_df = pd.DataFrame(model_coef)
 coef_df.index = x_test_df.columns
 coef_df.index.name = "features"
 
-file = os.path.join("results", "all_model_coefficients.tsv")
+file = os.path.join("results",
+                    "all_model_coefficients_{}.tsv".format(consensus))
 coef_df.to_csv(file, sep='\t', index=True)
 
 print(coef_df.shape)
 coef_df.head(2)
 
 
-# In[8]:
+# In[9]:
 
 
 # Extract all model coefficients and output to file
@@ -117,7 +124,8 @@ shuffle_coef_df = pd.DataFrame(shuffle_model_coef)
 shuffle_coef_df.index = x_test_df.columns
 shuffle_coef_df.index.name = "features"
 
-file = os.path.join("results", "all_model_coefficients_shuffled.tsv")
+file = os.path.join("results",
+                    "all_model_coefficients_shuffled_{}.tsv".format(consensus))
 shuffle_coef_df.to_csv(file, sep='\t', index=True)
 
 print(shuffle_coef_df.shape)
@@ -128,7 +136,7 @@ shuffle_coef_df.head(2)
 # 
 # For real and shuffled data.
 
-# In[9]:
+# In[10]:
 
 
 all_scores = []
@@ -153,7 +161,7 @@ for cell_health_feature in model_dict.keys():
 
 # ## 5) Concatenate scores with Metadata
 
-# In[10]:
+# In[11]:
 
 
 # Concatenate real data scores
@@ -176,15 +184,20 @@ all_scores = (
 all_scores.index = all_scores.Metadata_profile_id
 all_scores = all_scores.drop("Metadata_profile_id", axis="columns")
 
+# Remove prefix of variable columns
+strip_text = "cell_health_{}_target_".format(consensus)
+all_scores.columns = [x.replace(strip_text, "") for x in all_scores.columns]
+
 # Output file
-file = os.path.join("results", "all_model_predictions.tsv")
+file = os.path.join("results",
+                    "all_model_predictions_{}.tsv".format(consensus))
 all_scores.to_csv(file, sep='\t', index=True)
 
 print(all_scores.shape)
 all_scores.head(2)
 
 
-# In[11]:
+# In[12]:
 
 
 # Concatenate shuffled data scores
@@ -207,8 +220,13 @@ all_shuffle_scores = (
 all_shuffle_scores.index = all_shuffle_scores.Metadata_profile_id
 all_shuffle_scores = all_shuffle_scores.drop("Metadata_profile_id", axis="columns")
 
+# Remove prefix of variable columns
+strip_text = "cell_health_{}_target_".format(consensus)
+all_shuffle_scores.columns = [x.replace(strip_text, "") for x in all_shuffle_scores.columns]
+
 # Output file
-file = os.path.join("results", "all_model_predictions_shuffled.tsv")
+file = os.path.join("results",
+                    "all_model_predictions_shuffled_{}.tsv".format(consensus))
 all_shuffle_scores.to_csv(file, sep='\t', index=True)
 
 print(all_shuffle_scores.shape)
@@ -219,7 +237,7 @@ all_shuffle_scores.head(2)
 # 
 # For real and shuffled data
 
-# In[12]:
+# In[13]:
 
 
 y_df = pd.concat([y_train_df, y_test_df]).reindex(all_scores.index)
@@ -228,7 +246,7 @@ print(y_df.shape)
 y_df.head(2)
 
 
-# In[13]:
+# In[14]:
 
 
 all_score_error = sample_squared_error(scores=all_scores, y=y_df)
@@ -240,14 +258,15 @@ all_score_error = (
 )
 
 # Output file
-file = os.path.join("results", "all_model_sample_squared_error.tsv")
+file = os.path.join("results",
+                    "all_model_sample_squared_error_{}.tsv".format(consensus))
 all_score_error.to_csv(file, sep='\t', index=False)
 
 print(all_score_error.shape)
 all_score_error.head(2)
 
 
-# In[14]:
+# In[15]:
 
 
 all_shuffle_score_error = sample_squared_error(scores=all_shuffle_scores, y=y_df)
@@ -259,7 +278,8 @@ all_shuffle_score_error = (
 )
 
 # Output file
-file = os.path.join("results", "all_model_sample_squared_error_shuffled.tsv")
+file = os.path.join("results",
+                    "all_model_sample_squared_error_shuffled_{}.tsv".format(consensus))
 all_shuffle_score_error.to_csv(file, sep='\t', index=False)
 
 print(all_shuffle_score_error.shape)
