@@ -6,7 +6,9 @@
 # **Gregory Way, 2019**
 # 
 # Split the input data into training and testing sets balanced by cell line.
+# 
 # We generate training and test sets from median and MODZ consensus profiles.
+# We use the same training and testing samples for both consensus profiles.
 
 # In[1]:
 
@@ -58,7 +60,7 @@ print(y_median_df.shape)
 y_median_df.head(2)
 
 
-# ### Split into Training and Testing
+# #### Split into Training and Testing Sets
 
 # In[6]:
 
@@ -82,6 +84,13 @@ print(x_test_df.shape)
 # In[8]:
 
 
+training_samples = x_train_df.Metadata_profile_id.tolist()
+testing_samples = x_test_df.Metadata_profile_id.tolist()
+
+
+# In[9]:
+
+
 file = os.path.join("data", "x_train_median.tsv.gz")
 x_train_df.to_csv(file, sep="\t", index=False)
 
@@ -97,7 +106,7 @@ y_test_df.to_csv(file, sep="\t", index=False)
 
 # ### MODZ Consensus Profiles
 
-# In[9]:
+# In[10]:
 
 
 file = os.path.join(data_dir, "consensus", "cell_painting_modz.tsv.gz")
@@ -107,7 +116,7 @@ print(x_consensus_df.shape)
 x_consensus_df.head(2)
 
 
-# In[10]:
+# In[11]:
 
 
 file = os.path.join(data_dir, "consensus", "cell_health_modz.tsv.gz")
@@ -117,28 +126,26 @@ print(y_consensus_df.shape)
 y_consensus_df.head(2)
 
 
-# ## Split into Training and Testing
-
-# In[11]:
-
-
-x_train_df, x_test_df, y_train_df, y_test_df = train_test_split(
-    x_consensus_df,
-    y_consensus_df,
-    test_size=test_proportion,
-    stratify=y_consensus_df.Metadata_cell_line,
-    random_state=42
-)
-
+# #### Split into Training and Testing Sets
 
 # In[12]:
+
+
+x_train_df = x_consensus_df.query("Metadata_profile_id in @training_samples").reindex(x_train_df.index)
+y_train_df = y_consensus_df.query("Metadata_profile_id in @training_samples").reindex(y_train_df.index)
+
+x_test_df = x_consensus_df.query("Metadata_profile_id in @testing_samples").reindex(x_test_df.index)
+y_test_df = y_consensus_df.query("Metadata_profile_id in @testing_samples").reindex(y_test_df.index)
+
+
+# In[13]:
 
 
 print(x_train_df.shape)
 print(x_test_df.shape)
 
 
-# In[13]:
+# In[14]:
 
 
 file = os.path.join("data", "x_train_modz.tsv.gz")

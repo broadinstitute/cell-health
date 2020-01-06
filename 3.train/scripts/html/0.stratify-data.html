@@ -13079,6 +13079,8 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Stratify-Data-into-Training-and-Testing-Sets">Stratify Data into Training and Testing Sets<a class="anchor-link" href="#Stratify-Data-into-Training-and-Testing-Sets">&#182;</a></h1><p><strong>Gregory Way, 2019</strong></p>
 <p>Split the input data into training and testing sets balanced by cell line.</p>
+<p>We generate training and test sets from median and MODZ consensus profiles.
+We use the same training and testing samples for both consensus profiles.</p>
 
 </div>
 </div>
@@ -13133,7 +13135,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Load-Data">Load Data<a class="anchor-link" href="#Load-Data">&#182;</a></h2>
+<h2 id="Load-Data">Load Data<a class="anchor-link" href="#Load-Data">&#182;</a></h2><h3 id="Median-Consensus-Profiles">Median Consensus Profiles<a class="anchor-link" href="#Median-Consensus-Profiles">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13142,13 +13144,11 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;consensus&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_painting_modz.tsv.gz&quot;</span><span class="p">)</span>
-<span class="n">x_consensus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;consensus&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_painting_median.tsv.gz&quot;</span><span class="p">)</span>
+<span class="n">x_median_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="n">num_original_features</span> <span class="o">=</span> <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">x_consensus_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">x_consensus_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x_median_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">x_median_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13165,7 +13165,7 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(357, 1731)
+<pre>(357, 1601)
 </pre>
 </div>
 </div>
@@ -13203,8 +13203,8 @@ div#notebook {
       <th>Cells_AreaShape_Center_Y</th>
       <th>Cells_AreaShape_Compactness</th>
       <th>Cells_AreaShape_Eccentricity</th>
-      <th>Cells_AreaShape_EulerNumber</th>
       <th>Cells_AreaShape_Extent</th>
+      <th>Cells_AreaShape_FormFactor</th>
       <th>...</th>
       <th>Nuclei_Texture_Variance_DNA_5_0</th>
       <th>Nuclei_Texture_Variance_ER_10_0</th>
@@ -13224,52 +13224,52 @@ div#notebook {
       <td>profile_0</td>
       <td>A549</td>
       <td>AKT1-1</td>
-      <td>0.082039</td>
-      <td>-0.005152</td>
-      <td>0.007516</td>
-      <td>-0.262496</td>
-      <td>-0.096337</td>
-      <td>0.0</td>
-      <td>0.111426</td>
+      <td>0.390141</td>
+      <td>-0.472324</td>
+      <td>0.454178</td>
+      <td>0.300041</td>
+      <td>0.322093</td>
+      <td>-0.160304</td>
+      <td>0.093525</td>
       <td>...</td>
-      <td>0.911852</td>
-      <td>1.227693</td>
-      <td>1.103665</td>
-      <td>1.200197</td>
-      <td>0.596277</td>
-      <td>0.537276</td>
-      <td>0.552541</td>
-      <td>0.354905</td>
-      <td>0.183667</td>
-      <td>0.538379</td>
+      <td>0.896247</td>
+      <td>0.678922</td>
+      <td>0.798388</td>
+      <td>0.950740</td>
+      <td>0.520392</td>
+      <td>0.225345</td>
+      <td>0.714348</td>
+      <td>0.212517</td>
+      <td>0.189997</td>
+      <td>0.253847</td>
     </tr>
     <tr>
       <th>1</th>
       <td>profile_1</td>
       <td>A549</td>
       <td>AKT1-2</td>
-      <td>-0.127207</td>
-      <td>0.393959</td>
-      <td>0.456300</td>
-      <td>-0.193656</td>
-      <td>-0.020202</td>
-      <td>0.0</td>
-      <td>0.273250</td>
+      <td>0.045949</td>
+      <td>0.436621</td>
+      <td>0.403512</td>
+      <td>-0.118672</td>
+      <td>0.052351</td>
+      <td>0.231665</td>
+      <td>-0.081538</td>
       <td>...</td>
-      <td>0.526762</td>
-      <td>0.365948</td>
-      <td>0.192068</td>
-      <td>0.406909</td>
-      <td>0.006834</td>
-      <td>0.051908</td>
-      <td>0.087319</td>
-      <td>0.156875</td>
-      <td>0.146667</td>
-      <td>0.082659</td>
+      <td>0.421047</td>
+      <td>0.035434</td>
+      <td>0.010126</td>
+      <td>0.200546</td>
+      <td>-0.150230</td>
+      <td>-0.097422</td>
+      <td>0.011910</td>
+      <td>0.176618</td>
+      <td>0.060610</td>
+      <td>-0.153813</td>
     </tr>
   </tbody>
 </table>
-<p>2 rows × 1731 columns</p>
+<p>2 rows × 1601 columns</p>
 </div>
 </div>
 
@@ -13282,6 +13282,389 @@ div#notebook {
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;consensus&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_health_median.tsv.gz&quot;</span><span class="p">)</span>
+<span class="n">y_median_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">y_median_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">y_median_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(357, 73)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[5]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Metadata_profile_id</th>
+      <th>Metadata_pert_name</th>
+      <th>Metadata_cell_line</th>
+      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_large_notround_polynuclear_mean</th>
+      <th>cc_all_large_round_polyploid_mean</th>
+      <th>cc_all_n_objects</th>
+      <th>cc_all_n_spots_mean</th>
+      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>cc_all_nucleus_area_mean</th>
+      <th>...</th>
+      <th>vb_num_live_cells</th>
+      <th>vb_percent_all_apoptosis</th>
+      <th>vb_percent_all_early_apoptosis</th>
+      <th>vb_percent_all_late_apoptosis</th>
+      <th>vb_percent_caspase_dead_only</th>
+      <th>vb_percent_dead</th>
+      <th>vb_percent_dead_only</th>
+      <th>vb_percent_live</th>
+      <th>vb_ros_back_mean</th>
+      <th>vb_ros_mean</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>profile_0</td>
+      <td>AKT1-1</td>
+      <td>A549</td>
+      <td>0.008156</td>
+      <td>0.587977</td>
+      <td>0.01882</td>
+      <td>0.381501</td>
+      <td>0.176564</td>
+      <td>0.187675</td>
+      <td>-0.170616</td>
+      <td>...</td>
+      <td>0.399842</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-0.118976</td>
+      <td>-0.132871</td>
+      <td>-0.121090</td>
+      <td>0.132882</td>
+      <td>0.806970</td>
+      <td>1.293984</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>profile_1</td>
+      <td>AKT1-2</td>
+      <td>A549</td>
+      <td>0.056667</td>
+      <td>1.264627</td>
+      <td>0.24145</td>
+      <td>0.568443</td>
+      <td>0.235304</td>
+      <td>0.372684</td>
+      <td>-0.276888</td>
+      <td>...</td>
+      <td>0.101670</td>
+      <td>0.318027</td>
+      <td>0.132751</td>
+      <td>0.467027</td>
+      <td>0.621374</td>
+      <td>0.100032</td>
+      <td>0.074036</td>
+      <td>-0.099917</td>
+      <td>0.558041</td>
+      <td>1.151867</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 73 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Split-into-Training-and-Testing-Sets">Split into Training and Testing Sets<a class="anchor-link" href="#Split-into-Training-and-Testing-Sets">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_train_df</span><span class="p">,</span> <span class="n">x_test_df</span><span class="p">,</span> <span class="n">y_train_df</span><span class="p">,</span> <span class="n">y_test_df</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">x_median_df</span><span class="p">,</span>
+    <span class="n">y_median_df</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="n">test_proportion</span><span class="p">,</span>
+    <span class="n">stratify</span><span class="o">=</span><span class="n">y_median_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">x_train_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x_test_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(303, 1601)
+(54, 1601)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">training_samples</span> <span class="o">=</span> <span class="n">x_train_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">testing_samples</span> <span class="o">=</span> <span class="n">x_test_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;x_train_median.tsv.gz&quot;</span><span class="p">)</span>
+<span class="n">x_train_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;y_train_median.tsv.gz&quot;</span><span class="p">)</span>
+<span class="n">y_train_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;x_test_median.tsv.gz&quot;</span><span class="p">)</span>
+<span class="n">x_test_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;y_test_median.tsv.gz&quot;</span><span class="p">)</span>
+<span class="n">y_test_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="MODZ-Consensus-Profiles">MODZ Consensus Profiles<a class="anchor-link" href="#MODZ-Consensus-Profiles">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;consensus&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_painting_modz.tsv.gz&quot;</span><span class="p">)</span>
+<span class="n">x_consensus_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">x_consensus_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">x_consensus_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(357, 1601)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[10]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Metadata_profile_id</th>
+      <th>Metadata_cell_line</th>
+      <th>Metadata_pert_name</th>
+      <th>Cells_AreaShape_Area</th>
+      <th>Cells_AreaShape_Center_X</th>
+      <th>Cells_AreaShape_Center_Y</th>
+      <th>Cells_AreaShape_Compactness</th>
+      <th>Cells_AreaShape_Eccentricity</th>
+      <th>Cells_AreaShape_Extent</th>
+      <th>Cells_AreaShape_FormFactor</th>
+      <th>...</th>
+      <th>Nuclei_Texture_Variance_DNA_5_0</th>
+      <th>Nuclei_Texture_Variance_ER_10_0</th>
+      <th>Nuclei_Texture_Variance_ER_20_0</th>
+      <th>Nuclei_Texture_Variance_ER_5_0</th>
+      <th>Nuclei_Texture_Variance_Mito_10_0</th>
+      <th>Nuclei_Texture_Variance_Mito_20_0</th>
+      <th>Nuclei_Texture_Variance_Mito_5_0</th>
+      <th>Nuclei_Texture_Variance_RNA_10_0</th>
+      <th>Nuclei_Texture_Variance_RNA_20_0</th>
+      <th>Nuclei_Texture_Variance_RNA_5_0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>profile_0</td>
+      <td>A549</td>
+      <td>AKT1-1</td>
+      <td>0.42668</td>
+      <td>0.016416</td>
+      <td>-0.057528</td>
+      <td>-0.178226</td>
+      <td>-0.083852</td>
+      <td>0.172003</td>
+      <td>-0.280522</td>
+      <td>...</td>
+      <td>0.718460</td>
+      <td>0.877260</td>
+      <td>0.811628</td>
+      <td>1.068138</td>
+      <td>0.370770</td>
+      <td>0.287482</td>
+      <td>0.387510</td>
+      <td>0.264552</td>
+      <td>0.258830</td>
+      <td>0.354644</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>profile_1</td>
+      <td>A549</td>
+      <td>AKT1-2</td>
+      <td>0.29864</td>
+      <td>0.371576</td>
+      <td>0.295355</td>
+      <td>-0.176274</td>
+      <td>-0.003109</td>
+      <td>0.319832</td>
+      <td>0.247319</td>
+      <td>...</td>
+      <td>0.413436</td>
+      <td>0.281365</td>
+      <td>0.152485</td>
+      <td>0.386029</td>
+      <td>-0.062285</td>
+      <td>-0.011781</td>
+      <td>-0.011991</td>
+      <td>0.124322</td>
+      <td>0.221694</td>
+      <td>-0.008421</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 1601 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;consensus&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_health_modz.tsv.gz&quot;</span><span class="p">)</span>
@@ -13312,7 +13695,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[5]:</div>
+    <div class="prompt output_prompt">Out[11]:</div>
 
 
 
@@ -13422,549 +13805,20 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Subset-Features-into-those-acquired-in-Repurposing-Data">Subset Features into those acquired in Repurposing Data<a class="anchor-link" href="#Subset-Features-into-those-acquired-in-Repurposing-Data">&#182;</a></h2>
+<h4 id="Split-into-Training-and-Testing-Sets">Split into Training and Testing Sets<a class="anchor-link" href="#Split-into-Training-and-Testing-Sets">&#182;</a></h4>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Note, these files are not yet public!</span>
-<span class="n">repurposing_project_id</span> <span class="o">=</span> <span class="s2">&quot;2015_10_05_DrugRepurposing_AravindSubramanian_GolubLab_Broad&quot;</span>
-<span class="n">example_plate</span> <span class="o">=</span> <span class="s2">&quot;SQ00015058&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_train_df</span> <span class="o">=</span> <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Metadata_profile_id in @training_samples&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">x_train_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">y_train_df</span> <span class="o">=</span> <span class="n">y_consensus_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Metadata_profile_id in @training_samples&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">y_train_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 
-<span class="n">repurposing_profile_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-    <span class="s2">&quot;/Users&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;gway&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;work&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;projects&quot;</span><span class="p">,</span>
-    <span class="n">repurposing_project_id</span><span class="p">,</span>
-    <span class="s2">&quot;workspace&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;software&quot;</span><span class="p">,</span>
-    <span class="n">repurposing_project_id</span><span class="p">,</span>
-    <span class="s2">&quot;subsampling&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;data&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;profiles&quot;</span>
-<span class="p">)</span>
-
-<span class="n">plate_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">repurposing_profile_dir</span><span class="p">,</span> <span class="n">example_plate</span><span class="p">,</span> <span class="s2">&quot;n_all&quot;</span><span class="p">)</span>
-<span class="n">example_plate_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plate_dir</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_subsample_all_normalized.csv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">example_plate</span><span class="p">))</span>
-<span class="n">repurposing_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">example_plate_file</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">repurposing_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">repurposing_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(384, 1351)
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[6]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Metadata_plate_map_name</th>
-      <th>Metadata_broad_sample</th>
-      <th>Metadata_mg_per_ml</th>
-      <th>Metadata_mmoles_per_liter</th>
-      <th>Metadata_solvent</th>
-      <th>Image_Metadata_Plate</th>
-      <th>Image_Metadata_Well</th>
-      <th>Cells_AreaShape_Area</th>
-      <th>Cells_AreaShape_Center_X</th>
-      <th>Cells_AreaShape_Center_Y</th>
-      <th>...</th>
-      <th>Nuclei_Texture_Variance_DNA_5_0</th>
-      <th>Nuclei_Texture_Variance_ER_10_0</th>
-      <th>Nuclei_Texture_Variance_ER_20_0</th>
-      <th>Nuclei_Texture_Variance_ER_5_0</th>
-      <th>Nuclei_Texture_Variance_Mito_10_0</th>
-      <th>Nuclei_Texture_Variance_Mito_20_0</th>
-      <th>Nuclei_Texture_Variance_Mito_5_0</th>
-      <th>Nuclei_Texture_Variance_RNA_10_0</th>
-      <th>Nuclei_Texture_Variance_RNA_20_0</th>
-      <th>Nuclei_Texture_Variance_RNA_5_0</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>C-7161-01-LM6-028</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>DMSO</td>
-      <td>SQ00015058</td>
-      <td>A01</td>
-      <td>0.067943</td>
-      <td>0.723845</td>
-      <td>0.627867</td>
-      <td>...</td>
-      <td>0.388595</td>
-      <td>-0.220344</td>
-      <td>-0.021542</td>
-      <td>-0.302676</td>
-      <td>-0.417957</td>
-      <td>-0.361990</td>
-      <td>-0.442155</td>
-      <td>-0.087422</td>
-      <td>-0.134215</td>
-      <td>-0.104054</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>C-7161-01-LM6-028</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>DMSO</td>
-      <td>SQ00015058</td>
-      <td>A02</td>
-      <td>0.210561</td>
-      <td>1.648940</td>
-      <td>-0.426731</td>
-      <td>...</td>
-      <td>0.556791</td>
-      <td>-0.160838</td>
-      <td>-0.004258</td>
-      <td>-0.203185</td>
-      <td>-0.158496</td>
-      <td>-0.149739</td>
-      <td>-0.219452</td>
-      <td>-0.066237</td>
-      <td>-0.224963</td>
-      <td>-0.011944</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>C-7161-01-LM6-028</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>DMSO</td>
-      <td>SQ00015058</td>
-      <td>A03</td>
-      <td>-0.155591</td>
-      <td>0.329824</td>
-      <td>1.363809</td>
-      <td>...</td>
-      <td>0.827955</td>
-      <td>0.262965</td>
-      <td>0.309588</td>
-      <td>0.150367</td>
-      <td>-0.092583</td>
-      <td>-0.165437</td>
-      <td>-0.044953</td>
-      <td>-0.271777</td>
-      <td>-0.299115</td>
-      <td>-0.183484</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>C-7161-01-LM6-028</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>DMSO</td>
-      <td>SQ00015058</td>
-      <td>A04</td>
-      <td>-0.136381</td>
-      <td>0.569663</td>
-      <td>-0.062554</td>
-      <td>...</td>
-      <td>0.534781</td>
-      <td>-0.044292</td>
-      <td>-0.143393</td>
-      <td>0.016940</td>
-      <td>-0.152441</td>
-      <td>-0.157008</td>
-      <td>-0.074708</td>
-      <td>-0.407897</td>
-      <td>-0.472541</td>
-      <td>-0.271706</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>C-7161-01-LM6-028</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>DMSO</td>
-      <td>SQ00015058</td>
-      <td>A05</td>
-      <td>0.549936</td>
-      <td>1.357707</td>
-      <td>0.438191</td>
-      <td>...</td>
-      <td>-0.085308</td>
-      <td>-0.157880</td>
-      <td>-0.278797</td>
-      <td>-0.265350</td>
-      <td>-0.375957</td>
-      <td>-0.369248</td>
-      <td>-0.370915</td>
-      <td>-0.322905</td>
-      <td>-0.169420</td>
-      <td>-0.282563</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 1351 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cp_features</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">repurposing_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">~</span><span class="n">repurposing_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Metadata&quot;</span><span class="p">)])</span>
-<span class="n">cp_features</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-    <span class="nb">list</span><span class="p">(</span>
-        <span class="n">cp_features</span>
-        <span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
-            <span class="nb">set</span><span class="p">(</span>
-                <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">~</span><span class="n">x_consensus_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Metadata&quot;</span><span class="p">)]</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-
-<span class="nb">len</span><span class="p">(</span><span class="n">cp_features</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[7]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>1289</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">meta_cols</span> <span class="o">=</span> <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">x_consensus_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Metadata&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="n">x_consensus_df</span> <span class="o">=</span> <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">meta_cols</span> <span class="o">+</span> <span class="n">cp_features</span><span class="p">]</span>
-<span class="n">num_subset_features</span> <span class="o">=</span> <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">x_consensus_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">x_consensus_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(357, 1292)
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[8]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Metadata_profile_id</th>
-      <th>Metadata_cell_line</th>
-      <th>Metadata_pert_name</th>
-      <th>Cells_AreaShape_Area</th>
-      <th>Cells_AreaShape_Center_X</th>
-      <th>Cells_AreaShape_Center_Y</th>
-      <th>Cells_AreaShape_EulerNumber</th>
-      <th>Cells_AreaShape_Extent</th>
-      <th>Cells_AreaShape_MaxFeretDiameter</th>
-      <th>Cells_AreaShape_MaximumRadius</th>
-      <th>...</th>
-      <th>Nuclei_Texture_Variance_DNA_5_0</th>
-      <th>Nuclei_Texture_Variance_ER_10_0</th>
-      <th>Nuclei_Texture_Variance_ER_20_0</th>
-      <th>Nuclei_Texture_Variance_ER_5_0</th>
-      <th>Nuclei_Texture_Variance_Mito_10_0</th>
-      <th>Nuclei_Texture_Variance_Mito_20_0</th>
-      <th>Nuclei_Texture_Variance_Mito_5_0</th>
-      <th>Nuclei_Texture_Variance_RNA_10_0</th>
-      <th>Nuclei_Texture_Variance_RNA_20_0</th>
-      <th>Nuclei_Texture_Variance_RNA_5_0</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>profile_0</td>
-      <td>A549</td>
-      <td>AKT1-1</td>
-      <td>0.082039</td>
-      <td>-0.005152</td>
-      <td>0.007516</td>
-      <td>0.0</td>
-      <td>0.111426</td>
-      <td>0.121451</td>
-      <td>0.130145</td>
-      <td>...</td>
-      <td>0.911852</td>
-      <td>1.227693</td>
-      <td>1.103665</td>
-      <td>1.200197</td>
-      <td>0.596277</td>
-      <td>0.537276</td>
-      <td>0.552541</td>
-      <td>0.354905</td>
-      <td>0.183667</td>
-      <td>0.538379</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>profile_1</td>
-      <td>A549</td>
-      <td>AKT1-2</td>
-      <td>-0.127207</td>
-      <td>0.393959</td>
-      <td>0.456300</td>
-      <td>0.0</td>
-      <td>0.273250</td>
-      <td>-0.144039</td>
-      <td>-0.104757</td>
-      <td>...</td>
-      <td>0.526762</td>
-      <td>0.365948</td>
-      <td>0.192068</td>
-      <td>0.406909</td>
-      <td>0.006834</td>
-      <td>0.051908</td>
-      <td>0.087319</td>
-      <td>0.156875</td>
-      <td>0.146667</td>
-      <td>0.082659</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>profile_2</td>
-      <td>A549</td>
-      <td>ARID1B-1</td>
-      <td>0.160263</td>
-      <td>0.706940</td>
-      <td>-0.351952</td>
-      <td>0.0</td>
-      <td>-0.506445</td>
-      <td>0.303744</td>
-      <td>0.099667</td>
-      <td>...</td>
-      <td>-0.536363</td>
-      <td>-0.028874</td>
-      <td>0.112922</td>
-      <td>-0.104128</td>
-      <td>-0.048906</td>
-      <td>0.072595</td>
-      <td>-0.198982</td>
-      <td>0.325876</td>
-      <td>0.186032</td>
-      <td>0.342683</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>profile_3</td>
-      <td>A549</td>
-      <td>ARID1B-2</td>
-      <td>0.489093</td>
-      <td>-0.007086</td>
-      <td>0.368221</td>
-      <td>0.0</td>
-      <td>-0.367911</td>
-      <td>0.629834</td>
-      <td>0.420724</td>
-      <td>...</td>
-      <td>0.006326</td>
-      <td>-0.334649</td>
-      <td>-0.269844</td>
-      <td>-0.255930</td>
-      <td>-0.107642</td>
-      <td>-0.099935</td>
-      <td>0.093797</td>
-      <td>0.606730</td>
-      <td>0.427497</td>
-      <td>0.672805</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>profile_4</td>
-      <td>A549</td>
-      <td>ATF4-1</td>
-      <td>3.416773</td>
-      <td>-0.120053</td>
-      <td>-0.075411</td>
-      <td>0.0</td>
-      <td>0.462898</td>
-      <td>3.453786</td>
-      <td>3.251015</td>
-      <td>...</td>
-      <td>0.410653</td>
-      <td>-0.249195</td>
-      <td>0.061380</td>
-      <td>-0.142925</td>
-      <td>0.008937</td>
-      <td>-0.204777</td>
-      <td>0.216734</td>
-      <td>1.356973</td>
-      <td>2.361216</td>
-      <td>0.344510</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 1292 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;subsetting by repurposing features removed </span><span class="si">{}</span><span class="s2"> features&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_original_features</span> <span class="o">-</span> <span class="n">num_subset_features</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>subsetting by repurposing features removed 439 features
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Split-into-Training-and-Testing">Split into Training and Testing<a class="anchor-link" href="#Split-into-Training-and-Testing">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_train_df</span><span class="p">,</span> <span class="n">x_test_df</span><span class="p">,</span> <span class="n">y_train_df</span><span class="p">,</span> <span class="n">y_test_df</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
-    <span class="n">x_consensus_df</span><span class="p">,</span>
-    <span class="n">y_consensus_df</span><span class="p">,</span>
-    <span class="n">test_size</span><span class="o">=</span><span class="n">test_proportion</span><span class="p">,</span>
-    <span class="n">stratify</span><span class="o">=</span><span class="n">y_consensus_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">,</span>
-    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
-<span class="p">)</span>
+<span class="n">x_test_df</span> <span class="o">=</span> <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Metadata_profile_id in @testing_samples&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">x_test_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">y_test_df</span> <span class="o">=</span> <span class="n">y_consensus_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Metadata_profile_id in @testing_samples&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">y_test_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13974,7 +13828,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">x_train_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -13995,8 +13849,8 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(303, 1292)
-(54, 1292)
+<pre>(303, 1601)
+(54, 1601)
 </pre>
 </div>
 </div>
@@ -14007,19 +13861,19 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;x_train.tsv.gz&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;x_train_modz.tsv.gz&quot;</span><span class="p">)</span>
 <span class="n">x_train_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;y_train.tsv.gz&quot;</span><span class="p">)</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;y_train_modz.tsv.gz&quot;</span><span class="p">)</span>
 <span class="n">y_train_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;x_test.tsv.gz&quot;</span><span class="p">)</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;x_test_modz.tsv.gz&quot;</span><span class="p">)</span>
 <span class="n">x_test_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;y_test.tsv.gz&quot;</span><span class="p">)</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;y_test_modz.tsv.gz&quot;</span><span class="p">)</span>
 <span class="n">y_test_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
