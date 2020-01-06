@@ -102,7 +102,7 @@ ggplot(mse_df,
                                           fill = "#fdfff4"))
 
 file <- file.path("figures",
-                  paste0("mse_test_summary", consensus, ".png"))
+                  paste0("mse_test_summary_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 7, height = 9)
 
 # Label variables with specific cell health classes
@@ -364,8 +364,7 @@ for (target in unique(y_plot_df$target)) {
         cowplot_file <- file.path("figures",
                                   "target_performance",
                                   "regression",
-                                  y_transform,
-                                  paste0(target, "_", y_transform, "_performance.png"))
+                                  paste0(target, "_", y_transform, "_performance_", consensus, ".png"))
 
         cowplot::save_plot(filename = cowplot_file,
                            plot = regression_perf_gg,

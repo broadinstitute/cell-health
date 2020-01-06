@@ -124,7 +124,7 @@ ggplot(auc_diff_df,
                                           fill = "#fdfff4"))
 
 file <- file.path("figures",
-                  paste("cell_health_metric_shuffle_difference_summary_", consensus, ".png"))
+                  paste0("cell_health_metric_shuffle_difference_summary_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 9, height = 6)
 
 ggplot(full_roc_df, aes(x = fpr, y = tpr)) +
@@ -186,13 +186,13 @@ ggplot(full_pr_df, aes(x = recall, y = precision)) +
                                           fill = "#fdfff4")
     )
 
-file <- file.path("figures", paste0("pc_curves_", consensus, ".png"))
+file <- file.path("figures", paste0("pr_curves_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 9, height = 9)
 
 label_thresh_value = 0.90
 
 pdf_file <- file.path("figures",
-                      paste("all_classification_performance_metrics_", consensus, ".pdf"))
+                      paste0("all_classification_performance_metrics_", consensus, ".pdf"))
 pdf(pdf_file, width = 6, height = 8, onefile = TRUE)
 
 for (target in unique(full_roc_df$target)) {
@@ -410,7 +410,7 @@ for (target in unique(full_roc_df$target)) {
     cowplot_file <- file.path("figures",
                               "target_performance",
                               "binary",
-                              paste0(target, "_performance.png"))
+                              paste0(target, "_performance_", consensus, ".png"))
     
     cowplot::save_plot(filename = cowplot_file,
                        plot = performance_gg,

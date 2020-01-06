@@ -201,7 +201,7 @@ ggplot(metric_df, aes(x = AUROC_test, y = mse)) +
     theme_bw()
 
 file <- file.path("figures",
-                  paste("performance_summary_", consensus, ".png"))
+                  paste0("performance_summary_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 6, height = 4.25)
 
 ggplot(metric_df, aes(x = AUROC_test, y = AUROC_train)) +
@@ -229,7 +229,7 @@ ggplot(metric_df, aes(x = AUROC_test, y = AUROC_train)) +
     theme_bw()
 
 file <- file.path("figures",
-                  paste("performance_summary_assay_", consensus, ".png"))
+                  paste0("performance_summary_assay_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 6, height = 4.5)
 
 ggplot(metric_df, aes(x = AUROC_test,
@@ -347,7 +347,7 @@ ggplot(r_two_df, aes(y = train, x = test)) +
     theme_bw()
 
 file <- file.path("figures",
-                  paste("performance_summary_rsquared_assay_", consensus, ".png"))
+                  paste0("performance_summary_rsquared_assay_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 6, height = 4.25)
 
 # Cytominer results are archived on github
@@ -530,16 +530,16 @@ ggplot(all_classification_df,
                 alpha = 0.7) +
     ggtitle(metric) +
     geom_text_repel(data = subset(all_classification_df, label_logic),
-                        arrow = arrow(length = unit(0.01, "npc")),
-                        box.padding = 0.6,
-                        point.padding = 0.3,
-                        segment.size = 0.2,
-                        segment.alpha = 0.6,
-                        size = 1.2,
-                        fontface = "italic",
-                        aes(label = target,
-                            x = AUPR_test,
-                            y = AUPR)) +
+                    arrow = arrow(length = unit(0.01, "npc")),
+                    box.padding = 0.6,
+                    point.padding = 0.3,
+                    segment.size = 0.2,
+                    segment.alpha = 0.6,
+                    size = 1.2,
+                    fontface = "italic",
+                    aes(label = target,
+                        x = AUPR_test,
+                        y = AUPR)) +
     theme_bw()
 
 outfile <- file.path("figures",

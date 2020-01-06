@@ -3,6 +3,7 @@ suppressPackageStartupMessages(library(ggplot2))
 
 set.seed(123)
 
+consensus <- "median"
 cell_lines <- c("A549", "ES2", "HCC44")
 
 # Annotated Cell Health Features
@@ -11,7 +12,8 @@ label_df <- readr::read_csv(feat_file, col_types = readr::cols())
 
 head(label_df)
 
-regression_file <- file.path("results", "full_cell_health_regression_results.tsv.gz")
+regression_file <- file.path("results",
+                             paste0("full_cell_health_regression_", consensus, ".tsv.gz"))
 regression_metrics_df <- readr::read_tsv(regression_file, col_types = readr::cols()) %>%
     dplyr::filter(cell_line %in% cell_lines)
     
@@ -32,7 +34,8 @@ ggplot(regression_metrics_df %>% dplyr::filter(metric == "mse"),
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-output_file <- file.path("figures", "cell_line_mse_differences.png")
+output_file <- file.path("figures",
+                         paste0("cell_line_mse_differences_", consensus, ".png"))
 ggsave(output_file, height = 5, width = 5, dpi = 500)
 
 ggplot(regression_metrics_df %>% dplyr::filter(metric == "r_two"),
@@ -50,7 +53,8 @@ ggplot(regression_metrics_df %>% dplyr::filter(metric == "r_two"),
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-output_file <- file.path("figures", "cell_line_rsquared_differences.png")
+output_file <- file.path("figures",
+                         paste0("cell_line_rsquared_differences_", consensus, ".png"))
 ggsave(output_file, height = 5, width = 5, dpi = 500)
 
 # Compile Results
@@ -143,7 +147,8 @@ ggplot(results_df %>%
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-output_file <- file.path("figures", "cell_line_differences_target_linked_full.png")
+output_file <- file.path("figures",
+                         paste0("cell_line_differences_target_linked_full_", consensus, ".png"))
 ggsave(output_file, height = 5, width = 5, dpi = 500)
 
 ggplot(results_df %>%
@@ -167,7 +172,8 @@ ggplot(results_df %>%
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-output_file <- file.path("figures", "cell_line_differences_target_linked_subset.png")
+output_file <- file.path("figures",
+                         paste0("cell_line_differences_target_linked_subset_", consensus, ".png"))
 ggsave(output_file, height = 5, width = 5, dpi = 500)
 
 filtered_results_df <- results_df %>%
@@ -207,7 +213,8 @@ ggplot(filtered_results_df, aes(x = shuffle_true, y = shuffle_false)) +
           legend.text = element_text(size = 6),
           legend.key.size = unit(0.3, "cm"))
 
-output_file = file.path("figures", "ranked_models_A549_with_shuffle.png")
+output_file = file.path("figures",
+                        paste0("ranked_models_A549_with_shuffle_", consensus, ".png"))
 ggsave(output_file, dpi = 300, height = 3.5, width = 4)
 
 ggplot(filtered_results_df %>% dplyr::filter(shuffle_false > 0),
@@ -226,5 +233,6 @@ ggplot(filtered_results_df %>% dplyr::filter(shuffle_false > 0),
           legend.text = element_text(size = 6),
           legend.key.size = unit(0.3, "cm"))
 
-output_file = file.path("figures", "ranked_models_A549.png")
+output_file = file.path("figures",
+                        paste0("ranked_models_A549_", consensus, ".png"))
 ggsave(output_file, dpi = 300, height = 6, width = 6)

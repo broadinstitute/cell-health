@@ -46,7 +46,8 @@ y_plot_df$data_type <- dplyr::recode(y_plot_df$data_type,
 head(y_plot_df, 3)
 
 # Generate and save figures
-pdf_file <- file.path("figures", "all_binary_distributions.pdf")
+pdf_file <- file.path("figures",
+                      paste0("all_binary_distributions_", consensus, ".pdf"))
 pdf(pdf_file, width = 5, height = 3.5, onefile = TRUE)
 
 for (target in unique(y_plot_df$target)) {
@@ -77,7 +78,7 @@ for (target in unique(y_plot_df$target)) {
 
     output_file <- file.path("figures",
                              "feature_distribution",
-                             paste0(target, "_dist.png"))
+                             paste0(target, "_dist_", consensus, ".png"))
     
     ggsave(filename = output_file,
            plot = target_gg,
