@@ -53,23 +53,23 @@ jupyter nbconvert --to=html \
         --ExecutePreprocessor.timeout=10000000 \
         --execute 5.visualize-performance-summary.ipynb
 
-# Step 6: Visualize model coefficients
+# Step 6: Apply models to full dataset
 jupyter nbconvert --to=html \
         --FilesWriter.build_directory=scripts/html \
-        --ExecutePreprocessor.kernel_name=ir \
+        --ExecutePreprocessor.kernel_name=python3 \
         --ExecutePreprocessor.timeout=10000000 \
-        --execute 6.visualize-coefficients.ipynb
+        --execute 6.apply-models.ipynb
 
-# Step 8: Visualize cell line specific performance
+# Step 7: Visualize cell line specific performance
 jupyter nbconvert --to=html \
         --FilesWriter.build_directory=scripts/html \
         --ExecutePreprocessor.kernel_name=ir \
         --ExecutePreprocessor.timeout=10000000 \
         --execute 7.visualize-cell-line-performance.ipynb
 
-# Step 9: Apply models to full dataset
+# Step 8: Visualize model coefficients
 jupyter nbconvert --to=html \
         --FilesWriter.build_directory=scripts/html \
-        --ExecutePreprocessor.kernel_name=python3 \
+        --ExecutePreprocessor.kernel_name=ir \
         --ExecutePreprocessor.timeout=10000000 \
-        --execute 8.apply-models.ipynb
+        --execute 8.visualize-coefficients.ipynb
