@@ -37,8 +37,7 @@ from pycytominer import get_na_columns, aggregate
 # In[2]:
 
 
-batch = "CRISPR_PILOT_B1"
-profile_dir = os.path.join("data", "profiles", batch)
+profile_dir = os.path.join("data", "profiles")
 
 all_profile_files = []
 for plate in os.listdir(profile_dir):
@@ -82,6 +81,16 @@ x_metadata_df = x_df.loc[:, x_metadata_cols]
 
 x_df = x_df.drop(x_metadata_cols, axis="columns")
 x_df = pd.concat([x_metadata_df, x_df], axis="columns")
+
+# Drop columns with na values
+na_cols_to_drop = get_na_columns(x_df, cutoff=0)
+print("Dropping {} columns because of missing data".format(len(na_cols_to_drop)))
+x_df = x_df.drop(na_cols_to_drop, axis="columns")
+
+# Also drop Costes features
+costes_cols_to_drop = [x for x in x_df.columns if "costes" in x.lower()]
+print("Dropping {} costes features".format(len(costes_cols_to_drop)))
+x_df = x_df.drop(costes_cols_to_drop, axis="columns")
 
 print(x_df.shape)
 x_df.head(2)
@@ -366,20 +375,22 @@ pd.testing.assert_series_equal(x_consensus_df.Metadata_cell_line,
                                y_consensus_df.Metadata_cell_line, check_names=True)
 
 
-# ## Output Consensus Signatures
+# ## Output Median and MODZ Consensus Signatures
 
 # In[20]:
 
 
-file = os.path.join("data", "consensus", "cell_painting_median.tsv.gz")
+consensus_dir = os.path.join("data", "consensus")
+
+file = os.path.join(consensus_dir, "cell_painting_median.tsv.gz")
 x_median_df.to_csv(file, sep="\t", index=False)
 
-file = os.path.join("data", "consensus", "cell_health_median.tsv.gz")
+file = os.path.join(consensus_dir, "cell_health_median.tsv.gz")
 y_median_df.to_csv(file, sep="\t", index=False)
 
-file = os.path.join("data", "consensus", "cell_painting_modz.tsv.gz")
+file = os.path.join(consensus_dir, "cell_painting_modz.tsv.gz")
 x_consensus_df.to_csv(file, sep="\t", index=False)
 
-file = os.path.join("data", "consensus", "cell_health_modz.tsv.gz")
+file = os.path.join(consensus_dir, "cell_health_modz.tsv.gz")
 y_consensus_df.to_csv(file, sep="\t", index=False)
 
