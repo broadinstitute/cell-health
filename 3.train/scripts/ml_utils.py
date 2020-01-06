@@ -458,7 +458,7 @@ class CellHealthPredict:
 
 
 def load_train_test(
-    data_dir="data", consensus="modz", drop_metadata=False, output_metadata_only=False
+    data_dir="data", consensus="median", drop_metadata=False, output_metadata_only=False
 ):
     """
     Load training and testing data
@@ -519,10 +519,13 @@ def shuffle_columns(cp_feature):
     return np.random.permutation(cp_feature.tolist())
 
 
-def load_models(model_dir="models", shuffle=False, transform="raw"):
+def load_models(model_dir="models", consensus="median", shuffle=False, transform="raw"):
     """
     Load models and model coefficients
     """
+
+    assert consensus in ["median", "modz"], "consensus must be either median or modz"
+
     if shuffle:
         model_string = "shuffle_True"
     else:
@@ -534,6 +537,10 @@ def load_models(model_dir="models", shuffle=False, transform="raw"):
     for model_file in os.listdir(model_dir):
 
         if model_string not in model_file:
+            continue
+
+        consensus_transform = model_file.split("_")[2]
+        if consensus_transform != consensus:
             continue
 
         model_file_full = os.path.join(model_dir, model_file)
