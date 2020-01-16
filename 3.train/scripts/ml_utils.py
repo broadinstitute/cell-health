@@ -136,7 +136,15 @@ class CellHealthPredict:
 
         return x_df, y, num_samples_removed
 
-    def recode_y(self, y, target="None", y_transform="None", binarize_fit="kmeans"):
+    def recode_y(
+        self,
+        y,
+        target="None",
+        y_transform="None",
+        binarize_fit="kmeans",
+        stddev_multiplier=1.5,
+        binarize_fit_override=None,
+    ):
         """
         Recode y using a specific transformation. Note: if no arguments are passed, the
         function will use elements stored in self.
@@ -145,10 +153,18 @@ class CellHealthPredict:
         y - pandas Series indicating the status of the target variable
         target - "None" or string indicating target variable in y [Default: "None"]
         y_transform - "None" or string indicating transform operation [Default: "None"]
+        binarize_fit - recodes y according to some specific method [Default: "kmeans"]
+                       options = ["kmeans", "median", "sd"]
+        stddev_multiplier - how many multiples of standard devation to binarize
+        binarize_fit_override - if provided, use this value to fit [default: None]
 
         Output:
         The transformed y variables
         """
+        binarize_options = ["kmeans", "median", "sd"]
+        assert (
+            binarize_fit in binarize_options
+        ), "{} not supported. Provide one of {}".format(binarize_fit, binarize_options)
         if target == "None":
             target = self.target
 
@@ -173,14 +189,22 @@ class CellHealthPredict:
                 else:
                     y_scale = self.kmeans.predict(np.reshape(y.values, (-1, 1)))
             else:
-                feature_median = y.median()
-                y_neg = y < feature_median
-                y_pos = y >= feature_median
+                if binarize_fit == "median":
+                    feature_cutoff = y.median()
+                elif binarize_fit == "sd":
+                    feature_cutoff = y.std() * stddev_multiplier
+
+                if binarize_fit_override:
+                    feature_cutoff = binarize_fit_override
+
+                y_neg = y < feature_cutoff
+                y_pos = y >= feature_cutoff
                 y_scale = y.copy()
 
                 y_scale.loc[y_neg] = 0
                 y_scale.loc[y_pos] = 1
                 y_scale = y_scale.astype(int)
+                self.binarize_cutoff = feature_cutoff
         else:
             y_scale = y
 
@@ -301,6 +325,7 @@ class CellHealthPredict:
         binarize_fit="kmeans",
         data_fit_type="train",
         cell_line="all",
+        binarize_fit_override=None,
     ):
         """
         Get the classifier or regression performance of the fit classifier
@@ -311,6 +336,7 @@ class CellHealthPredict:
         y_test - "None" or pandas DataFrame indicating status labels. [Default: "None"]
         return_y - boolean if the transformed y variable should be output [Default: False]
         binarize_fit - string indicating how the binary recoding is performed
+        binarize_fit_override - if provided, use this value to fit [default: None]
 
         Output:
         Performanc metrics for regression or classification (depends on y_transform)
@@ -335,7 +361,11 @@ class CellHealthPredict:
             )
 
             # Transform the target variable
-            y_true = self.recode_y(y=y_true, binarize_fit=binarize_fit)
+            y_true = self.recode_y(
+                y=y_true,
+                binarize_fit=binarize_fit,
+                binarize_fit_override=binarize_fit_override,
+            )
 
             # Get predicted values from trained model
             y_pred = self.predict(x_test, decision_function=decision_function)
