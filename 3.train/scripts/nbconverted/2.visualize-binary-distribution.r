@@ -47,7 +47,7 @@ head(y_plot_df, 3)
 
 # Generate and save figures
 pdf_file <- file.path("figures",
-                      paste0("all_binary_distributions_", consensus, ".pdf"))
+                      paste0("all_binary_distributions_std_", consensus, ".pdf"))
 pdf(pdf_file, width = 5, height = 3.5, onefile = TRUE)
 
 for (target in unique(y_plot_df$target)) {
@@ -83,7 +83,7 @@ for (target in unique(y_plot_df$target)) {
     ggsave(filename = output_file,
            plot = target_gg,
            width = 5,
-           height = 3.5,
+           height = 2.75,
            dpi = 400)
     
     print(target_gg)
