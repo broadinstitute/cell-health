@@ -3,7 +3,9 @@ suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(ggrepel))
 
 results_dir <- "results"
-consensus <- "median"
+consensus <- "modz"
+figure_dir <- file.path("figures", "regression")
+dir.create(figure_dir)
 
 regression_file <- file.path(results_dir, 
                              paste0("full_cell_health_regression_", consensus, ".tsv.gz"))
@@ -94,19 +96,25 @@ ggplot(mse_df,
     facet_grid(~shuffle, scales="free_y") +
     coord_flip() +
     theme_bw() +
-    geom_hline(yintercept = 1, linetype = "dashed") +
     ylab("Mean Squared Error") +
-    xlab("Cell Health Target") +
-    theme(legend.position = "none",
+    xlab("Target") +
+    theme(axis.text.x = element_text(size = 8, angle = 90),
+          axis.text.y = element_text(size = 6),
+          axis.title = element_text(size = 10),
+          legend.position = "none",
+          legend.text = element_text(size = 7),
+          legend.title = element_text(size = 9),
+          strip.text = element_text(size = 8),
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-file <- file.path("figures",
+file <- file.path(figure_dir,
                   paste0("mse_test_summary_", consensus, ".png"))
-ggsave(file, dpi = 300, width = 7, height = 9)
+ggsave(file, dpi = 300, width = 6, height = 6)
 
 # Label variables with specific cell health classes
-label_file <- file.path("..", "1.generate-profiles", "data", "labels", "feature_mapping_annotated.csv")
+label_file <- file.path("..", "1.generate-profiles", "data",
+                        "labels", "feature_mapping_annotated.csv")
 label_df <- readr::read_csv(label_file, col_types = readr::cols())
 
 print(dim(label_df))
@@ -181,7 +189,7 @@ ggplot(mse_spread_df,
                                   "s_arrest" = "S Arrest",
                                   "toxicity" = "Toxicity"))
 
-output_file <- file.path("figures",
+output_file <- file.path(figure_dir,
                          paste0("mse_comparison_scatter_", consensus, ".png"))
 ggsave(output_file, width = 2, height = 1.5, dpi = 600, units = "in")
 
@@ -207,23 +215,29 @@ ggplot(r2_df,
     geom_bar(stat = "identity",
              alpha = 0.5,
              position = position_dodge()) +
-    facet_grid(~data_type, scales="free_y") +
+    facet_grid(~data_type, scales = "free_y") +
     coord_flip() +
     theme_bw() +
     geom_hline(yintercept = 0, linetype = "dashed") +
     ylab(bquote(R^2)) +
     xlab("Cell Health Target") +
-    theme(legend.position = "none",
+    theme(axis.text.x = element_text(size = 8, angle = 90),
+          axis.text.y = element_text(size = 6),
+          axis.title = element_text(size = 10),
+          legend.position = "none",
+          legend.text = element_text(size = 7),
+          legend.title = element_text(size = 9),
+          strip.text = element_text(size = 8),
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-file <- file.path("figures",
+file <- file.path(figure_dir,
                   paste0("r_squared_model_summary_", consensus, ".png"))
-ggsave(file, dpi = 300, width = 7, height = 9)
+ggsave(file, dpi = 300, width = 6, height = 6)
 
-label_thresh_value = 0.90
+label_thresh_value = 0.925
 
-pdf_file <- file.path("figures",
+pdf_file <- file.path(figure_dir,
                       paste0("all_regression_performance_metrics_", consensus, ".pdf"))
 pdf(pdf_file, width = 6, height = 8, onefile = TRUE)
 
@@ -361,16 +375,17 @@ for (target in unique(y_plot_df$target)) {
         )
         
         # Save figure
-        cowplot_file <- file.path("figures",
-                                  "target_performance",
-                                  "regression",
-                                  paste0(target, "_", y_transform, "_performance_", consensus, ".png"))
+        cowplot_file <- file.path(
+            "figures",
+            "individual_target_performance",
+            "regression",
+            paste0(target, "_", y_transform, "_performance_", consensus, ".png")
+        )
 
         cowplot::save_plot(filename = cowplot_file,
                            plot = regression_perf_gg,
                            base_height = 6,
                            base_width = 6)
-
     }
 }
 
