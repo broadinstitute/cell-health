@@ -1,1 +1,2 @@
 data/profiles/CRISPR_PILOT_B1/ filter=lfs diff=lfs merge=lfs -text
+4.apply/data/*.tsv.gz filter=lfs diff=lfs merge=lfs -text
