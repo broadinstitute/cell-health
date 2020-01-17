@@ -142,7 +142,11 @@ get_ipython().run_cell_magic('time', '', '\ncv_results_list = []\nroc_results_li
 
 
 # These are the models that cannot be fit
-cannot_fit_list
+not_fit_df = pd.DataFrame(cannot_fit_list, columns=["target", "y_transform", "shuffle"])
+not_fit_file = os.path.join("results", "not_fit_models_{}.tsv".format(consensus))
+
+not_fit_df.to_csv(not_fit_file, sep='\t', index=False)
+not_fit_df
 
 
 # In[14]:
