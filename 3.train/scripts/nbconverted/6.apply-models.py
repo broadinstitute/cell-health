@@ -69,7 +69,7 @@ def sample_squared_error(scores, y):
 # In[4]:
 
 
-consensus = "median"
+consensus = "modz"
 
 
 # In[5]:

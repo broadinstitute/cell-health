@@ -6,6 +6,7 @@ suppressPackageStartupMessages(library(cowplot))
 
 results_dir <- "results"
 consensus <- "modz"
+
 figure_dir <- file.path("figures", "classification")
 dir.create(figure_dir)
 
@@ -113,7 +114,7 @@ target_order <- paste(target_order$target)
 
 auc_df$target <- factor(auc_df$target, levels = rev(target_order))
 
-head(auc_df, 2)
+head(auc_df, 3)
 
 summary_gg <- ggplot(auc_df,
        aes(x = target,
@@ -254,6 +255,13 @@ y_plot_df$data_type <- dplyr::recode(y_plot_df$data_type,
 head(y_plot_df, 3)
 
 label_thresh_value = 0.925
+
+individual_fig_dir <- file.path(
+    "figures",
+    "individual_target_performance",
+    "classification"
+)
+dir.create(individual_fig_dir)
 
 pdf_file <- file.path(figure_dir,
                       paste0("all_classification_performance_metrics_", consensus, ".pdf"))
@@ -489,9 +497,7 @@ for (target in use_targets) {
     )
     
     # Save figure
-    cowplot_file <- file.path("figures",
-                              "individual_target_performance",
-                              "classification",
+    cowplot_file <- file.path(individual_fig_dir,
                               paste0(target, "_performance_", consensus, ".png"))
     
     cowplot::save_plot(filename = cowplot_file,

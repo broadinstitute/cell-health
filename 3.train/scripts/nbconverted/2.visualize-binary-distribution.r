@@ -1,7 +1,7 @@
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(dplyr))
 
-consensus <- "median"
+consensus <- "modz"
 
 # Load Data
 y_cols <- readr::cols(

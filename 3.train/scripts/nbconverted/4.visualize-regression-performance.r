@@ -4,6 +4,7 @@ suppressPackageStartupMessages(library(ggrepel))
 
 results_dir <- "results"
 consensus <- "modz"
+
 figure_dir <- file.path("figures", "regression")
 dir.create(figure_dir)
 
@@ -237,6 +238,13 @@ ggsave(file, dpi = 300, width = 6, height = 6)
 
 label_thresh_value = 0.925
 
+individual_fig_dir <- file.path(
+    "figures",
+    "individual_target_performance",
+    "regression"
+    )
+dir.create(individual_fig_dir)
+
 pdf_file <- file.path(figure_dir,
                       paste0("all_regression_performance_metrics_", consensus, ".pdf"))
 pdf(pdf_file, width = 6, height = 8, onefile = TRUE)
@@ -376,9 +384,7 @@ for (target in unique(y_plot_df$target)) {
         
         # Save figure
         cowplot_file <- file.path(
-            "figures",
-            "individual_target_performance",
-            "regression",
+            individual_fig_dir,
             paste0(target, "_", y_transform, "_performance_", consensus, ".png")
         )
 
