@@ -2,12 +2,15 @@ suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(ggplot2))
 
 # Load Data
-data_dir <- file.path("data", "repurposing_transformed")
-real_file <- file.path(data_dir, "repurposing_umap_transformed_cell_painting.tsv.gz")
+consensus <- "modz"
+data_dir <- file.path("data")
+real_file <- file.path(data_dir,
+                       paste0("repurposing_umap_consensus_", consensus, ".tsv.gz"))
 
 cp_embedding_df <- readr::read_tsv(real_file, col_types = readr::cols())
 
-cell_health_file <- file.path(data_dir, "repurposing_transformed_real_models.tsv.gz")
+cell_health_file <- file.path(data_dir,
+                       paste0("repurposing_cell_health_scores_", consensus, ".tsv.gz"))
 cell_health_df <- readr::read_tsv(cell_health_file, col_types = readr::cols()) 
 
 # Merge data together
@@ -32,14 +35,13 @@ ggplot(cp_embedding_df,
                alpha = 0.6) +
     theme_bw() +
     scale_color_viridis_c(name = "log(dose)") +
-    xlim(c(-7.75, 6)) +
-    ylim(c(-6.75, 5)) +
     scale_size_discrete("Treatment",
                         range = c(0.5, 3)) +
     xlab("UMAP 1") +
     ylab("UMAP 2")
 
-output_file <- file.path("figures", "umap_repurposing_cell_painting_dose_consensus.png")
+output_file <- file.path("figures",
+                         paste0("umap_repurposing_cell_painting_dose_consensus_", consensus, ".png"))
 ggsave(output_file, height = 5, width = 6, dpi = 500)
 
 ggplot(cp_embedding_df %>% dplyr::filter(Metadata_Treatment == "DMSO"),
@@ -49,13 +51,13 @@ ggplot(cp_embedding_df %>% dplyr::filter(Metadata_Treatment == "DMSO"),
                size = 3,
                alpha = 0.6) +
     geom_point(data = cp_embedding_df, color = "grey", alpha = 0.1, size = 0.5) +
-    xlim(c(-7.75, 6)) +
-    ylim(c(-6.75, 5)) +
     theme_bw() +
     xlab("UMAP 1") +
     ylab("UMAP 2")
 
-output_file <- file.path("figures", "umap_repurposing_cell_painting_dose_consensus_dmso.png")
+output_file <- file.path("figures",
+                         paste0("umap_repurposing_cell_painting_dose_consensus_dmso_", consensus, ".png"))
+
 ggsave(output_file, height = 5, width = 6, dpi = 500)
 
 visualize_model <- function(target_variable, legend_title, title = "none", dpi = 500, save_figure = TRUE) {
@@ -93,66 +95,47 @@ print(dim(map_df))
 head(map_df, 3)
 
 visualize_model(target_variable = "Metadata_dose_recode",
-                legend_title = "Compound\nDose (log)") 
+                legend_title = "Compound Dose") 
 
-map_df %>% filter(original_name == "# Live Cells")
-
-visualize_model(target_variable = "vb_num_live_cells",
+visualize_model(target_variable = "cell_health_modz_target_vb_num_live_cells",
                 legend_title = "Num Live Cells\n(DRAQ7)")
 
-map_df %>% filter(original_name == "Live Width:Length")
-
-visualize_model(target_variable = "vb_live_cell_width_length",
+visualize_model(target_variable = "cell_health_modz_target_vb_live_cell_width_length",
                 legend_title = "Live Cell\n(Width:Length)\n(DRAQ7)")
 
-map_df %>% filter(original_name == "Live Cell Roundness")
-
-visualize_model(target_variable = "vb_live_cell_roundness",
+visualize_model(target_variable = "cell_health_modz_target_vb_live_cell_roundness",
                 legend_title = "Live Cell Roundness\n(DRAQ7)")
 
-map_df %>% filter(original_name == "ALL - Number of Objects")
-
-visualize_model(target_variable = "cc_all_n_objects",
+visualize_model(target_variable = "cell_health_modz_target_cc_all_n_objects",
                 legend_title = "Number of Objects\n(Hoechst)")
 
-map_df %>% filter(original_name == "Live Cell Area")
-
-visualize_model(target_variable = "vb_live_cell_area",
+visualize_model(target_variable = "cell_health_modz_target_vb_live_cell_area",
                 legend_title = "Live Cell Area\n(DRAQ7)")
 
-map_df %>% filter(original_name == "CC - Number of Objects")
-
-visualize_model(target_variable = "cc_cc_n_objects",
+visualize_model(target_variable = "cell_health_modz_target_cc_cc_n_objects",
                 legend_title = "Num Cell\nCycle Objects\n(Hoechst)")
 
-map_df %>% filter(original_name == "G1 - Number of Objects")
-
-visualize_model(target_variable = "cc_g1_n_objects",
+visualize_model(target_variable = "cell_health_modz_target_cc_g1_n_objects",
                 legend_title = "G1 Objects\n(Many Dyes)")
 
-map_df %>% filter(original_name == "edu positive - Intensity Nucleus Alexa 647 Sum - Sum per Well")
-
-visualize_model(target_variable = "cc_edu_pos_alexa647_intensity_nucleus_area_sum",
+visualize_model(target_variable = "cell_health_modz_target_cc_edu_pos_alexa647_intensity_nucleus_area_sum",
                 legend_title = "Sum S phase\n(EdU)")
 
-map_df %>% filter(original_name == "edu positive - Number of Objects")
-
-visualize_model(target_variable = "cc_edu_pos_n_objects",
+visualize_model(target_variable = "cell_health_modz_target_cc_edu_pos_n_objects",
                 legend_title = "Number of\nS-phase Cells\n(EdU)")
 
-map_df %>% filter(original_name == "ROS-back Mean")
-
-visualize_model(target_variable = "vb_ros_back_mean",
+visualize_model(target_variable = "cell_health_modz_target_vb_ros_back_mean",
                 legend_title = "ROS Background\n(Caspase)")
 
 cell_health_variables <- colnames(
     cp_embedding_df %>%
-        dplyr::select(starts_with("cc"), starts_with("vb"))
+        dplyr::select(starts_with("cell_health_modz_target_"))
     )
 
 length(cell_health_variables)
 
-pdf_file <- file.path("figures", "repurposing_hub_umaps_consensus.pdf")
+pdf_file <- file.path("figures",
+                      paste0("repurposing_hub_umaps_consensus_", consensus, ".pdf"))
 pdf(pdf_file, width = 5, height = 5, onefile = TRUE)
 
 for (cell_health_variable in cell_health_variables) {
@@ -232,8 +215,12 @@ col_types <- readr::cols(
     shuffle_true = readr::col_double()
 )
 
-rank_file <- file.path("..", "3.train", "results", "A549_ranked_models.tsv")
+rank_file <- file.path("..", "4.apply", "repurposing_cellhealth_shiny", "data",
+                       paste0("A549_ranked_models_regression_", consensus, ".tsv"))
 model_rank_df <- readr::read_tsv(rank_file, col_types = col_types)
+
+# Recode the target variable
+model_rank_df$target <- paste0("cell_health_", consensus, "_target_", model_rank_df$target)
 
 head(model_rank_df, 3)
 
@@ -243,12 +230,17 @@ dmso_embeddings_df <- cp_embedding_df %>%
 non_dmso_embeddings_df <- cp_embedding_df %>%
     dplyr::filter(Metadata_Treatment != "DMSO")
 
-std_dev_dmso_features <- apply(dmso_embeddings_df %>% dplyr::select(matches("cc_|vb_")), 2, sd)
-std_dev_compound_features <- apply(non_dmso_embeddings_df %>% dplyr::select(matches("cc_|vb_")), 2, sd)
+head(dmso_embeddings_df)
+
+std_dev_dmso_features <- apply(dmso_embeddings_df %>%
+                               dplyr::select(matches("cell_health_modz_target")), 2, sd)
+std_dev_compound_features <- apply(non_dmso_embeddings_df %>%
+                                   dplyr::select(matches("cell_health_modz_target")), 2, sd)
 
 std_dev_all_df <- dplyr::bind_cols(as.data.frame(std_dev_dmso_features),
                                    as.data.frame(std_dev_compound_features)) %>%
-    dplyr::mutate(features = colnames(dmso_embeddings_df %>% dplyr::select(matches("cc_|vb_")))) %>%
+    dplyr::mutate(features = colnames(dmso_embeddings_df %>%
+                                      dplyr::select(matches("cell_health_modz_target")))) %>%
     dplyr::left_join(model_rank_df, by = c("features" = "target")) 
 
 good_performing <- std_dev_all_df %>%
@@ -274,7 +266,7 @@ ggplot(std_dev_good_df, aes(x = std_dev_dmso_features, y = std_dev_compound_feat
     geom_point(data = bad_performing,
                aes(color = assay),
                size = 1,
-               alpha = 0.2) +
+               alpha = 0.5) +
     theme_bw() +
     geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red") +
     scale_color_manual(name = "Assay",
