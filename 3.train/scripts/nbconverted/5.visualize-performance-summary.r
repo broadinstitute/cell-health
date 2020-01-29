@@ -1,9 +1,13 @@
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(cowplot))
 suppressPackageStartupMessages(library(ggrepel))
 
 results_dir <- "results"
 consensus <- "median"
+
+figure_dir <- file.path("figures", "summary")
+dir.create(figure_dir)
 
 # Regression Results
 regression_file <- file.path(results_dir, 
@@ -183,31 +187,14 @@ dye_labels <- c(
     "crispr_efficiency" = "CRISPR Efficiency"
 )
 
-ggplot(metric_df, aes(x = AUROC_test, y = mse)) +
-    geom_point(alpha = 0.95,
-               size = 2,
-               aes(color = measurement,
-                   shape = as.factor(maria_thumbs_up))) +
-    xlab("Classification\nAUROC (Test Set)") +
-    ylab("Regression\nMean Squared Error (Test Set)") +
-    geom_vline(xintercept = 0.5,
-               alpha = 0.5, 
-               linetype = "dashed") +
-    scale_shape_manual(name = "Maria :+1:",
-                       values = c(16, 3)) +
-    scale_color_manual(name = "Measurement",
-                       values = measurement_colors,
-                       labels = measurement_labels) +
-    theme_bw()
-
-file <- file.path("figures",
-                  paste0("performance_summary_", consensus, ".png"))
-ggsave(file, dpi = 300, width = 6, height = 4.25)
-
-ggplot(metric_df, aes(x = AUROC_test, y = AUROC_train)) +
+# Note that the points that failed to plot did not contain enough positive samples in test set
+ggplot(metric_df,
+       aes(x = AUROC_test,
+           y = AUROC_train)) +
     geom_point(alpha = 0.95,
                size = 1.7,
                aes(color = assay)) +
+    ggtitle("Classification Summary") +
     xlab("Test Set - AUROC") +
     ylab("Training Set - AUROC") +
     geom_vline(xintercept = 0.5,
@@ -251,13 +238,171 @@ ggplot(metric_df, aes(x = AUROC_test,
                        labels = dye_labels) +
     theme_bw()
 
-file <- file.path("figures",
-                  paste0("performance_summary_assay_classification_vs_regression_", consensus, ".png"))
+file <- file.path(
+    figure_dir,
+    paste0("performance_summary_assay_classification_vs_regression_",
+           consensus,
+           ".png")
+)
 ggsave(file, dpi = 300, width = 6, height = 4.5)
 
-metric_df %>%
-    dplyr::filter(r_two < 0.1, AUROC_test > 0.7) %>%
+# Get data ready for plotting
+auc_test_full_df <- dplyr::bind_rows(auroc_df, aupr_df) %>%
+    dplyr::left_join(label_df, by = c("target" = "updated_name")) %>%
+    dplyr::filter(data_fit == "test")
+
+auc_test_full_real_df <- auc_test_full_df %>%
+    dplyr::filter(shuffle == "shuffle_false") %>%
+    dplyr::arrange(target, metric)
+auc_test_full_shuffle_df <- auc_test_full_df %>%
+    dplyr::filter(shuffle == "shuffle_true") %>%
+    dplyr::arrange(target, metric)
+
+real_minus_shuffle_df <- auc_test_full_real_df %>%
+    dplyr::mutate(
+        auc = auc_test_full_real_df$auc - auc_test_full_shuffle_df$auc,
+        shuffle = "real_minus_shuffle"
+    )
+
+target_order <- real_minus_shuffle_df %>%
+    dplyr::filter(metric == "roc") %>%
+    dplyr::arrange(desc(auc)) %>%
+    dplyr::pull(target)
+
+auc_test_full_df <- auc_test_full_df %>%
+    dplyr::bind_rows(real_minus_shuffle_df)
+
+auc_test_full_df$metric <- auc_test_full_df$metric %>%
+    dplyr::recode("aupr" = "AUPR", "roc" = "AUROC")
+
+auc_test_full_df$target <- factor(auc_test_full_df$target, levels = rev(target_order))
+auc_test_full_df$metric <- factor(auc_test_full_df$metric, levels = c("AUROC", "AUPR"))
+
+print(dim(auc_test_full_df))
+head(auc_test_full_df, 2)
+
+# Get side by side plot
+metric_df$target <- factor(metric_df$target, levels = rev(target_order))
+metric_df <- metric_df %>%
+    dplyr::mutate(r_two_rank = as.numeric(paste(rank(metric_df$r_two, ties.method = "first"))))
+
+head(metric_df, 2)
+
+regression_performance_comp_gg <- ggplot(metric_df, aes(y = target, x = 1)) +
+    geom_point(aes(fill = r_two), shape = 22, size = 3) +
+    scale_fill_gradient2(name = expression(paste("Test ", "R"^2)),
+                         midpoint = 0,
+                         mid = "black",
+                         low = "black",
+                         high = "white") +
+    xlab("") +
+    ylab("") +
+    xlim(0.99999, 1.01) +
+    theme(panel.background = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.title.y = element_blank())
+
+regression_performance_comp_legend <- get_legend(regression_performance_comp_gg)
+#regression_performance_comp_gg <- regression_performance_comp_gg + theme(legend.position="none")
+
+assay_gg <- ggplot(metric_df, aes(y = target, x = 1)) +
+    geom_point(aes(fill = assay), shape = 22, size = 3) +
+    xlab("") +
+    xlim(0.99999, 1.01) +
+    scale_fill_manual(name = "Assay",
+                      values = dye_colors,
+                      labels = dye_labels) +
+    theme(panel.background = element_blank(),
+          axis.text.x = element_text(angle = 90, size = 4, color="black"),
+          axis.ticks.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.title.y = element_blank())
+
+assay_legend <- get_legend(assay_gg)
+assay_gg <- assay_gg + theme(legend.position="none")
+
+measure_gg <- ggplot(metric_df, aes(y = target, x = 1)) +
+    geom_point(aes(fill = measurement), shape = 22, size = 3) +
+    xlab("") +
+    xlim(0.99999, 1.01) +
+    scale_fill_manual(name = "Measurement",
+                      values = measurement_colors,
+                      labels = measurement_labels) +
+    theme(panel.background = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.title.y = element_blank())
+
+measure_legend <- get_legend(measure_gg)
+measure_gg <- measure_gg + theme(legend.position="none")
+
+classifier_perf_gg <- ggplot(auc_test_full_df,
+       aes(x = target,
+           y = auc)) +
+    geom_point(aes(size = min_class_count,
+                   fill = shuffle,
+                   alpha = shuffle),
+               pch = 21) +
+    geom_hline(yintercept = 0.5,
+               linetype = "dashed",
+               color="black",
+               alpha = 0.9) +
+    ylab("AUC") +
+    xlab("") +
+    coord_flip() +
+    scale_alpha_manual(name = "",
+                       values = c("shuffle_true" = 0.3,
+                                  "shuffle_false" = 0.3,
+                                  "real_minus_shuffle" = 1),
+                       guide = FALSE) +
+    scale_fill_manual(name = "",
+                      values = c("shuffle_true" = "#0FA3AD",
+                                 "shuffle_false" = "#F76916",
+                                 "real_minus_shuffle" = "black"),
+                      labels = c("shuffle_true" = "Shuffle",
+                                 "shuffle_false" = "Real",
+                                 "real_minus_shuffle" = "Difference")) +
+    scale_size_continuous(name = "Minimum Class\nn =",
+                          range = c(0.5, 2)) +
+    facet_wrap(~metric, nrow = 1) +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 90),
+          axis.text.y = element_text(size = 4),
+          axis.title.y = element_text(size = 8),
+          strip.text = element_text(size = 8),
+          strip.background = element_rect(colour = "black",
+                                          fill = "#fdfff4"))
+classifier_perf_legend <- get_legend(classifier_perf_gg)
+classifier_perf_gg <- classifier_perf_gg + theme(legend.position="none")
+
+cowplot::plot_grid(
+    assay_gg,
+    measure_gg,
+    classifier_perf_gg,
+    regression_performance_comp_gg,
+    labels = c("", "", "", ""),
+    ncol = 4,
+    nrow = 1,
+    rel_widths = c(0.1, 0.1, 0.6, 0.3)
+    )
+
+# Here is an example of high performing models in classification
+# but low performing in regression
+
+metric_diff_df <- auc_test_full_df %>%
+    dplyr::filter(shuffle == "real_minus_shuffle",
+                  metric == "AUROC") %>%
+    dplyr::select(metric, target, auc, shuffle)
+
+high_class_models <- metric_df %>%
+    dplyr::left_join(metric_diff_df, by = c("target")) %>%
+    dplyr::filter(r_two < 0.4, auc > 0.25) %>%
     dplyr::arrange(desc(AUROC_test))
+
+high_class_models
 
 r_two_df <- regression_metrics_df %>%
     dplyr::filter(metric == "r_two",
@@ -318,7 +463,7 @@ ggplot(r_two_df %>%
                        labels = measurement_labels) +
     theme_bw()
 
-file <- file.path("figures",
+file <- file.path(figure_dir,
                   paste0("performance_summary_rsquared_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 6, height = 4.25)
 
@@ -346,7 +491,7 @@ ggplot(r_two_df, aes(y = train, x = test)) +
                        labels = dye_labels) +
     theme_bw()
 
-file <- file.path("figures",
+file <- file.path(figure_dir,
                   paste0("performance_summary_rsquared_assay_", consensus, ".png"))
 ggsave(file, dpi = 300, width = 6, height = 4.25)
 
