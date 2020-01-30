@@ -386,9 +386,48 @@ complete_embedding_df.to_csv(output_real_file, sep="\t", index=False, compressio
 # In[25]:
 
 
+# Load perturbation information
+pert_info_file = os.path.join("data", "pert_info.txt")
+pert_info_df = pd.read_csv(pert_info_file, sep='\t')
+
+print(pert_info_df.shape)
+pert_info_df.head()
+
+
+# In[26]:
+
+
+core_id = [
+    "{}-{}".format(
+        x.split("-")[0],
+        x.split("-")[1]
+    ) if x != "DMSO"
+    else x
+    for x in full_df.Metadata_broad_sample
+]
+
+pert_df = (
+    real_embedding_df
+    .assign(Metadata_broad_core_id=core_id)
+    .sort_index(axis="columns")
+    .merge(
+        pert_info_df,
+        left_on="Metadata_broad_core_id",
+        right_on="pert_id",
+        how="left"
+    )
+)
+
+print(pert_df.shape)
+pert_df.head()
+
+
+# In[27]:
+
+
 shiny_merge_cols = ["Metadata_broad_sample", "Metadata_dose_recode", "Image_Metadata_Well"]
 
-shiny_df = real_embedding_df.merge(
+shiny_df = pert_df.merge(
     full_df,
     left_on=shiny_merge_cols,
     right_on=shiny_merge_cols,
@@ -399,7 +438,7 @@ print(shiny_df.shape)
 shiny_df.head()
 
 
-# In[26]:
+# In[28]:
 
 
 shiny_file = os.path.join("repurposing_cellhealth_shiny",
