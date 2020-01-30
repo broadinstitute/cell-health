@@ -41,6 +41,10 @@ shinyUI(
           
           sidebarPanel(
             helpText("Select compounds and cell health models"),
+            selectInput("scatter_type",
+                        label = "Select Scatter Plot Type",
+                        choices = c("Cell Health", "UMAP"),
+                        selected = "Cell Health"),
             selectInput("cell_health_model",
                         label = "Select Cell Health Variable",
                         choices = rank_df$original_name,
@@ -50,10 +54,6 @@ shinyUI(
                                options = sort(unique(moa_df$pert_iname)),
                                max_options = 10,
                                value = "bortezomib"),
-            selectInput("scatter_type",
-                        label = "Select Scatter Plot Type",
-                        choices = c("Cell Health", "UMAP"),
-                        selected = "Cell Health"),
             fluidRow(
               column(width = 12,
                      h4("Click and Drag Points"),
