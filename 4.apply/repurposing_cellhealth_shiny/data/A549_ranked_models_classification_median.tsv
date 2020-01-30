@@ -43,7 +43,7 @@ aupr	cc_edu_pos_alexa647_intensity_nucleus_area_mean	edu positive - Intensity Nu
 aupr	cc_edu_pos_high_n_spots_h2ax_mean	edu positive - High number of spots gH2AX - Mean per Well	cell_cycle	dna_damage	edu_gh2ax	In S phase cells: fraction of >3 gH2Ax spots	0	0
 aupr	cc_edu_pos_n_spots_mean	edu positive - Number of Spots - Mean per Well	cell_cycle	dna_damage	edu	In S phase cells: average number of gH2Ax spots	0	0
 aupr	cc_edu_pos_n_spots_per_nucleus_area_mean	edu positive - Number of Spots per Area of Nucleus - Mean per Well	cell_cycle	dna_damage	edu_gh2ax	In S phase cells: average number of gH2Ax spots per nucleus area	0	0
-aupr	cc_g1_high_n_spots_h2ax_mean	G1 - Number of Spots per Area of Nucleus - Mean per Well	cell_cycle	dna_damage	many_cell_cycle	In G1 cells: fraction of >3 gH2Ax spots	0	0
+aupr	cc_g1_high_n_spots_h2ax_mean	G1 - Number of gH2AX Spots - Mean per Well	cell_cycle	dna_damage	many_cell_cycle	In G1 cells: fraction of >3 gH2Ax spots	0	0
 aupr	cc_g1_n_objects	G1 - Number of Objects	cell_cycle	NA	many_cell_cycle	number of G1 cells	0	0
 aupr	cc_g2_g1	G2/G1	cell_cycle	NA	many_cell_cycle	G1-G2	0	0
 aupr	cc_g2_ph3_neg_high_n_spots_h2ax_mean	G2-pH3 - High number of spots gH2AX - Mean per Well	cell_cycle	dna_damage	many_cell_cycle	In G2 cells: fraction of >3 gH2Ax spots	0	0
