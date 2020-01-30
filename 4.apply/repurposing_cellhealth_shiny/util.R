@@ -46,15 +46,12 @@ build_cell_health_scatter <- function(
 build_umap_scatter <- function(
   moa_full_df, compound_df, dmso_df, model, target
   ){
-  
-  color_id <- paste0("cell_health_modz_target_", model)
 
-  umap_scatter_gg <- ggplot(moa_df, aes(x = umap_x, y = umap_y)) +
-    geom_point(size = 0.5, alpha = 0.6) +
+  umap_scatter_gg <- ggplot(moa_full_df, aes(x = umap_x, y = umap_y)) +
     xlab("UMAP X") +
     ylab("UMAP Y") +
-    geom_point(aes_string(color = color_id),
-               size = 1.25,
+    geom_point(aes_string(color = model),
+               size = 0.75,
                pch = 16,
                alpha = 0.6) +
     geom_point(data = compound_df,
@@ -77,8 +74,8 @@ build_umap_scatter <- function(
                size = 3,
                pch = 21,
                alpha = 0.7) +
-    scale_color_viridis_c(name = model) +
-    scale_fill_viridis_c(name = model, guide = "none") +
+    scale_color_viridis_c(name = target) +
+    scale_fill_viridis_c(name = target, guide = "none") +
     theme_bw()
 }
 
