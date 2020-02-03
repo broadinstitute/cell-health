@@ -26,19 +26,32 @@ build_cell_health_scatter <- function(
              pch = 16,
              alpha = 0.6) +
   geom_point(data = compound_df,
-             aes(fill = Metadata_dose_recode),
-             color = "black",
+             aes(color = Metadata_dose_recode),
              size = 5,
-             pch = 23,
-             alpha = 0.7) +
+             pch = 17,
+             alpha = 0.7,
+             show.legend = FALSE) +
   geom_point(data = dmso_df,
+             aes(shape = Metadata_broad_sample),
              fill = "grey",
              size = 3,
-             pch = 21,
-             alpha = 0.7) +
+             alpha = 0.7,
+             show.legend = TRUE) +
   scale_color_viridis_c(name = "Dose\nLevel") +
-  scale_fill_viridis_c(name = "Dose\nLevel", guide = "none") +
-  theme_bw()
+  scale_shape_manual(name = "", values = 21, labels = "DMSO") +
+  theme_bw() +
+  guides(
+    shape = guide_legend(order = 2,
+                         keywidth = 0.1,
+                         keyheight = 0.1,
+                         title = "",
+                         override.aes = list(
+                           size = 3,
+                           pch = 21,
+                           color = "grey",
+                           alpha = 0.7)
+                         )
+    )
   
   return(moa_scatter_gg)
 }
