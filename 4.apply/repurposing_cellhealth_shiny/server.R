@@ -115,6 +115,15 @@ shinyServer(function(input, output) {
       compound_df <- moa_df %>%
           dplyr::filter(pert_iname == !!compound_select)
     
+      # Determine range of y axis
+      ymax_compound <- max(compound_df[, cell_health_model_select])
+      ymax_dmso <- max(dmso_df[, cell_health_model_select])
+      ymax <- max(c(ymax_compound, ymax_dmso))
+      
+      ymin_compound <- min(compound_df[, cell_health_model_select])
+      ymin_dmso <- min(dmso_df[, cell_health_model_select])
+      ymin <- min(c(ymin_compound, ymin_dmso))
+
       # Plot! 1st - Generate the dose barplot
       bar_gg <- ggplot(compound_df,
                        aes_string(x = "as.factor(Metadata_dose_recode)",
@@ -125,17 +134,25 @@ shinyServer(function(input, output) {
         scale_fill_continuous(name = "# Live Cells") +
         ggtitle(compound_select) +
         xlab("Dose Recoded (low to high)") +
-        ylab(target)
+        ylab(target) +
+        ylim(ymin, ymax)
       
       # 2nd, plot the distribution of DMSO samples along the same model
       dmso_gg <- ggplot(dmso_df,
                         aes_string(y = cell_health_model_select,
                                    x = "Metadata_broad_sample")) +
-        geom_jitter(stat = "identity", width = 0.2) +
+        geom_jitter(stat = "identity",
+                    width = 0.2,
+                    size = 3,
+                    pch = 21,
+                    alpha = 0.7,
+                    color = "black",
+                    fill = "grey") +
         theme_bw() +
         ggtitle("") +
         xlab("") +
-        ylab(target)
+        ylab(target) +
+        ylim(ymin, ymax)
       
       # Combine these two plots into a single figure called "barchart"
       main_plot <- (

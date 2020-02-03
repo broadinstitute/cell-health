@@ -72,9 +72,8 @@ shinyUI(
                          width = 550)
             ),
             fluidRow(
-              column(width = 12,
-                     h4("Click and Drag Points"),
-                     dataTableOutput("brush_info"))
+              h3("Click and Drag Points"),
+              dataTableOutput("brush_info")
           )
         )
       ),
