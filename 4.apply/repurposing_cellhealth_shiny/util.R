@@ -34,6 +34,7 @@ build_cell_health_scatter <- function(
   geom_point(data = dmso_df,
              aes(shape = Metadata_broad_sample),
              fill = "grey",
+             color = "black",
              size = 3,
              alpha = 0.7,
              show.legend = TRUE) +
@@ -48,7 +49,8 @@ build_cell_health_scatter <- function(
                          override.aes = list(
                            size = 3,
                            pch = 21,
-                           color = "grey",
+                           fill = "grey",
+                           color = "black",
                            alpha = 0.7)
                          )
     )
