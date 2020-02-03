@@ -249,7 +249,8 @@ shinyServer(function(input, output) {
     output_df <- output_df %>%
         dplyr::rename(perturbation = pert_iname,
                       sample = Metadata_broad_sample,
-                      dose = Metadata_dose_recode)
+                      dose = Metadata_dose_recode) %>%
+      mutate_if(is.numeric, round, 3)
     
     res <- brushedPoints(output_df, input$plot_brush)
     DT::datatable(res)
