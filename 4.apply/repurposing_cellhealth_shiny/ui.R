@@ -28,7 +28,7 @@ rank_df$original_name <- factor(rank_df$original_name,
 
 # Define UI for application that draws a histogram
 shinyUI(
-  fluidPage(
+  fluidPage(theme = "bootstrap.min.css",
     # Application title
     titlePanel("Drug Repurposing Hub Cell Health Predictions"),
     
@@ -53,26 +53,28 @@ shinyUI(
                                label = "Select a Compound",
                                options = sort(unique(moa_df$pert_iname)),
                                max_options = 10,
-                               value = "bortezomib"),
-            fluidRow(
-              column(width = 12,
-                     h4("Click and Drag Points"),
-                     verbatimTextOutput("brush_info"))
+                               value = "bortezomib")
             ),
-            plotOutput("rank_plot",
-                       height = 400,
-                       width = 550)
+          plotOutput("scatter_plot",
+                     height = 400,
+                     width = 500,
+                     brush = brushOpts("plot_brush"))
           ),
           
           # Show a plot of the generated distribution
           mainPanel(
-            plotOutput("scatter_plot",
-                       height = 400,
-                       width = 500,
-                       brush = brushOpts(id = "plot_brush")),
-            plotOutput("bar_chart",
-                       height = 400,
-                       width = 550)
+            fluidRow(
+              plotOutput("rank_plot",
+                         height = 400,
+                         width = 550),
+              plotOutput("bar_chart",
+                         height = 400,
+                         width = 550)
+            ),
+            fluidRow(
+              column(width = 12,
+                     h4("Click and Drag Points"),
+                     dataTableOutput("brush_info"))
           )
         )
       ),

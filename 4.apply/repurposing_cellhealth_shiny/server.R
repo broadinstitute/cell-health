@@ -1,4 +1,5 @@
 suppressMessages(library(shiny))
+suppressMessages(library(DT))
 suppressMessages(library(readr))
 suppressMessages(library(dplyr))
 suppressMessages(library(ggplot2))
@@ -218,7 +219,7 @@ shinyServer(function(input, output) {
   })
   
   # Build output text for print rendering
-  output$brush_info <- renderPrint({
+  output$brush_info <- renderDataTable({
     
     # Load reactive elements
     cell_health_model_select <- cell_health_model()
@@ -244,7 +245,13 @@ shinyServer(function(input, output) {
                       vb_num_live_cells) %>%
         dplyr::arrange(desc(!!sym(cell_health_model_select)))
     }
-
-    brushedPoints(output_df, input$plot_brush)
+    
+    output_df <- output_df %>%
+        dplyr::rename(perturbation = pert_iname,
+                      sample = Metadata_broad_sample,
+                      dose = Metadata_dose_recode)
+    
+    res <- brushedPoints(output_df, input$plot_brush)
+    DT::datatable(res)
     })
   })

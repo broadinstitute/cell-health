@@ -74,8 +74,9 @@ build_umap_scatter <- function(
                size = 3,
                pch = 21,
                alpha = 0.7) +
-    scale_color_viridis_c(name = target) +
-    scale_fill_viridis_c(name = target, guide = "none") +
+    ggtitle(target) +
+    scale_color_viridis_c(name = "") +
+    scale_fill_viridis_c(name = "", guide = "none") +
     theme_bw()
 }
 
