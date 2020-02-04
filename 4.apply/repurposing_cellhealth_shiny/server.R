@@ -236,7 +236,7 @@ shinyServer(function(input, output) {
   })
   
   # Build output text for print rendering
-  output$brush_info <- renderDataTable({
+  output$brush_info <- renderTable({
     
     # Load reactive elements
     cell_health_model_select <- cell_health_model()
@@ -269,7 +269,6 @@ shinyServer(function(input, output) {
                       dose = Metadata_dose_recode) %>%
       mutate_if(is.numeric, round, 3)
     
-    res <- brushedPoints(output_df, input$plot_brush)
-    DT::datatable(res)
+    brushedPoints(output_df, input$plot_brush)
     })
   })
