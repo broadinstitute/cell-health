@@ -60,7 +60,8 @@ coef_plot <- function(df, target_name, compartment_features, coef_theme, top_plo
     )
 
     # 1st Plot - Area Features
-    area_gg <- ggplot(area_df, aes(x = compartment, y = feature_group)) +
+    area_gg <- ggplot(area_df,
+                      aes(x = compartment, y = feature_group)) +
         geom_point(aes(fill = abs_weight), size = 3, pch = 21) +
         facet_wrap(~shuffle) +
         scale_fill_viridis_c(name = "Abs Weight") +
@@ -71,7 +72,8 @@ coef_plot <- function(df, target_name, compartment_features, coef_theme, top_plo
         coef_theme
 
     # 2nd Plot - Other Compartment Features
-    compartment_gg <- ggplot(compartment_df, aes(x = channel, y = feature_group)) +
+    compartment_gg <- ggplot(compartment_df,
+                             aes(x = channel, y = feature_group)) +
         geom_point(aes(fill = abs_weight), size = 3, pch = 21) +
         facet_grid(compartment~shuffle) +
         scale_fill_viridis_c(name = "Abs Weight") +
@@ -82,7 +84,8 @@ coef_plot <- function(df, target_name, compartment_features, coef_theme, top_plo
         theme(axis.text.x = element_text(angle = 90))
 
     # 3rd Plot - Individual Feature Names
-    feature_name_gg <- ggplot(subset_coef_features_df, aes(x = feature, y = weight)) +
+    feature_name_gg <- ggplot(subset_coef_features_df,
+                              aes(x = feature, y = weight)) +
         geom_bar(fill = "#8DB495", color = "black", stat = "identity") +
         ggtitle(feature_title) +
         coord_flip() +
@@ -122,7 +125,9 @@ coef_plot <- function(df, target_name, compartment_features, coef_theme, top_plo
     return(coef_full_gg)
 }
 
-coef_file <- file.path("results", paste0("full_cell_health_coefficients_", consensus, ".tsv.gz"))
+coef_file <- file.path(
+    "results", paste0("full_cell_health_coefficients_", consensus, ".tsv.gz")
+)
 
 coef_df <- readr::read_tsv(
     coef_file,
@@ -159,7 +164,13 @@ coef_df$shuffle <- factor(coef_df$shuffle,
 print(dim(coef_df))
 head(coef_df, 5)
 
-compartment_features <- c("Texture", "Intensity", "RadialDistribution", "Correlation", "Granularity")
+compartment_features <- c(
+    "Texture",
+    "Intensity",
+    "RadialDistribution",
+    "Correlation",
+    "Granularity"
+)
 top_plot_num <- 15
 coef_theme <- theme(
     strip.text = element_text(size = 6,
@@ -178,7 +189,7 @@ coef_theme <- theme(
 
 pdf_file <- file.path("figures",
                       paste0("all_model_coefficients_", consensus, ".pdf"))
-pdf(pdf_file, width = 5, height = 7, onefile = TRUE)
+pdf(pdf_file, width = 7, height = 5, onefile = TRUE)
 
 for (target in unique(coef_df$target)) {
     coef_gg <- coef_plot(
