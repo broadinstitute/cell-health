@@ -190,7 +190,15 @@ complete_df.Metadata_dose_recode.value_counts()
 # In[14]:
 
 
-replicate_cols = ["Metadata_broad_sample", "Metadata_dose_recode", "Image_Metadata_Well"]
+# Fill DMSO dose as zero
+complete_df.loc[:, "Metadata_mmoles_per_liter"] = complete_df.Metadata_mmoles_per_liter.fillna(0)
+
+
+# In[15]:
+
+
+replicate_cols = ["Metadata_broad_sample", "Metadata_dose_recode",
+                  "Metadata_mmoles_per_liter", "Image_Metadata_Well"]
 
 dmso_consensus_df = modz(
     complete_df.query("Metadata_broad_sample == 'DMSO'"),
@@ -207,10 +215,10 @@ dmso_consensus_df.head(2)
 
 # ### b) Generate consensus profiles for all treatments
 
-# In[15]:
+# In[16]:
 
 
-replicate_cols = ["Metadata_broad_sample", "Metadata_dose_recode"]
+replicate_cols = ["Metadata_broad_sample", "Metadata_dose_recode", "Metadata_mmoles_per_liter"]
 
 complete_consensus_df = modz(
     complete_df.query("Metadata_broad_sample != 'DMSO'"),
@@ -228,7 +236,7 @@ complete_consensus_df.head(2)
 
 # ### c) Merge Together
 
-# In[16]:
+# In[17]:
 
 
 repurp_cp_cols = (
@@ -246,7 +254,7 @@ meta_cols = (
 )
 
 
-# In[17]:
+# In[18]:
 
 
 complete_consensus_df = (
@@ -268,7 +276,7 @@ complete_consensus_df.head()
 
 # ### d) Output Profiles
 
-# In[18]:
+# In[19]:
 
 
 # Output consensus profiles
@@ -276,7 +284,7 @@ output_file = os.path.join(output_dir, "repurposing_{}_consensus.tsv.gz".format(
 complete_consensus_df.to_csv(output_file, sep='\t', compression="gzip", index=False)
 
 
-# In[19]:
+# In[20]:
 
 
 # Extract cell profiler and metadata features
@@ -285,7 +293,7 @@ cp_features = x_test_df.columns[~x_test_df.columns.str.startswith("Metadata")].t
 
 # ## 3) Apply all Regression Models to all Repurposing Plates
 
-# In[20]:
+# In[21]:
 
 
 feature_df = complete_consensus_df.reindex(x_test_df.columns, axis="columns")
@@ -301,7 +309,7 @@ for cell_health_feature in model_dict.keys():
 
 # ## 4) Output Results
 
-# In[21]:
+# In[22]:
 
 
 # Output scores
@@ -325,13 +333,13 @@ full_df.head()
 # 
 # ### Part 1: Apply UMAP to Cell Health Transformed Repurposing Hub Features
 
-# In[22]:
+# In[23]:
 
 
 cell_health_features = list(model_dict.keys())
 
 
-# In[23]:
+# In[24]:
 
 
 reducer = umap.UMAP(random_state=1234, n_components=2)
@@ -357,7 +365,7 @@ real_embedding_df.to_csv(output_real_file, sep="\t", index=False, compression="g
 
 # ### Part 2: Apply UMAP to All Repurposing Hub Cell Painting Profiles
 
-# In[24]:
+# In[25]:
 
 
 reducer = umap.UMAP(random_state=1234, n_components=2)
@@ -383,7 +391,7 @@ complete_embedding_df.to_csv(output_real_file, sep="\t", index=False, compressio
 
 # ## Merge Data Together for Shiny App Exploration
 
-# In[25]:
+# In[26]:
 
 
 # Load perturbation information
@@ -394,7 +402,7 @@ print(pert_info_df.shape)
 pert_info_df.head()
 
 
-# In[26]:
+# In[27]:
 
 
 core_id = [
@@ -422,10 +430,11 @@ print(pert_df.shape)
 pert_df.head()
 
 
-# In[27]:
+# In[28]:
 
 
-shiny_merge_cols = ["Metadata_broad_sample", "Metadata_dose_recode", "Image_Metadata_Well"]
+shiny_merge_cols = ["Metadata_broad_sample", "Metadata_dose_recode",
+                    "Metadata_mmoles_per_liter", "Image_Metadata_Well"]
 
 shiny_df = pert_df.merge(
     full_df,
@@ -438,7 +447,7 @@ print(shiny_df.shape)
 shiny_df.head()
 
 
-# In[28]:
+# In[29]:
 
 
 shiny_file = os.path.join("repurposing_cellhealth_shiny",
