@@ -65,12 +65,12 @@ build_umap_scatter <- function(
   umap_scatter_gg <- ggplot(moa_full_df, aes(x = umap_x, y = umap_y)) +
     xlab("UMAP X") +
     ylab("UMAP Y") +
-    geom_point(aes(color = Metadata_dose_recode),
+    geom_point(aes_string(color = model),
                size = 1.25,
                pch = 16,
                alpha = 0.6) +
     geom_point(data = compound_df,
-               aes(color = Metadata_dose_recode),
+               aes_string(color = model),
                size = 5,
                pch = 17,
                alpha = 0.7,
@@ -92,7 +92,7 @@ build_umap_scatter <- function(
                alpha = 0.7,
                show.legend = TRUE) +
     ggtitle(target) +
-    scale_color_viridis_c(name = "Dose\nLevel") +
+    scale_color_viridis_c(name = target) +
     scale_shape_manual(name = "", values = 21, labels = "DMSO") +
     theme_bw() +
     guides(
