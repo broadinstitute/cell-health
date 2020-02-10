@@ -4,20 +4,29 @@ suppressPackageStartupMessages(library(ggplot2))
 set.seed(123)
 
 consensus <- "modz"
-results_dir <- "results"
-figure_dir <- file.path("figures", "cell_line_performance")
-
 cell_lines <- c("A549", "ES2", "HCC44")
 
+results_dir <- "results"
+figure_dir <- file.path("figures", "cell_line_performance", consensus)
+
+dir.create(figure_dir, recursive = TRUE, showWarnings = FALSE)
+
 # Annotated Cell Health Features
-feat_file <- file.path("..", "1.generate-profiles", "data",
-                       "labels", "feature_mapping_annotated.csv")
+feat_file <- file.path(
+    "..",
+    "1.generate-profiles",
+    "data",
+    "labels",
+    "feature_mapping_annotated.csv"
+)
 label_df <- readr::read_csv(feat_file, col_types = readr::cols())
 
 head(label_df)
 
-regression_file <- file.path(results_dir,
-                             paste0("full_cell_health_regression_", consensus, ".tsv.gz"))
+regression_file <- file.path(
+    results_dir,
+    paste0("full_cell_health_regression_", consensus, ".tsv.gz")
+)
 regression_metrics_df <- readr::read_tsv(regression_file, col_types = readr::cols()) %>%
     dplyr::filter(cell_line %in% cell_lines)
     
@@ -38,8 +47,10 @@ ggplot(regression_metrics_df %>% dplyr::filter(metric == "mse"),
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-output_file <- file.path(figure_dir,
-                         paste0("cell_line_mse_differences_", consensus, ".png"))
+output_file <- file.path(
+    figure_dir,
+    paste0("cell_line_mse_differences_", consensus, ".png")
+)
 ggsave(output_file, height = 5, width = 5, dpi = 500)
 
 ggplot(regression_metrics_df %>% dplyr::filter(metric == "r_two"),
@@ -57,8 +68,10 @@ ggplot(regression_metrics_df %>% dplyr::filter(metric == "r_two"),
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-output_file <- file.path(figure_dir,
-                         paste0("cell_line_rsquared_differences_", consensus, ".png"))
+output_file <- file.path(
+    figure_dir,
+    paste0("cell_line_rsquared_differences_", consensus, ".png")
+)
 ggsave(output_file, height = 5, width = 5, dpi = 500)
 
 # Compile Results
@@ -71,33 +84,37 @@ head(results_df, 2)
 
 # Set some plotting defaults
 measurement_colors <- c(
+    "shape" = "#6a3d9a",
     "apoptosis" = "#a6cee3",
-    "cell_cycle_arrest" = "#1f78b4",
-    "cell_viability" = "#b2df8a",
     "death" = "#33a02c",
-    "dna_damage" = "#fb9a99", 
+    "cell_viability" = "#b2df8a",
+    "dna_damage" = "#fb9a99",
+    "ros" = "red",
+    "cell_cycle" = "#1f78b4",
     "g1_arrest" = "#fdbf6f",
     "g2_arrest" = "#ff7f00",
     "g2_m_arrest" = "#005c8c",
     "mitosis" = "green",
-    "other" = "black",
     "s_arrest" = "#cab2d6",
-    "toxicity" = "#6a3d9a"
+    "other" = "black",
+    "metadata" = "grey"
 )
 
 measurement_labels <- c(
+    "shape" = "Shape",
     "apoptosis" = "Apoptosis",
-    "cell_cycle_arrest" = "Cell Cycle Arrest",
-    "cell_viability" = "Cell Viability",
     "death" = "Death",
-    "dna_damage" = "DNA Damage", 
+    "cell_viability" = "Cell Viability",
+    "dna_damage" = "DNA Damage",
+    "ros" = "Reactive Oxygen Species", 
+    "cell_cycle" = "Cell Cycle Gates",
     "g1_arrest" = "G1 Arrest",
     "g2_arrest" = "G2 Arrest",
     "g2_m_arrest" = "G2/M Arrest",
     "mitosis" = "Mitosis",
-    "other" = "Other",
     "s_arrest" = "S Arrest",
-    "toxicity" = "Toxicity"
+    "other" = "Other",
+    "metadata" = "Metadata"
 )
 
 dye_colors <- c(
@@ -130,8 +147,6 @@ dye_labels <- c(
     "crispr_efficiency" = "CRISPR Efficiency"
 )
 
-head(results_df, 2)
-
 ggplot(results_df %>%
        dplyr::filter(data_fit == "test"),
        aes(x = cell_line,
@@ -151,9 +166,11 @@ ggplot(results_df %>%
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-output_file <- file.path(figure_dir,
-                         paste0("cell_line_differences_target_linked_full_", consensus, ".png"))
-ggsave(output_file, height = 5, width = 5, dpi = 500)
+output_file <- file.path(
+    figure_dir,
+    paste0("cell_line_differences_target_linked_full_", consensus, ".png")
+)
+ggsave(output_file, height = 5, width = 6.5, dpi = 500)
 
 ggplot(results_df %>%
        dplyr::filter(data_fit == "test",
@@ -176,9 +193,11 @@ ggplot(results_df %>%
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-output_file <- file.path(figure_dir,
-                         paste0("cell_line_differences_target_linked_subset_", consensus, ".png"))
-ggsave(output_file, height = 5, width = 5, dpi = 500)
+output_file <- file.path(
+    figure_dir,
+    paste0("cell_line_differences_target_linked_subset_", consensus, ".png")
+)
+ggsave(output_file, height = 5, width = 6.5, dpi = 500)
 
 filtered_results_df <- results_df %>%
     dplyr::filter(cell_line == "A549",
@@ -196,8 +215,13 @@ filtered_results_df$original_name <- factor(filtered_results_df$original_name,
 
 
 # Output ranked models
-output_file <- file.path("..", "4.apply", "repurposing_cellhealth_shiny", "data",
-                         paste0("A549_ranked_models_regression_", consensus, ".tsv"))
+output_file <- file.path(
+    "..",
+    "4.apply",
+    "repurposing_cellhealth_shiny",
+    "data",
+    paste0("A549_ranked_models_regression_", consensus, ".tsv")
+)
 readr::write_tsv(filtered_results_df, output_file)
 
 print(dim(filtered_results_df))
@@ -218,8 +242,10 @@ ggplot(filtered_results_df, aes(x = shuffle_true, y = shuffle_false)) +
           legend.text = element_text(size = 6),
           legend.key.size = unit(0.3, "cm"))
 
-output_file = file.path(figure_dir,
-                        paste0("ranked_models_A549_with_shuffle_", consensus, ".png"))
+output_file = file.path(
+    figure_dir,
+    paste0("ranked_models_A549_with_shuffle_", consensus, ".png")
+)
 ggsave(output_file, dpi = 300, height = 3.5, width = 4)
 
 # Do not spread
@@ -255,8 +281,10 @@ ggplot(plot_df %>% dplyr::filter(value > 0),
           legend.text = element_text(size = 6),
           legend.key.size = unit(0.3, "cm"))
 
-output_file = file.path(figure_dir,
-                        paste0("ranked_models_A549_", consensus, ".png"))
+output_file = file.path(
+    figure_dir,
+    paste0("ranked_models_A549_", consensus, ".png")
+)
 ggsave(output_file, dpi = 300, height = 6, width = 8)
 
 roc_file <- file.path(results_dir,
@@ -298,8 +326,10 @@ ggplot(auc_df %>% dplyr::filter(metric == "roc"),
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-output_file <- file.path(figure_dir,
-                         paste0("cell_line_roc_differences_", consensus, ".png"))
+output_file <- file.path(
+    figure_dir,
+    paste0("cell_line_roc_differences_", consensus, ".png")
+)
 ggsave(output_file, height = 5, width = 5, dpi = 500)
 
 ggplot(auc_df %>% dplyr::filter(metric == "aupr"),
@@ -318,8 +348,10 @@ ggplot(auc_df %>% dplyr::filter(metric == "aupr"),
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-output_file <- file.path(figure_dir,
-                         paste0("cell_line_pr_differences_", consensus, ".png"))
+output_file <- file.path(
+    figure_dir,
+    paste0("cell_line_pr_differences_", consensus, ".png")
+)
 ggsave(output_file, height = 5, width = 5, dpi = 500)
 
 # Compile Results
@@ -352,7 +384,7 @@ ggplot(results_df %>%
 output_file <- file.path(figure_dir,
                          paste0("cell_line_differences_classification_target_linked_full_",
                                 consensus, ".png"))
-ggsave(output_file, height = 5, width = 5, dpi = 500)
+ggsave(output_file, height = 5, width = 6.5, dpi = 500)
 
 filtered_results_df <- results_df %>%
     dplyr::filter(cell_line == "A549",
@@ -370,8 +402,13 @@ filtered_results_df$original_name <- factor(filtered_results_df$original_name,
 
 
 # Output ranked models
-output_file <- file.path("..", "4.apply", "repurposing_cellhealth_shiny", "data",
-                         paste0("A549_ranked_models_classification_", consensus, ".tsv"))
+output_file <- file.path(
+    "..",
+    "4.apply",
+    "repurposing_cellhealth_shiny",
+    "data",
+    paste0("A549_ranked_models_classification_", consensus, ".tsv")
+)
 readr::write_tsv(filtered_results_df, output_file)
 
 print(dim(filtered_results_df))
@@ -411,6 +448,8 @@ ggplot(plot_df %>% dplyr::filter(auc > 0),
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-output_file = file.path(figure_dir,
-                        paste0("ranked_models_A549_", consensus, "_classification.png"))
+output_file = file.path(
+    figure_dir,
+    paste0("ranked_models_A549_", consensus, "_classification.png")
+)
 ggsave(output_file, dpi = 300, height = 6, width = 8)
