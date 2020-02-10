@@ -250,8 +250,10 @@ ggplot(metric_df,
                        labels = dye_labels) +
     theme_bw()
 
-file <- file.path("figures",
-                  paste0("performance_summary_assay_", consensus, ".png"))
+file <- file.path(
+    figure_dir,
+    paste0("performance_summary_auroc_assay_", consensus, ".png")
+)
 ggsave(file, dpi = 300, width = 6, height = 4.5)
 
 ggplot(metric_df, aes(x = AUROC_test,
