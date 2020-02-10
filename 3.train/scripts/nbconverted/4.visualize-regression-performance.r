@@ -2,29 +2,63 @@ suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(ggrepel))
 
-results_dir <- "results"
 consensus <- "modz"
 
+results_dir <- "results"
 figure_dir <- file.path("figures", "regression")
-dir.create(figure_dir)
+individual_fig_dir <- file.path(
+    "figures",
+    "individual_target_performance",
+    "regression",
+    consensus
+)
 
-regression_file <- file.path(results_dir, 
-                             paste0("full_cell_health_regression_", consensus, ".tsv.gz"))
+dir.create(results_dir, showWarnings = FALSE)
+dir.create(figure_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(individual_fig_dir, recursive = TRUE, showWarnings = FALSE)
+
+# Complete regression results
+regression_file <- file.path(
+    results_dir, 
+    paste0("full_cell_health_regression_", consensus, ".tsv.gz")
+)
 regression_metrics_df <- readr::read_tsv(regression_file, col_types = readr::cols()) %>%
     dplyr::filter(cell_line == "all")
 
-coef_file <- file.path(results_dir,
-                       paste0("full_cell_health_coefficients_", consensus, ".tsv.gz"))
+# Model coefficients
+coef_file <- file.path(
+    results_dir,
+    paste0("full_cell_health_coefficients_", consensus, ".tsv.gz")
+)
 full_coef_df <- readr::read_tsv(coef_file, col_types = readr::cols()) %>%
     dplyr::filter(y_transform == "raw")
 
-metadata_file <- file.path("..", "1.generate-profiles", "data", "profile_id_metadata_mapping.tsv")
+# Metadata information
+metadata_file <- file.path(
+    "..",
+    "1.generate-profiles",
+    "data",
+    "profile_id_metadata_mapping.tsv"
+)
 metadata_df <- readr::read_tsv(metadata_file, col_types = readr::cols())
 
-y_file <- file.path(results_dir,
-                    paste0("full_cell_health_y_labels_", consensus, ".tsv.gz"))
+# Ground truth (y) values
+y_file <- file.path(
+    results_dir,
+    paste0("full_cell_health_y_labels_", consensus, ".tsv.gz")
+)
 y_df <- readr::read_tsv(y_file, col_types = readr::cols()) %>%
     dplyr::filter(y_transform == "raw")
+
+# Label variables with specific cell health classes
+label_file <- file.path(
+    "..",
+    "1.generate-profiles",
+    "data",
+    "labels",
+    "feature_mapping_annotated.csv"
+)
+label_df <- readr::read_csv(label_file, col_types = readr::cols())
 
 # Combine data for downstream processing
 y_binary_subset_true_df <- y_df %>%
@@ -35,29 +69,36 @@ y_binary_subset_pred_df <- y_df %>%
 
 # Process data for plotting
 y_plot_df <- y_binary_subset_true_df %>%
-    dplyr::inner_join(y_binary_subset_pred_df,
-                      by = c("Metadata_profile_id",
-                             "target",
-                             "data_type",
-                             "shuffle",
-                             "y_transform"),
-                      suffix = c("_true", "_pred")) %>%
+    dplyr::inner_join(
+        y_binary_subset_pred_df,
+        by = c("Metadata_profile_id",
+               "target",
+               "data_type",
+               "shuffle",
+               "y_transform"),
+        suffix = c("_true", "_pred")) %>%
     dplyr::left_join(metadata_df, by = "Metadata_profile_id")
 
-y_plot_df$data_type <- dplyr::recode(y_plot_df$data_type,
-                                     "train" = "Train",
-                                     "test" = "Test")
+y_plot_df$data_type <- dplyr::recode(
+    y_plot_df$data_type,
+    "train" = "Train",
+    "test" = "Test"
+)
 
 print(dim(y_plot_df))
 head(y_plot_df, 3)
 
-regression_metrics_df$data_fit <- dplyr::recode(regression_metrics_df$data_fit,
-                                                "train" = "Train",
-                                                "test" = "Test")
+regression_metrics_df$data_fit <- dplyr::recode(
+    regression_metrics_df$data_fit,
+    "train" = "Train",
+    "test" = "Test"
+)
 
-regression_metrics_df$shuffle <- dplyr::recode(regression_metrics_df$shuffle,
-                                                "shuffle_true" = "Shuffle",
-                                                "shuffle_false" = "Real")
+regression_metrics_df$shuffle <- dplyr::recode(
+    regression_metrics_df$shuffle,
+    "shuffle_true" = "Shuffle",
+    "shuffle_false" = "Real"
+)
 
 regression_metrics_df <- regression_metrics_df %>%
     dplyr::rename(data_type = data_fit)
@@ -66,6 +107,54 @@ regression_metrics_df$value <- round(regression_metrics_df$value, 2)
 
 print(dim(regression_metrics_df))
 head(regression_metrics_df, 3)
+
+# Setup plotting constants
+dye_colors = c(
+    "apoptosis" = "#a6cee3",
+    "cell_cycle_arrest" = "#1f78b4",
+    "cell_viability" = "#b2df8a",
+    "death" = "#33a02c",
+    "dna_damage" = "#fb9a99", 
+    "g1_arrest" = "#fdbf6f",
+    "g2_arrest" = "#ff7f00",
+    "g2_m_arrest" = "#005c8c",
+    "mitosis" = "green",
+    "s_arrest" = "#cab2d6",
+    "toxicity" = "#6a3d9a"
+)
+
+dye_labels = c(
+    "apoptosis" = "Apoptosis",
+    "cell_cycle_arrest" = "Cell Cycle Arrest",
+    "cell_viability" = "Cell Viability",
+    "death" = "Death",
+    "dna_damage" = "DNA Damage", 
+    "g1_arrest" = "G1 Arrest",
+    "g2_arrest" = "G2 Arrest",
+    "g2_m_arrest" = "G2/M Arrest",
+    "mitosis" = "Mitosis",
+    "s_arrest" = "S Arrest",
+    "toxicity" = "Toxicity"
+)
+
+dye_theme = theme(
+    axis.title = element_text(size = 4),
+    axis.title.x = element_text(margin = margin(0, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 0, 0, 0)),
+    axis.text = element_text(size = 4),
+    axis.ticks = element_line(size = 0.1),
+    axis.ticks.length = unit(0.05, "cm"),
+    plot.title = element_text(size = 5, margin = margin(0, 0, 0, 0)),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "mm"),
+    legend.title = element_text(size = 3.5),
+    legend.text = element_text(size = 3.5), 
+    legend.key.height = unit(0.2, "line"),
+    legend.key.width = unit(-0.2, "line"),
+    panel.grid.minor = element_line(size = 0.1),
+    panel.grid.major = element_line(size = 0.2),
+    legend.margin = margin(-5, 7, 0, 0),
+    legend.box.margin=margin(0, -5, 5, -5)
+)
 
 mse_df <- regression_metrics_df %>%
     dplyr::filter(metric == "mse",
@@ -83,7 +172,10 @@ target_order <- mse_df %>%
     dplyr::arrange(desc(value)) %>%
     dplyr::select(target)
 
-mse_df$target <- factor(mse_df$target, levels=target_order$target)
+mse_df$target <- factor(
+    mse_df$target,
+    levels=target_order$target
+)
 
 print(dim(mse_df))
 head(mse_df, 4)
@@ -109,17 +201,11 @@ ggplot(mse_df,
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-file <- file.path(figure_dir,
-                  paste0("mse_test_summary_", consensus, ".png"))
+file <- file.path(
+    figure_dir,
+    paste0("mse_test_summary_", consensus, ".png")
+)
 ggsave(file, dpi = 300, width = 6, height = 6)
-
-# Label variables with specific cell health classes
-label_file <- file.path("..", "1.generate-profiles", "data",
-                        "labels", "feature_mapping_annotated.csv")
-label_df <- readr::read_csv(label_file, col_types = readr::cols())
-
-print(dim(label_df))
-tail(label_df, 5)
 
 # Merge table with target labels
 mse_summary_df <- mse_df %>%
@@ -150,54 +236,22 @@ ggplot(mse_spread_df,
     ylab("Permuted Data (Mean Squared Error)") +
     ggtitle("Regression Performance") +
     theme_bw() +
-    theme(axis.title = element_text(size = 4),
-          axis.title.x = element_text(margin = margin(0, 0, 0, 0)),
-          axis.title.y = element_text(margin = margin(0, 0, 0, 0)),
-          axis.text = element_text(size = 4),
-          axis.ticks = element_line(size = 0.1),
-          axis.ticks.length = unit(0.05, "cm"),
-          plot.title = element_text(size = 5, margin = margin(0, 0, 0, 0)),
-          plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "mm"),
-          legend.title = element_text(size = 3.5),
-          legend.text = element_text(size = 3.5), 
-          legend.key.height = unit(0.2, "line"),
-          legend.key.width = unit(-0.2, "line"),
-          panel.grid.minor = element_line(size = 0.1),
-          panel.grid.major = element_line(size = 0.2),
-          legend.margin = margin(-5, 7, 0, 0),
-          legend.box.margin=margin(0, -5, 5, -5)) +
-    scale_color_manual(name = "Cell Health\nPhenotypes",
-                       values = c("apoptosis" = "#a6cee3",
-                                  "cell_cycle_arrest" = "#1f78b4",
-                                  "cell_viability" = "#b2df8a",
-                                  "death" = "#33a02c",
-                                  "dna_damage" = "#fb9a99", 
-                                  "g1_arrest" = "#fdbf6f",
-                                  "g2_arrest" = "#ff7f00",
-                                  "g2_m_arrest" = "#005c8c",
-                                  "mitosis" = "green",
-                                  "s_arrest" = "#cab2d6",
-                                  "toxicity" = "#6a3d9a"),
-                       labels = c("apoptosis" = "Apoptosis",
-                                  "cell_cycle_arrest" = "Cell Cycle Arrest",
-                                  "cell_viability" = "Cell Viability",
-                                  "death" = "Death",
-                                  "dna_damage" = "DNA Damage", 
-                                  "g1_arrest" = "G1 Arrest",
-                                  "g2_arrest" = "G2 Arrest",
-                                  "g2_m_arrest" = "G2/M Arrest",
-                                  "mitosis" = "Mitosis",
-                                  "s_arrest" = "S Arrest",
-                                  "toxicity" = "Toxicity"))
+    dye_theme +
+    scale_color_manual(
+        name = "Cell Health\nPhenotypes",
+        values = dye_colors,
+        labels = dye_labels
+    )
 
-output_file <- file.path(figure_dir,
-                         paste0("mse_comparison_scatter_", consensus, ".png"))
-ggsave(output_file, width = 2, height = 1.5, dpi = 600, units = "in")
+output_file <- file.path(
+    figure_dir,
+    paste0("mse_comparison_scatter_", consensus, ".png")
+)
+ggsave(output_file, width = 2, height = 1.5, dpi = 300, units = "in")
 
 r2_df <- regression_metrics_df %>%
     dplyr::filter(metric == "r_two",
-                  y_transform == "raw",
-                  shuffle == "Real")
+                  y_transform == "raw")
 
 # Sort mse by minimum MSE in test set
 target_order <- r2_df %>%
@@ -210,7 +264,7 @@ r2_df$target <- factor(r2_df$target, levels=target_order$target)
 
 head(r2_df, 4)
 
-ggplot(r2_df,
+ggplot(r2_df %>% dplyr::filter(shuffle == "Real"),
        aes(x = target,
            y = value)) +
     geom_bar(stat = "identity",
@@ -232,21 +286,58 @@ ggplot(r2_df,
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-file <- file.path(figure_dir,
-                  paste0("r_squared_model_summary_", consensus, ".png"))
+file <- file.path(
+    figure_dir,
+    paste0("r_squared_model_summary_", consensus, ".png")
+)
 ggsave(file, dpi = 300, width = 6, height = 6)
+
+# Merge table with target labels
+r2_summary_df <- r2_df %>%
+    dplyr::left_join(label_df, by = c("target" = "updated_name")) %>%
+    dplyr::filter(!is.na(measurement))
+
+# Split shuffle column for scatter plot
+r2_spread_df <- r2_summary_df %>% tidyr::spread(shuffle, value)
+
+head(r2_spread_df, 2)
+
+ggplot(r2_spread_df,
+       aes(x = Real,
+           y = Shuffle,
+           color = measurement)) +
+    geom_abline(intercept = 0,
+                lwd = 0.1,
+                slope = 1,
+                linetype = "dotted",
+                alpha = 0.7,
+                color = "red") +
+    geom_point(size = 0.4,
+               alpha = 0.7,
+               pch = 16) +
+    xlab(bquote("Real Data R-Squared")) +
+    ylab(bquote("Permuted Data R-Squared")) +
+    ggtitle("Regression Performance") +
+    theme_bw() +
+    dye_theme +
+    scale_color_manual(
+        name = "Cell Health\nPhenotypes",
+        values = dye_colors,
+        labels = dye_labels
+    )
+
+output_file <- file.path(
+    figure_dir,
+    paste0("r_squared_comparison_scatter_", consensus, ".png")
+)
+ggsave(output_file, width = 2, height = 1.5, dpi = 300, units = "in")
 
 label_thresh_value = 0.925
 
-individual_fig_dir <- file.path(
-    "figures",
-    "individual_target_performance",
-    "regression"
-    )
-dir.create(individual_fig_dir)
-
-pdf_file <- file.path(figure_dir,
-                      paste0("all_regression_performance_metrics_", consensus, ".pdf"))
+pdf_file <- file.path(
+    figure_dir,
+    paste0("all_regression_performance_metrics_", consensus, ".pdf")
+)
 pdf(pdf_file, width = 6, height = 8, onefile = TRUE)
 
 for (target in unique(y_plot_df$target)) {
@@ -257,8 +348,10 @@ for (target in unique(y_plot_df$target)) {
         dplyr::recode_factor("shuffle_false" = "Real",
                              "shuffle_true" = "Permuted")
     
-    coef_subset_df <- full_coef_df %>% dplyr::filter(target == !!target)
-    metrics_subset_df <- regression_metrics_df %>% dplyr::filter(target == !!target)
+    coef_subset_df <- full_coef_df %>%
+        dplyr::filter(target == !!target)
+    metrics_subset_df <- regression_metrics_df %>%
+        dplyr::filter(target == !!target)
     
     for (y_transform in unique(y_subset_df$y_transform)) {
         y_subset_transform_df <- y_subset_df %>%
@@ -307,17 +400,18 @@ for (target in unique(y_plot_df$target)) {
                            alpha = 0.6) +
                 xlab("Weight Rank") +
                 ylab("Weight") +
-                geom_text_repel(data = subset(coef_subset_transform_df, label_logic),
-                                arrow = arrow(length = unit(0.01, "npc")),
-                                box.padding = 0.4,
-                                point.padding = 0.1,
-                                segment.size = 0.5,
-                                segment.alpha = 0.6,
-                                size = 1.5,
-                                fontface = "italic",
-                                aes(label = feature,
-                                    x = weight_rank,
-                                    y = weight)) +
+                geom_text_repel(
+                    data = subset(coef_subset_transform_df, label_logic),
+                    arrow = arrow(length = unit(0.01, "npc")),
+                    box.padding = 0.4,
+                    point.padding = 0.1,
+                    segment.size = 0.5,
+                    segment.alpha = 0.6,
+                    size = 1.5,
+                    fontface = "italic",
+                    aes(label = feature,
+                        x = weight_rank,
+                        y = weight)) +
                 theme_bw()
         
          # Build table for plotting performance metrics
@@ -332,14 +426,17 @@ for (target in unique(y_plot_df$target)) {
             dplyr::select(-metric)
 
         metric_table_df <- r2_df %>%
-            dplyr::inner_join(mse_df, by=c("target", "data_type", "shuffle", "y_transform")) %>%
+            dplyr::inner_join(mse_df,
+                              by=c("target", "data_type", "shuffle", "y_transform")) %>%
             dplyr::select(data_type, shuffle, y_transform, r2, value) %>%
             dplyr::rename(fit = data_type, transform = y_transform) %>%
             dplyr::arrange(shuffle)
 
-        metric_table_df$shuffle <- dplyr::recode(metric_table_df$shuffle,
-                                                 shuffle_true = "True",
-                                                 shuffle_false = "False")
+        metric_table_df$shuffle <- dplyr::recode(
+            metric_table_df$shuffle,
+            shuffle_true = "True",
+            shuffle_false = "False"
+        )
 
         # Plot all performance metrics together with cowplot
         table_theme <- gridExtra::ttheme_default(
@@ -388,10 +485,14 @@ for (target in unique(y_plot_df$target)) {
             paste0(target, "_", y_transform, "_performance_", consensus, ".png")
         )
 
-        cowplot::save_plot(filename = cowplot_file,
-                           plot = regression_perf_gg,
-                           base_height = 6,
-                           base_width = 6)
+        cowplot::save_plot(
+            filename = cowplot_file,
+            plot = regression_perf_gg,
+            base_height = 6,
+            base_width = 6
+        )
+        
+        print(regression_perf_gg)
     }
 }
 
