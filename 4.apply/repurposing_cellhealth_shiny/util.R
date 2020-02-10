@@ -92,7 +92,7 @@ build_umap_scatter <- function(
                alpha = 0.7,
                show.legend = TRUE) +
     ggtitle(target) +
-    scale_color_viridis_c(name = target) +
+    scale_color_viridis_c(name = "") +
     scale_shape_manual(name = "", values = 21, labels = "DMSO") +
     theme_bw() +
     guides(
