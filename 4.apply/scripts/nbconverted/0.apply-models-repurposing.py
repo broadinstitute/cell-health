@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Apply Cell Health Models to The Drug Repurposing Set
+# # Apply Cell Health Models to Repurposing Set
 # 
 # **Gregory Way, 2019**
 # 
@@ -46,11 +46,9 @@ output_dir = "data"
 
 model_dir = os.path.join("..", "3.train", "models")
 
-model_dict, model_coef = (
-    load_models(
-        model_dir=model_dir,
-        consensus=consensus,
-    )
+model_dict, model_coef = load_models(
+    model_dir=model_dir,
+    consensus=consensus
 )
 
 
@@ -59,10 +57,10 @@ model_dict, model_coef = (
 
 data_dir = os.path.join("..", "3.train", "data")
 
-x_train_df, x_test_df, y_train_df, y_test_df = (
-    load_train_test(data_dir=data_dir,
-                    drop_metadata=True,
-                    consensus=consensus)
+x_train_df, x_test_df, y_train_df, y_test_df = load_train_test(
+    data_dir=data_dir,
+    consensus=consensus,
+    drop_metadata=True
 )
 
 
@@ -88,7 +86,7 @@ repurposing_profile_dir = os.path.join(
     "full_profile_data"
 )
 
-repurposing_profile_dir
+all_plates = list(set([x.split("_")[0] for x in os.listdir(repurposing_profile_dir)]))
 
 
 # In[7]:
@@ -98,10 +96,13 @@ repurposing_profile_dir
 plate_info = {}
 all_dfs = []
 all_metadata_dfs = []
-all_files = os.listdir(repurposing_profile_dir)
-for file in all_files:
-    if "_subsample_all_normalized.csv" in file:
-        norm_file = os.path.join(repurposing_profile_dir, file)
+for plate in all_plates:
+    norm_file = os.path.join(repurposing_profile_dir, 
+                             "{}_subsample_all_normalized.csv".format(plate))
+
+    plate_info[plate] = norm_file
+    
+    if os.path.exists(norm_file):
         df = pd.read_csv(norm_file)
 
         feature_df = df.reindex(x_test_df.columns, axis="columns").fillna(0)
@@ -115,18 +116,30 @@ for file in all_files:
 
 
 # Merge feature data and metadata
-all_df = pd.concat(all_dfs)
-all_metadata_df = pd.concat(all_metadata_dfs)
+all_df = pd.concat(all_dfs, sort=True)
+all_metadata_df = pd.concat(all_metadata_dfs, sort=True)
 
 complete_df = pd.concat([all_metadata_df, all_df], axis="columns").reset_index(drop=True)
+
+# Fill in NaN in Metadata_broad_sample as DMSO
+complete_df.Metadata_broad_sample = complete_df.Metadata_broad_sample.fillna("DMSO")
 
 print(complete_df.shape)
 complete_df.head()
 
 
+# In[9]:
+
+
+# Confirm that all plates are loaded
+assert (
+    sorted(list(complete_df.Image_Metadata_Plate.unique())) == sorted(all_plates)
+)
+
+
 # ## Recode Dose Information
 
-# In[9]:
+# In[10]:
 
 
 def recode_dose(x, doses, return_level=False):
@@ -139,13 +152,13 @@ def recode_dose(x, doses, return_level=False):
         return doses[closest_index]
 
 
-# In[10]:
+# In[11]:
 
 
 primary_dose_mapping = [0.04, 0.12, 0.37, 1.11, 3.33, 10, 20]
 
 
-# In[11]:
+# In[12]:
 
 
 complete_df = complete_df.assign(
@@ -162,7 +175,7 @@ print(complete_df.shape)
 complete_df.head()
 
 
-# In[12]:
+# In[13]:
 
 
 complete_df.Metadata_dose_recode.value_counts()
@@ -172,13 +185,20 @@ complete_df.Metadata_dose_recode.value_counts()
 # 
 # ### a) Generate different consensus profiles for DMSO
 # 
-# We generate DMSO profiles _per well_ across all plates.
-# This helps us to determine the extent of plate effects across all plates.  
+# Include Well Level Information
 
-# In[13]:
+# In[14]:
 
 
-replicate_cols = ["Metadata_broad_sample", "Metadata_dose_recode", "Image_Metadata_Well"]
+# Fill DMSO dose as zero
+complete_df.loc[:, "Metadata_mmoles_per_liter"] = complete_df.Metadata_mmoles_per_liter.fillna(0)
+
+
+# In[15]:
+
+
+replicate_cols = ["Metadata_broad_sample", "Metadata_dose_recode",
+                  "Metadata_mmoles_per_liter", "Image_Metadata_Well"]
 
 dmso_consensus_df = modz(
     complete_df.query("Metadata_broad_sample == 'DMSO'"),
@@ -194,13 +214,11 @@ dmso_consensus_df.head(2)
 
 
 # ### b) Generate consensus profiles for all treatments
-# 
-# Only consider the perturbation and dose. Do not consider well.
 
-# In[14]:
+# In[16]:
 
 
-replicate_cols = ["Metadata_broad_sample", "Metadata_dose_recode"]
+replicate_cols = ["Metadata_broad_sample", "Metadata_dose_recode", "Metadata_mmoles_per_liter"]
 
 complete_consensus_df = modz(
     complete_df.query("Metadata_broad_sample != 'DMSO'"),
@@ -218,7 +236,7 @@ complete_consensus_df.head(2)
 
 # ### c) Merge Together
 
-# In[15]:
+# In[17]:
 
 
 repurp_cp_cols = (
@@ -236,7 +254,7 @@ meta_cols = (
 )
 
 
-# In[16]:
+# In[18]:
 
 
 complete_consensus_df = (
@@ -258,7 +276,7 @@ complete_consensus_df.head()
 
 # ### d) Output Profiles
 
-# In[17]:
+# In[19]:
 
 
 # Output consensus profiles
@@ -266,7 +284,7 @@ output_file = os.path.join(output_dir, "repurposing_{}_consensus.tsv.gz".format(
 complete_consensus_df.to_csv(output_file, sep='\t', compression="gzip", index=False)
 
 
-# In[18]:
+# In[20]:
 
 
 # Extract cell profiler and metadata features
@@ -274,19 +292,16 @@ cp_features = x_test_df.columns[~x_test_df.columns.str.startswith("Metadata")].t
 
 
 # ## 3) Apply all Regression Models to all Repurposing Plates
-# 
-# We do not apply classification algorithms.
 
-# In[19]:
+# In[21]:
 
 
 feature_df = complete_consensus_df.reindex(x_test_df.columns, axis="columns")
 metadata_df = complete_consensus_df.loc[:, meta_cols]
 
 all_scores = {}
-all_shuffle_scores = {}
 for cell_health_feature in model_dict.keys():
-    # Apply Classifiers
+    # Apply Real Model Classifiers
     model_clf = model_dict[cell_health_feature]
     pred_df = model_clf.predict(feature_df)
     all_scores[cell_health_feature] = pred_df
@@ -294,7 +309,7 @@ for cell_health_feature in model_dict.keys():
 
 # ## 4) Output Results
 
-# In[20]:
+# In[22]:
 
 
 # Output scores
@@ -306,10 +321,8 @@ full_df = (
            right_index=True)
 )
 
-output_real_file = os.path.join(
-    output_dir,
-    "repurposing_cell_health_scores_{}.tsv.gz".format(consensus)
-)
+output_real_file = os.path.join(output_dir,
+                                "repurposing_transformed_real_models_{}.tsv.gz".format(consensus))
 full_df.to_csv(output_real_file, sep="\t", index=False, compression="gzip")
 
 print(full_df.shape)
@@ -318,17 +331,23 @@ full_df.head()
 
 # ## 5) Apply UMAP
 # 
-# ### Part 1: Apply UMAP to Repurposing Hub Well Profiles
+# ### Part 1: Apply UMAP to Cell Health Transformed Repurposing Hub Features
 
-# In[21]:
+# In[23]:
+
+
+cell_health_features = list(model_dict.keys())
+
+
+# In[24]:
 
 
 reducer = umap.UMAP(random_state=1234, n_components=2)
 
-metadata_df = complete_df.drop(cp_features, axis="columns")
+metadata_df = full_df.drop(cell_health_features, axis="columns")
 
 real_embedding_df = pd.DataFrame(
-    reducer.fit_transform(complete_df.loc[:, cp_features]),
+    reducer.fit_transform(full_df.loc[:, cell_health_features]),
     columns=["umap_x", "umap_y"]
 )
 
@@ -339,13 +358,14 @@ real_embedding_df = (
            right_index=True)
 )
 
-output_real_file = os.path.join(output_dir, "repurposing_umap_well_profiles.tsv.gz")
+output_real_file = os.path.join(output_dir,
+                                "repurposing_umap_transformed_real_models_{}.tsv.gz".format(consensus))
 real_embedding_df.to_csv(output_real_file, sep="\t", index=False, compression="gzip")
 
 
-# ### Part 2: Apply UMAP to Consensus Repurposing Hub Cell Painting Profiles
+# ### Part 2: Apply UMAP to All Repurposing Hub Cell Painting Profiles
 
-# In[22]:
+# In[25]:
 
 
 reducer = umap.UMAP(random_state=1234, n_components=2)
@@ -364,6 +384,75 @@ complete_embedding_df = (
            right_index=True)
 )
 
-output_real_file = os.path.join(output_dir, "repurposing_umap_consensus_{}.tsv.gz".format(consensus))
+output_real_file = os.path.join(output_dir,
+                                "repurposing_umap_transformed_cell_painting_{}.tsv.gz".format(consensus))
 complete_embedding_df.to_csv(output_real_file, sep="\t", index=False, compression="gzip")
+
+
+# ## Merge Data Together for Shiny App Exploration
+
+# In[26]:
+
+
+# Load perturbation information
+pert_info_file = os.path.join("data", "pert_info.txt")
+pert_info_df = pd.read_csv(pert_info_file, sep='\t')
+
+print(pert_info_df.shape)
+pert_info_df.head()
+
+
+# In[27]:
+
+
+core_id = [
+    "{}-{}".format(
+        x.split("-")[0],
+        x.split("-")[1]
+    ) if x != "DMSO"
+    else x
+    for x in full_df.Metadata_broad_sample
+]
+
+pert_df = (
+    real_embedding_df
+    .assign(Metadata_broad_core_id=core_id)
+    .sort_index(axis="columns")
+    .merge(
+        pert_info_df,
+        left_on="Metadata_broad_core_id",
+        right_on="pert_id",
+        how="left"
+    )
+)
+
+print(pert_df.shape)
+pert_df.head()
+
+
+# In[28]:
+
+
+shiny_merge_cols = ["Metadata_broad_sample", "Metadata_dose_recode",
+                    "Metadata_mmoles_per_liter", "Image_Metadata_Well"]
+
+shiny_df = pert_df.merge(
+    full_df,
+    left_on=shiny_merge_cols,
+    right_on=shiny_merge_cols,
+    how="inner"
+)
+
+print(shiny_df.shape)
+shiny_df.head()
+
+
+# In[29]:
+
+
+shiny_file = os.path.join("repurposing_cellhealth_shiny",
+                          "data",
+                          "moa_cell_health_{}.tsv.gz".format(consensus))
+
+shiny_df.to_csv(shiny_file, sep='\t', index=False, compression="gzip")
 

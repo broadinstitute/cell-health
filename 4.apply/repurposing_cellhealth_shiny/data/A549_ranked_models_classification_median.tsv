@@ -1,0 +1,59 @@
+metric	target	original_name	feature_type	measurement	assay	description	shuffle_false	shuffle_true
+aupr	cc_cc_g2_ph3_pos_early_mitosis_mean	CC - G2+pH3 (Early mitiosis) - Mean per Well	cell_cycle	g2_m_arrest	many_cell_cycle	fraction of G2/M cells	1	0.06666666666666667
+aupr	cc_g1_plus_g2	G1+G2	cell_cycle	NA	many_cell_cycle	G1+G2	1	1
+aupr	cc_polynuclear_n_objects	large not round (polynuclear) - Number of Objects	cell_cycle	NA	hoechst	number of late polynuc cells	1	0.14285714285714285
+aupr	vb_live_cell_area	Live Cell Area	viability	NA	draq	cell size	1	0.0625
+aupr	vb_percent_all_apoptosis	% All Apoptosis	viability	apoptosis	caspase	fraction of casp positive cells	1	1
+aupr	vb_percent_all_early_apoptosis	% Early Apop	viability	apoptosis	draq_caspase	fraction of casp positive (no DRAQ7) cells	1	0.25
+aupr	vb_percent_all_late_apoptosis	% Late Apop	viability	apoptosis	draq_caspase	fraction of both, casp and DRAQ7 positive cells	1	0.058823529411764705
+aupr	vb_percent_dead	% Dead	viability	death	draq	fraction of DRAQ7 positive cells	1	0.05555555555555555
+aupr	vb_percent_dead_only	% Dead Only	viability	apoptosis	draq_caspase	fraction of DRAQ7 positive / Casp negative cells	1	1
+aupr	cc_all_nucleus_area_mean	ALL - Nucleus Area - Mean per Well	cell_cycle	NA	hoechst	average nucleus area	0.6666666666666666	0.325
+aupr	cc_cc_g1_mean	CC - G1 - Mean per Well	cell_cycle	g1_arrest	many_cell_cycle	fraction of G1 cells	0.5	0.5
+aupr	cc_mitosis_ph3_pos_n_objects	pH3 positive, Hoechst condenced (mitosis) - Number of Objects	cell_cycle	NA	many_cell_cycle	number of late M cells	0.45	0.10882352941176471
+aupr	cc_polyploid_n_spots_per_nucleus_area_mean	Large round (polyploid) - Number of Spots per Area of Nucleus - Mean per Well	cell_cycle	dna_damage	hoechst_gh2ax	In polypl cells: average number of gH2Ax spots per nucleus area	0.3888888888888889	0.12810457516339868
+aupr	cc_g1_n_spots_mean	G1 - Number of Spots - Mean per Well	cell_cycle	dna_damage	many_cell_cycle	In G1 cells: average number of gH2Ax spots	0.3333333333333333	0.058823529411764705
+aupr	cc_g1_n_spots_per_nucleus_area_mean	G1 - Number of Spots per Area of Nucleus - Mean per Well	cell_cycle	dna_damage	many_cell_cycle	In G1 cells: average number of gH2Ax spots per nucleus area	0.3333333333333333	0.05555555555555555
+aupr	cc_g2_ph3_pos_n_spots_per_nucleus_area_mean	G2+pH3 (Early mitiosis) - Number of Spots per Area of Nucleus - Mean per Well	cell_cycle	dna_damage	many_cell_cycle	In early M cells: average number of gH2Ax spots per nucleus area	0.3333333333333333	0.07142857142857142
+aupr	cc_polynuclear_n_spots_per_nucleus_area_mean	large not round (polynuclear) - Number of Spots per Area of Nucleus - Mean per Well	cell_cycle	dna_damage	hoechst_gh2ax	In polynuc cells: average number of gH2Ax spots per nucleus area	0.3333333333333333	0.058823529411764705
+aupr	cc_polyploid_high_n_spots_h2ax_mean	Large round (polyploid) - High number of spots gH2AX - Mean per Well	cell_cycle	dna_damage	hoechst_gh2ax	In polypl cells: fraction of >3 gH2Ax spots	0.19444444444444442	0.3214285714285714
+aupr	cc_polyploid_n_objects	Large round (polyploid) - Number of Objects	cell_cycle	NA	hoechst	number of late polypl cells	0.16666666666666666	0.1
+aupr	cc_g2_ph3_pos_n_spots_mean	G2+pH3 (Early mitiosis) - Number of Spots - Mean per Well	cell_cycle	dna_damage	many_cell_cycle	In early M cells: average number of gH2Ax spots	0.125	0.3333333333333333
+aupr	cc_mitosis_ph3_neg_n_spots_mean	pH3 neg, Hoechst cond (late mitosis) - Number of Spots - Mean per Well	cell_cycle	NA	ph3	NA	0.11437908496732026	0.25757575757575757
+aupr	cc_polyploid_n_spots_mean	Large round (polyploid) - Number of Spots - Mean per Well	cell_cycle	dna_damage	hoechst_gh2ax	In polypl cells: average number of gH2Ax spots	0.11309523809523808	0.10989010989010989
+aupr	cc_mitosis_ph3_neg_n_spots_per_nucleus_area_mean	pH3 neg, Hoechst cond (late mitosis) - Number of Spots per Area of Nucleus - Mean per Well	cell_cycle	NA	ph3	NA	0.10416666666666666	0.1534090909090909
+aupr	vb_percent_caspase_dead_only	% Caspase/%Dead Only	viability	NA	draq_caspase	NA	0.09090909090909091	0.058823529411764705
+aupr	cc_infection_percentage	Inf %	metadata	NA	crispr_efficiency	NA	0.08333333333333333	0.14285714285714285
+aupr	cc_mitosis_ph3_pos_n_spots_mean	pH3 positive, Hoechst condenced (mitosis) - Number of Spots - Mean per Well	cell_cycle	dna_damage	ph3	In late M cells: average number of gH2Ax spots	0.08333333333333333	0.16666666666666666
+aupr	vb_infection_percentage	% Inf	metadata	NA	crispr_efficiency	NA	0.08333333333333333	0.1
+aupr	cc_mitosis_ph3_pos_n_spots_per_nucleus_area_mean	pH3 positive, Hoechst condenced (mitosis) - Number of Spots per Area of Nucleus	cell_cycle	dna_damage	ph3	In late M cells: average number of gH2Ax spots per nucleus area	0.07142857142857142	0.05555555555555555
+aupr	cc_g2_ph3_pos_n_objects	G2+pH3 (Early mitiosis) - Number of Objects	cell_cycle	NA	many_cell_cycle	number of early M cells	0.06666666666666667	0.5
+aupr	cc_all_high_n_spots_h2ax_mean	ALL - High number of spots gH2AX - Mean per Well	cell_cycle	dna_damage	gh2ax	Within all cells: fraction of cells containing more than 3 gH2AX spots	0	0
+aupr	cc_all_large_notround_polynuclear_mean	ALL - large not round (polynuclear) - Mean per Well	cell_cycle	toxicity	hoechst	Fraction of cells with large non-round nuclei	0	0
+aupr	cc_all_large_round_polyploid_mean	ALL - Large round (polyploid) - Mean per Well	cell_cycle	NA	hoechst	NA	0	0
+aupr	cc_all_n_spots_mean	ALL - Number of Spots - Mean per Well	cell_cycle	dna_damage	gh2ax	average number of gH2AX spots per nucleus	0	0
+aupr	cc_all_n_spots_per_nucleus_area_mean	ALL - Number of Spots per Area of Nucleus - Mean per Well	cell_cycle	dna_damage	gh2ax	average number of gH2AX spots per area of nucleus	0	0
+aupr	cc_cc_edu_pos_mean	CC - edu positive - Mean per Well	cell_cycle	cell_cycle_arrest	edu	fraction of EdU positive cells (S-phase of cell cycle)	0	0
+aupr	cc_cc_g2_ph3_neg_mean	CC - G2-pH3 - Mean per Well	cell_cycle	g2_arrest	many_cell_cycle	fraction of G2 cells	0	0
+aupr	cc_cc_high_n_spots_h2ax_mean	CC - High number of spots gH2AX - Mean per Well	cell_cycle	dna_damage	gh2ax	Within cells selected for cell cycle (round, not large): fraction of cells containing more than 3 gH2AX spots	0	0
+aupr	cc_cc_n_spots_mean	CC - Number of Spots - Mean per Well	cell_cycle	dna_damage	gh2ax	Within cells selected for cell cycle: average number of gH2AX spots	0	0
+aupr	cc_cc_n_spots_per_nucleus_area_mean	CC - Number of Spots per Area of Nucleus - Mean per Well	cell_cycle	dna_damage	gh2ax	Within cells selected for cell cycle: average number of gH2AX spots per area of nucleus	0	0
+aupr	cc_cc_ph3_pos_hoechst_mitosis_mean	CC - pH3 positive, Hoechst condenced (mitosis) - Mean per Well	cell_cycle	mitosis	hoechst_edu	fraction of cells in late mitosis	0	0
+aupr	cc_edu_pos_alexa647_intensity_nucleus_area_mean	edu positive - Intensity Nucleus Alexa 647 Mean - Mean per Well	cell_cycle	s_arrest	edu	In S phase cells: how much EdU was incorporated (average intensity per cell)	0	0
+aupr	cc_edu_pos_high_n_spots_h2ax_mean	edu positive - High number of spots gH2AX - Mean per Well	cell_cycle	dna_damage	edu_gh2ax	In S phase cells: fraction of >3 gH2Ax spots	0	0
+aupr	cc_edu_pos_n_spots_mean	edu positive - Number of Spots - Mean per Well	cell_cycle	dna_damage	edu	In S phase cells: average number of gH2Ax spots	0	0
+aupr	cc_edu_pos_n_spots_per_nucleus_area_mean	edu positive - Number of Spots per Area of Nucleus - Mean per Well	cell_cycle	dna_damage	edu_gh2ax	In S phase cells: average number of gH2Ax spots per nucleus area	0	0
+aupr	cc_g1_high_n_spots_h2ax_mean	G1 - Number of gH2AX Spots - Mean per Well	cell_cycle	dna_damage	many_cell_cycle	In G1 cells: fraction of >3 gH2Ax spots	0	0
+aupr	cc_g1_n_objects	G1 - Number of Objects	cell_cycle	NA	many_cell_cycle	number of G1 cells	0	0
+aupr	cc_g2_g1	G2/G1	cell_cycle	NA	many_cell_cycle	G1-G2	0	0
+aupr	cc_g2_ph3_neg_high_n_spots_h2ax_mean	G2-pH3 - High number of spots gH2AX - Mean per Well	cell_cycle	dna_damage	many_cell_cycle	In G2 cells: fraction of >3 gH2Ax spots	0	0
+aupr	cc_g2_ph3_neg_n_objects	G2-pH3 - Number of Objects	cell_cycle	NA	many_cell_cycle	number of G2 cells	0	0
+aupr	cc_g2_ph3_neg_n_spots_mean	G2-pH3 - Number of Spots - Mean per Well	cell_cycle	dna_damage	many_cell_cycle	In G2 cells: average number of gH2Ax spots	0	0
+aupr	cc_g2_ph3_neg_n_spots_per_nucleus_area_mean	G2-pH3 - Number of Spots per Area of Nucleus - Mean per Well	cell_cycle	dna_damage	many_cell_cycle	In G2 cells: average number of gH2Ax spots per nucleus area	0	0
+aupr	cc_g2_ph3_pos_high_n_spots_h2ax_mean	G2+pH3 (Early mitiosis) - High number of spots gH2AX - Mean per Well	cell_cycle	dna_damage	many_cell_cycle	In erly M cells: fraction of >3 gH2Ax spots	0	0
+aupr	cc_g2_plus_all_m	G2 + All M-phase	cell_cycle	NA	many_cell_cycle	G2+M	0	0
+aupr	cc_mitosis_ph3_neg_n_objects	pH3 neg, Hoechst cond (late mitosis) - Number of Objects	cell_cycle	NA	ph3	NA	0	0
+aupr	cc_mitosis_ph3_pos_high_n_spots_h2ax_mean	pH3 positive, Hoechst condenced (mitosis) - High number of spots gH2AX - Mean per Well	cell_cycle	dna_damage	ph3	In M cells: fraction of >3 gH2Ax spots	0	0
+aupr	cc_polynuclear_high_n_spots_h2ax_mean	large not round (polynuclear) - High number of spots gH2AX - Mean per Well	cell_cycle	dna_damage	hoechst_gh2ax	In polynuc cells: fraction of >3 gH2Ax spots	0	0
+aupr	cc_polynuclear_n_spots_mean	large not round (polynuclear) - Number of Spots - Mean per Well	cell_cycle	dna_damage	hoechst_gh2ax	In polynuc cells: average number of gH2Ax spots	0	0
+aupr	vb_ros_mean	ROS Mean	viability	cell_viability	caspase	mean intensity of ROS marker per cell	0	0

@@ -1,0 +1,1572 @@
+pert_id	pert_iname	pert_type	moa
+DMSO	DMSO	ctl_vehicle	Control vehicle
+BRD-K25114078	aminoguanidine	trt_cp	Nitric oxide synthase inhibitor
+BRD-K25204779	pritelivir	trt_cp	Helicase primase inhibitor
+BRD-K25361343	batimastat	trt_cp	Matrix metalloprotease inhibitor
+BRD-K25140590	cx516	trt_cp	Glutamate receptor modulator
+BRD-A25234499	aminoglutethimide	trt_cp	Glucocorticoid receptor antagonist
+BRD-K25394294	oxaprozin	trt_cp	Cyclooxygenase inhibitor
+BRD-K25650355	physostigmine	trt_cp	Cholinesterase inhibitor|Acetylcholinesterase inhibitor
+BRD-K25943794	blonanserin	trt_cp	Dopamine receptor antagonist|Serotonin receptor antagonist
+BRD-A26032986	zaldaride	trt_cp	Calmodulin antagonist
+BRD-K50691590	bortezomib	trt_cp	NFkB pathway inhibitor|Proteasome inhibitor
+BRD-K25837718	josamycin	trt_cp	Bacterial 50S ribosomal subunit inhibitor
+BRD-K26011976	licochalcone-a	trt_cp	Topoisomerase inhibitor
+BRD-A26095496	clobetasol	trt_cp	Glucocorticoid receptor agonist
+BRD-A26334849	propafenone	trt_cp	Antiarrhythmic
+BRD-K26603252	pd153035	trt_cp	EGFR inhibitor
+BRD-K26657438	imiquimod	trt_cp	Interferon inducer|TLR agonist
+BRD-A26690767	saquinavir	trt_cp	HIV protease inhibitor
+BRD-A26711594	nicardipine	trt_cp	Calcium channel blocker
+BRD-K26619122	thiocolchicoside	trt_cp	GABA receptor antagonist
+BRD-K26701552	tegobuvir	trt_cp	HCV inhibitor|Protease inhibitor
+BRD-K26712974	vx-765	trt_cp	NA
+BRD-A27376179	lestaurtinib	trt_cp	FLT3 inhibitor|Growth factor receptor inhibitor|JAK inhibitor
+BRD-K27938825	asa-404	trt_cp	NA
+BRD-K28183345	proguanil	trt_cp	Dihydrofolate reductase inhibitor
+BRD-A27732521	tolperisone	trt_cp	Voltage-gated sodium channel blocker
+BRD-K27955832	lomeguatrib	trt_cp	O6-alkylguanine-DNA alkyltransferase inhibitor
+BRD-K28143534	cyproheptadine	trt_cp	Histamine receptor antagonist
+BRD-K28217197	ganaxolone	trt_cp	GABA receptor modulator
+BRD-A28467416	pki-179	trt_cp	NA
+BRD-A28545468	selegiline	trt_cp	Monoamine oxidase inhibitor
+BRD-K28731095	calcitriol	trt_cp	Vitamin D receptor agonist
+BRD-K28761891	ramelteon	trt_cp	Melatonin receptor agonist
+BRD-K28542495	benzydamine	trt_cp	Prostanoid receptor antagonist
+BRD-K28667793	pyrazinamide	trt_cp	Fatty acid synthase inhibitor
+BRD-A28787076	inosine	trt_cp	Neurotrophic agent
+BRD-K28971625	zd-7114	trt_cp	NA
+BRD-K60230970	MG-132	trt_cp	Proteasome inhibitor
+BRD-A29289453	PCA-4248	trt_cp	Platelet activating factor receptor antagonist
+BRD-K29322660	edoxaban	trt_cp	Coagulation factor inhibitor
+BRD-K28984613	dutasteride	trt_cp	5 alpha reductase inhibitor
+BRD-A29260609	acebutolol	trt_cp	Adrenergic receptor antagonist
+BRD-A29322418	canrenoic-acid	trt_cp	Mineralocorticoid receptor antagonist
+BRD-K29359156	ebselen	trt_cp	Cyclooxygenase inhibitor|Glutathione peroxidase agonist|H+/K+-ATPase inhibitor|Nitric oxide synthase inhibitor
+BRD-K29582115	ziprasidone	trt_cp	Dopamine receptor antagonist|Serotonin receptor antagonist
+BRD-K29653726	topiramate	trt_cp	Carbonic anhydrase inhibitor|Glutamate receptor antagonist|Kainate receptor antagonist
+BRD-K29673530	hypericin	trt_cp	Tyrosine kinase inhibitor
+BRD-A29734509	disopyramide	trt_cp	Sodium channel blocker
+BRD-A29623586	anisodamine	trt_cp	Lipid peroxidase inhibitor
+BRD-K29656036	mk-8245	trt_cp	NA
+BRD-A29731977	17-hydroxyprogesterone-caproate	trt_cp	Progesterone receptor agonist
+BRD-K29735307	ostarine	trt_cp	Androgen receptor modulator
+BRD-K30126819	dimesna	trt_cp	Tubulin inhibitor
+BRD-K30421593	timolol	trt_cp	Adrenergic receptor antagonist
+BRD-K30480208	torasemide	trt_cp	Electrolyte reabsorption inhibitor|Thromboxane receptor antagonist
+BRD-A30051119	amikacin	trt_cp	Bacterial 30S ribosomal subunit inhibitor
+BRD-K30331124	asc-j9	trt_cp	NA
+BRD-K30466858	ellagic-acid	trt_cp	Glutathione transferase inhibitor|Reverse transcriptase inhibitor|Aldose reductase inhibitor|Beta-secretase inhibitor|HCV inhibitor|HIV integrase inhibitor|Quorum sensing signaling modulator
+BRD-K03842655	penitrem-a	trt_cp	Potassium channel blocker
+BRD-K15502390	nevirapine	trt_cp	Reverse transcriptase inhibitor
+BRD-K15567136	papaverine	trt_cp	Phosphodiesterase inhibitor
+BRD-A15909516	rebamipide	trt_cp	Free radical scavenger
+BRD-K15507868	tesaglitazar	trt_cp	Insulin sensitizer|PPAR receptor agonist
+BRD-K15766189	cefdinir	trt_cp	Bacterial cell wall synthesis inhibitor
+BRD-K15916496	clotrimazole	trt_cp	Cytochrome P450 inhibitor|Imidazoline ligand
+BRD-K15933101	ropinirole	trt_cp	Dopamine receptor agonist
+BRD-K16037980	z160	trt_cp	N-type calcium channel blocker
+BRD-K16133773	abiraterone-acetate	trt_cp	17,20 lyase inhibitor|Cytochrome P450 inhibitor|Steroid sulfatase inhibitor|Androgen biosynthesis inhibitor
+BRD-K15976406	telbivudine	trt_cp	DNA polymerase inhibitor
+BRD-K16077845	fentiazac	trt_cp	Cyclooxygenase inhibitor
+BRD-K16195444	oxymetazoline	trt_cp	Adrenergic receptor agonist
+BRD-K16295392	atrasentan	trt_cp	Endothelin receptor antagonist
+BRD-A16296925	indobufen	trt_cp	Cyclooxygenase inhibitor|Platelet aggregation inhibitor
+BRD-K16444452	ibudilast	trt_cp	Phosphodiesterase inhibitor|Leukotriene receptor antagonist
+BRD-K16508793	diazepam	trt_cp	Benzodiazepine receptor agonist
+BRD-A16665823	butoconazole	trt_cp	Bacterial cell wall synthesis inhibitor
+BRD-A16347691	thioctic-acid	trt_cp	Reducing agent|Aldehyde dehydrogenase activator|Protein kinase activator|Reverse transcriptase inhibitor
+BRD-K16542329	zaprinast	trt_cp	Phosphodiesterase inhibitor
+BRD-K16730910	regorafenib	trt_cp	FGFR inhibitor|KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|RAF inhibitor|RET tyrosine kinase inhibitor|VEGFR inhibitor
+BRD-K16732600	mk-0893	trt_cp	NA
+BRD-K16761703	sotrastaurin	trt_cp	PKC inhibitor
+BRD-K16898998	bevirimat-dimeglumine	trt_cp	HIV capsid assembly inhibitor|HIV gag inhibitor
+BRD-K16757695	prx-08066	trt_cp	NA
+BRD-K16762525	clarithromycin	trt_cp	Bacterial 50S ribosomal subunit inhibitor
+BRD-K16803204	filgotinib	trt_cp	JAK inhibitor
+BRD-A16997652	protirelin	trt_cp	Thyrotropin releasing hormone receptor agonist
+BRD-K17026858	pibenzimol	trt_cp	DNA inhibitor
+BRD-K17075857	chloroxine	trt_cp	Opioid receptor antagonist
+BRD-A17411484	carprofen	trt_cp	Cyclooxygenase inhibitor
+BRD-A17462676	bambuterol	trt_cp	Adrenergic receptor agonist
+BRD-K17068645	bendamustine	trt_cp	DNA inhibitor
+BRD-K17203476	ly2874455	trt_cp	FGFR antagonist
+BRD-K17498618	atracurium	trt_cp	Acetylcholine receptor antagonist
+BRD-K17500877	bropirimine	trt_cp	Interferon inducer
+BRD-K17561142	amiodarone	trt_cp	Potassium channel blocker
+BRD-K17705806	JTC-801	trt_cp	Opioid receptor antagonist
+BRD-K17513304	firategrast	trt_cp	Integrin antagonist
+BRD-K17555800	talmapimod	trt_cp	P38 MAPK inhibitor
+BRD-A17655518	ibuprofen	trt_cp	Cyclooxygenase inhibitor
+BRD-K17743125	belinostat	trt_cp	HDAC inhibitor
+BRD-K17849083	tranilast	trt_cp	Angiogenesis inhibitor
+BRD-K17894950	indirubin	trt_cp	CDK inhibitor|Glycogen synthase kinase inhibitor
+BRD-K17944737	artesunate	trt_cp	DNA synthesis inhibitor
+BRD-A18043272	phensuximide	trt_cp	Succinimide antiepileptic
+BRD-A17883755	lenalidomide	trt_cp	Anticancer agent
+BRD-K17930269	retapamulin	trt_cp	Protein synthesis inhibitor
+BRD-K17953908	ly2886721	trt_cp	Beta-secretase inhibitor
+BRD-K99964838	bosutinib	trt_cp	Src inhibitor|Abl kinase inhibitor|Bcr-Abl kinase inhibitor
+BRD-K18194590	mephentermine	trt_cp	Adrenergic receptor agonist
+BRD-K12184916	NVP-BEZ235	trt_cp	MTOR inhibitor|PI3K inhibitor
+BRD-K18673820	folic-acid	trt_cp	Folate receptor ligand
+BRD-K18157228	fdcyd	trt_cp	DNA methyltransferase inhibitor
+BRD-K18324993	budipine	trt_cp	Glutamate receptor antagonist
+BRD-A18620900	estriol	trt_cp	Estrogen receptor agonist
+BRD-K18678457	ZD-7288	trt_cp	HCN channel blocker
+BRD-K31111078	dimethyl-fumarate	trt_cp	Nuclear factor erythroid derived, like (NRF2) activator|Kelch-like ECH-associated protein ligand|NFkB pathway inhibitor
+BRD-A31159102	fluoxetine	trt_cp	Selective serotonin reuptake inhibitor (SSRI)
+BRD-K23499943	alvespimycin	trt_cp	HSP inhibitor
+BRD-K31135544	ib-meca	trt_cp	NA
+BRD-K31309378	lucitanib	trt_cp	FGFR inhibitor|VEGFR inhibitor
+BRD-K31385749	ivabradine	trt_cp	HCN channel antagonist|Potassium channel blocker|Sodium channel blocker
+BRD-A31521121	methocarbamol	trt_cp	Muscle relaxant
+BRD-K31731454	pemirolast	trt_cp	Mediator release inhibitor
+BRD-K31812033	levobunolol	trt_cp	Adrenergic receptor antagonist
+BRD-K31627533	rimexolone	trt_cp	Glucocorticoid receptor agonist
+BRD-A31811760	miltefosine	trt_cp	Membrane integrity inhibitor
+BRD-K31841515	oxypurinol	trt_cp	Xanthine oxidase inhibitor
+BRD-K32101625	lx1031	trt_cp	Tryptophan hydroxylase inhibitor
+BRD-K32247306	primidone	trt_cp	GABA receptor antagonist
+BRD-K32285926	amg-208	trt_cp	NA
+BRD-K32405725	etomoxir	trt_cp	Carnitine palmitoyltransferase inhibitor
+BRD-K32744045	disulfiram	trt_cp	Aldehyde dehydrogenase inhibitor|DNA methyltransferase inhibitor|TRPV agonist
+BRD-A32269193	vgx-1027	trt_cp	NA
+BRD-K32501161	vanoxerine	trt_cp	Dopamine uptake inhibitor
+BRD-K32821942	azathioprine	trt_cp	Dehydrogenase inhibitor
+BRD-K33141550	l-name	trt_cp	NA
+BRD-K33211335	dextromethorphan	trt_cp	Glutamate receptor antagonist|Sigma receptor agonist
+BRD-A33447119	oxfendazole	trt_cp	Anthelmintic agent
+BRD-A33168282	sotalol	trt_cp	Adrenergic receptor antagonist
+BRD-K33226500	indinavir	trt_cp	HIV protease inhibitor
+BRD-K33379087	tivantinib	trt_cp	Tyrosine kinase inhibitor
+BRD-K33453211	levocabastine	trt_cp	Histamine receptor antagonist
+BRD-A33711280	metixene	trt_cp	Acetylcholine receptor antagonist
+BRD-K33852358	arofylline	trt_cp	Phosphodiesterase inhibitor
+BRD-A34006693	suprofen	trt_cp	Cyclooxygenase inhibitor
+BRD-K34022604	clofarabine	trt_cp	Ribonucleoside reductase inhibitor
+BRD-K33732501	methylnaltrexone	trt_cp	Opioid receptor antagonist
+BRD-K33882852	ZK-93423	trt_cp	Benzodiazepine receptor agonist
+BRD-K34154330	tracazolate	trt_cp	GABA receptor modulator
+BRD-K96550715	linagliptin	trt_cp	Dipeptidyl peptidase inhibitor
+BRD-A34513497	lacitol	trt_cp	Osmosis stimulant
+BRD-K34776109	glimepiride	trt_cp	Insulin secretagogue
+BRD-K34341643	glasdegib	trt_cp	Hedgehog pathway inhibitor
+BRD-K34469523	levalbuterol	trt_cp	Adrenergic receptor agonist
+BRD-K34713073	pd123319	trt_cp	Angiotensin antagonist
+BRD-K34870043	adoprazine	trt_cp	Dopamine receptor antagonist|Serotonin receptor agonist
+BRD-K35245662	ciclesonide	trt_cp	Glucocorticoid receptor agonist
+BRD-K35586044	yohimbine	trt_cp	Adrenergic receptor antagonist
+BRD-K35629949	SR-27897	trt_cp	CCK receptor antagonist
+BRD-K35719256	rotundine	trt_cp	Serotonin receptor agonist
+BRD-K35520305	dacarbazine	trt_cp	DNA alkylating agent
+BRD-K35589454	danegaptide	trt_cp	Gap junction modulator
+BRD-K35687421	gimeracil	trt_cp	Dihydropyrimidine dehydrogenase inhibitor
+BRD-K35775715	liranaftate	trt_cp	Fungal squalene epoxidase inhibitor
+BRD-A36331462	oprozomib	trt_cp	Proteasome inhibitor
+BRD-K36467523	bindarit	trt_cp	NFkB pathway inhibitor
+BRD-K36680103	omecamtiv-mecarbil	trt_cp	Cardiac myosin activator|Unidentified pharmacological activity
+BRD-K36280065	tofacitinib	trt_cp	JAK inhibitor
+BRD-K36386086	dolutegravir	trt_cp	HIV integrase inhibitor
+BRD-K36627727	tamibarotene	trt_cp	Retinoid receptor agonist
+BRD-K36732695	setiptiline	trt_cp	Adrenergic receptor antagonist
+BRD-A18611368	tazobactam	trt_cp	Beta lactamase inhibitor
+BRD-K18779551	bifemelane	trt_cp	Acetylcholine release stimulant
+BRD-A19195498	trimipramine	trt_cp	Norepinephrine reputake inhibitor|Tricyclic antidepressant
+BRD-K53097745	pterostilbene	trt_cp	Cyclooxygenase inhibitor|PPAR receptor agonist
+BRD-K18850819	mk-0752	trt_cp	NA
+BRD-K19284129	salvinorin-a	trt_cp	Opioid receptor agonist
+BRD-K19352500	prochlorperazine	trt_cp	Dopamine receptor antagonist
+BRD-A19661776	mianserin	trt_cp	Serotonin receptor antagonist
+BRD-A19736161	ondansetron	trt_cp	Serotonin receptor antagonist
+BRD-K19388745	colforsin-daproate	trt_cp	Adenylyl cyclase activator|Adenylate cyclase stimulant
+BRD-K19687926	lapatinib	trt_cp	EGFR inhibitor|ErbB2 inhibitor
+BRD-A19633847	perhexiline	trt_cp	Carnitine palmitoyltransferase inhibitor
+BRD-K20285085	fostamatinib	trt_cp	SYK inhibitor
+BRD-A20119038	mecamylamine	trt_cp	Acetylcholine receptor antagonist
+BRD-K20141153	atomoxetine	trt_cp	Norepinephrine transporter inhibitor
+BRD-K21361524	kpt-330	trt_cp	NA
+BRD-K21450440	benzthiazide	trt_cp	Carbonic anhydrase inhibitor
+BRD-A20126139	medrysone	trt_cp	Glucocorticoid receptor agonist
+BRD-K21396683	marimastat	trt_cp	Matrix metalloprotease inhibitor
+BRD-K21295289	senicapoc	trt_cp	Intermediate conductance potassium channel blocker
+BRD-K21908111	azd1208	trt_cp	Pim kinase inhibitor
+BRD-K22031190	diflunisal	trt_cp	Prostanoid receptor antagonist
+BRD-A02006392	nitrendipine	trt_cp	Calcium channel blocker
+BRD-K22024824	rg4733	trt_cp	Gamma secretase inhibitor
+BRD-A22032524	amlodipine	trt_cp	Calcium channel blocker
+BRD-K22848513	bardoxolone-methyl	trt_cp	Nuclear factor erythroid derived, like (NRF2) activator|Apoptosis stimulant|BCL inhibitor|Glutathione Reductase (NADPH) Activators|Heme Oxygenase Activators|IKK-1 (IKK-alpha) Inhibitors|NFkB pathway inhibitor|Nitric oxide production inhibitor|PPAR receptor agonist|Reducing agent
+BRD-K22822991	odanacatib	trt_cp	Cathepsin inhibitor
+BRD-K22749967	abt-239	trt_cp	NA
+BRD-K23672206	bci-540	trt_cp	NA
+BRD-K23728141	tafamidis-meglumine	trt_cp	Transthyretin amyloid inhibitor|Transthyretin stabilizer
+BRD-K23363278	CYT-997	trt_cp	Tubulin inhibitor
+BRD-A22769835	homochlorcyclizine	trt_cp	Antihistamine
+BRD-K23677682	voreloxin	trt_cp	Topoisomerase inhibitor
+BRD-K24844714	fluorouracil	trt_cp	RNA synthesis inhibitor|Thymidylate synthase inhibitor
+BRD-K24616672	procaine	trt_cp	HMGCR inhibitor
+BRD-K19939891	tic10	trt_cp	AKT inhibitor|TRAIL modulator
+BRD-K21718444	kw-2449	trt_cp	NA
+BRD-K24723746	solifenacin-succinate	trt_cp	Acetylcholine receptor antagonist
+BRD-K19540840	saracatinib	trt_cp	Src inhibitor
+BRD-K20920669	cromoglicic-acid	trt_cp	Immunosuppressant
+BRD-K22134346	simvastatin	trt_cp	HMGCR inhibitor
+BRD-K23976833	travoprost	trt_cp	Prostanoid receptor agonist
+BRD-K23248433	camicinal	trt_cp	Motilin receptor agonist
+BRD-K24968862	sb-683698	trt_cp	NA
+BRD-K25630527	ly2784544	trt_cp	JAK inhibitor
+BRD-A24228527	ofloxacin	trt_cp	Bacterial DNA gyrase inhibitor
+BRD-K24943235	grazoprevir	trt_cp	HCV inhibitor
+BRD-A25619068	fadrozole	trt_cp	Aromatase inhibitor
+BRD-K25433859	maprotiline	trt_cp	Norepinephrine reputake inhibitor|Tricyclic antidepressant
+BRD-A26384407	chlortalidone	trt_cp	Diuretic
+BRD-A26503646	formestane	trt_cp	Aromatase inhibitor
+BRD-K27184429	levocetirizine	trt_cp	Histamine receptor antagonist
+BRD-K26341917	l-ergothioneine	trt_cp	NA
+BRD-A26423207	sparfloxacin	trt_cp	Bacterial DNA gyrase inhibitor
+BRD-K27182532	metatinib	trt_cp	Bcr-Abl kinase inhibitor
+BRD-K27204852	balicatib	trt_cp	Cathepsin inhibitor
+BRD-K07881437	danusertib	trt_cp	Aurora kinase inhibitor|Growth factor receptor inhibitor
+BRD-A07986123	galeterone	trt_cp	Androgen receptor modulator
+BRD-K08109215	i-bet-762	trt_cp	NA
+BRD-K07954936	2-iminobiotin	trt_cp	Nitric oxide synthase inhibitor
+BRD-K08037784	arbutin	trt_cp	Melanin inhibitor
+BRD-A08187463	racecadotril	trt_cp	Enkephalinase inhibitor
+BRD-K08206212	entecavir	trt_cp	DNA replication inhibitor|Reverse transcriptase inhibitor
+BRD-K08252256	diclofenac	trt_cp	Cyclooxygenase inhibitor
+BRD-K08547377	irinotecan	trt_cp	Topoisomerase inhibitor
+BRD-K08248804	lcl-161	trt_cp	NA
+BRD-A08545410	doxycycline-hyclate	trt_cp	Bacterial 30S ribosomal subunit inhibitor
+BRD-K08586861	ramatroban	trt_cp	Prostanoid receptor antagonist
+BRD-K08703257	3-amino-benzamide	trt_cp	PARP inhibitor
+BRD-K08799216	pelitinib	trt_cp	EGFR inhibitor
+BRD-K08859203	du-728	trt_cp	NA
+BRD-K08924299	palonosetron	trt_cp	Serotonin receptor antagonist
+BRD-K09078998	deforolimus	trt_cp	MTOR inhibitor
+BRD-K08832567	naringenin	trt_cp	Aromatase inhibitor|TRPV antagonist
+BRD-K08976401	azelaic-acid	trt_cp	Tyrosinase inhibitor
+BRD-K09090949	cp-945,598	trt_cp	NA
+BRD-K09132007	D-4476	trt_cp	TGF beta receptor inhibitor
+BRD-A09349126	norethindrone	trt_cp	Progestogen hormone
+BRD-K09426783	tas-103	trt_cp	NA
+BRD-K09255212	clioquinol	trt_cp	Chelating agent
+BRD-K09372874	merimepodib	trt_cp	Inosine monophosphate dehydrogenase inhibitor
+BRD-K09397065	SR-57227A	trt_cp	Serotonin receptor agonist
+BRD-K09471561	levofloxacin	trt_cp	Bacterial DNA gyrase inhibitor
+BRD-A09472452	flecainide	trt_cp	Sodium channel blocker
+BRD-K09549677	mibefradil	trt_cp	T-type calcium channel blocker
+BRD-K09711437	varespladib	trt_cp	Secretory phospholipase inhibitor
+BRD-K09951645	dabrafenib	trt_cp	RAF inhibitor
+BRD-A09533288	verapamil	trt_cp	Calcium channel blocker
+BRD-K09602097	forskolin	trt_cp	Adenylyl cyclase activator
+BRD-A10012892	argatroban	trt_cp	Thrombin inhibitor
+BRD-A10039652	tipranavir	trt_cp	HIV protease inhibitor
+BRD-K10843433	phenylbutazone	trt_cp	Cyclooxygenase inhibitor|Prostanoid receptor antagonist
+BRD-K10852020	tolcapone	trt_cp	Catechol O methyltransferase inhibitor
+BRD-A10070317	propranolol	trt_cp	Adrenergic receptor antagonist
+BRD-K10670311	sulfasalazine	trt_cp	Antirheumatic drug|NFkB pathway inhibitor
+BRD-K10845183	tiludronate	trt_cp	Bone resorption inhibitor|Osteoclast inhibitor
+BRD-K10859802	apd668	trt_cp	Glucose-Dependent Insulinotropic Receptor (GDIR, GPR119) Agonists
+BRD-A10903566	imiloxan	trt_cp	Adrenergic receptor antagonist
+BRD-A10967948	granisetron	trt_cp	Serotonin receptor antagonist
+BRD-K11071038	ici-162846	trt_cp	NA
+BRD-K11129031	gemfibrozil	trt_cp	Lipoprotein lipase activator
+BRD-K10961822	latanoprost	trt_cp	Prostanoid receptor agonist
+BRD-A10977446	carvedilol	trt_cp	Adrenergic receptor antagonist
+BRD-K11073688	cpi-1189	trt_cp	NA
+BRD-K80738081	resveratrol	trt_cp	Cytochrome P450 inhibitor|SIRT activator
+BRD-K11196887	norfloxacin	trt_cp	Bacterial DNA gyrase inhibitor
+BRD-A11319535	beclomethasone-dipropionate	trt_cp	Immunosuppressant|Glucocorticoid receptor agonist
+BRD-K11433652	aspirin	trt_cp	Cyclooxygenase inhibitor
+BRD-K11153516	iniparib	trt_cp	PARP inhibitor
+BRD-K11267252	alectinib	trt_cp	ALK tyrosine kinase receptor inhibitor
+BRD-K11399644	phenformin	trt_cp	AMPK activator
+BRD-K11717138	benzbromarone	trt_cp	Chloride channel blocker
+BRD-K18895904	olanzapine	trt_cp	Dopamine receptor antagonist|Serotonin receptor antagonist
+BRD-K18922609	neostigmine	trt_cp	Acetylcholinesterase inhibitor
+BRD-K19061412	mubritinib	trt_cp	Receptor tyrosine protein kinase inhibitor
+BRD-A18917088	estradiol	trt_cp	Estrogen receptor agonist
+BRD-K18961567	ly2801653	trt_cp	MET inhibitor
+BRD-K19085898	darapladib	trt_cp	Phospholipase inhibitor
+BRD-K19412355	sb-242235	trt_cp	NA
+BRD-K19438463	cnqx	trt_cp	Glutamate receptor antagonist
+BRD-K19462402	buflomedil	trt_cp	Adrenergic receptor antagonist|Calcium channel blocker
+BRD-K19416115	sitagliptin	trt_cp	Dipeptidyl peptidase inhibitor
+BRD-K19456237	piracetam	trt_cp	Acetylcholine receptor agonist
+BRD-K19477839	SGX523	trt_cp	NA
+BRD-K19601669	ruxolitinib-(s)	trt_cp	NA
+BRD-K19741547	vernakalant	trt_cp	Potassium channel blocker
+BRD-A19795905	atovaquone	trt_cp	Mitochondrial electron transport inhibitor
+BRD-A19952358	closantel	trt_cp	Chitinase inhibitor|NFkB pathway inhibitor
+BRD-K20008181	lcq908	trt_cp	Diacylglycerol O acyltransferase inhibitor
+BRD-K19761926	eplerenone	trt_cp	Cytochrome P450 inhibitor
+BRD-K20001883	rvx-208	trt_cp	NA
+BRD-K20079257	rufinamide	trt_cp	Voltage-gated sodium channel blocker
+BRD-K20722021	cep-32496	trt_cp	NA
+BRD-K20745393	olprinone	trt_cp	Phosphodiesterase inhibitor
+BRD-K21071223	vp-20629	trt_cp	NA
+BRD-K20738689	dazmegrel	trt_cp	Thromboxane synthase inhibitor
+BRD-K20897876	castanospermine	trt_cp	Glucosidase inhibitor
+BRD-K20958582	th-302	trt_cp	NA
+BRD-K21283037	riluzole	trt_cp	Glutamate inhibitor
+BRD-K21547160	sufentanil	trt_cp	Opiod receptor modulator
+BRD-A21607826	medetomidine	trt_cp	Adrenergic receptor agonist
+BRD-K21680192	mitoxantrone	trt_cp	Topoisomerase inhibitor
+BRD-A21858158	praziquantel	trt_cp	Anthelmintic agent
+BRD-K21548250	moracizine	trt_cp	Sodium channel blocker
+BRD-K21670884	cariporide	trt_cp	Sodium/hydrogen exchanger inhibitor
+BRD-K21884483	mizolastine	trt_cp	Histamine receptor antagonist
+BRD-A22081593	sulmazole	trt_cp	Adenosine receptor antagonist
+BRD-A22380646	pantoprazole	trt_cp	ATPase inhibitor
+BRD-A22642447	licarbazepine	trt_cp	Voltage-gated sodium channel blocker
+BRD-K22097830	oco-1112	trt_cp	NA
+BRD-A22305049	benfluorex	trt_cp	Gluconeogenesis inhibitor
+BRD-K22482860	dalfampridine	trt_cp	Potassium channel blocker
+BRD-K22662435	ganciclovir	trt_cp	DNA polymerase inhibitor
+BRD-K22861715	chrysin	trt_cp	Breast cancer resistance protein inhibitor
+BRD-K22969690	chloramphenicol	trt_cp	Bacterial 50S ribosomal subunit inhibitor
+BRD-K23082237	butaclamol	trt_cp	Dopamine receptor antagonist
+BRD-K23204545	busulfan	trt_cp	DNA inhibitor
+BRD-K22936972	diphenylpyraline	trt_cp	Dopamine uptake inhibitor
+BRD-A23067620	itraconazole	trt_cp	Cytochrome P450 inhibitor
+BRD-K23190681	av-412	trt_cp	NA
+BRD-K23228615	gdc-0980	trt_cp	NA
+BRD-A24191444	ifenprodil	trt_cp	Adrenergic receptor antagonist|Glutamate receptor antagonist
+BRD-A02710418	meptazinol	trt_cp	Opioid receptor agonist
+BRD-A24560335	efatutazone	trt_cp	PPAR receptor agonist
+BRD-K23984367	sorafenib	trt_cp	RAF inhibitor|FLT3 inhibitor|KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|RET tyrosine kinase inhibitor|VEGFR inhibitor
+BRD-K24219278	amineptine	trt_cp	Dopamine receptor agonist
+BRD-A24514565	warfarin	trt_cp	Vitamin K antagonist
+BRD-K24576554	AT-9283	trt_cp	Aurora kinase inhibitor|JAK inhibitor|Abl kinase inhibitor|Bcr-Abl kinase inhibitor|FLT3 inhibitor|Mitotic inhibitor|Protein kinase inhibitor
+BRD-K41772907	tolimidone	trt_cp	Src activator
+BRD-A42759514	ornidazole	trt_cp	Antiprotozoal agent
+BRD-K42898655	temsirolimus	trt_cp	MTOR inhibitor
+BRD-A42699921	teriflunomide	trt_cp	Dihydroorotate dehydrogenase inhibitor
+BRD-K42805893	azd9291	trt_cp	EGFR inhibitor
+BRD-K43586850	lacidipine	trt_cp	Calcium channel blocker
+BRD-K43723251	chenodiol	trt_cp	11-beta-HSD1 inhibitor
+BRD-K43802723	amg-837	trt_cp	NA
+BRD-K44408410	2-methoxyestradiol	trt_cp	Hypoxia inducible factor inhibitor
+BRD-K43797669	genistein	trt_cp	Tyrosine kinase inhibitor
+BRD-K44366189	anacetrapib	trt_cp	Cholesteryl ester transfer protein inhibitor
+BRD-K44442813	pidotimod	trt_cp	Interferon receptor agonist|Interleukin receptor agonist
+BRD-A44448661	pentobarbital	trt_cp	Barbiturate antiepileptic|GABA receptor modulator
+BRD-K37111771	trientine	trt_cp	Chelating agent
+BRD-A38076815	glafenine	trt_cp	DeltaF508-CFTR Correctors
+BRD-K38852836	ganetespib	trt_cp	HSP inhibitor
+BRD-K41438959	perampanel	trt_cp	Glutamate receptor antagonist
+BRD-A37288617	amfepramone	trt_cp	Adrenergic receptor agonist
+BRD-K40718343	aee788	trt_cp	EGFR inhibitor|VEGFR inhibitor
+BRD-K42191735	buparlisib	trt_cp	PI3K inhibitor
+BRD-K43806473	camostat-mesilate	trt_cp	Protease inhibitor|Peptidase inhibitor|Trypsin inhibitor
+BRD-K51350053	toremifene	trt_cp	Selective estrogen receptor modulator (SERM)|Estrogen receptor antagonist
+BRD-K52020312	metronidazole	trt_cp	DNA inhibitor
+BRD-K51333959	siramesine	trt_cp	Sigma receptor antagonist
+BRD-A51382177	fosinopril	trt_cp	Angiotensin converting enzyme inhibitor
+BRD-K51485625	ritonavir	trt_cp	HIV protease inhibitor
+BRD-K52080565	rilmenidine	trt_cp	Adrenergic receptor agonist|Imidazoline receptor agonist
+BRD-K52172416	anastrozole	trt_cp	Aromatase inhibitor
+BRD-K52911425	GDC-0941	trt_cp	PI3K inhibitor
+BRD-K52959329	mitiglinide	trt_cp	Insulin secretagogue
+BRD-K52989797	clomipramine	trt_cp	Serotonin transporter (SERT) inhibitor
+BRD-K52183142	pregnenolone	trt_cp	Glutamate receptor modulator
+BRD-A52922642	gallopamil	trt_cp	L-type calcium channel blocker
+BRD-K53581288	baricitinib	trt_cp	JAK inhibitor
+BRD-K53665955	MK-5108	trt_cp	Aurora kinase inhibitor
+BRD-K54472332	elvitegravir	trt_cp	HIV integrase inhibitor
+BRD-K54640016	way-362450	trt_cp	NA
+BRD-K53737926	amitriptyline	trt_cp	Norepinephrine inhibitor|Norepinephrine reuptake inhibitor|Serotonin receptor antagonist|Serotonin reuptake inhibitor
+BRD-K53765467	empagliflozin	trt_cp	Sodium/glucose cotransporter inhibitor
+BRD-K54520417	lxr-623	trt_cp	NA
+BRD-K54759182	dosulepin	trt_cp	Norepinephrine reuptake inhibitor|Serotonin reuptake inhibitor|Tricyclic antidepressant
+BRD-K55250441	sulfadoxine	trt_cp	Dihydropteroate synthase inhibitor
+BRD-K89732114	trifluoperazine	trt_cp	Dopamine receptor antagonist
+BRD-K73395020	SA-1478088	trt_cp	Metalloproteinase inhibitor
+BRD-K01192156	tyrphostin-AG-112	trt_cp	Protein tyrosine kinase inhibitor
+BRD-A55272860	sulpiride	trt_cp	Dopamine receptor antagonist
+BRD-K48168960	propylthiouracil	trt_cp	Thyroid peroxidase inhibitor
+BRD-K70792160	10-DEBC	trt_cp	AKT inhibitor
+BRD-A84045418	calpeptin	trt_cp	Calpain inhibitor
+BRD-K60623809	SU-11652	trt_cp	Tyrosine kinase inhibitor
+BRD-A56359832	zileuton	trt_cp	Leukotriene inhibitor|Lipoxygenase inhibitor
+BRD-K51040301	cobicistat	trt_cp	Cytochrome P450 inhibitor
+BRD-K67868012	PI-103	trt_cp	PI3K inhibitor|MTOR inhibitor
+BRD-K40175214	torin-1	trt_cp	MTOR inhibitor|PI3K inhibitor
+BRD-K51033547	tramadol	trt_cp	Opioid receptor agonist|Norepinephrine reputake inhibitor|Serotonin reuptake inhibitor
+BRD-A51964809	halofantrine	trt_cp	Antimalarial agent
+BRD-A68009927	daunorubicin	trt_cp	RNA synthesis inhibitor|Topoisomerase inhibitor
+BRD-K35960502	niclosamide	trt_cp	DNA replication inhibitor|STAT inhibitor
+BRD-K63712959	temoporfin	trt_cp	Radical formation stimulant
+BRD-K99107520	felbamate	trt_cp	Glutamate receptor antagonist
+BRD-A36010170	amcinonide	trt_cp	Glucocorticoid receptor agonist
+BRD-K36269323	asymmetrical-dimethylarginine	trt_cp	Dimethylarginine dimethylaminohydrolase inhibitor|Nitric oxide synthase inhibitor
+BRD-K36740062	GSK-1070916	trt_cp	Aurora kinase inhibitor
+BRD-K36927236	glibenclamide	trt_cp	Sulfonylurea
+BRD-K31928526	barasertib	trt_cp	Aurora kinase inhibitor
+BRD-K36862742	hydroflumethiazide	trt_cp	Sodium/potassium/chloride transporter inhibitor
+BRD-K36970462	tonabersat	trt_cp	Gap junction modulator|Nitric oxide production inhibitor
+BRD-K37516142	idebenone	trt_cp	Calcium channel modulator
+BRD-K34415467	trimethobenzamide	trt_cp	Histamine receptor antagonist
+BRD-K32318651	acyclovir	trt_cp	DNA polymerase inhibitor
+BRD-K34008116	dolasetron	trt_cp	Serotonin receptor antagonist
+BRD-K36270037	esculin	trt_cp	Antioxidant
+BRD-A50684349	fenoldopam	trt_cp	Dopamine receptor agonist
+BRD-K33251802	miglustat	trt_cp	Glycosyl transferase inhibitor
+BRD-K47539947	tetradecylthioacetic-acid	trt_cp	Lipid peroxidase inhibitor
+BRD-K58550667	FK-866	trt_cp	Niacinamide phosphoribosyltransferase inhibitor
+BRD-K60038276	irbesartan	trt_cp	Angiotensin receptor antagonist
+BRD-K73691377	alprostadil	trt_cp	Prostanoid receptor agonist
+BRD-K82164249	andarine	trt_cp	Androgen receptor modulator
+BRD-K69688083	mestinon	trt_cp	Cholinesterase inhibitor
+BRD-K77771411	moxonidine	trt_cp	Imidazoline receptor agonist
+BRD-K76703230	YM-155	trt_cp	Survivin inhibitor
+BRD-K80535353	enoxolone	trt_cp	Gap junction modulator
+BRD-A20131130	2',5'-dideoxyadenosine	trt_cp	Adenylyl cyclase inhibitor
+BRD-K91290917	amodiaquine	trt_cp	Histamine receptor agonist
+BRD-K96029467	alagebrium	trt_cp	Glycosylation inhibitor
+BRD-K75024268	lesinurad	trt_cp	Uric acid diuretic
+BRD-K89104321	gaboxadol	trt_cp	GABA receptor agonist
+BRD-K89015388	gsk923295	trt_cp	Centromere associated protein inhibitor
+BRD-K92731339	perindopril	trt_cp	Angiotensin converting enzyme inhibitor
+BRD-K90239174	amg-487	trt_cp	NA
+BRD-K03353589	ecabet	trt_cp	Gastrin inhibitor|Urease inhibitor
+BRD-K97688263	benzamil	trt_cp	Sodium channel blocker
+BRD-K31339321	lirimilast	trt_cp	Phosphodiesterase inhibitor
+BRD-K35007173	enprofylline	trt_cp	Phosphodiesterase inhibitor
+BRD-M98279124	cevimeline	trt_cp	Acetylcholine receptor agonist
+BRD-K87202646	isoniazid	trt_cp	Enoyl-(acyl-carrier protein) reductase Fabl inhibitor
+BRD-K98453471	salirasib	trt_cp	MTOR inhibitor
+BRD-K87990216	piretanide	trt_cp	Glucocorticoid receptor agonist
+BRD-K88052444	urea	trt_cp	Hydroxy radical formation stimulant
+BRD-K88807631	elacridar	trt_cp	P-glycoprotein inhibitor
+BRD-A87983072	benzotript	trt_cp	CCK receptor antagonist
+BRD-K88025533	fingolimod	trt_cp	Immunosuppressant|Sphingosine 1 phosphate receptor agonist
+BRD-K88789588	letrozole	trt_cp	Aromatase inhibitor
+BRD-K87278688	armodafinil	trt_cp	Adrenergic receptor agonist
+BRD-A49838158	phenprocoumon	trt_cp	Vitamin K antagonist
+BRD-K89561498	sn-38	trt_cp	NA
+BRD-K89704198	vincamine	trt_cp	Adrenergic receptor antagonist
+BRD-K89014967	AS-703026	trt_cp	MEK inhibitor
+BRD-K89402695	L-655240	trt_cp	Thromboxane receptor antagonist
+BRD-A89585551	mefloquine	trt_cp	Adenosine receptor antagonist|Hemoglobin antagonist
+BRD-K90789829	nefazodone	trt_cp	Serotonin receptor antagonist|Serotonin reuptake inhibitor|Adrenergic inhibitor|Norepinephrine reuptake inhibitor
+BRD-K25412176	gsk2110183	trt_cp	AKT inhibitor
+BRD-K24771047	ampalex	trt_cp	Glutamate receptor agonist
+BRD-K28307902	flutamide	trt_cp	Androgen receptor antagonist
+BRD-K26823213	gw842166	trt_cp	Cannabinoid receptor agonist
+BRD-K31342827	bisindolylmaleimide	trt_cp	CDK inhibitor|PKC inhibitor
+BRD-K28392481	azd4547	trt_cp	FGFR inhibitor
+BRD-K28428262	brivanib	trt_cp	FGFR inhibitor|VEGFR inhibitor
+BRD-K28822270	resminostat	trt_cp	HDAC inhibitor
+BRD-K28936863	ketotifen	trt_cp	Histamine receptor agonist|Leukotriene receptor antagonist|Phosphodiesterase inhibitor|Histamine receptor ligand
+BRD-K28456624	seocalcitol	trt_cp	Vitamin D receptor agonist
+BRD-K28912512	nicotinamide	trt_cp	Protein synthesis stimulant
+BRD-K28965160	bvd-523	trt_cp	NA
+BRD-K29458283	chlorambucil	trt_cp	DNA inhibitor
+BRD-A29485665	bicalutamide	trt_cp	Androgen receptor antagonist
+BRD-K29530284	amlexanox	trt_cp	Histamine receptor modulator
+BRD-A29844814	abt-202	trt_cp	NA
+BRD-K29950728	clomifene	trt_cp	Estrogen receptor antagonist
+BRD-A29520968	acifran	trt_cp	Cholesterol inhibitor
+BRD-A29854054	lorglumide	trt_cp	CCK receptor antagonist
+BRD-K29968218	kx2-391	trt_cp	NA
+BRD-K30563334	rifabutin	trt_cp	Protein synthesis inhibitor
+BRD-A30815329	felodipine	trt_cp	Calcium channel blocker
+BRD-K26667523	tak-733	trt_cp	NA
+BRD-K30685142	levothyroxine	trt_cp	Thyroid hormone stimulant
+BRD-A30984645	gdc-0834	trt_cp	NA
+BRD-K26325692	api-001	trt_cp	NA
+BRD-A28746609	paclitaxel	trt_cp	Tubulin inhibitor
+BRD-K28115081	apafant	trt_cp	Platelet activating factor receptor antagonist
+BRD-K30020243	aliskiren	trt_cp	Antihypertensive agent|Renin inhibitor|Peptidase inhibitor|Protease inhibitor
+BRD-K31092604	donitriptan	trt_cp	Serotonin receptor agonist
+BRD-A31095847	mozavaptan	trt_cp	Vasopressin receptor antagonist
+BRD-K29133151	ici-185,282	trt_cp	NA
+BRD-K30550578	pf-04620110	trt_cp	NA
+BRD-K31447894	pravastatin	trt_cp	HMGCR inhibitor
+BRD-K32107296	temozolomide	trt_cp	DNA alkylating drug
+BRD-A32172948	methiopril	trt_cp	Angiotensin converting enzyme inhibitor
+BRD-K31519811	pf-02545920	trt_cp	NA
+BRD-K32164935	tolazamide	trt_cp	ATP channel blocker
+BRD-K32218650	mbx-2982	trt_cp	NA
+BRD-K31495718	azd7687	trt_cp	Diacylglycerol O acyltransferase inhibitor
+BRD-K31476763	azd9668	trt_cp	Elastase inhibitor
+BRD-K32977963	eugenol	trt_cp	Androgen receptor antagonist
+BRD-K33106058	cytarabine	trt_cp	Ribonucleotide reductase inhibitor
+BRD-K33483813	actarit	trt_cp	Interleukin receptor agonist
+BRD-A33692381	zidovudine	trt_cp	Reverse transcriptase inhibitor
+BRD-A33084557	tioconazole	trt_cp	Sterol demethylase inhibitor
+BRD-K33127281	adapalene	trt_cp	Retinoid receptor agonist
+BRD-K33610132	rociletinib	trt_cp	EGFR inhibitor
+BRD-A33697453	fenticonazole	trt_cp	Bacterial cell wall synthesis inhibitor
+BRD-A34255068	rolipram	trt_cp	Phosphodiesterase inhibitor
+BRD-K34157611	cimetidine	trt_cp	Histamine receptor antagonist
+BRD-K28470988	L-690330	trt_cp	Inositol monophosphatase inhibitor
+BRD-K34185671	amg-517	trt_cp	NA
+BRD-K34313798	ly215490	trt_cp	Glutamate receptor antagonist
+BRD-K34888156	theobromine	trt_cp	Phosphodiesterase inhibitor
+BRD-K35169477	taranabant	trt_cp	Cannabinoid receptor inverse agonist
+BRD-K11973162	tipiracil	trt_cp	Thymidine phosphorylase inhibitor
+BRD-A12077521	cefepime	trt_cp	Bacterial cell wall synthesis inhibitor
+BRD-A12230535	nutlin-3	trt_cp	MDM inhibitor
+BRD-A11990600	lorazepam	trt_cp	Benzodiazepine receptor agonist
+BRD-K12219985	glipizide	trt_cp	Sulfonylurea
+BRD-A12237696	l-citrulline	trt_cp	NA
+BRD-K12423485	griseofulvin	trt_cp	Tubulin inhibitor
+BRD-K12609457	exalamide	trt_cp	Membrane permeability inhibitor
+BRD-K12737986	veliparib	trt_cp	PARP inhibitor
+BRD-K12539416	sulbutiamine	trt_cp	Acetylcholine receptor antagonist
+BRD-K12735121	tg-100801	trt_cp	NA
+BRD-K12787259	cx-5461	trt_cp	NA
+BRD-K12867552	THM-I-94	trt_cp	HDAC inhibitor
+BRD-K12885236	dapivirine	trt_cp	Non-nucleoside reverse transcriptase inhibitor
+BRD-K12932420	YM-976	trt_cp	Phosphodiesterase inhibitor
+BRD-A12994259	pomalidomide	trt_cp	Angiogenesis inhibitor|Tumor necrosis factor production inhibitor
+BRD-K13050541	acivicin	trt_cp	Gamma glutamyltransferase Inhibitors
+BRD-A12896037	cisapride	trt_cp	Serotonin receptor agonist
+BRD-K12994359	valdecoxib	trt_cp	Cyclooxygenase inhibitor
+BRD-A13084692	troglitazone	trt_cp	PPAR receptor agonist|Insulin sensitizer
+BRD-A13133631	fluorometholone	trt_cp	Glucocorticoid receptor agonist
+BRD-K13183738	pentamidine	trt_cp	Anti-pneumocystis agent
+BRD-K13356952	methazolamide	trt_cp	Carbonic anhydrase inhibitor
+BRD-K13154216	everolimus	trt_cp	MTOR inhibitor
+BRD-A13188892	doxazosin	trt_cp	Adrenergic receptor antagonist
+BRD-K13296708	rimonabant	trt_cp	Cannabinoid receptor antagonist
+BRD-K13390322	AT-7519	trt_cp	CDK inhibitor|Cell cycle inhibitor
+BRD-K13646352	midostaurin	trt_cp	FLT3 inhibitor|KIT inhibitor|PKC inhibitor
+BRD-K13756951	bitopertin	trt_cp	Glycine transporter inhibitor|GlyT-1 inhibitor
+BRD-K13926615	vardenafil	trt_cp	Phosphodiesterase inhibitor
+BRD-K14175878	mk-0812	trt_cp	NA
+BRD-K13662825	dinaciclib	trt_cp	CDK inhibitor
+BRD-K13819402	desoxypeganine	trt_cp	Acetylcholinesterase inhibitor|Monoamine oxidase inhibitor
+BRD-A14262390	guanadrel	trt_cp	Adrenergic inhibitor
+BRD-K14529030	meisoindigo	trt_cp	STAT inhibitor
+BRD-K14704277	cinoxacin	trt_cp	Topoisomerase inhibitor
+BRD-A14798026	mestranol	trt_cp	Estrogen receptor agonist
+BRD-K14619660	altrenogest	trt_cp	Progestogen hormone
+BRD-K14653796	tasquinimod	trt_cp	Angiogenesis inhibitor|S100A9 inhibitor
+BRD-K14796088	berberine	trt_cp	LDL receptor activator
+BRD-K14870255	r-428	trt_cp	NA
+BRD-A14886633	norgestrel	trt_cp	Progesterone receptor agonist
+BRD-A14966924	alaproclate	trt_cp	Serotonin receptor antagonist
+BRD-K15010214	emedastine	trt_cp	Histamine receptor antagonist
+BRD-K15170068	swainsonine	trt_cp	Alpha mannosidase inhibitor
+BRD-A14941520	dofequidar	trt_cp	MRP inhibitor|P-glycoprotein inhibitor
+BRD-K14993104	bemegride	trt_cp	Chemoreceptor agonist
+BRD-K15108141	gemcitabine	trt_cp	Ribonucleotide reductase inhibitor
+BRD-K01638814	rilmenidine	trt_cp	Adrenergic receptor agonist|Imidazoline receptor agonist
+BRD-A15202882	milnacipran	trt_cp	Serotonin reuptake inhibitor
+BRD-K15318383	ammonium-glycyrrhizinate	trt_cp	Thrombin inhibitor
+BRD-K15426076	iguratimod	trt_cp	Cyclooxygenase inhibitor|NFkB pathway inhibitor
+BRD-K15179879	carfilzomib	trt_cp	Proteasome inhibitor
+BRD-A15297126	fluocinonide	trt_cp	Glucocorticoid receptor agonist
+BRD-K15409150	penfluridol	trt_cp	T-type calcium channel blocker
+BRD-A15435692	BMY-14802	trt_cp	Sigma receptor antagonist
+BRD-A03506276	xl888	trt_cp	HSP inhibitor
+BRD-A03623303	metoprolol	trt_cp	Adrenergic receptor antagonist
+BRD-K04112579	nepafenac	trt_cp	Cyclooxygenase inhibitor
+BRD-K03601870	ixabepilone	trt_cp	Microtubule stabilizing agent
+BRD-K04111260	raclopride	trt_cp	Dopamine receptor antagonist
+BRD-K04264130	favipiravir	trt_cp	RNA polymerase inhibitor
+BRD-A04352665	maraviroc	trt_cp	CC chemokine receptor antagonist
+BRD-K04691817	agi-6780	trt_cp	NA
+BRD-K04804440	ciprofloxacin	trt_cp	Bacterial DNA gyrase inhibitor
+BRD-A04553218	chlorphenamine	trt_cp	Histamine receptor antagonist
+BRD-K04704168	clemizole	trt_cp	HCV inhibitor
+BRD-K04956647	nebivolol	trt_cp	Adrenergic receptor antagonist
+BRD-K04993719	ly2334737	trt_cp	Antitumor agent|Ribonucleoside reductase inhibitor
+BRD-K05104363	PD-184352	trt_cp	MEK inhibitor
+BRD-K05236810	luteolin	trt_cp	Glucosidase inhibitor
+BRD-A05334458	lisofylline	trt_cp	Interleukin receptor antagonist|STAT inhibitor
+BRD-K05446112	ledipasvir	trt_cp	HCV inhibitor
+BRD-A05186015	bupropion	trt_cp	Dopamine uptake inhibitor
+BRD-K05395900	nicotine	trt_cp	Acetylcholine receptor agonist
+BRD-A05523972	telmesteine	trt_cp	Mucolytic agent
+BRD-K05524748	dronedarone	trt_cp	Adrenergic receptor antagonist
+BRD-K05674516	sofosbuvir	trt_cp	RNA polymerase inhibitor
+BRD-K05977355	fluconazole	trt_cp	Sterol demethylase inhibitor
+BRD-K05673000	dicloxacillin	trt_cp	Bacterial cell wall synthesis inhibitor
+BRD-K05804044	AZ-628	trt_cp	RAF inhibitor
+BRD-A05821830	docetaxel	trt_cp	Tubulin inhibitor
+BRD-K06240250	rilpivirine	trt_cp	Non-nucleoside reverse transcriptase inhibitor
+BRD-K06294530	uk-383367	trt_cp	NA
+BRD-K06388322	pramipexole	trt_cp	Dopamine receptor agonist
+BRD-K06674495	nafamostat	trt_cp	Serine protease inhibitor
+BRD-K06762493	isbufylline	trt_cp	Phosphodiesterase inhibitor
+BRD-K06335600	tizanidine	trt_cp	Adrenergic receptor agonist
+BRD-K06557128	voriconazole	trt_cp	Cytochrome P450 inhibitor
+BRD-K06858286	cabazitaxel	trt_cp	Microtubule inhibitor
+BRD-K06878038	deferiprone	trt_cp	Chelating agent
+BRD-A06916187	cpi-613	trt_cp	NA
+BRD-K07106112	bms-599626	trt_cp	NA
+BRD-K06900071	tebipenem	trt_cp	Bacterial cell wall synthesis inhibitor
+BRD-K06902185	minoxidil	trt_cp	KATP activator|Kir6 channel (KATP) activator|Vasodilator
+BRD-A06935312	fusidic-acid	trt_cp	Bacterial 30S ribosomal subunit inhibitor
+BRD-K07160047	fiacitabine	trt_cp	DNA synthesis inhibitor
+BRD-K07208025	trimethoprim	trt_cp	Dihydrofolate reductase inhibitor
+BRD-K07237224	moclobemide	trt_cp	Monoamine oxidase inhibitor
+BRD-A07395371	esmolol	trt_cp	Adrenergic receptor antagonist
+BRD-A07563059	bopindolol	trt_cp	Adrenergic receptor antagonist
+BRD-K07220430	cinnarizine	trt_cp	Calcium channel blocker
+BRD-K07310275	pf-04691502	trt_cp	NA
+BRD-A07440155	labetalol	trt_cp	Adrenergic receptor antagonist
+BRD-K04185004	oxybuprocaine	trt_cp	Local anesthetic
+BRD-K07691486	roscovitine	trt_cp	CDK inhibitor
+BRD-K07753030	acecainide	trt_cp	Polarization inhibitor
+BRD-A07815743	kakonein	trt_cp	GABA receptor antagonist|Serotonin receptor antagonist
+BRD-K07609981	dexloxiglumide	trt_cp	CCK receptor antagonist
+BRD-A07704283	isofloxythepin	trt_cp	Dopamine receptor antagonist
+BRD-K07798980	psi-6130	trt_cp	NA
+BRD-A33280134	etoposide	trt_cp	Topoisomerase inhibitor
+BRD-K00077635	estramustine-phosphate	trt_cp	DNA synthesis inhibitor|Microtubule inhibitor|DNA alkylating drug|DNA inhibitor|Estrogen receptor agonist
+BRD-K00152668	adarotene	trt_cp	Retinoid receptor agonist
+BRD-K00259736	colchicine	trt_cp	Microtubule inhibitor
+BRD-A00147595	balaglitazone	trt_cp	Insulin sensitizer|PPAR receptor partial agonist
+BRD-A00218260	flutrimazole	trt_cp	Sterol demethylase inhibitor
+BRD-A00376169	kbg	trt_cp	Neprilysin inhibitor
+BRD-K00494077	trovafloxacin	trt_cp	Bacterial DNA gyrase inhibitor
+BRD-A00546892	biperiden	trt_cp	Acetylcholine receptor antagonist
+BRD-K00610438	altanserin	trt_cp	Serotonin receptor antagonist
+BRD-K00521308	atn-161	trt_cp	NA
+BRD-K00603606	ticlopidine	trt_cp	Purinergic receptor antagonist
+BRD-K00662280	CL-218872	trt_cp	GABA receptor agonist
+BRD-K00673382	famotidine	trt_cp	Histamine receptor antagonist
+BRD-K00674894	orteronel	trt_cp	Androgen biosynthesis inhibitor|Androgen receptor antagonist|Cytochrome P450 inhibitor
+BRD-A00938334	drospirenone	trt_cp	Mineralocorticoid receptor antagonist
+BRD-K01029106	picolinic-acid	trt_cp	Chelating agent
+BRD-K01174345	anamorelin	trt_cp	Growth hormone secretagogue receptor agonist
+BRD-K00911143	brexpiprazole	trt_cp	Dopamine receptor partial agonist
+BRD-K01039503	sofalcone	trt_cp	Mucus protecting agent
+BRD-K01292756	pimozide	trt_cp	Dopamine receptor antagonist
+BRD-K01577834	adenosine	trt_cp	Adenosine receptor agonist
+BRD-A01636364	bupivacaine	trt_cp	Sodium channel blocker
+BRD-A01787639	naftopidil	trt_cp	Adrenergic receptor antagonist
+BRD-K01621533	acarbose	trt_cp	Glucosidase inhibitor
+BRD-K01663662	diphenidol	trt_cp	Acetylcholine receptor agonist
+BRD-K01674964	histamine	trt_cp	Histamine receptor agonist
+BRD-K01815685	indole	trt_cp	Aryl hydrocarbon receptor agonist|Indoleamine 2,3-dioxygenase inhibitor
+BRD-K01824921	dpcpx	trt_cp	Adenosine receptor antagonist
+BRD-K02113016	olaparib	trt_cp	PARP inhibitor
+BRD-K02265150	amoxapine	trt_cp	Norepinephrine reputake inhibitor
+BRD-K02292852	cefoperazone	trt_cp	Bacterial cell wall synthesis inhibitor
+BRD-K02079473	oxatomide	trt_cp	Histamine receptor antagonist
+BRD-K02123250	JNJ-38877605	trt_cp	Tyrosine kinase inhibitor
+BRD-K02314383	epitiostanol	trt_cp	Androgen receptor agonist
+BRD-A02367930	ethinyl-estradiol	trt_cp	Estrogen receptor agonist|DNA directed DNA polymerase stimunlant|Estrogenic component in oral contraceptives
+BRD-K02501528	s18986	trt_cp	Glutamate receptor modulator
+BRD-K02867583	minaprine	trt_cp	Serotonin reuptake inhibitor
+BRD-K02389548	rg2833	trt_cp	HDAC inhibitor
+BRD-K02404261	caffeine	trt_cp	Adenosine receptor antagonist|Phosphodiesterase inhibitor
+BRD-K02637541	celecoxib	trt_cp	Cyclooxygenase inhibitor
+BRD-K02900412	clofoctol	trt_cp	Protein synthesis inhibitor
+BRD-K02943813	dasabuvir	trt_cp	HCV inhibitor
+BRD-A02990301	lofexidine	trt_cp	Adrenergic receptor agonist
+BRD-A03061970	alizapride	trt_cp	Dopamine receptor antagonist
+BRD-K03194791	roflumilast	trt_cp	Phosphodiesterase inhibitor
+BRD-K02950022	BMS-299897	trt_cp	Gamma secretase inhibitor
+BRD-K02992638	lamivudine	trt_cp	Nucleoside reverse transcriptase inhibitor
+BRD-K03095347	levosimendan	trt_cp	Calcium sensitizer
+BRD-K05658747	raltegravir	trt_cp	HIV integrase inhibitor
+BRD-A03249105	fulvestrant	trt_cp	Estrogen receptor antagonist
+BRD-K03816923	rottlerin	trt_cp	MAP kinase inhibitor|Protein kinase inhibitor
+BRD-K03390685	cobimetinib	trt_cp	MEK inhibitor
+BRD-A03216249	mepivacaine	trt_cp	Potassium channel blocker|Sodium channel blocker
+BRD-K03289534	lersivirine	trt_cp	Non-nucleoside reverse transcriptase inhibitor
+BRD-K03384561	roquinimex	trt_cp	Angiogenesis inhibitor|TNF production inhibitor
+BRD-K03449891	foretinib	trt_cp	VEGFR inhibitor
+BRD-K37289225	clozapine	trt_cp	Serotonin receptor antagonist|Dopamine receptor antagonist
+BRD-K37385792	conivaptan	trt_cp	Vasopressin receptor antagonist
+BRD-K37561857	zardaverine	trt_cp	Phosphodiesterase inhibitor
+BRD-K37355418	efaproxiral	trt_cp	Haemoglobin oxygen release stimulant
+BRD-K38744518	betulinic-acid	trt_cp	Apoptosis stimulant|Caspase activator|Diacylglycerol O acyltransferase inhibitor|HIV integrase inhibitor|NFkB pathway activator|SARS coronavirus 3C-like protease inhibitor|Topoisomerase inhibitor
+BRD-K37590257	gsk256066	trt_cp	Phosphodiesterase inhibitor
+BRD-A37780065	triamcinolone	trt_cp	Glucocorticoid receptor agonist
+BRD-K37872686	tirofiban	trt_cp	Platelet aggregation inhibitor|Structural glycoprotein antagonist
+BRD-A37959677	estrone	trt_cp	Estrogen receptor agonist|Estrogenic hormone
+BRD-K37846922	3,3'-diindolylmethane	trt_cp	CHK inhibitor|Cytochrome P450 activator|Indoleamine 2,3-dioxygenase inhibitor
+BRD-K37890730	camptothecin	trt_cp	Topoisomerase inhibitor
+BRD-K37991163	paroxetine	trt_cp	Selective serotonin reuptake inhibitor (SSRI)
+BRD-K38183498	clonazepam	trt_cp	GABA benzodiazepine site receptor agonist
+BRD-K38436528	imipramine	trt_cp	Norepinephrine reputake inhibitor|Serotonin reuptake inhibitor
+BRD-A67373739	AICA-ribonucleotide	trt_cp	AMPK activator
+BRD-K38868394	mk-0773	trt_cp	NA
+BRD-K39339537	epirizole	trt_cp	Cyclooxygenase inhibitor
+BRD-K38473998	cilomilast	trt_cp	Phosphodiesterase inhibitor
+BRD-K39252998	atipamezole	trt_cp	Adrenergic receptor antagonist
+BRD-M39350793	reboxetine	trt_cp	Adrenergic receptor antagonist
+BRD-K39974922	lenvatinib	trt_cp	FGFR inhibitor|KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|VEGFR inhibitor
+BRD-K40227168	vinburnine	trt_cp	Adrenergic receptor antagonist
+BRD-K40758068	efavirenz	trt_cp	HIV protease inhibitor
+BRD-A40084411	cgp12177	trt_cp	Adrenergic receptor agonist
+BRD-A40639672	ketorolac	trt_cp	Cyclooxygenase inhibitor
+BRD-K40738845	BMS-777607	trt_cp	AXL kinase inhibitor|C-Met inhibitor|FLT3 inhibitor|Hepatocyte growth factor receptor inhibitor|Macrophage inhibitor|Tyrosine kinase inhibitor
+BRD-A40787240	gemifloxacin	trt_cp	Bacterial DNA gyrase inhibitor
+BRD-K41185545	ambrisentan	trt_cp	Endothelin receptor antagonist
+BRD-K41260949	valproic-acid	trt_cp	HDAC inhibitor
+BRD-K41434598	org-9768	trt_cp	Adrenergic receptor antagonist
+BRD-A41451487	PK-11195	trt_cp	Benzodiazepine receptor antagonist
+BRD-K41213548	kw-2478	trt_cp	NA
+BRD-K41410256	balsalazide	trt_cp	Cyclooxygenase inhibitor
+BRD-K41524689	paracetamol	trt_cp	Cyclooxygenase inhibitor
+BRD-K41783120	sta-5326	trt_cp	NA
+BRD-K42352790	anandamide	trt_cp	Cannabinoid receptor agonist
+BRD-K42495768	tasisulam	trt_cp	Apoptosis stimulant
+BRD-K42098891	protriptyline	trt_cp	Tricyclic antidepressant
+BRD-K42348709	cyclobenzaprine	trt_cp	Adrenergic receptor agonist|Serotonin receptor agonist
+BRD-K42417338	butorphanol-(+)-tartrate	trt_cp	Opioid receptor agonist|Opioid receptor antagonist
+BRD-K42679050	Y-27152	trt_cp	Potassium channel activator
+BRD-K42948882	amd11070	trt_cp	CC chemokine receptor antagonist
+BRD-K43002771	sr-33805	trt_cp	NA
+BRD-K43164539	cholic-acid	trt_cp	Bile acid
+BRD-K43457670	acetazolamide	trt_cp	Carbonic anhydrase inhibitor
+BRD-K42981054	mibampator	trt_cp	Glutamate receptor modulator
+BRD-A43082555	loxoprofen	trt_cp	Cyclooxygenase inhibitor|Prostanoid receptor antagonist
+BRD-K43410529	mln2480	trt_cp	RAF inhibitor
+BRD-K43578482	defactinib	trt_cp	Focal adhesion kinase inhibitor
+BRD-K43887077	dopamine	trt_cp	Dopamine receptor agonist
+BRD-A44090213	indoprofen	trt_cp	Cyclooxygenase inhibitor|Prostanoid receptor antagonist
+BRD-K44309363	dexniguldipine	trt_cp	Calmodulin antagonist
+BRD-A43882281	pinacidil	trt_cp	ATP channel activator|Potassium channel activator
+BRD-K43966364	penicillin-v-potassium	trt_cp	Bacterial cell wall synthesis inhibitor
+BRD-K44273375	tolnaftate	trt_cp	Fungal squalene epoxidase inhibitor
+BRD-K44353683	nateglinide	trt_cp	Insulin secretagogue
+BRD-A61676498	climbazole	trt_cp	Enzyme inducer
+BRD-K55966568	orantinib	trt_cp	PDGFR tyrosine kinase receptor inhibitor|FGFR inhibitor|VEGFR inhibitor
+BRD-A56085258	lgx818	trt_cp	RAF inhibitor
+BRD-A55962179	omeprazole	trt_cp	ATPase inhibitor
+BRD-K56032964	ap26113	trt_cp	ALK tyrosine kinase receptor inhibitor
+BRD-K56558538	ambroxol	trt_cp	Sodium channel blocker
+BRD-A56592690	PX-12	trt_cp	Thioredoxin inhibitor
+BRD-K56751279	Y-39983	trt_cp	Rho associated kinase inhibitor
+BRD-K57252450	cilengitide	trt_cp	Integrin antagonist
+BRD-K56614220	clofazimine	trt_cp	GK0582 inhibitor
+BRD-K57222227	indometacin	trt_cp	Cyclooxygenase inhibitor
+BRD-K57371763	fidaxomicin	trt_cp	RNA polymerase inhibitor
+BRD-A57382968	piroxicam	trt_cp	Cyclooxygenase inhibitor
+BRD-K58211978	roxithromycin	trt_cp	Bacterial 50S ribosomal subunit inhibitor
+BRD-K58486055	reparixin	trt_cp	CC chemokine receptor antagonist
+BRD-K58501140	tak-875	trt_cp	NA
+BRD-A59174698	ritodrine	trt_cp	Adrenergic receptor agonist
+BRD-K58435339	at13387	trt_cp	HSP antagonist
+BRD-K59058766	chlorprothixene	trt_cp	Dopamine receptor antagonist
+BRD-K59197931	naproxen	trt_cp	Cyclooxygenase inhibitor
+BRD-K59227464	ly2228820	trt_cp	P38 MAPK inhibitor
+BRD-K59524082	maribavir	trt_cp	Cytomegalovirus inhibitor|Protein kinase inhibitor
+BRD-K60341624	gsk1292263	trt_cp	Glucose-Dependent Insulinotropic Receptor (GDIR, GPR119) Agonists
+BRD-K59506194	targinine	trt_cp	Nitric oxide synthase inhibitor
+BRD-K59573506	cyproterone-acetate	trt_cp	Androgen receptor antagonist|Progesterone receptor agonist|Testosterone receptor antagonist
+BRD-K59574735	ubenimex	trt_cp	Leukotriene inhibitor
+BRD-K60585088	paricalcitol	trt_cp	Vitamin D receptor agonist
+BRD-K60866521	idelalisib	trt_cp	PI3K inhibitor
+BRD-A55393291	testosterone	trt_cp	Androgen receptor agonist
+BRD-A56371469	agi-5198	trt_cp	NA
+BRD-K56851771	enzalutamide	trt_cp	Androgen receptor antagonist
+BRD-K60997853	pha-848125	trt_cp	NA
+BRD-K55512740	mk-8033	trt_cp	NA
+BRD-K57764956	cariprazine	trt_cp	Dopamine receptor antagonist
+BRD-A58955223	sulforaphane	trt_cp	Anticancer agent|Aryl hydrocarbon receptor antagonist
+BRD-K37764012	pf-03758309	trt_cp	NA
+BRD-K38287497	narlaprevir	trt_cp	HCV inhibitor
+BRD-K59325863	delanzomib	trt_cp	Proteasome inhibitor
+BRD-K37714784	abt-724	trt_cp	NA
+BRD-K61036791	rucinol	trt_cp	Tyrosinase inhibitor
+BRD-A38350138	ketoconazole	trt_cp	Sterol demethylase inhibitor
+BRD-K37687095	AZD-8330	trt_cp	MEK inhibitor
+BRD-K38197229	bumetanide	trt_cp	Solute carrier family member inhibitor
+BRD-A39390670	rabeprazole	trt_cp	ATPase inhibitor|Gastrin inhibitor
+BRD-K39503511	quiflapon	trt_cp	Leukotriene inhibitor
+BRD-K37694030	doxepin	trt_cp	Histamine receptor antagonist
+BRD-A38218502	metenkephalin	trt_cp	Immunostimulant
+BRD-A39415247	norethisterone	trt_cp	Progesterone receptor agonist
+BRD-A39935389	teroxirone	trt_cp	DNA inhibitor
+BRD-K40797222	sc-12267	trt_cp	NA
+BRD-K41160163	fenobam	trt_cp	Glutamate receptor antagonist
+BRD-K41708980	triamcinolone-acetonide	trt_cp	Immunosuppressant|Corticosteroid agonist|Glucocorticoid receptor agonist
+BRD-K41170226	deoxycholic-acid	trt_cp	G protein coupled receptor agonist|Unidentified pharmacological activity|Biliverdin reductase A activator|G protein-coupled receptor agonist
+BRD-K40870905	ct-7758	trt_cp	NA
+BRD-K41599323	lonafarnib	trt_cp	Farnesyltransferase inhibitor
+BRD-K41731458	triclosan	trt_cp	Enoyl-[acyl-carrier-protein] reductase [NADH] inhibitor
+BRD-A55579717	cytisine	trt_cp	Acetylcholine receptor agonist
+BRD-K55781385	bms-927711	trt_cp	NA
+BRD-A55913614	primaquine	trt_cp	Antimalarial agent|DNA inhibitor
+BRD-K55748775	SCH-28080	trt_cp	ATPase inhibitor
+BRD-K55847762	lobenzarit	trt_cp	Immunosuppressant
+BRD-K55930204	phenytoin	trt_cp	Hydantoin antiepileptic
+BRD-K56104152	oxiconazole	trt_cp	Bacterial cell wall synthesis inhibitor
+BRD-K56291712	voxtalisib	trt_cp	MTOR inhibitor|PI3K inhibitor
+BRD-K56334280	amonafide	trt_cp	Topoisomerase inhibitor
+BRD-K56195681	losmapimod	trt_cp	P38 MAPK inhibitor
+BRD-K56301217	ABT-737	trt_cp	BCL inhibitor
+BRD-K56343971	vemurafenib	trt_cp	RAF inhibitor
+BRD-K56405753	mk-2461	trt_cp	NA
+BRD-K56800335	guanabenz	trt_cp	Adrenergic receptor agonist
+BRD-K56844688	epirubicin	trt_cp	Topoisomerase inhibitor
+BRD-K56957086	dacinostat	trt_cp	HDAC inhibitor
+BRD-K57080016	selumetinib	trt_cp	MEK inhibitor
+BRD-K56810756	fomepizole	trt_cp	Alcohol dehydrogenase inhibitor
+BRD-K57041787	dabigatran-etexilate	trt_cp	Thrombin inhibitor|Serine protease inhibitor
+BRD-K57169635	dacomitinib	trt_cp	EGFR inhibitor
+BRD-K57432881	tiapride	trt_cp	Dopamine receptor antagonist
+BRD-K57569181	pentoxifylline	trt_cp	Phosphodiesterase inhibitor
+BRD-A58048407	nimodipine	trt_cp	Calcium channel blocker
+BRD-K57545991	enalapril	trt_cp	Angiotensin converting enzyme inhibitor
+BRD-K57631554	aminolevulinic-acid	trt_cp	Oxidative stress inducer
+BRD-K58010567	vilazodone	trt_cp	Serotonin reuptake inhibitor
+BRD-K58114536	rasagiline	trt_cp	Monoamine oxidase inhibitor
+BRD-K77987382	mebendazole	trt_cp	Tubulin inhibitor
+BRD-K58626373	dexfenfluramine	trt_cp	Serotonin receptor agonist
+BRD-K58951486	rocuronium	trt_cp	Acetylcholine receptor antagonist
+BRD-K59013864	am-24	trt_cp	NA
+BRD-A58564983	selamectin	trt_cp	Nematocide
+BRD-K58736316	cianidanol	trt_cp	Fatty acid synthase inhibitor
+BRD-K59037100	oxybenzone	trt_cp	Lipase inhibitor
+BRD-K59273480	propentofylline	trt_cp	Adenosine reuptake inhibitor|Phosphodiesterase inhibitor
+BRD-K59332007	linopirdine	trt_cp	Potassium channel blocker
+BRD-K59433843	ici-192605	trt_cp	NA
+BRD-K59317601	mln0128	trt_cp	MTOR inhibitor
+BRD-K59331299	voglibose	trt_cp	Glucosidase inhibitor
+BRD-K59369769	tozasertib	trt_cp	Aurora kinase inhibitor|Bcr-Abl kinase inhibitor|FLT3 inhibitor|JAK inhibitor
+BRD-K59436580	tedizolid	trt_cp	Bacterial 50S ribosomal subunit inhibitor
+BRD-K59632282	quinidine	trt_cp	Sodium channel blocker
+BRD-K59875992	fpl-62064	trt_cp	NA
+BRD-A51078674	diclofensine	trt_cp	Dopamine reuptake inhibitor
+BRD-K60237333	niacin	trt_cp	NAD precursor with lipid lowering effects|Vitamin B
+BRD-K59715032	pasireotide	trt_cp	Somatostatin receptor agonist
+BRD-K59929863	cb-10-277-(free-acid)	trt_cp	NA
+BRD-K60160658	tiagabine	trt_cp	GABA uptake inhibitor
+BRD-K60240222	carglumic-acid	trt_cp	Carbamoyl phosphate synthase activator
+BRD-K61195623	combretastatin-a-4	trt_cp	NA
+BRD-K61250553	loperamide	trt_cp	Opioid receptor agonist
+BRD-K61452026	emtricitabine	trt_cp	Nucleoside reverse transcriptase inhibitor
+BRD-A61154809	gliclazide	trt_cp	ATP channel blocker|Insulin secretagogue
+BRD-A61221616	medroxyprogesterone-acetate	trt_cp	Progesterone receptor agonist
+BRD-K61397605	romidepsin	trt_cp	HDAC inhibitor
+BRD-K61567297	resatorvid	trt_cp	Toll-like receptor antagonist
+BRD-K81672972	dinoprost	trt_cp	Prostacyclin analog
+BRD-K51143828	lurasidone	trt_cp	Dopamine receptor antagonist|Serotonin receptor antagonist
+BRD-K51313569	palbociclib	trt_cp	CDK inhibitor
+BRD-K51087630	tirasemtiv	trt_cp	Troponin activator
+BRD-K51263939	sarcosine	trt_cp	GlyT-1 inhibitor
+BRD-K51324732	meglitinide	trt_cp	Potassium channel blocker
+BRD-K51544265	cabozantinib	trt_cp	RET tyrosine kinase inhibitor|VEGFR inhibitor
+BRD-K51677086	erythromycin	trt_cp	NFkB pathway inhibitor
+BRD-K51747290	hydroxyurea	trt_cp	Ribonucleoside reductase inhibitor
+BRD-K51662849	ilomastat	trt_cp	Matrix metalloprotease inhibitor
+BRD-A51714012	venlafaxine	trt_cp	Serotonin reuptake inhibitor|Adrenergic inhibitor|Norepinephrine reuptake inhibitor
+BRD-A51820102	econazole	trt_cp	Lanosterol demethylase inhibitor|Sterol demethylase inhibitor|Bacterial cell wall synthesis inhibitor
+BRD-K51967704	BIIB021	trt_cp	NA
+BRD-K52233191	r547	trt_cp	CDK inhibitor
+BRD-K52313696	tacedinaline	trt_cp	HDAC inhibitor
+BRD-A52660433	tetrindole	trt_cp	Monoamine oxidase inhibitor
+BRD-K52751261	TAK-715	trt_cp	P38 MAPK inhibitor
+BRD-A52252998	clindamycin	trt_cp	Protein synthesis inhibitor
+BRD-K52662033	lidocaine	trt_cp	Histamine receptor agonist
+BRD-K52818472	ivacaftor	trt_cp	CFTR channel potentiator
+BRD-K53061490	ozagrel	trt_cp	Thromboxane synthase inhibitor
+BRD-K53318339	vinpocetine	trt_cp	Phosphodiesterase inhibitor|Sodium channel blocker
+BRD-A53566267	anecortave-acetate	trt_cp	Corticosteroid agonist|Angiogenesis inhibitor
+BRD-A53176877	methylprednisolone	trt_cp	Glucocorticoid receptor agonist
+BRD-K53414658	tivozanib	trt_cp	VEGFR inhibitor
+BRD-K53517854	fluvoxamine	trt_cp	Selective serotonin reuptake inhibitor (SSRI)
+BRD-A53576514	orphenadrine	trt_cp	Acetylcholine receptor antagonist
+BRD-K53814070	ripasudil	trt_cp	Rho associated kinase inhibitor
+BRD-K53963539	vortioxetine	trt_cp	Serotonin receptor agonist|Serotonin receptor antagonist
+BRD-K54006094	formoterol	trt_cp	Adrenergic receptor agonist
+BRD-K54256913	MK-1775	trt_cp	WEE1 kinase inhibitor
+BRD-K53857191	risperidone	trt_cp	Dopamine receptor antagonist|Serotonin receptor antagonist
+BRD-K53979406	ALX-5407	trt_cp	Glycine transporter inhibitor
+BRD-K54416256	methimazole	trt_cp	Antithyroid agent
+BRD-K54770957	etoricoxib	trt_cp	Cyclooxygenase inhibitor
+BRD-K55013654	lorcaserin	trt_cp	Serotonin receptor agonist
+BRD-K55127134	fluphenazine	trt_cp	Dopamine receptor antagonist
+BRD-K54847683	equol	trt_cp	Estrogen receptor agonist
+BRD-K54936858	dmp-777	trt_cp	NA
+BRD-K55026842	azacitidine	trt_cp	DNA methyltransferase inhibitor
+BRD-K55191674	benzylpenicillin	trt_cp	Penicillin binding protein inhibitor
+BRD-K85140930	aphidicolin	trt_cp	RNA synthesis inhibitor
+BRD-A77216878	manumycin-a	trt_cp	Farnesyltransferase inhibitor|NFkB pathway inhibitor
+BRD-K36324071	NF-449	trt_cp	Purinergic receptor antagonist
+BRD-A58280226	Y-27632	trt_cp	Rho associated kinase inhibitor
+BRD-A69951442	dexamethasone	trt_cp	Glucocorticoid receptor agonist
+BRD-A43331270	niguldipine	trt_cp	Adrenergic receptor antagonist|Calcium channel blocker
+BRD-K07572174	curcumin	trt_cp	Cyclooxygenase inhibitor|Histone acetyltransferase inhibitor|Lipoxygenase inhibitor|NFkB pathway inhibitor
+BRD-K41895714	AS-605240	trt_cp	PI3K inhibitor
+BRD-K53417444	ots167	trt_cp	Maternal embryonic leucine zipper kinase inhibitor
+BRD-A54880345	etomidate	trt_cp	GABA receptor modulator
+BRD-K23875128	RHO-kinase-inhibitor-III[rockout]	trt_cp	Rho associated kinase inhibitor
+BRD-K52618540	inositol	trt_cp	Insulin sensitizer
+BRD-K54028654	trehalose	trt_cp	Pharmacological chaperone
+BRD-K86301799	dipyridamole	trt_cp	Phosphodiesterase inhibitor
+BRD-K64990520	apocynin	trt_cp	NADPH oxidase inhibitor
+BRD-K50163129	acrivastine	trt_cp	Histamine receptor antagonist
+BRD-A50764878	MDL-73005EF	trt_cp	Serotonin receptor antagonist
+BRD-K50938287	sumatriptan	trt_cp	Serotonin receptor agonist
+BRD-K50168500	canertinib	trt_cp	EGFR inhibitor
+BRD-K50859149	sulfafurazole	trt_cp	Bacterial antifolate
+BRD-A50998626	palomid-529	trt_cp	AKT inhibitor|MTOR inhibitor|Fibroblast growth factor inhibitor|VEGFR inhibitor
+BRD-K44771174	ibutamoren	trt_cp	Growth hormone secretagogue receptor agonist
+BRD-K45542189	diethylcarbamazine	trt_cp	Lipoxygenase inhibitor
+BRD-A47598013	citalopram	trt_cp	Serotonin reuptake inhibitor
+BRD-K44827188	vismodegib	trt_cp	Hedgehog pathway inhibitor|Smoothened receptor antagonist
+BRD-K46386702	arry-334543	trt_cp	NA
+BRD-A48430263	pioglitazone	trt_cp	PPAR receptor agonist|Insulin sensitizer
+BRD-K49111258	prazosin	trt_cp	Adrenergic receptor antagonist
+BRD-A50311610	meclozine	trt_cp	CAR agonist
+BRD-K62387885	basimglurant	trt_cp	Glutamate receptor antagonist
+BRD-K62398570	lerisetron	trt_cp	Serotonin receptor antagonist
+BRD-A62879835	rifaximin	trt_cp	RNA synthesis inhibitor
+BRD-K62363391	dapsone	trt_cp	Bacterial antifolate
+BRD-K62858456	lomerizine	trt_cp	Calcium channel blocker
+BRD-K62965247	tipifarnib-P2	trt_cp	Farnesyltransferase inhibitor
+BRD-K62391742	gdc-0199	trt_cp	NA
+BRD-K63550407	erythromycin	trt_cp	NFkB pathway inhibitor
+BRD-K63675182	triflupromazine	trt_cp	Dopamine receptor antagonist
+BRD-K62996583	lidoflazine	trt_cp	Calcium channel blocker
+BRD-K63630713	etacrynic-acid	trt_cp	Sodium/potassium/chloride transporter inhibitor
+BRD-A63675168	brivudine	trt_cp	DNA directed DNA polymerase inhibitor
+BRD-A64553394	dpi-201106	trt_cp	NA
+BRD-A64485570	trifluridine	trt_cp	DNA directed DNA polymerase inhibitor|Thymidylate synthase inhibitor
+BRD-K64538373	ro-4987655	trt_cp	NA
+BRD-A64977602	mirtazapine	trt_cp	Adrenergic receptor antagonist|Serotonin receptor antagonist
+BRD-A65013509	oxybutynin	trt_cp	Acetylcholine receptor antagonist
+BRD-K64504314	dienogest	trt_cp	Progesterone receptor agonist
+BRD-K64931368	aminocaproic-acid	trt_cp	Plasminogen activator inhibitor
+BRD-A66155091	trilostane	trt_cp	3beta-hydroxy-delta5-steroid dehydrogenase inhibitor
+BRD-K65991129	sb-705498	trt_cp	NA
+BRD-K66937583	lodoxamide	trt_cp	Histamine receptor antagonist
+BRD-K67043667	altretamine	trt_cp	DNA synthesis inhibitor
+BRD-K65992024	pirenoxine	trt_cp	AGE inhibitor
+BRD-K66035042	sorbitol	trt_cp	Mucolytic agent
+BRD-K67017579	cilostazol	trt_cp	Phosphodiesterase inhibitor
+BRD-K67068943	ore1001	trt_cp	Angiotensin converting enzyme inhibitor
+BRD-K67525671	zk-200775	trt_cp	NA
+BRD-K67680372	CI-966	trt_cp	GAT inhibitor
+BRD-A61793559	metolazone	trt_cp	Carbonic anhydrase inhibitor
+BRD-K62737565	gabapentin	trt_cp	Calcium channel blocker
+BRD-A67616246	levomequitazine	trt_cp	Histamine receptor antagonist
+BRD-K67783091	haloperidol	trt_cp	Dopamine receptor antagonist
+BRD-K61988078	moxidectin	trt_cp	Chloride channel antagonist
+BRD-A63236097	andrographolide	trt_cp	Tumor necrosis factor production inhibitor
+BRD-K64874225	nsc-4644	trt_cp	NA
+BRD-K67080878	milrinone	trt_cp	Phosphodiesterase inhibitor
+BRD-A61767428	ursolic-acid	trt_cp	11-beta hydroxysteroid dehydrogenase inhibitor|Acetylcholinesterase inhibitor|Caspase inhibitor|HIV protease inhibitor|Lipid peroxidase inhibitor|Quorum sensing signaling modulator|Steryl sulfatase inhibitor|Tyrosine phosphatase inhibitor|ATPase inhibitor|NFkB pathway inhibitor|STAT inhibitor
+BRD-K63861289	molsidomine	trt_cp	Guanylyl cyclase activator
+BRD-A65280694	molindone	trt_cp	Dopamine receptor antagonist
+BRD-K61693562	pyrazinoylguanidine	trt_cp	Diuretic
+BRD-K61691541	pf-03084014	trt_cp	NA
+BRD-A62035778	scopolamine	trt_cp	Acetylcholine receptor antagonist
+BRD-K62196610	avn-944	trt_cp	NA
+BRD-K62277907	pym50028	trt_cp	Neurotrophic agent
+BRD-A62071884	siguazodan	trt_cp	Phosphodiesterase inhibitor
+BRD-K62200014	anagrelide	trt_cp	Phosphodiesterase inhibitor
+BRD-K62310379	fluticasone	trt_cp	Glucocorticoid receptor agonist
+BRD-A62525898	prednisone	trt_cp	Glucocorticoid receptor agonist
+BRD-K62627508	rg-7388	trt_cp	NA
+BRD-K62685538	triptorelin	trt_cp	Gonadotropin releasing factor hormone receptor agonist
+BRD-K62562723	sr-2640	trt_cp	NA
+BRD-K62676709	guanethidine	trt_cp	Adrenergic inhibitor
+BRD-K62734952	arglabin	trt_cp	Farnesyltransferase inhibitor
+BRD-K62762455	ru-58841	trt_cp	NA
+BRD-K63126190	epinephrine	trt_cp	Adrenergic receptor agonist|Neurotransmitter
+BRD-K63178091	telotristat	trt_cp	Serotonin receptor antagonist|Serotonin release inhibitor
+BRD-A63310107	miglitol	trt_cp	Glucosidase inhibitor
+BRD-K63430059	methoxsalen	trt_cp	DNA synthesis inhibitor
+BRD-K63150726	JTE-907	trt_cp	Cannabinoid receptor inverse agonist
+BRD-K63343048	orlistat	trt_cp	Lipase inhibitor
+BRD-K63504947	semaxanib	trt_cp	VEGFR inhibitor
+BRD-K63736853	acipimox	trt_cp	Cholesterol inhibitor
+BRD-A63752151	fidarestat	trt_cp	Aldose reductase inhibitor
+BRD-K64338723	milacemide	trt_cp	Monoamine oxidase inhibitor
+BRD-K34328244	mf-101	trt_cp	NA
+BRD-K63828191	raloxifene	trt_cp	Estrogen receptor antagonist|Selective estrogen receptor modulator (SERM)
+BRD-K64052750	gefitinib	trt_cp	EGFR inhibitor
+BRD-A64406146	timofibrate	trt_cp	Cholesterol inhibitor|Lipase clearing factor inhibitor
+BRD-K64622987	torcetrapib	trt_cp	Cholesteryl ester transfer protein inhibitor
+BRD-K64785675	TG100-115	trt_cp	NA
+BRD-K64838454	dipraglurant	trt_cp	Glutamate receptor negative allosteric modulator
+BRD-K64890080	BI-2536	trt_cp	PLK inhibitor
+BRD-K64755930	etazolate	trt_cp	Phosphodiesterase inhibitor
+BRD-K64800655	PHA-793887	trt_cp	CDK inhibitor
+BRD-K64925568	amg-232	trt_cp	NA
+BRD-K65170927	aprepitant	trt_cp	Tachykinin antagonist
+BRD-K65678996	nefiracetam	trt_cp	Acetylcholine receptor agonist|GABA receptor agonist
+BRD-K65820248	sdz-nkt-343	trt_cp	NA
+BRD-A65248799	emd-53998	trt_cp	NA
+BRD-K65428967	cordycepin	trt_cp	DNA inhibitor
+BRD-K65781196	avanafil	trt_cp	Phosphodiesterase inhibitor
+BRD-K65928735	azd1480	trt_cp	JAK inhibitor
+BRD-K66175015	afatinib	trt_cp	EGFR inhibitor
+BRD-K66412701	pazufloxacin	trt_cp	Topoisomerase inhibitor
+BRD-K66538826	amuvatinib	trt_cp	FLT3 inhibitor|KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|RAD51 inhibitor|RET tyrosine kinase inhibitor
+BRD-K66876909	linezolid	trt_cp	Bacterial 50S ribosomal subunit inhibitor
+BRD-K66404838	nalbuphine	trt_cp	Opioid receptor agonist|Opioid receptor antagonist
+BRD-A66419424	mln9708	trt_cp	Proteasome inhibitor
+BRD-K66615216	moxifloxacin	trt_cp	Bacterial DNA gyrase inhibitor
+BRD-K66911501	mk-3207	trt_cp	NA
+BRD-K67174965	acetylcysteine	trt_cp	Mucolytic agent
+BRD-A67479912	progesterone	trt_cp	Progesterone receptor agonist
+BRD-A67097164	ifosfamide	trt_cp	DNA alkylating agent
+BRD-K67121414	apixaban	trt_cp	Coagulation factor inhibitor
+BRD-K67277431	picotamide	trt_cp	Thromboxane receptor antagonist|Thromboxane synthase inhibitor
+BRD-A67516570	lafutidine	trt_cp	Histamine receptor antagonist
+BRD-A36057565	bruceantin	trt_cp	Protein synthesis inhibitor
+BRD-K44844162	taselisib	trt_cp	PI3K inhibitor
+BRD-K44876623	zolpidem	trt_cp	Benzodiazepine receptor agonist
+BRD-K44974079	ticagrelor	trt_cp	Purinergic receptor antagonist
+BRD-A44863528	proglumide	trt_cp	CCK receptor antagonist
+BRD-K44942188	fomocaine	trt_cp	Voltage-gated sodium channel modulator
+BRD-K45033733	famciclovir	trt_cp	DNA polymerase inhibitor
+BRD-K45158365	valsartan	trt_cp	Angiotensin receptor antagonist
+BRD-K45245728	ursodeoxycholyltaurine	trt_cp	Cholesterol inhibitor
+BRD-K45330754	diethylstilbestrol	trt_cp	Estrogen receptor agonist
+BRD-K45168550	sb-756050	trt_cp	NA
+BRD-K45252063	clofibrate	trt_cp	PPAR receptor agonist
+BRD-K45503887	delivert	trt_cp	Angiotensin receptor agonist
+BRD-K45746021	cc-401	trt_cp	NA
+BRD-K46133855	nxy-059	trt_cp	NA
+BRD-K46290096	preladenant	trt_cp	Adenosine receptor antagonist
+BRD-K46424862	hymecromone	trt_cp	Monoamine oxidase inhibitor
+BRD-K46654563	zofenopril-calcium	trt_cp	Angiotensin converting enzyme inhibitor
+BRD-A46179541	doxapram	trt_cp	Potassium channel blocker
+BRD-K46604138	dapagliflozin	trt_cp	Sodium/glucose cotransporter inhibitor
+BRD-K46692793	umeclidinium	trt_cp	Acetylcholine receptor antagonist
+BRD-K47095176	talnetant	trt_cp	Tachykinin antagonist
+BRD-K04887706	AKT-inhibitor-1-2	trt_cp	AKT inhibitor
+BRD-K47642186	piclamilast	trt_cp	Phosphodiesterase inhibitor
+BRD-A47364545	sk&f-10047-(+)	trt_cp	NA
+BRD-K47554101	eperezolid	trt_cp	Bacterial 30S ribosomal subunit inhibitor
+BRD-K47639036	flavoxate	trt_cp	Acetylcholine receptor antagonist
+BRD-K47780086	penciclovir	trt_cp	DNA directed DNA polymerase inhibitor
+BRD-K48195801	tecastemizole	trt_cp	Histamine receptor antagonist
+BRD-A48237631	mitomycin-c	trt_cp	DNA alkylating drug|DNA inhibitor|DNA alkylating agent|DNA synthesis inhibitor
+BRD-K48367671	febuxostat	trt_cp	Xanthine oxidase inhibitor
+BRD-K48461310	fosfomycin	trt_cp	Bacterial cell wall synthesis inhibitor
+BRD-K48213016	cc-930	trt_cp	NA
+BRD-K48300629	zonisamide	trt_cp	Sodium channel blocker|T-type calcium channel blocker
+BRD-A48570745	ivermectin	trt_cp	GABA receptor agonist
+BRD-K48894757	laropiprant	trt_cp	Prostanoid receptor antagonist
+BRD-K49215523	gsk2636771	trt_cp	PI3K inhibitor
+BRD-K49350383	thioguanine	trt_cp	Purine antagonist
+BRD-K49075727	nintedanib	trt_cp	FGFR inhibitor|PDGFR tyrosine kinase receptor inhibitor|VEGFR inhibitor
+BRD-A49160188	donepezil	trt_cp	Acetylcholinesterase inhibitor
+BRD-K49328571	dasatinib	trt_cp	KIT inhibitor|Src inhibitor|Bcr-Abl kinase inhibitor|Ephrin inhibitor|PDGFR tyrosine kinase receptor inhibitor|Tyrosine kinase inhibitor
+BRD-A49399758	desmopressin-acetate	trt_cp	Vasopressin receptor agonist
+BRD-A49622760	faropenem	trt_cp	Lactamase inhibitor
+BRD-K49685476	TTNPB	trt_cp	Retinoid receptor agonist
+BRD-K49807096	benazepril	trt_cp	Angiotensin converting enzyme inhibitor
+BRD-K49865102	PD-0325901	trt_cp	MEK inhibitor|MAP kinase inhibitor|Protein kinase inhibitor
+BRD-K49671696	ketanserin	trt_cp	Serotonin receptor antagonist
+BRD-A49765801	fludroxycortide	trt_cp	Glucocorticoid receptor agonist
+BRD-K49840922	etofylline-clofibrate	trt_cp	Platelet aggregation inhibitor|Lipase clearing factor inhibitor
+BRD-K50031829	pf-04447943	trt_cp	NA
+BRD-K50422030	clomethiazole	trt_cp	GABA receptor antagonist|GABA receptor modulator
+BRD-K50564936	e-2012	trt_cp	NA
+BRD-A50675702	fipronil	trt_cp	Chloride channel blocker|GABA gated chloride channel blocker
+BRD-K50398167	meclofenamic-acid	trt_cp	Cyclooxygenase inhibitor|Prostanoid receptor antagonist
+BRD-K50498985	taladegib	trt_cp	Smoothened receptor antagonist
+BRD-K50590187	capsaicin	trt_cp	TRPV agonist
+BRD-K53508936	cts-1027	trt_cp	NA
+BRD-K82522873	n6022	trt_cp	Alcohol dehydrogenase inhibitor
+BRD-A83081521	finasteride	trt_cp	5 alpha reductase inhibitor
+BRD-K83405785	pimavanserin	trt_cp	Serotonin receptor inverse agonist
+BRD-K82603084	ethylenediaminetetraacetic-acid	trt_cp	PKC inhibitor
+BRD-K83186168	azd1981	trt_cp	CRTH receptor antagonist
+BRD-K83508485	FK-888	trt_cp	Tachykinin antagonist
+BRD-A84174393	meloxicam	trt_cp	Cyclooxygenase inhibitor
+BRD-K84564571	telatinib	trt_cp	KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|VEGFR inhibitor
+BRD-K84925803	t-5224	trt_cp	NA
+BRD-K84466663	nelarabine	trt_cp	DNA synthesis inhibitor|T cell inhibitor
+BRD-A84575140	pimobendan	trt_cp	Calcium sensitizer|Phosphodiesterase inhibitor
+BRD-K84986517	darunavir	trt_cp	HIV protease inhibitor
+BRD-K84996356	azd3514	trt_cp	Drugs Acting on Androgen Receptor
+BRD-K85090592	pilocarpine	trt_cp	Acetylcholine receptor agonist
+BRD-K85833139	dehydroepiandrosterone	trt_cp	Protein synthesis stimulant
+BRD-K85925969	zalcitabine	trt_cp	Nucleoside reverse transcriptase inhibitor
+BRD-K86892782	edoxudine	trt_cp	DNA directed DNA polymerase inhibitor
+BRD-K85751432	refametinib	trt_cp	MEK inhibitor
+BRD-K86118762	linsitinib	trt_cp	IGF-1 inhibitor
+BRD-K86930074	cediranib	trt_cp	VEGFR inhibitor|KIT inhibitor
+BRD-A87130939	masoprocol	trt_cp	Lipoxygenase inhibitor
+BRD-K80082640	otamixaban	trt_cp	Coagulation factor inhibitor
+BRD-K82236179	dicoumarol	trt_cp	NADPH inhibitor
+BRD-A84481105	thioridazine	trt_cp	Dopamine receptor antagonist
+BRD-A80151636	bromocriptine	trt_cp	Dopamine receptor agonist
+BRD-K81795818	exherin	trt_cp	Cadherin antagonist
+BRD-K82928847	acy-1215	trt_cp	NA
+BRD-K84011460	nizofenone	trt_cp	Ion channel antagonist
+BRD-A86216746	varenicline	trt_cp	Acetylcholine receptor agonist
+BRD-K45117373	Y-26763	trt_cp	Potassium channel activator
+BRD-K45152786	merbarone	trt_cp	Topoisomerase inhibitor
+BRD-K84748119	vicriviroc	trt_cp	CC chemokine receptor antagonist
+BRD-K45071273	tetracaine	trt_cp	Membrane integrity inhibitor
+BRD-A45153512	bimatoprost	trt_cp	Prostanoid receptor agonist
+BRD-K45875383	xbd173	trt_cp	Benzodiazepine receptor ligand
+BRD-K46018455	bezafibrate	trt_cp	PPAR receptor agonist
+BRD-K46937689	phenazone	trt_cp	Cyclooxygenase inhibitor
+BRD-A45889380	mepacrine	trt_cp	NFkB pathway inhibitor|Cytokine production inhibitor|TP53 activator
+BRD-K45924332	amrinone	trt_cp	Phosphodiesterase inhibitor
+BRD-K46839850	cinepazide	trt_cp	Calcium channel activator
+BRD-K46970505	cefozopran	trt_cp	Bacterial cell wall synthesis inhibitor
+BRD-K47000838	cytochalasin-b	trt_cp	Microtubule inhibitor
+BRD-K50133271	tolfenamic-acid	trt_cp	Cyclooxygenase inhibitor|Prostanoid receptor antagonist|Leukotriene synthesis inhibitor|Prostanoid receptor inhibitor
+BRD-K47976015	balapiravir	trt_cp	RNA polymerase inhibitor
+BRD-K48578705	methyldopa	trt_cp	Adrenergic receptor agonist
+BRD-K47869605	podophyllotoxin	trt_cp	Microtubule inhibitor|Tubulin inhibitor
+BRD-K47936004	piribedil	trt_cp	Dopamine receptor agonist
+BRD-K48068743	teneligliptin	trt_cp	Dipeptidyl peptidase inhibitor
+BRD-K48722258	dilazep	trt_cp	Adenosine reuptake inhibitor
+BRD-K48892307	sasapyrine	trt_cp	NFkB pathway inhibitor
+BRD-K49456274	pilaralisib	trt_cp	PI3K inhibitor
+BRD-K49555808	bms-707035	trt_cp	NA
+BRD-K48812570	macitentan	trt_cp	Endothelin receptor antagonist
+BRD-K49404994	levetiracetam	trt_cp	Calcium channel blocker
+BRD-K49504902	sep-227900	trt_cp	NA
+BRD-A50033377	rivaroxaban	trt_cp	Coagulation factor inhibitor
+BRD-M80207679	nemonapride	trt_cp	Dopamine receptor antagonist
+BRD-K80343549	tak-285	trt_cp	NA
+BRD-K19111024	clofibric-acid	trt_cp	PPAR receptor agonist
+BRD-K80267133	aminosalicylic-acid	trt_cp	Cyclooxygenase inhibitor
+BRD-K80396088	gliquidone	trt_cp	Sulfonylurea
+BRD-K80608265	erteberel	trt_cp	Estrogen receptor agonist
+BRD-K81272440	dantrolene	trt_cp	Calcium channel blocker
+BRD-K81458380	cx-4945	trt_cp	NA
+BRD-K81528515	nilotinib	trt_cp	Bcr-Abl kinase inhibitor|Abl kinase inhibitor
+BRD-K81332461	maxacalcitol	trt_cp	Vitamin D receptor agonist
+BRD-K81473089	tacrine	trt_cp	Acetylcholinesterase inhibitor
+BRD-K81694556	vtp-27999	trt_cp	NA
+BRD-K81916719	triclabendazole	trt_cp	Microtubule inhibitor
+BRD-A62025033	temsirolimus	trt_cp	MTOR inhibitor
+BRD-K82234479	tramiprosate	trt_cp	Beta amyloid aggregation inhibitor
+BRD-K82244583	mek162	trt_cp	MEK inhibitor
+BRD-A82396632	miconazole	trt_cp	Bacterial cell wall synthesis inhibitor
+BRD-K82225283	isosorbide	trt_cp	Nitric oxide stimulant
+BRD-A82395837	ginkgolide-b	trt_cp	Platelet activating factor receptor antagonist|GABA receptor antagonist|Glycine receptor antagonist|Immunosuppressant|Peptidase inhibitor|Protease inhibitor|Reducing agent
+BRD-K82467063	sb-271046	trt_cp	NA
+BRD-K82767007	dazoxiben	trt_cp	Thromboxane synthase inhibitor
+BRD-K82795137	loratadine	trt_cp	Histamine receptor antagonist
+BRD-K82967685	mirodenafil	trt_cp	Phosphodiesterase inhibitor
+BRD-A82772293	mepazine	trt_cp	Mucosa associated lymphoid tissue lymphoma translocation protein 1 (MALT1) inhibitor
+BRD-K82846253	repaglinide	trt_cp	Insulin secretagogue
+BRD-K82941592	rosuvastatin	trt_cp	HMGCR inhibitor
+BRD-K83057217	doxifluridine	trt_cp	Thymidylate synthase inhibitor
+BRD-K83699324	nms-1286937	trt_cp	NA
+BRD-K83794243	palovarotene	trt_cp	Retinoid receptor agonist
+BRD-K83963101	MLN-8054	trt_cp	Aurora kinase inhibitor|Mitotic inhibitor|Protein kinase inhibitor
+BRD-K84091759	candesartan	trt_cp	Angiotensin receptor antagonist
+BRD-K83720053	avagacestat	trt_cp	Gamma secretase inhibitor
+BRD-K83837640	JNJ-26854165	trt_cp	HDAC inhibitor
+BRD-K84163249	ercalcitriol	trt_cp	Vitamin D receptor agonist
+BRD-K84683831	radezolid	trt_cp	Bacterial 30S ribosomal subunit inhibitor|Bacterial 50S ribosomal subunit inhibitor
+BRD-K84794093	dideoxyadenosine	trt_cp	Nucleoside reverse transcriptase inhibitor
+BRD-K84810405	almorexant	trt_cp	Orexin receptor antagonist
+BRD-K84698278	agomelatine	trt_cp	Melatonin receptor agonist|Serotonin receptor antagonist
+BRD-K84783599	riociguat	trt_cp	Guanylate cyclase stimulant
+BRD-K84798689	sodium-tanshinone-ii-a-sulfonate	trt_cp	Inward rectifier potassium channel activator
+BRD-K84892605	iowh032	trt_cp	CFTR channel antagonist
+BRD-K85119730	tolbutamide	trt_cp	ATP channel blocker
+BRD-K85337334	otilonium	trt_cp	Acetylcholine receptor antagonist
+BRD-A85439007	idoxuridin	trt_cp	DNA synthesis inhibitor
+BRD-K85606544	neratinib	trt_cp	EGFR inhibitor
+BRD-K85307935	novobiocin	trt_cp	Bacterial DNA gyrase inhibitor
+BRD-K85406984	sobetirome	trt_cp	Thyroid hormone receptor agonist
+BRD-A85548292	piketoprofen	trt_cp	Cyclooxygenase inhibitor
+BRD-K85679373	sulbactam	trt_cp	Beta lactamase inhibitor
+BRD-K86307448	allopurinol	trt_cp	Xanthine oxidase inhibitor
+BRD-K86797399	sb-939	trt_cp	NA
+BRD-A86871940	nicaraven	trt_cp	Free radical scavenger
+BRD-A86248581	tetrahydrouridine	trt_cp	Cytidine deaminase inhibitor
+BRD-K86525559	azd7762	trt_cp	CHK inhibitor
+BRD-K86816506	pf-04457845	trt_cp	NA
+BRD-K86882815	cabergoline	trt_cp	Dopamine receptor agonist
+BRD-K74363950	aclidinium	trt_cp	Acetylcholine receptor antagonist
+BRD-K75958547	pitavastatin	trt_cp	HMGCR inhibitor
+BRD-K77908580	entinostat	trt_cp	HDAC inhibitor
+BRD-A74980173	gatifloxacin	trt_cp	Bacterial DNA gyrase inhibitor
+BRD-K76908866	CP-724714	trt_cp	Tyrosine kinase inhibitor|EGFR inhibitor
+BRD-K79254416	decitabine	trt_cp	DNA methyltransferase inhibitor
+BRD-K68103045	CGS-20625	trt_cp	Benzodiazepine receptor agonist
+BRD-K68164687	epothilone-b	trt_cp	Microtubule stabilizing agent|Tubulin inhibitor|Microtubule stimulant
+BRD-K68532323	sb-743921	trt_cp	NA
+BRD-K68132782	terbinafine	trt_cp	Fungal squalene epoxidase inhibitor
+BRD-K68232413	etizolam	trt_cp	Benzodiazepine receptor agonist
+BRD-K68552125	phorbol-myristate-acetate	trt_cp	PKC activator
+BRD-K68693535	lidamidine	trt_cp	Adrenergic receptor agonist
+BRD-K68747584	pf-03814735	trt_cp	NA
+BRD-K69247067	afloqualone	trt_cp	Acetylcholine receptor antagonist
+BRD-A69275535	pinitol	trt_cp	Gamma secretase inhibitor
+BRD-K70330367	amantadine	trt_cp	Glutamate receptor antagonist
+BRD-K69236721	vx-809	trt_cp	NA
+BRD-A69636825	diltiazem	trt_cp	Calcium channel blocker
+BRD-K70358946	aripiprazole	trt_cp	Serotonin receptor agonist|Serotonin receptor antagonist
+BRD-K70401845	erlotinib	trt_cp	EGFR inhibitor
+BRD-K70778732	trazodone	trt_cp	Adrenergic receptor antagonist|Serotonin receptor antagonist|Serotonin reuptake inhibitor
+BRD-K70914287	BIBX-1382	trt_cp	EGFR inhibitor|Tyrosine kinase inhibitor
+BRD-K70463136	bay-87-2243	trt_cp	NA
+BRD-A70858459	estramustine	trt_cp	DNA alkylating drug
+BRD-K70912147	co-102862	trt_cp	NA
+BRD-K71221037	birinapant	trt_cp	XIAP inhibitor
+BRD-K71281111	snx-2112	trt_cp	NA
+BRD-K71480163	gdc-0068	trt_cp	NA
+BRD-K72222507	quinapril	trt_cp	Angiotensin converting enzyme inhibitor
+BRD-A72309220	metergoline	trt_cp	Dopamine receptor agonist|Serotonin receptor antagonist
+BRD-K71289571	zafirlukast	trt_cp	Leukotriene receptor antagonist
+BRD-K72215350	acexamic-acid	trt_cp	Gastrin inhibitor|Reducing agent|5 alpha reductase inhibitor
+BRD-A72390365	choline-alfoscerate	trt_cp	Acetylcholine receptor agonist|Membrane permeability enhancer|Acetylcholine precursor
+BRD-K73196317	urapidil	trt_cp	Adrenergic receptor antagonist
+BRD-K73319509	PF-04217903	trt_cp	C-Met inhibitor
+BRD-K67844266	MLN-4924	trt_cp	Nedd activating enzyme inhibitor
+BRD-K73237276	tacalcitol	trt_cp	Vitamin D receptor agonist
+BRD-A73368467	fexofenadine	trt_cp	Histamine receptor antagonist
+BRD-K67789209	adatanserin	trt_cp	Serotonin receptor agonist|Serotonin receptor antagonist
+BRD-K68488863	ENMD-2076	trt_cp	Aurora kinase inhibitor|FLT3 inhibitor|VEGFR inhibitor
+BRD-K68938568	gdc-0152	trt_cp	NA
+BRD-K70557564	zosuquidar	trt_cp	P-glycoprotein inhibitor
+BRD-K72414522	AZD-5438	trt_cp	CDK inhibitor
+BRD-K81144366	moxisylyte	trt_cp	Adrenergic receptor antagonist
+BRD-A69815203	cyclosporin-a	trt_cp	Calcineurin inhibitor
+BRD-K71035033	masitinib	trt_cp	KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|Src inhibitor
+BRD-K80700417	sgi-1776	trt_cp	NA
+BRD-A81233518	glycopyrrolate	trt_cp	Acetylcholine receptor antagonist
+BRD-K81957469	semagacestat	trt_cp	Gamma secretase inhibitor
+BRD-K82135108	elesclomol	trt_cp	Oxidative stress inducer
+BRD-K82677201	almitrine	trt_cp	Neurotransmitter agonist
+BRD-K81258678	triptolide	trt_cp	RNA polymerase inhibitor
+BRD-A82035391	tolvaptan	trt_cp	Vasopressin receptor antagonist
+BRD-A82156122	saxagliptin	trt_cp	Dipeptidyl peptidase inhibitor
+BRD-K82746043	navitoclax	trt_cp	BCL inhibitor
+BRD-A67862938	naftidrofuryl	trt_cp	Adrenergic receptor antagonist
+BRD-K67966701	lisinopril	trt_cp	Angiotensin converting enzyme inhibitor
+BRD-K68065987	MK-2206	trt_cp	AKT inhibitor
+BRD-K67901620	avasimibe	trt_cp	ACAT inhibitor
+BRD-K67102207	phenylbutyrate	trt_cp	HDAC inhibitor
+BRD-K68095457	palmitoylethanolamide	trt_cp	Cannabinoid receptor agonist
+BRD-K68232650	lacosamide	trt_cp	Collapsin response mediator protein inhibitor|Collapsin response mediator protein stimulant|Sodium channel blocker
+BRD-A68304895	bts-54505	trt_cp	NA
+BRD-K68392338	ZK-93426	trt_cp	Benzodiazepine receptor antagonist
+BRD-A68281735	REV-5901	trt_cp	Leukotriene receptor antagonist|Lipoxygenase inhibitor
+BRD-K68346641	amsacrine	trt_cp	Topoisomerase inhibitor
+BRD-A68464583	mazindol	trt_cp	Dopamine reuptake inhibitor|Serotonin reuptake inhibitor
+BRD-A68493689	simeprevir	trt_cp	HCV inhibitor
+BRD-K68867920	quetiapine	trt_cp	Dopamine receptor antagonist|Serotonin receptor antagonist
+BRD-A68888262	azelastine	trt_cp	Histamine receptor antagonist
+BRD-A68942014	amitifadine	trt_cp	Serotonin transporter (SERT) inhibitor
+BRD-K69116396	sertindole	trt_cp	Dopamine receptor antagonist|Serotonin receptor antagonist
+BRD-K68870568	flumatinib	trt_cp	Bcr-Abl kinase inhibitor
+BRD-K69001009	golvatinib	trt_cp	VEGFR inhibitor
+BRD-K69122748	diacerein	trt_cp	Interleukin inhibitor
+BRD-K35189033	levonorgestrel	trt_cp	Estrogen receptor agonist|Glucocorticoid receptor antagonist|Progesterone receptor agonist|Progesterone receptor antagonist
+BRD-K69726595	mericitabine	trt_cp	HCV inhibitor
+BRD-K70301465	ibrutinib	trt_cp	BTK inhibitor
+BRD-K69726342	atorvastatin	trt_cp	HMGCR inhibitor
+BRD-K69776681	volasertib	trt_cp	PLK inhibitor
+BRD-A70083328	secnidazole	trt_cp	Acetylcholinesterase inhibitor|Microtubule inhibitor
+BRD-K70301876	escitalopram	trt_cp	Selective serotonin reuptake inhibitor (SSRI)
+BRD-K70464547	sertraline	trt_cp	Serotonin receptor antagonist
+BRD-K70505054	ranitidine	trt_cp	Histamine receptor antagonist
+BRD-K70511574	sunitinib	trt_cp	FLT3 inhibitor|KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor|RET tyrosine kinase inhibitor|VEGFR inhibitor
+BRD-K70592483	phenylacetylglutamine	trt_cp	DNA methylase inhibitor|Protein synthesis inhibitor
+BRD-K70490179	rimcazole	trt_cp	Sigma receptor antagonist
+BRD-K70507123	doxofylline	trt_cp	Adenosine receptor antagonist
+BRD-K70610771	vx-222	trt_cp	NA
+BRD-K70924353	amtolmetin-guacil	trt_cp	Cyclooxygenase inhibitor
+BRD-K71075609	dorzolamide	trt_cp	Carbonic anhydrase inhibitor
+BRD-K71106091	fludarabine-phosphate	trt_cp	DNA synthesis inhibitor|DNA repair enzyme inhibitor|Purine antagonist
+BRD-A70998768	pinaverium	trt_cp	T-type calcium channel blocker
+BRD-K71058253	luliconazole	trt_cp	Sterol demethylase inhibitor
+BRD-K71103788	duloxetine	trt_cp	Norepinephrine reuptake inhibitor|Serotonin reuptake inhibitor
+BRD-K71164191	kd-023	trt_cp	NA
+BRD-K71603915	evp-6124	trt_cp	NA
+BRD-K71822263	d-serine	trt_cp	NA
+BRD-K72029282	probucol	trt_cp	Atherogenesis inhibitor
+BRD-K72093121	vidarabine	trt_cp	Antiviral
+BRD-K71799949	carbamazepine	trt_cp	Carboxamide antiepileptic
+BRD-K72005722	vt-464	trt_cp	NA
+BRD-A72066420	mifobate	trt_cp	PPAR receptor antagonist
+BRD-K72166146	dihydroergotamine	trt_cp	Serotonin receptor agonist
+BRD-K72827473	cep-37440	trt_cp	NA
+BRD-K72951360	valrubicin	trt_cp	DNA inhibitor|Topoisomerase inhibitor
+BRD-K73107279	levamisole	trt_cp	Acetylcholine receptor agonist
+BRD-A72711497	lasalocid	trt_cp	Bacterial permeability inducer
+BRD-K72922393	linsidomine	trt_cp	Nitric oxide donor
+BRD-K73088654	floxuridine	trt_cp	DNA synthesis inhibitor
+BRD-K73109821	diazoxide	trt_cp	Potassium channel activator
+BRD-K73524797	st-1859	trt_cp	NA
+BRD-A73556557	tagatose	trt_cp	Phosphorylase inhibitor
+BRD-A73741725	exemestane	trt_cp	Aromatase inhibitor
+BRD-K73541271	etofenamate	trt_cp	Cyclooxygenase inhibitor
+BRD-A20239487	atenolol	trt_cp	Adrenergic receptor antagonist
+BRD-K73794685	azithromycin	trt_cp	Bacterial 50S ribosomal subunit inhibitor
+BRD-K74065929	doramapimod	trt_cp	P38 MAPK inhibitor
+BRD-K74190368	resorcinol	trt_cp	Phosphodiesterase inhibitor
+BRD-K74305673	IKK-2-inhibitor-V	trt_cp	IKK inhibitor|NFkB pathway inhibitor
+BRD-K74141488	naftifine	trt_cp	Fungal squalene epoxidase inhibitor
+BRD-K74195153	irsogladine	trt_cp	Phosphodiesterase inhibitor
+BRD-K74339692	tamsulosin	trt_cp	Adrenergic receptor antagonist
+BRD-K74371986	nsi-189	trt_cp	NA
+BRD-K74763371	bosentan	trt_cp	Endothelin receptor antagonist
+BRD-A74914197	pralatrexate	trt_cp	Dihydrofolate reductase inhibitor
+BRD-K75037734	carbachol	trt_cp	Cholinergic receptor agonist
+BRD-A75172220	hydrocortisone	trt_cp	Glucocorticoid receptor agonist
+BRD-K74765201	tomelukast	trt_cp	Leukotriene receptor antagonist
+BRD-K75089421	procainamide	trt_cp	Sodium channel blocker
+BRD-K75295174	alisertib	trt_cp	Aurora kinase inhibitor
+BRD-K75699339	rizatriptan	trt_cp	Serotonin receptor agonist
+BRD-K75844781	mcpp	trt_cp	Serotonin receptor agonist
+BRD-K76197012	ulipristal	trt_cp	Progesterone receptor antagonist
+BRD-A75726477	clenbuterol	trt_cp	Adrenergic receptor agonist
+BRD-K75911534	su014813	trt_cp	PDGFR tyrosine kinase receptor inhibitor|VEGFR inhibitor
+BRD-K76022557	r(-)-apomorphine	trt_cp	Dopamine receptor agonist|TRPA1 modulator
+BRD-K76205745	losartan	trt_cp	Angiotensin receptor antagonist
+BRD-A76747559	rutin	trt_cp	Antioxidant|Capillary stabilizing agent|Nitric oxide scavenger
+BRD-K76810206	nicergoline	trt_cp	Adrenergic receptor antagonist
+BRD-K76841105	tazarotene	trt_cp	Retinoid receptor agonist
+BRD-K76953762	indoramin	trt_cp	Adrenergic receptor antagonist
+BRD-K76775527	nimesulide	trt_cp	Cyclooxygenase inhibitor
+BRD-K76812510	metamizole	trt_cp	Cyclooxygenase inhibitor|Opioid receptor agonist
+BRD-K77396579	nvp-dpp728	trt_cp	NA
+BRD-K77695569	tiabendazole	trt_cp	Angiogenesis inhibitor
+BRD-K78010432	furosemide	trt_cp	Diuretic
+BRD-K78096648	oxiperomide	trt_cp	Dopamine receptor antagonist
+BRD-K45275534	betrixaban	trt_cp	Coagulation inhibitor
+BRD-K77947974	fluspirilene	trt_cp	Dopamine receptor antagonist
+BRD-K78055238	ly2090314	trt_cp	Glycogen synthase kinase inhibitor
+BRD-K78113049	enoxacin	trt_cp	Topoisomerase inhibitor
+BRD-A78341343	regadenoson	trt_cp	Adenosine receptor agonist
+BRD-K78485176	olmesartan	trt_cp	Angiotensin receptor antagonist
+BRD-K78567475	dolastatin-10	trt_cp	Tubulin inhibitor|Immunostimulant|Microtubule inhibitor|Tubulin polymerisation inhibitor
+BRD-K78692225	leflunomide	trt_cp	Dihydroorotate dehydrogenase inhibitor|PDGFR tyrosine kinase receptor inhibitor
+BRD-K78431006	crizotinib	trt_cp	ALK tyrosine kinase receptor inhibitor
+BRD-K78513633	lonidamine	trt_cp	Glucokinase inhibitor
+BRD-K78659596	MLN-2238	trt_cp	Proteasome inhibitor
+BRD-A78723049	cefotetan	trt_cp	Bacterial cell wall synthesis inhibitor
+BRD-A79431551	3-deazaadenosine	trt_cp	Adenosylhomocysteinase inhibitor
+BRD-K79595931	bavisant	trt_cp	Histamine receptor antagonist
+BRD-K79759585	sildenafil	trt_cp	Phosphodiesterase inhibitor
+BRD-K79404599	enzastaurin	trt_cp	PKC inhibitor
+BRD-K79501723	cyclizine	trt_cp	Histamine receptor modulator
+BRD-K79602928	metformin	trt_cp	Insulin sensitizer
+BRD-A79768653	sirolimus	trt_cp	MTOR inhibitor
+BRD-A97701745	pindolol	trt_cp	Adrenergic receptor antagonist
+BRD-K97746869	chlorpropamide	trt_cp	ATP channel blocker
+BRD-K98493452	honokiol	trt_cp	AKT inhibitor
+BRD-K97729603	pimecrolimus	trt_cp	Calcineurin inhibitor
+BRD-K97799481	theophylline	trt_cp	Adenosine receptor antagonist
+BRD-K98530306	clonidine	trt_cp	Adrenergic receptor agonist
+BRD-K98624455	bepotastine	trt_cp	Histamine receptor antagonist
+BRD-K91336023	mesulergine	trt_cp	Dopamine receptor agonist
+BRD-K92213669	lomitapide	trt_cp	Microsomal trigylceride transfer protein inhibitor
+BRD-A90799790	isradipine	trt_cp	Calcium channel blocker
+BRD-K91456750	sacubitril	trt_cp	Neprilysin inhibitor
+BRD-K92241597	tosedostat	trt_cp	Peptidase inhibitor
+BRD-K96194081	cepharanthine	trt_cp	NFkB pathway inhibitor
+BRD-K99475619	genz-644282	trt_cp	Topoisomerase inhibitor
+BRD-K98733875	baicalin	trt_cp	Beta glucuronidase inhibitor
+BRD-K88544581	CI-976	trt_cp	ACAT inhibitor
+BRD-K90333595	phentolamine	trt_cp	Adrenergic receptor antagonist
+BRD-A98702003	carbenoxolone	trt_cp	11-beta-HSD1 inhibitor
+BRD-A89175223	bisoprolol	trt_cp	Adrenergic receptor antagonist
+BRD-K91301684	noscapine	trt_cp	Bradykinin receptor antagonist|Tubulin inhibitor
+BRD-K91822704	torcitabine	trt_cp	DNA polymerase inhibitor
+BRD-K73815512	hc-030031	trt_cp	NA
+BRD-K74057757	indibulin	trt_cp	Tubulin inhibitor
+BRD-K99113996	azd2014	trt_cp	MTOR inhibitor
+BRD-A73908300	EX-527	trt_cp	SIRT inhibitor
+BRD-K73999723	telmisartan	trt_cp	Angiotensin receptor antagonist
+BRD-A74391928	ibutilide	trt_cp	Potassium channel blocker
+BRD-K74514084	pazopanib	trt_cp	VEGFR inhibitor|KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor
+BRD-K74717603	etravirine	trt_cp	Non-nucleoside reverse transcriptase inhibitor
+BRD-A75479906	rimantadine	trt_cp	Antiviral|RNA synthesis inhibitor
+BRD-K75641298	metoclopramide	trt_cp	Dopamine receptor antagonist|Serotonin receptor antagonist
+BRD-A74667430	etodolac	trt_cp	Cyclooxygenase inhibitor
+BRD-A75305484	anidulafungin	trt_cp	Fungal 1,3-beta-D-glucan synthase inhibitor
+BRD-K75649340	tioguanine	trt_cp	Purine antagonist
+BRD-K76210423	resiquimod	trt_cp	Toll-like receptor agonist
+BRD-A82522119	tibolone	trt_cp	Estrogen receptor agonist|Androgen receptor agonist|Progesterone receptor agonist
+BRD-K77625799	vandetanib	trt_cp	EGFR inhibitor|RET tyrosine kinase inhibitor|VEGFR inhibitor
+BRD-K76617868	fasudil	trt_cp	Rho associated kinase inhibitor
+BRD-K76674262	homoharringtonine	trt_cp	Protein synthesis inhibitor
+BRD-K77561571	topiroxostat	trt_cp	Xanthine oxidase inhibitor
+BRD-K77641333	naphazoline	trt_cp	Adrenergic receptor agonist
+BRD-K77685957	dequalinium	trt_cp	PKC inhibitor
+BRD-K78126613	menadione	trt_cp	Mitochondrial DNA polymerase inhibitor|Phosphatase inhibitor
+BRD-K78303961	glycitein	trt_cp	Tumor necrosis factor release inhibitor
+BRD-K79095980	broxuridine	trt_cp	Antimetabolite
+BRD-K78118466	ly2157299	trt_cp	TGF beta receptor inhibitor
+BRD-A78195072	imexon	trt_cp	Apoptosis stimulant|Ribonucleoside reductase inhibitor
+BRD-A78877355	nefopam	trt_cp	Cyclooxygenase inhibitor
+BRD-K79102359	idalopirdine	trt_cp	Serotonin receptor antagonist
+BRD-A79981887	midodrine	trt_cp	Adrenergic receptor agonist
+BRD-A80017228	bendroflumethiazide	trt_cp	Sodium/potassium/chloride transporter inhibitor
+BRD-K73381542	phenylephrine	trt_cp	Adrenergic receptor agonist
+BRD-K79131256	albendazole	trt_cp	Tubulin inhibitor
+BRD-K79989959	nesbuvir	trt_cp	RNA polymerase inhibitor
+BRD-K80043866	sodium-gualenate	trt_cp	Antacid
+BRD-K73440166	cinaciguat	trt_cp	Guanylate cyclase activator
+BRD-K87300616	ursodiol	trt_cp	Nuclear factor erythroid derived, like (NRF2) activator
+BRD-A87479750	tenidap	trt_cp	Cyclooxygenase inhibitor
+BRD-K87782578	avl-292	trt_cp	NA
+BRD-A87435144	azd7545	trt_cp	Pyruvate dehydrogenase kinase inhibitor
+BRD-K87737963	CYT387	trt_cp	NA
+BRD-K87909389	alvocidib	trt_cp	CDK inhibitor
+BRD-A88138582	halcinonide	trt_cp	Glucocorticoid receptor agonist
+BRD-K88366685	trimetazidine	trt_cp	3-ketoacyl CoA thiolase inhibitor
+BRD-K88506063	kd025	trt_cp	Rho associated kinase inhibitor
+BRD-K88358234	xaliproden	trt_cp	Serotonin receptor agonist
+BRD-K88429204	pyrimethamine	trt_cp	Dihydrofolate reductase inhibitor
+BRD-K88510285	bortezomib	trt_cp	NFkB pathway inhibitor|Proteasome inhibitor
+BRD-K88611939	aniracetam	trt_cp	Glutamate receptor agonist
+BRD-K87156652	carbimazole	trt_cp	Antithyroid agent
+BRD-A89164055	sorbinil	trt_cp	Aldose reductase inhibitor
+BRD-K89208535	indacaterol	trt_cp	Adrenergic receptor agonist
+BRD-K89348303	ramipril	trt_cp	Angiotensin converting enzyme inhibitor
+BRD-K89162000	tandutinib	trt_cp	FLT3 inhibitor|KIT inhibitor|PDGFR tyrosine kinase receptor inhibitor
+BRD-K89274813	DMP-543	trt_cp	Acetylcholine release stimulant
+BRD-K89375097	pirenzepine	trt_cp	Acetylcholine receptor antagonist
+BRD-M89827113	levcromakalim	trt_cp	Potassium channel activator
+BRD-K89997465	chlorpromazine	trt_cp	Dopamine receptor antagonist
+BRD-A90625545	clinofibrate	trt_cp	Lipase clearing factor inhibitor
+BRD-K89917372	retigabine	trt_cp	Potassium channel activator
+BRD-K90195324	bazedoxifene	trt_cp	Selective estrogen receptor modulator (SERM)
+BRD-A90547603	eptifibatide	trt_cp	Platelet aggregation inhibitor
+BRD-K90777969	cutamesine	trt_cp	Sigma receptor agonist
+BRD-K90948141	indiplon	trt_cp	Benzodiazepine receptor agonist|GABA receptor agonist
+BRD-K91159026	telcagepant	trt_cp	Calcitonin antagonist
+BRD-A05457250	BAY-K8644	trt_cp	Calcium channel activator
+BRD-K91308639	arn-509	trt_cp	NA
+BRD-K91111634	rotigotine	trt_cp	Dopamine receptor agonist
+BRD-K91263825	nortriptyline	trt_cp	Tricyclic antidepressant
+BRD-K91315211	betahistine	trt_cp	Histamine receptor agonist|Histamine receptor antagonist
+BRD-K91601245	mercaptopurine	trt_cp	Immunosuppressant|Protein synthesis inhibitor|Purine antagonist
+BRD-A91877226	capecitabine	trt_cp	DNA synthesis inhibitor|Thymidylate synthase inhibitor
+BRD-K92049597	triamterene	trt_cp	Sodium channel blocker
+BRD-A91699651	chloroquine	trt_cp	Antimalarial agent
+BRD-K91825936	zk811752	trt_cp	CC chemokine receptor antagonist
+BRD-K92041145	o6-benzylguanine	trt_cp	NA
+BRD-K92093830	doxorubicin	trt_cp	Topoisomerase inhibitor
+BRD-K98769987	flumazenil	trt_cp	Benzodiazepine receptor antagonist
+BRD-A98990573	epinastine	trt_cp	Histamine receptor antagonist
+BRD-K99092662	ps178990	trt_cp	Androgen receptor modulator
+BRD-K99792991	hexachlorophene	trt_cp	Potassium channel activator
+BRD-A98845662	desvenlafaxine	trt_cp	Serotonin reuptake inhibitor
+BRD-K99023089	azd5363	trt_cp	AKT inhibitor
+BRD-K99749624	linifanib	trt_cp	PDGFR tyrosine kinase receptor inhibitor|VEGFR inhibitor
+BRD-A99939097	carisoprodol	trt_cp	Acetylcholine receptor antagonist
+BRD-K99383816	ftorafur	trt_cp	Thymidylate synthase inhibitor
+BRD-A65051990	acenocoumarol	trt_cp	Vitamin K antagonist
+BRD-A20348246	chlormezanone	trt_cp	GABA receptor modulator
+BRD-K99257182	quinidine	trt_cp	Sodium channel blocker
+BRD-K99451608	lopinavir	trt_cp	HIV protease inhibitor
+BRD-K91740057	felbinac	trt_cp	Cyclooxygenase inhibitor
+BRD-A15931911	bucladesine	trt_cp	Adenosine receptor agonist|CAMP stimulant
+BRD-K92301463	16,16-dimethylprostaglandin-e2	trt_cp	Prostanoid receptor agonist
+BRD-A92630576	trimebutine	trt_cp	Opioid receptor agonist
+BRD-K92723993	imatinib	trt_cp	PDGFR tyrosine kinase receptor inhibitor|Bcr-Abl kinase inhibitor|KIT inhibitor
+BRD-K92303087	oglemilast	trt_cp	Phosphodiesterase inhibitor
+BRD-K92657060	zaleplon	trt_cp	Benzodiazepine receptor agonist
+BRD-K61443650	thiomersal	trt_cp	Other antibiotic
+BRD-K93123848	raf265	trt_cp	RAF inhibitor|VEGFR inhibitor
+BRD-A93255169	thalidomide	trt_cp	TNF production inhibitor
+BRD-K93869735	taltirelin	trt_cp	Thyrotropin releasing hormone receptor agonist
+BRD-K93208532	apremilast	trt_cp	Phosphodiesterase inhibitor
+BRD-K93255255	indoximod	trt_cp	Indoleamine 2,3-dioxygenase inhibitor
+BRD-K93880783	stavudine	trt_cp	DNA directed DNA polymerase inhibitor|Reverse transcriptase inhibitor
+BRD-K93779381	ingenol-mebutate	trt_cp	PKC activator
+BRD-K93767137	oseltamivir-carboxylate	trt_cp	Neuraminidase inhibitor
+BRD-A94756469	digoxin	trt_cp	ATPase inhibitor
+BRD-K94436377	diosmin	trt_cp	Aryl hydrocarbon receptor agonist|Capillary stabilizing agent
+BRD-K95763993	trapidil	trt_cp	PDGFR tyrosine kinase receptor inhibitor
+BRD-A94543220	bifonazole	trt_cp	Sterol demethylase inhibitor
+BRD-K94534639	ly2811376	trt_cp	Beta-secretase inhibitor
+BRD-K95773607	darifenacin	trt_cp	Acetylcholine receptor antagonist
+BRD-A95869247	indapamide	trt_cp	Thiazide diuretic
+BRD-K96319534	phentermine	trt_cp	Dopamine uptake inhibitor|Serotonin reuptake inhibitor
+BRD-K96615647	av-608	trt_cp	NA
+BRD-K95880107	ph-797804	trt_cp	NA
+BRD-K96342952	tobramycin	trt_cp	Bacterial 30S ribosomal subunit inhibitor
+BRD-A96456596	FPL-55712	trt_cp	Leukotriene receptor antagonist
+BRD-K97101532	vx-661	trt_cp	NA
+BRD-A97104540	fenoterol	trt_cp	Adrenergic receptor agonist
+BRD-K97181089	amiloride	trt_cp	Sodium channel blocker
+BRD-K97564742	mepyramine	trt_cp	Histamine receptor antagonist
+BRD-K97643133	amiprilose	trt_cp	CD antagonist
+BRD-K97158071	droperidol	trt_cp	Dopamine receptor antagonist
+BRD-K97530723	melatonin	trt_cp	Melatonin receptor agonist|Nitric oxide synthase inhibitor
+BRD-A97674275	ranolazine	trt_cp	Sodium channel blocker
+BRD-K93034159	cladribine	trt_cp	Adenosine deaminase inhibitor|Ribonucleoside reductase inhibitor
+BRD-K95412502	istaroxime	trt_cp	ATPase inhibitor
+BRD-K97309399	thiothixene	trt_cp	Dopamine receptor antagonist
+BRD-K93461745	buspirone	trt_cp	Serotonin receptor agonist
+BRD-K94288301	letermovir	trt_cp	CMV terminase inhibitor
+BRD-A95939040	sertaconazole	trt_cp	Sterol demethylase inhibitor
+BRD-K99504665	goserelin-acetate	trt_cp	Gonadotropin releasing factor hormone receptor agonist
+BRD-K98572433	azd8931	trt_cp	EGFR inhibitor
+BRD-K90868879	canagliflozin	trt_cp	Sodium/glucose cotransporter inhibitor
+BRD-K91544578	nikethamide	trt_cp	Immunostimulant
+BRD-K99545815	PF-562271	trt_cp	Focal adhesion kinase inhibitor
+BRD-K90825648	rs-127445	trt_cp	NA
+BRD-K91495480	agp-103	trt_cp	NA
+BRD-K41996876	tyrphostin-1	trt_cp	EGFR inhibitor
+BRD-K99604664	tanaproget	trt_cp	Progesterone receptor agonist
+BRD-A97808748	spironolactone	trt_cp	Mineralocorticoid receptor antagonist
+BRD-A97739905	ketoprofen	trt_cp	Cyclooxygenase inhibitor
+BRD-A38592941	timonacic	trt_cp	Antioxidant
+BRD-K98004573	rupatadine	trt_cp	Histamine receptor antagonist|Platelet activating factor receptor antagonist
+BRD-K97963946	emd-1214063	trt_cp	NA
+BRD-K97884852	malotilate	trt_cp	Protein synthesis stimulant
+BRD-K07857022	alvimopan	trt_cp	Opioid receptor antagonist
+BRD-K92428153	mycophenolate-mofetil	trt_cp	Inosine monophosphate dehydrogenase inhibitor|Hydroxycarboxylic acid receptor agonist|Immunosuppressant|Dehydrogenase inhibitor|Inositol monophosphatase inhibitor
+BRD-K92441787	bexarotene	trt_cp	Retinoid receptor agonist
+BRD-A92537424	danazol	trt_cp	Estrogen receptor antagonist|Progesterone receptor agonist
+BRD-K92428232	GSK-461364	trt_cp	PLK inhibitor
+BRD-K92467929	oxandrolone	trt_cp	Androgen receptor agonist
+BRD-K92613113	safinamide	trt_cp	Dopamine uptake inhibitor|Glutamate inhibitor|Monoamine oxidase inhibitor
+BRD-K92758126	gibberellic-acid	trt_cp	NA
+BRD-K92848252	diminazene-aceturate	trt_cp	Angiotensin converting enzyme activator|DNA intercalating agent|Topoisomerase inhibitor
+BRD-K92984783	melperone	trt_cp	Dopamine receptor antagonist|Serotonin receptor antagonist
+BRD-A92826379	lupanine	trt_cp	Sodium channel blocker
+BRD-K92968657	tirapazamine	trt_cp	DNA inhibitor
+BRD-A93000692	ciglitazone	trt_cp	PPAR receptor agonist
+BRD-A93093700	temazepam	trt_cp	GABA receptor agonist
+BRD-A93353767	isoconazole	trt_cp	Fungal lanosterol demethylase inhibitor
+BRD-K93460210	lamotrigine	trt_cp	Serotonin receptor antagonist|Sodium channel blocker
+BRD-K93618743	ipriflavone	trt_cp	Bone resorption inhibitor
+BRD-K93645900	tadalafil	trt_cp	Phosphodiesterase inhibitor
+BRD-A93424738	dexamethasone	trt_cp	Glucocorticoid receptor agonist
+BRD-K93633846	hesperidin	trt_cp	Flavanone glycoside
+BRD-K93754473	tamoxifen	trt_cp	Estrogen receptor antagonist|Selective estrogen receptor modulator (SERM)
+BRD-K93918653	quizartinib	trt_cp	FLT3 inhibitor
+BRD-A93964801	clinafloxacin	trt_cp	Bacterial DNA gyrase inhibitor
+BRD-K94397152	ribavirin	trt_cp	Antiviral
+BRD-K93944989	safingol	trt_cp	PKC inhibitor
+BRD-A94276798	talinolol	trt_cp	Adrenergic receptor antagonist
+BRD-K94293891	suvorexant	trt_cp	Orexin receptor antagonist
+BRD-K94420399	pf-04136309	trt_cp	NA
+BRD-K94830329	ataluren	trt_cp	CFTR channel agonist|Dystrophin stimulant
+BRD-K95142244	talazoparib	trt_cp	PARP inhibitor
+BRD-K95260951	asenapine	trt_cp	Dopamine receptor antagonist|Serotonin receptor antagonist
+BRD-A95696066	nisoxetine	trt_cp	Norepinephrine reuptake inhibitor
+BRD-A95032015	abacavir	trt_cp	Reverse transcriptase inhibitor
+BRD-K95237249	probenecid	trt_cp	Uricosuric blocker
+BRD-K95739795	tetrabenazine	trt_cp	Vesicular monoamine transporter inhibitor
+BRD-K95901403	XL-147	trt_cp	PI3K inhibitor
+BRD-K96042922	etanidazole	trt_cp	Bacterial cell wall synthesis inhibitor
+BRD-K96123349	brequinar	trt_cp	Dihydroorotate dehydrogenase inhibitor
+BRD-K95921201	reserpine	trt_cp	Vesicular monoamine transporter inhibitor
+BRD-K63750851	mycophenolic-acid	trt_cp	Dehydrogenase inhibitor|Inositol monophosphatase inhibitor
+BRD-A96060515	ipratropium	trt_cp	Acetylcholine receptor antagonist
+BRD-A96292436	eflornithine	trt_cp	Ornithine decarboxylase inhibitor
+BRD-K96671969	pa-824	trt_cp	NA
+BRD-K96740444	itopride	trt_cp	Dopamine receptor antagonist
+BRD-K96862998	pirfenidone	trt_cp	TGF beta receptor inhibitor
+BRD-K97010173	deferasirox	trt_cp	Chelating agent
+BRD-K96720755	relcovaptan	trt_cp	Vasopressin receptor antagonist
+BRD-A96754982	tacrolimus	trt_cp	Calcineurin inhibitor
+BRD-K96936751	bretazenil	trt_cp	GABA benzodiazepine site receptor partial agonist
+BRD-K97045029	pranlukast	trt_cp	Leukotriene receptor antagonist
+BRD-K97428065	netupitant	trt_cp	Tachykinin antagonist
+BRD-K97440753	dihydroergocristine	trt_cp	Adrenergic receptor antagonist|Prolactin inhibitor
+BRD-A97479839	piperidolate	trt_cp	Acetylcholine receptor antagonist
+BRD-K97399794	quercetin	trt_cp	Polar auxin transport inhibitor
+BRD-A97437073	rosiglitazone	trt_cp	PPAR receptor agonist|Insulin sensitizer
+BRD-K97472745	gestrinone	trt_cp	Progesterone receptor antagonist
+BRD-A97502381	cyanocobalamin	trt_cp	Methylmalonyl CoA mutase stimulant|Vitamin B
