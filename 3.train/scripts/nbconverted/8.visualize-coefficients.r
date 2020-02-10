@@ -5,7 +5,14 @@ suppressPackageStartupMessages(library(ggrepel))
 
 consensus <- "modz"
 
-coef_plot <- function(df, target_name, compartment_features, coef_theme, top_plot_num = 15) {
+coef_dir <- file.path("figures", "coefficients")
+figure_dir <- file.path(coef_dir, consensus)
+
+dir.create(figure_dir, recursive = TRUE, showWarnings = FALSE)
+
+coef_plot <- function(
+    df, target_name, compartment_features, coef_theme, top_plot_num = 15
+) {
     # Compile a series of plots that describe model coefficients
     #
     # Arguments:
@@ -187,10 +194,12 @@ coef_theme <- theme(
     legend.key.size = unit(0.3, "cm")
 )
 
-pdf_file <- file.path("figures",
-                      paste0("all_model_coefficients_", consensus, ".pdf"))
-pdf(pdf_file, width = 7, height = 5, onefile = TRUE)
+pdf_file <- file.path(
+    coef_dir,
+    paste0("all_model_coefficients_", consensus, ".pdf")
+)
 
+pdf(pdf_file, width = 7, height = 5, onefile = TRUE)
 for (target in unique(coef_df$target)) {
     coef_gg <- coef_plot(
         df = coef_df,
@@ -200,8 +209,7 @@ for (target in unique(coef_df$target)) {
         top_plot_num = top_plot_num
     )
     output_file <- file.path(
-        "figures",
-        "coefficients",
+        figure_dir,
         paste0("model_", consensus, "_", target, ".png")
     )
     cowplot::save_plot(output_file, coef_gg, base_height = 5, base_width = 7)
