@@ -3,42 +3,61 @@ suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(cowplot))
 suppressPackageStartupMessages(library(ggrepel))
 
-results_dir <- "results"
-consensus <- "median"
+consensus <- "modz"
 
-figure_dir <- file.path("figures", "summary")
-dir.create(figure_dir)
+results_dir <- "results"
+figure_dir <- file.path("figures", "summary", consensus)
+cytominer_compare_dir <- file.path("figures", "cytominer_comparison", consensus)
+
+dir.create(figure_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(cytominer_compare_dir, recursive = TRUE, showWarnings = FALSE)
 
 # Regression Results
-regression_file <- file.path(results_dir, 
-                             paste0("full_cell_health_regression_", consensus, ".tsv.gz"))
+regression_file <- file.path(
+    results_dir, 
+    paste0("full_cell_health_regression_", consensus, ".tsv.gz")
+)
 regression_metrics_df <- readr::read_tsv(regression_file, col_types = readr::cols()) %>%
     dplyr::filter(cell_line == "all")
 
 # Classification Results
-roc_file <- file.path(results_dir,
-                      paste0("full_cell_health_roc_results_", consensus, ".tsv.gz"))
+roc_file <- file.path(
+    results_dir,
+    paste0("full_cell_health_roc_results_", consensus, ".tsv.gz")
+)
 full_roc_df <- readr::read_tsv(roc_file, col_types = readr::cols()) %>%
     dplyr::filter(cell_line == "all")
 
-pr_file <- file.path(results_dir,
-                     paste0("full_cell_health_pr_results_", consensus, ".tsv.gz"))
+pr_file <- file.path(
+    results_dir,
+    paste0("full_cell_health_pr_results_", consensus, ".tsv.gz")
+)
 full_pr_df <- readr::read_tsv(pr_file, col_types = readr::cols()) %>%
     dplyr::filter(cell_line == "all")
 
 # Model Coefficients
-coef_file <- file.path(results_dir,
-                       paste0("full_cell_health_coefficients_", consensus, ".tsv.gz"))
+coef_file <- file.path(
+    results_dir,
+    paste0("full_cell_health_coefficients_", consensus, ".tsv.gz")
+)
 full_coef_df <- readr::read_tsv(coef_file, col_types = readr::cols())
 
 # Model Predictions
-y_file <- file.path(results_dir,
-                    paste0("full_cell_health_y_labels_", consensus, ".tsv.gz"))
+y_file <- file.path(
+    results_dir,
+    paste0("full_cell_health_y_labels_", consensus, ".tsv.gz")
+)
 y_df <- readr::read_tsv(y_file, col_types = readr::cols()) %>%
     dplyr::filter(y_transform == "raw")
 
 # Annotated Cell Health Features
-feat_file <- file.path("..", "1.generate-profiles", "data", "labels", "feature_mapping_annotated.csv")
+feat_file <- file.path(
+    "..",
+    "1.generate-profiles",
+    "data",
+    "labels",
+    "feature_mapping_annotated.csv"
+)
 label_df <- readr::read_csv(feat_file, col_types = readr::cols())
 
 regression_subset_df <- regression_metrics_df %>%
@@ -87,6 +106,37 @@ auc_df <- train_auc_df %>%
 print(dim(auc_df))
 head(auc_df, 2)
 
+measurement_levels <- c(
+    "shape",
+    "apoptosis",
+    "death",
+    "cell_viability",
+    "dna_damage",
+    "ros",
+    "cell_cycle",
+    "g1_arrest",
+    "g2_arrest",
+    "g2_m_arrest",
+    "mitosis",
+    "s_arrest",
+    "other"
+)
+
+assay_levels <- c(
+    "hoechst",
+    "edu",
+    "gh2ax",
+    "ph3",
+    "hoechst_gh2ax",
+    "hoechst_edu",
+    "edu_gh2ax",
+    "caspase",
+    "draq",
+    "draq_caspase",
+    "many_cell_cycle",
+    "crispr_efficiency"
+)
+
 metric_df <- regression_subset_df %>%
     dplyr::inner_join(auc_df, by = c("target", "data_fit", "shuffle")) %>%
     dplyr::left_join(label_df, by = c("target" = "updated_name"))
@@ -96,65 +146,50 @@ metric_df$mse = abs(metric_df$mse)
 metric_df$maria_thumbs_up <- tidyr::replace_na(metric_df$maria_thumbs_up, 0)
 metric_df$measurement <- tidyr::replace_na(metric_df$measurement, "other")
 
-metric_df$measurement <- factor(metric_df$measurement,
-                                levels = c("apoptosis",
-                                           "death",
-                                           "cell_viability",
-                                           "toxicity",
-                                           "dna_damage",
-                                           "cell_cycle_arrest",
-                                           "g1_arrest",
-                                           "g2_arrest",
-                                           "g2_m_arrest",
-                                           "mitosis",
-                                           "s_arrest",
-                                           "other"))
+metric_df$measurement <- factor(
+    metric_df$measurement,
+    levels = measurement_levels
+)
 
-metric_df$assay <- factor(metric_df$assay,
-                          levels = c("hoechst",
-                                     "edu",
-                                     "gh2ax",
-                                     "ph3",
-                                     "hoechst_gh2ax",
-                                     "hoechst_edu",
-                                     "edu_gh2ax",
-                                     "caspase",
-                                     "draq",
-                                     "draq_caspase",
-                                     "many_cell_cycle",
-                                     "crispr_efficiency"))
+metric_df$assay <- factor(
+    metric_df$assay,
+    levels = assay_levels
+)
+
 print(dim(metric_df))
 head(metric_df, 3)
 
 # Set some plotting defaults
 measurement_colors <- c(
+    "shape" = "#6a3d9a",
     "apoptosis" = "#a6cee3",
-    "cell_cycle_arrest" = "#1f78b4",
-    "cell_viability" = "#b2df8a",
     "death" = "#33a02c",
-    "dna_damage" = "#fb9a99", 
+    "cell_viability" = "#b2df8a",
+    "dna_damage" = "#fb9a99",
+    "ros" = "red",
+    "cell_cycle" = "#1f78b4",
     "g1_arrest" = "#fdbf6f",
     "g2_arrest" = "#ff7f00",
     "g2_m_arrest" = "#005c8c",
     "mitosis" = "green",
-    "other" = "black",
     "s_arrest" = "#cab2d6",
-    "toxicity" = "#6a3d9a"
+    "other" = "black"
 )
 
 measurement_labels <- c(
+    "shape" = "Shape",
     "apoptosis" = "Apoptosis",
-    "cell_cycle_arrest" = "Cell Cycle Arrest",
-    "cell_viability" = "Cell Viability",
     "death" = "Death",
-    "dna_damage" = "DNA Damage", 
+    "cell_viability" = "Cell Viability",
+    "dna_damage" = "DNA Damage",
+    "ros" = "Reactive Oxygen Species", 
+    "cell_cycle" = "Cell Cycle Gates",
     "g1_arrest" = "G1 Arrest",
     "g2_arrest" = "G2 Arrest",
     "g2_m_arrest" = "G2/M Arrest",
     "mitosis" = "Mitosis",
-    "other" = "Other",
     "s_arrest" = "S Arrest",
-    "toxicity" = "Toxicity"
+    "other" = "Other"
 )
 
 dye_colors <- c(
@@ -240,9 +275,11 @@ ggplot(metric_df, aes(x = AUROC_test,
 
 file <- file.path(
     figure_dir,
-    paste0("performance_summary_assay_classification_vs_regression_",
-           consensus,
-           ".png")
+    paste0(
+        "performance_summary_assay_classification_vs_regression_",
+        consensus,
+        ".png"
+    )
 )
 ggsave(file, dpi = 300, width = 6, height = 4.5)
 
@@ -288,122 +325,6 @@ metric_df <- metric_df %>%
 
 head(metric_df, 2)
 
-regression_performance_comp_gg <- ggplot(metric_df, aes(y = target, x = 1)) +
-    geom_point(aes(fill = r_two), shape = 22, size = 3) +
-    scale_fill_gradient2(name = expression(paste("Test ", "R"^2)),
-                         midpoint = 0,
-                         mid = "black",
-                         low = "black",
-                         high = "white") +
-    xlab("") +
-    ylab("") +
-    xlim(0.99999, 1.01) +
-    theme(panel.background = element_blank(),
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank(),
-          axis.text.y = element_blank(),
-          axis.title.y = element_blank())
-
-regression_performance_comp_legend <- get_legend(regression_performance_comp_gg)
-#regression_performance_comp_gg <- regression_performance_comp_gg + theme(legend.position="none")
-
-assay_gg <- ggplot(metric_df, aes(y = target, x = 1)) +
-    geom_point(aes(fill = assay), shape = 22, size = 3) +
-    xlab("") +
-    xlim(0.99999, 1.01) +
-    scale_fill_manual(name = "Assay",
-                      values = dye_colors,
-                      labels = dye_labels) +
-    theme(panel.background = element_blank(),
-          axis.text.x = element_text(angle = 90, size = 4, color="black"),
-          axis.ticks.x = element_blank(),
-          axis.text.y = element_blank(),
-          axis.title.y = element_blank())
-
-assay_legend <- get_legend(assay_gg)
-assay_gg <- assay_gg + theme(legend.position="none")
-
-measure_gg <- ggplot(metric_df, aes(y = target, x = 1)) +
-    geom_point(aes(fill = measurement), shape = 22, size = 3) +
-    xlab("") +
-    xlim(0.99999, 1.01) +
-    scale_fill_manual(name = "Measurement",
-                      values = measurement_colors,
-                      labels = measurement_labels) +
-    theme(panel.background = element_blank(),
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank(),
-          axis.text.y = element_blank(),
-          axis.title.y = element_blank())
-
-measure_legend <- get_legend(measure_gg)
-measure_gg <- measure_gg + theme(legend.position="none")
-
-classifier_perf_gg <- ggplot(auc_test_full_df,
-       aes(x = target,
-           y = auc)) +
-    geom_point(aes(size = min_class_count,
-                   fill = shuffle,
-                   alpha = shuffle),
-               pch = 21) +
-    geom_hline(yintercept = 0.5,
-               linetype = "dashed",
-               color="black",
-               alpha = 0.9) +
-    ylab("AUC") +
-    xlab("") +
-    coord_flip() +
-    scale_alpha_manual(name = "",
-                       values = c("shuffle_true" = 0.3,
-                                  "shuffle_false" = 0.3,
-                                  "real_minus_shuffle" = 1),
-                       guide = FALSE) +
-    scale_fill_manual(name = "",
-                      values = c("shuffle_true" = "#0FA3AD",
-                                 "shuffle_false" = "#F76916",
-                                 "real_minus_shuffle" = "black"),
-                      labels = c("shuffle_true" = "Shuffle",
-                                 "shuffle_false" = "Real",
-                                 "real_minus_shuffle" = "Difference")) +
-    scale_size_continuous(name = "Minimum Class\nn =",
-                          range = c(0.5, 2)) +
-    facet_wrap(~metric, nrow = 1) +
-    theme_bw() +
-    theme(axis.text.x = element_text(angle = 90),
-          axis.text.y = element_text(size = 4),
-          axis.title.y = element_text(size = 8),
-          strip.text = element_text(size = 8),
-          strip.background = element_rect(colour = "black",
-                                          fill = "#fdfff4"))
-classifier_perf_legend <- get_legend(classifier_perf_gg)
-classifier_perf_gg <- classifier_perf_gg + theme(legend.position="none")
-
-cowplot::plot_grid(
-    assay_gg,
-    measure_gg,
-    classifier_perf_gg,
-    regression_performance_comp_gg,
-    labels = c("", "", "", ""),
-    ncol = 4,
-    nrow = 1,
-    rel_widths = c(0.1, 0.1, 0.6, 0.3)
-    )
-
-# Here is an example of high performing models in classification
-# but low performing in regression
-
-metric_diff_df <- auc_test_full_df %>%
-    dplyr::filter(shuffle == "real_minus_shuffle",
-                  metric == "AUROC") %>%
-    dplyr::select(metric, target, auc, shuffle)
-
-high_class_models <- metric_df %>%
-    dplyr::left_join(metric_diff_df, by = c("target")) %>%
-    dplyr::filter(r_two < 0.4, auc > 0.25) %>%
-    dplyr::arrange(desc(AUROC_test))
-
-high_class_models
-
 r_two_df <- regression_metrics_df %>%
     dplyr::filter(metric == "r_two",
                   shuffle == "shuffle_false",
@@ -411,50 +332,38 @@ r_two_df <- regression_metrics_df %>%
     tidyr::spread(data_fit, value) %>%
     dplyr::left_join(label_df, by=c("target" = "updated_name"))
 
+r_two_df$measurement <- factor(
+    r_two_df$measurement,
+    levels = measurement_levels
+)
 r_two_df$measurement <- tidyr::replace_na(r_two_df$measurement, "other")
-r_two_df$measurement <- factor(r_two_df$measurement,
-                               levels = c("apoptosis",
-                                          "death",
-                                          "cell_viability",
-                                          "toxicity",
-                                          "dna_damage",
-                                          "cell_cycle_arrest",
-                                          "g1_arrest",
-                                          "g2_arrest",
-                                          "g2_m_arrest",
-                                          "mitosis",
-                                          "s_arrest",
-                                          "other"))
 
-r_two_df$assay <- factor(r_two_df$assay,
-                          levels = c("hoechst",
-                                     "edu",
-                                     "gh2ax",
-                                     "ph3",
-                                     "hoechst_gh2ax",
-                                     "hoechst_edu",
-                                     "edu_gh2ax",
-                                     "caspase",
-                                     "draq",
-                                     "draq_caspase",
-                                     "many_cell_cycle",
-                                     "crispr_efficiency"))
+r_two_df$assay <- factor(
+    r_two_df$assay,
+    levels = assay_levels
+)
+
 print(dim(r_two_df))
 head(r_two_df, 2)
 
-ggplot(r_two_df %>%
-       dplyr::filter(measurement != "other"),
+ggplot(r_two_df,
        aes(y = train, x = test)) +
     geom_point(alpha = 0.95,
                size = 2,
                aes(color = measurement)) +
+    geom_vline(xintercept = 0,
+               alpha = 0.5, 
+               linetype = "dashed") +
+    geom_hline(yintercept = 0,
+               alpha = 0.5,
+               linetype = "dashed") +
     coord_fixed() +
     ylab("Training R squared") +
     xlab("Testing R squared") +
     geom_abline(intercept = 0,
             slope = 1,
             linetype = "dashed",
-            color = "black",
+            color = "red",
             alpha = 0.7) +
     xlim(c(-0.4, 1.1)) +
     ylim(c(-0.4, 1.1)) +
@@ -463,11 +372,14 @@ ggplot(r_two_df %>%
                        labels = measurement_labels) +
     theme_bw()
 
-file <- file.path(figure_dir,
-                  paste0("performance_summary_rsquared_", consensus, ".png"))
+file <- file.path(
+    figure_dir,
+    paste0("performance_summary_rsquared_", consensus, ".png")
+)
 ggsave(file, dpi = 300, width = 6, height = 4.25)
 
-ggplot(r_two_df, aes(y = train, x = test)) +
+ggplot(r_two_df,
+       aes(y = train, x = test)) +
     geom_point(alpha = 0.95,
                size = 1.7,
                aes(color = assay)) +
@@ -491,14 +403,20 @@ ggplot(r_two_df, aes(y = train, x = test)) +
                        labels = dye_labels) +
     theme_bw()
 
-file <- file.path(figure_dir,
-                  paste0("performance_summary_rsquared_assay_", consensus, ".png"))
+file <- file.path(
+    figure_dir,
+    paste0("performance_summary_rsquared_assay_", consensus, ".png")
+)
 ggsave(file, dpi = 300, width = 6, height = 4.25)
 
 # Cytominer results are archived on github
 hash = "26d1095c209d402102494c0c28e978476643e572"
-cyto_file = paste0("https://github.com/broadinstitute/cell-health/raw/",
-                   hash, "/3.train/results/full_cell_health_regression_results.tsv.gz")
+
+cyto_file = paste0(
+    "https://github.com/broadinstitute/cell-health/raw/",
+    hash,
+    "/3.train/results/full_cell_health_regression_results.tsv.gz"
+)
 
 cyto_regression_df = readr::read_tsv(cyto_file, col_types=readr::cols()) %>%
     dplyr::mutate(package = "cytominer")
@@ -512,9 +430,11 @@ head(regression_metrics_df, 2)
 
 # Note that mse_diff is coded as "value" in pycytominer and "mse" in cytominer
 all_regression_df <- regression_metrics_df %>%
-    dplyr::inner_join(cyto_regression_df,
-                      by = c("metric", "target", "data_fit", "shuffle", "y_transform"),
-                      suffix = c("_pycytominer", "_cytominer")) %>%
+    dplyr::inner_join(
+        cyto_regression_df,
+        by = c("metric", "target", "data_fit", "shuffle", "y_transform"),
+        suffix = c("_pycytominer", "_cytominer")
+    ) %>%
     dplyr::mutate(mse_diff = value - mse)
 
 head(all_regression_df, 2)
@@ -548,8 +468,10 @@ for (metric in unique(all_regression_df$metric)) {
                                           fill = "#fdfff4"))
     
     print(mse_gg)
-    outfile <- file.path("figures",
-                         paste0("compare_pycytominer_cytominer_", metric, "_", consensus, ".png"))
+    outfile <- file.path(
+        cytominer_compare_dir,
+        paste0("compare_pycytominer_cytominer_", metric, "_", consensus, ".png")
+    )
     ggsave(outfile, height = 5, width = 6, dpi = 300)
 }
 
@@ -561,15 +483,21 @@ all_regression_df %>%
     dplyr::distinct(metric, data_fit, shuffle, y_transform, percent_pycytominer_better)
 
 # Cytominer results are archived on github
-cyto_file = paste0("https://github.com/broadinstitute/cell-health/raw/",
-                   hash, "/3.train/results/full_cell_health_roc_results.tsv.gz")
+cyto_file = paste0(
+    "https://github.com/broadinstitute/cell-health/raw/",
+    hash,
+    "/3.train/results/full_cell_health_roc_results.tsv.gz"
+)
 
 cyto_roc_df = readr::read_tsv(cyto_file, col_types=readr::cols())
 
 head(cyto_roc_df, 2)
 
-cyto_file = paste0("https://github.com/broadinstitute/cell-health/raw/",
-                   hash, "/3.train/results/full_cell_health_pr_results.tsv.gz")
+cyto_file = paste0(
+    "https://github.com/broadinstitute/cell-health/raw/",
+    hash,
+    "/3.train/results/full_cell_health_pr_results.tsv.gz"
+)
 
 cyto_pr_df = readr::read_tsv(cyto_file, col_types=readr::cols())
 
@@ -596,20 +524,20 @@ cyto_auc_df$metric <- dplyr::recode_factor(
 cyto_auc_df <- cyto_auc_df %>%
     tidyr::spread(key = "metric", value = "auc") %>%
     dplyr::select(-y_transform) %>%
-    dplyr::mutate(package = "pycytominer")
+    dplyr::mutate(package = "cytominer")
 
 print(dim(cyto_auc_df))
 head(cyto_auc_df, 2)
 
 auc_df <- auc_df %>%
-    dplyr::mutate(package = "cytominer")
+    dplyr::mutate(package = "pycytominer")
 
 all_classification_df <- auc_df %>%
     dplyr::inner_join(cyto_auc_df,
-                      by = c("target", "data_fit", "shuffle", "min_class_count"),
+                      by = c("target", "data_fit", "shuffle"),
                       suffix = c("_pycytominer", "_cytominer")) %>%
-    dplyr::mutate(auroc_diff = AUROC - AUROC_test,
-                  aupr_diff = AUPR - AUPR_test) %>%
+    dplyr::mutate(auroc_diff = AUROC_test - AUROC,
+                  aupr_diff = AUPR_test - AUPR) %>%
     dplyr::filter(data_fit == "test",
                   shuffle == "shuffle_false") 
 
@@ -620,8 +548,8 @@ metric <- "AUROC"
 label_logic <- abs(all_classification_df$auroc_diff) > 0.08
 
 ggplot(all_classification_df,
-       aes(x=AUROC_test, 
-           y=AUROC)) +
+       aes(x = AUROC_test, 
+           y = AUROC)) +
     geom_point(alpha = 0.7,
                size = 0.8) +
     xlab("pycytominer") +
@@ -653,8 +581,10 @@ ggplot(all_classification_df,
                         y = AUROC)) +
     theme_bw()
 
-outfile <- file.path("figures",
-                     paste0("compare_pycytominer_cytominer_", metric, "_", consensus, ".png"))
+outfile <- file.path(
+    cytominer_compare_dir,
+    paste0("compare_pycytominer_cytominer_", metric, "_", consensus, ".png")
+)
 ggsave(outfile, height = 3, width = 3, dpi = 300)
 
 metric <- "AUPR"
@@ -662,8 +592,8 @@ metric <- "AUPR"
 label_logic <- abs(all_classification_df$aupr_diff) > 0.08
 
 ggplot(all_classification_df,
-       aes(x=AUPR_test, 
-           y=AUPR)) +
+       aes(x = AUPR_test, 
+           y = AUPR)) +
     geom_point(alpha = 0.7,
                size = 0.8) +
     xlab("pycytominer") +
@@ -687,11 +617,14 @@ ggplot(all_classification_df,
                         y = AUPR)) +
     theme_bw()
 
-outfile <- file.path("figures",
-                     paste0("compare_pycytominer_cytominer_", metric, "_", consensus, ".png"))
+outfile <- file.path(
+    cytominer_compare_dir,
+    paste0("compare_pycytominer_cytominer_", metric, "_", consensus, ".png")
+)
 ggsave(outfile, height = 3, width = 3, dpi = 300)
 
 all_classification_df %>%
+    tidyr::drop_na() %>%
     dplyr::mutate(percent_auroc_pycytominer_better = sum(auroc_diff > 0) / n(),
                   percent_aupr_pycytominer_better = sum(aupr_diff > 0) / n()) %>%
     dplyr::distinct(data_fit, shuffle, percent_auroc_pycytominer_better, percent_aupr_pycytominer_better)
