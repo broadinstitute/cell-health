@@ -2,6 +2,9 @@ suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(dplyr))
 
 consensus <- "modz"
+output_dir <- file.path("figures", "feature_distribution", consensus)
+
+dir.create(output_dir, showWarnings = FALSE)
 
 # Load Data
 y_cols <- readr::cols(
@@ -46,8 +49,11 @@ y_plot_df$data_type <- dplyr::recode(y_plot_df$data_type,
 head(y_plot_df, 3)
 
 # Generate and save figures
-pdf_file <- file.path("figures",
-                      paste0("all_binary_distributions_std_", consensus, ".pdf"))
+pdf_file <- file.path(
+    output_dir,
+    paste0("all_binary_distributions_std_", consensus, ".pdf")
+)
+
 pdf(pdf_file, width = 5, height = 3.5, onefile = TRUE)
 
 for (target in unique(y_plot_df$target)) {
@@ -76,9 +82,7 @@ for (target in unique(y_plot_df$target)) {
                   strip.background = element_rect(colour = "black",
                                                   fill = "#fdfff4"))
 
-    output_file <- file.path("figures",
-                             "feature_distribution",
-                             paste0(target, "_dist_", consensus, ".png"))
+    output_file <- file.path(output_dir, paste0(target, "_dist_", consensus, ".png"))
     
     ggsave(filename = output_file,
            plot = target_gg,
