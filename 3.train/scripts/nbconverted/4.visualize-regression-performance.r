@@ -5,7 +5,7 @@ suppressPackageStartupMessages(library(ggrepel))
 consensus <- "modz"
 
 results_dir <- "results"
-figure_dir <- file.path("figures", "regression")
+figure_dir <- file.path("figures", "regression", consensus)
 individual_fig_dir <- file.path(
     "figures",
     "individual_target_performance",
@@ -108,33 +108,38 @@ regression_metrics_df$value <- round(regression_metrics_df$value, 2)
 print(dim(regression_metrics_df))
 head(regression_metrics_df, 3)
 
-# Setup plotting constants
-dye_colors = c(
+measurement_colors <- c(
+    "shape" = "#6a3d9a",
     "apoptosis" = "#a6cee3",
-    "cell_cycle_arrest" = "#1f78b4",
-    "cell_viability" = "#b2df8a",
     "death" = "#33a02c",
-    "dna_damage" = "#fb9a99", 
+    "cell_viability" = "#b2df8a",
+    "dna_damage" = "#fb9a99",
+    "ros" = "red",
+    "cell_cycle" = "#1f78b4",
     "g1_arrest" = "#fdbf6f",
     "g2_arrest" = "#ff7f00",
     "g2_m_arrest" = "#005c8c",
     "mitosis" = "green",
     "s_arrest" = "#cab2d6",
-    "toxicity" = "#6a3d9a"
+    "other" = "black",
+    "metadata" = "grey"
 )
 
-dye_labels = c(
+measurement_labels <- c(
+    "shape" = "Shape",
     "apoptosis" = "Apoptosis",
-    "cell_cycle_arrest" = "Cell Cycle Arrest",
-    "cell_viability" = "Cell Viability",
     "death" = "Death",
-    "dna_damage" = "DNA Damage", 
+    "cell_viability" = "Cell Viability",
+    "dna_damage" = "DNA Damage",
+    "ros" = "Reactive Oxygen Species", 
+    "cell_cycle" = "Cell Cycle Gates",
     "g1_arrest" = "G1 Arrest",
     "g2_arrest" = "G2 Arrest",
     "g2_m_arrest" = "G2/M Arrest",
     "mitosis" = "Mitosis",
     "s_arrest" = "S Arrest",
-    "toxicity" = "Toxicity"
+    "other" = "Other",
+    "metadata" = "Metadata"
 )
 
 dye_theme = theme(
@@ -239,8 +244,8 @@ ggplot(mse_spread_df,
     dye_theme +
     scale_color_manual(
         name = "Cell Health\nPhenotypes",
-        values = dye_colors,
-        labels = dye_labels
+        values = measurement_colors,
+        labels = measurement_labels
     )
 
 output_file <- file.path(
@@ -322,8 +327,8 @@ ggplot(r2_spread_df,
     dye_theme +
     scale_color_manual(
         name = "Cell Health\nPhenotypes",
-        values = dye_colors,
-        labels = dye_labels
+        values = measurement_colors,
+        labels = measurement_labels
     )
 
 output_file <- file.path(

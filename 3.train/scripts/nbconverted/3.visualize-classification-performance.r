@@ -7,7 +7,7 @@ suppressPackageStartupMessages(library(cowplot))
 consensus <- "modz"
 
 results_dir <- "results"
-figure_dir <- file.path("figures", "classification")
+figure_dir <- file.path("figures", "classification", consensus)
 individual_fig_dir <- file.path(
     "figures",
     "individual_target_performance",
