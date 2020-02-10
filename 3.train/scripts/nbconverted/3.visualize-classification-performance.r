@@ -4,15 +4,29 @@ suppressPackageStartupMessages(library(gridExtra))
 suppressPackageStartupMessages(library(ggrepel))
 suppressPackageStartupMessages(library(cowplot))
 
-results_dir <- "results"
 consensus <- "modz"
 
+results_dir <- "results"
 figure_dir <- file.path("figures", "classification")
-dir.create(figure_dir)
+individual_fig_dir <- file.path(
+    "figures",
+    "individual_target_performance",
+    "classification",
+    consensus
+)
 
-y_file <- file.path(results_dir,
-                    paste0("full_cell_health_y_labels_", consensus, ".tsv.gz"))
+dir.create(results_dir, showWarnings = FALSE)
+dir.create(figure_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(individual_fig_dir, recursive = TRUE, showWarnings = FALSE)
+
+y_file <- file.path(
+    results_dir,
+    paste0("full_cell_health_y_labels_", consensus, ".tsv.gz")
+)
+
 y_df <- readr::read_tsv(y_file, col_types = readr::cols())
+print(dim(y_df))
+head(y_df)
 
 y_binary_df <- y_df %>%
     dplyr::filter(y_transform == "binarize",
@@ -256,16 +270,11 @@ head(y_plot_df, 3)
 
 label_thresh_value = 0.925
 
-individual_fig_dir <- file.path(
-    "figures",
-    "individual_target_performance",
-    "classification"
+pdf_file <- file.path(
+    figure_dir,
+    paste0("all_classification_performance_metrics_", consensus, ".pdf")
 )
-dir.create(individual_fig_dir)
-
-pdf_file <- file.path(figure_dir,
-                      paste0("all_classification_performance_metrics_", consensus, ".pdf"))
-pdf(pdf_file, width = 5.5, height = 6, onefile = TRUE)
+pdf(pdf_file, width = 7, height = 6, onefile = TRUE)
 
 for (target in use_targets) {
     subset_roc_df <- full_roc_df %>%
@@ -497,8 +506,10 @@ for (target in use_targets) {
     )
     
     # Save figure
-    cowplot_file <- file.path(individual_fig_dir,
-                              paste0(target, "_performance_", consensus, ".png"))
+    cowplot_file <- file.path(
+        individual_fig_dir,
+        paste0(target, "_performance_", consensus, ".png")
+    )
     
     cowplot::save_plot(filename = cowplot_file,
                        plot = performance_gg,
