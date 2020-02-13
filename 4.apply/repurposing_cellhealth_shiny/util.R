@@ -13,14 +13,14 @@ get_target <- function(rank, model) {
 }
 
 build_cell_health_scatter <- function(
-  moa_full_df, compound_df, dmso_df, model, target
+  moa_full_df, compound_df, dmso_df, model_y, model_x, target_y, target_x
   ) {
   
   moa_scatter_gg <- ggplot(moa_full_df,
-       aes_string(x = "vb_num_live_cells",
-                  y = model)) +
-  xlab("# Live Cells") +
-  ylab(target) +
+       aes_string(x = model_x,
+                  y = model_y)) +
+  xlab(target_x) +
+  ylab(target_y) +
   geom_point(aes(color = Metadata_dose_recode),
              size = 1.25,
              pch = 16,
