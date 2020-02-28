@@ -1,8 +1,3 @@
-# Data Access
-
-These data were downloaded from the Cancer Dependency Map (DepMap) Portal at https://depmap.org/portal/download/.
-
-The data represent drug screen data from the PRISM Repurposing 19Q4 version.
-These data were originally deposited in the Broad DepMap Portal under a [CC-BY 4.0 License](https://creativecommons.org/licenses/by/4.0/).
-
-The data are associated with [Corsello et al. 2019](https://doi.org/10.1101/730119).
+version https://git-lfs.github.com/spec/v1
+oid sha256:63a3acf282e1e893875d666f06e28d84dead122a951aa1ddef604b766f6e5f3f
+size 432
