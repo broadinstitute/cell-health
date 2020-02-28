@@ -13440,11 +13440,11 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">treatment_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;primary-screen-replicate-collapsed-treatment-info.csv&quot;</span><span class="p">)</span>
-<span class="n">treatment_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">treatment_file</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">primary_treatment_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;primary-screen-replicate-collapsed-treatment-info.csv&quot;</span><span class="p">)</span>
+<span class="n">primary_treatment_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">primary_treatment_file</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">treatment_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">treatment_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">primary_treatment_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">primary_treatment_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13533,47 +13533,222 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
       <td>COC(=O)C1=COC(OC2OC(CO)C(O)C(O)C2O)\C(=C/C)C1C...</td>
       <td>Phase 2</td>
     </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">secondary_treatment_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;secondary-screen-replicate-collapsed-treatment-info.csv&quot;</span><span class="p">)</span>
+<span class="n">secondary_treatment_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">secondary_treatment_file</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;compound_plate&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">secondary_treatment_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">secondary_treatment_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(13008, 11)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[8]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>column_name</th>
+      <th>broad_id</th>
+      <th>dose</th>
+      <th>screen_id</th>
+      <th>name</th>
+      <th>moa</th>
+      <th>target</th>
+      <th>disease.area</th>
+      <th>indication</th>
+      <th>smiles</th>
+      <th>phase</th>
+    </tr>
+  </thead>
+  <tbody>
     <tr>
-      <th>2</th>
-      <td>BRD-A02232681-001-01-8::2.5::MTS004</td>
-      <td>BRD-A02232681-001-01-8</td>
-      <td>isoleucine</td>
-      <td>2.500000</td>
-      <td>MTS004</td>
-      <td>NaN</td>
-      <td>ACADSB, BCAT1, BCAT2, IARS, IARS2</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>CCC(C)C(N)C(O)=O</td>
+      <th>0</th>
+      <td>BRD-A25234499-001-19-1::0.00061::MTS010::PROS0...</td>
+      <td>BRD-A25234499-001-19-1</td>
+      <td>0.00061</td>
+      <td>MTS010</td>
+      <td>aminoglutethimide</td>
+      <td>glucocorticoid receptor antagonist</td>
+      <td>CYP11A1, CYP19A1</td>
+      <td>endocrinology, oncology</td>
+      <td>Cushing's syndrome, breast cancer</td>
+      <td>CCC1(CCC(=O)NC1=O)c1ccc(N)cc1, CCC1(CCC(=O)NC1...</td>
       <td>Launched</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>BRD-A04447196-001-01-8::2.5::MTS004</td>
-      <td>BRD-A04447196-001-01-8</td>
-      <td>gepefrine</td>
-      <td>2.500000</td>
-      <td>MTS004</td>
-      <td>adrenergic receptor agonist</td>
-      <td>NaN</td>
-      <td>cardiology</td>
-      <td>hypotension</td>
-      <td>CC(N)Cc1cccc(O)c1</td>
+      <th>1</th>
+      <td>BRD-A25234499-001-19-1::0.00244::MTS010::PROS0...</td>
+      <td>BRD-A25234499-001-19-1</td>
+      <td>0.00244</td>
+      <td>MTS010</td>
+      <td>aminoglutethimide</td>
+      <td>glucocorticoid receptor antagonist</td>
+      <td>CYP11A1, CYP19A1</td>
+      <td>endocrinology, oncology</td>
+      <td>Cushing's syndrome, breast cancer</td>
+      <td>CCC1(CCC(=O)NC1=O)c1ccc(N)cc1, CCC1(CCC(=O)NC1...</td>
       <td>Launched</td>
     </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">treatment_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">primary_treatment_df</span><span class="p">,</span> <span class="n">secondary_treatment_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;rows&quot;</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">treatment_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">treatment_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(17694, 11)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[9]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>broad_id</th>
+      <th>column_name</th>
+      <th>disease.area</th>
+      <th>dose</th>
+      <th>indication</th>
+      <th>moa</th>
+      <th>name</th>
+      <th>phase</th>
+      <th>screen_id</th>
+      <th>smiles</th>
+      <th>target</th>
+    </tr>
+  </thead>
+  <tbody>
     <tr>
-      <th>4</th>
-      <td>BRD-A04971881-003-01-3::2.65294603::MTS004</td>
-      <td>BRD-A04971881-003-01-3</td>
-      <td>cloranolol</td>
-      <td>2.652946</td>
+      <th>0</th>
+      <td>BRD-A00055058-001-01-0</td>
+      <td>BRD-A00055058-001-01-0::2.325889319::MTS004</td>
+      <td>NaN</td>
+      <td>2.325889</td>
+      <td>NaN</td>
+      <td>immunostimulant</td>
+      <td>RS-0481</td>
+      <td>Phase 2</td>
       <td>MTS004</td>
-      <td>adrenergic receptor antagonist</td>
-      <td>ADRB1, ADRB2, ADRB3</td>
+      <td>CC(NC(=O)C1CSCN1C(=O)c1ccccc1)c1ccccc1</td>
       <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>BRD-A00842753-001-01-9</td>
+      <td>BRD-A00842753-001-01-9::2.5::MTS004</td>
       <td>NaN</td>
-      <td>CC(C)(C)NCC(O)COc1cc(Cl)ccc1Cl</td>
-      <td>Launched</td>
+      <td>2.500000</td>
+      <td>NaN</td>
+      <td>estrogen receptor agonist</td>
+      <td>oleuropein</td>
+      <td>Phase 2</td>
+      <td>MTS004</td>
+      <td>COC(=O)C1=COC(OC2OC(CO)C(O)C(O)C2O)\C(=C/C)C1C...</td>
+      <td>GPER1</td>
     </tr>
   </tbody>
 </table>
@@ -13595,14 +13770,14 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">viability_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;primary-screen-replicate-collapsed-logfold-change.csv&quot;</span><span class="p">)</span>
-<span class="n">viability_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">viability_file</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">primary_viability_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;primary-screen-replicate-collapsed-logfold-change.csv&quot;</span><span class="p">)</span>
+<span class="n">primary_viability_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">primary_viability_file</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">viability_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">viability_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">primary_viability_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">primary_viability_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13626,7 +13801,7 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[8]:</div>
+    <div class="prompt output_prompt">Out[10]:</div>
 
 
 
@@ -13721,81 +13896,9 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
       <td>-0.831461</td>
       <td>0.323558</td>
     </tr>
-    <tr>
-      <th>ACH-000008</th>
-      <td>0.379480</td>
-      <td>-0.596132</td>
-      <td>0.548056</td>
-      <td>0.422269</td>
-      <td>-0.216986</td>
-      <td>0.081866</td>
-      <td>0.145335</td>
-      <td>-0.570841</td>
-      <td>-0.512119</td>
-      <td>0.452698</td>
-      <td>...</td>
-      <td>-0.111951</td>
-      <td>0.534787</td>
-      <td>0.206642</td>
-      <td>-0.410153</td>
-      <td>-0.560722</td>
-      <td>-0.036088</td>
-      <td>0.158071</td>
-      <td>0.171043</td>
-      <td>-3.947090</td>
-      <td>0.099310</td>
-    </tr>
-    <tr>
-      <th>ACH-000010_FAILED_STR</th>
-      <td>0.118890</td>
-      <td>-0.231615</td>
-      <td>0.621937</td>
-      <td>-0.202707</td>
-      <td>-1.005139</td>
-      <td>-0.213739</td>
-      <td>0.020246</td>
-      <td>-0.795278</td>
-      <td>NaN</td>
-      <td>0.679571</td>
-      <td>...</td>
-      <td>0.200605</td>
-      <td>-0.075356</td>
-      <td>0.610310</td>
-      <td>-0.019413</td>
-      <td>-0.202971</td>
-      <td>0.218158</td>
-      <td>-0.411009</td>
-      <td>-0.181540</td>
-      <td>-3.010225</td>
-      <td>0.090652</td>
-    </tr>
-    <tr>
-      <th>ACH-000011</th>
-      <td>0.145346</td>
-      <td>-0.499274</td>
-      <td>0.267470</td>
-      <td>0.157804</td>
-      <td>-0.272286</td>
-      <td>0.207768</td>
-      <td>0.004464</td>
-      <td>-0.191680</td>
-      <td>-0.310375</td>
-      <td>0.112537</td>
-      <td>...</td>
-      <td>-0.076863</td>
-      <td>0.026002</td>
-      <td>0.139921</td>
-      <td>-0.261704</td>
-      <td>0.085339</td>
-      <td>0.447482</td>
-      <td>0.164620</td>
-      <td>-0.565251</td>
-      <td>-4.110627</td>
-      <td>0.222394</td>
-    </tr>
   </tbody>
 </table>
-<p>5 rows × 4686 columns</p>
+<p>2 rows × 4686 columns</p>
 </div>
 </div>
 
@@ -13807,12 +13910,152 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">viability_df</span> <span class="o">=</span> <span class="p">(</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">secondary_viability_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;secondary-screen-replicate-collapsed-logfold-change.csv&quot;</span><span class="p">)</span>
+<span class="n">secondary_viability_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">secondary_viability_file</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">secondary_viability_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">secondary_viability_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(489, 13008)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[11]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>BRD-A00077618-236-07-6::0.00061034::HTS002</th>
+      <th>BRD-A00077618-236-07-6::0.0024414::HTS002</th>
+      <th>BRD-A00077618-236-07-6::0.00976562::HTS002</th>
+      <th>BRD-A00077618-236-07-6::0.0390625::HTS002</th>
+      <th>BRD-A00077618-236-07-6::0.15625::HTS002</th>
+      <th>BRD-A00077618-236-07-6::0.625::HTS002</th>
+      <th>BRD-A00077618-236-07-6::10::HTS002</th>
+      <th>BRD-A00077618-236-07-6::2.5::HTS002</th>
+      <th>BRD-A00758722-001-04-9::0.00061034::HTS002</th>
+      <th>BRD-A00758722-001-04-9::0.0024414::HTS002</th>
+      <th>...</th>
+      <th>BRD-U25960968-000-01-9::10::HTS002</th>
+      <th>BRD-U25960968-000-01-9::2.5::HTS002</th>
+      <th>BRD-U45393375-000-01-6::0.000610351569230769::HTS002</th>
+      <th>BRD-U45393375-000-01-6::0.00244140624615385::HTS002</th>
+      <th>BRD-U45393375-000-01-6::0.009765625::HTS002</th>
+      <th>BRD-U45393375-000-01-6::0.0390625::HTS002</th>
+      <th>BRD-U45393375-000-01-6::0.15625::HTS002</th>
+      <th>BRD-U45393375-000-01-6::0.625::HTS002</th>
+      <th>BRD-U45393375-000-01-6::10::HTS002</th>
+      <th>BRD-U45393375-000-01-6::2.5::HTS002</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>ACH-000007</th>
+      <td>0.155931</td>
+      <td>0.019271</td>
+      <td>-0.325728</td>
+      <td>0.162858</td>
+      <td>0.321621</td>
+      <td>0.090677</td>
+      <td>-0.67391</td>
+      <td>0.488094</td>
+      <td>0.012847</td>
+      <td>0.837298</td>
+      <td>...</td>
+      <td>-1.211172</td>
+      <td>-0.030709</td>
+      <td>0.109745</td>
+      <td>1.091437</td>
+      <td>0.845174</td>
+      <td>0.914664</td>
+      <td>0.308181</td>
+      <td>0.487404</td>
+      <td>0.100248</td>
+      <td>1.018868</td>
+    </tr>
+    <tr>
+      <th>ACH-000008</th>
+      <td>0.184596</td>
+      <td>0.225428</td>
+      <td>0.514571</td>
+      <td>0.053359</td>
+      <td>0.308493</td>
+      <td>0.333541</td>
+      <td>-0.10919</td>
+      <td>0.509444</td>
+      <td>0.591794</td>
+      <td>0.453814</td>
+      <td>...</td>
+      <td>0.002228</td>
+      <td>0.764709</td>
+      <td>0.195910</td>
+      <td>0.440849</td>
+      <td>0.130811</td>
+      <td>0.114002</td>
+      <td>0.227759</td>
+      <td>0.230646</td>
+      <td>-0.148456</td>
+      <td>0.110857</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 13008 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">primary_viability_df</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="n">viability_df</span>
+        <span class="n">primary_viability_df</span>
         <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">depmap_id</span><span class="p">,</span> <span class="p">:]</span>
     <span class="p">)</span>
     <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
@@ -13825,6 +14068,24 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
     <span class="p">)</span>
 <span class="p">)</span>
 
+<span class="n">secondary_viability_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">secondary_viability_df</span>
+        <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">depmap_id</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;treatment_id&quot;</span><span class="p">,</span>
+            <span class="n">depmap_id</span><span class="p">:</span> <span class="n">cell_line_id</span>
+        <span class="p">},</span>
+        <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">viability_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">primary_viability_df</span><span class="p">,</span> <span class="n">secondary_viability_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;rows&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">viability_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">viability_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
@@ -13838,7 +14099,18 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[9]:</div>
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(17694, 2)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[12]:</div>
 
 
 
@@ -13911,7 +14183,7 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">complete_results_df</span> <span class="o">=</span> <span class="p">(</span>
@@ -13942,14 +14214,14 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(4686, 13)
+<pre>(17694, 13)
 </pre>
 </div>
 </div>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[10]:</div>
+    <div class="prompt output_prompt">Out[13]:</div>
 
 
 
@@ -13974,17 +14246,17 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
       <th></th>
       <th>treatment_id</th>
       <th>A549_LUNG</th>
-      <th>column_name</th>
       <th>broad_id</th>
-      <th>name</th>
-      <th>dose</th>
-      <th>screen_id</th>
-      <th>moa</th>
-      <th>target</th>
+      <th>column_name</th>
       <th>disease.area</th>
+      <th>dose</th>
       <th>indication</th>
-      <th>smiles</th>
+      <th>moa</th>
+      <th>name</th>
       <th>phase</th>
+      <th>screen_id</th>
+      <th>smiles</th>
+      <th>target</th>
     </tr>
   </thead>
   <tbody>
@@ -13992,49 +14264,49 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
       <th>0</th>
       <td>BRD-A00077618-236-07-6::2.5::HTS</td>
       <td>-0.253541</td>
-      <td>BRD-A00077618-236-07-6::2.5::HTS</td>
       <td>BRD-A00077618-236-07-6</td>
-      <td>8-bromo-cGMP</td>
+      <td>BRD-A00077618-236-07-6::2.5::HTS</td>
+      <td>NaN</td>
       <td>2.5</td>
-      <td>HTS</td>
+      <td>NaN</td>
       <td>PKA activator</td>
-      <td>PRKG1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>Nc1nc(O)c2nc(Br)n([C@@H]3O[C@@H]4COP(O)(=O)O[C...</td>
+      <td>8-bromo-cGMP</td>
       <td>Preclinical</td>
+      <td>HTS</td>
+      <td>Nc1nc(O)c2nc(Br)n([C@@H]3O[C@@H]4COP(O)(=O)O[C...</td>
+      <td>PRKG1</td>
     </tr>
     <tr>
       <th>1</th>
       <td>BRD-A00100033-001-08-9::2.5::HTS</td>
       <td>-0.506751</td>
-      <td>BRD-A00100033-001-08-9::2.5::HTS</td>
       <td>BRD-A00100033-001-08-9</td>
-      <td>nifurtimox</td>
-      <td>2.5</td>
-      <td>HTS</td>
-      <td>DNA inhibitor</td>
-      <td>NaN</td>
+      <td>BRD-A00100033-001-08-9::2.5::HTS</td>
       <td>infectious disease</td>
+      <td>2.5</td>
       <td>Chagas disease, African trypanosomiasis</td>
-      <td>CC1CS(=O)(=O)CCN1N=Cc1ccc(o1)[N+]([O-])=O</td>
+      <td>DNA inhibitor</td>
+      <td>nifurtimox</td>
       <td>Launched</td>
+      <td>HTS</td>
+      <td>CC1CS(=O)(=O)CCN1N=Cc1ccc(o1)[N+]([O-])=O</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>2</th>
       <td>BRD-A00147595-001-01-5::2.5::HTS</td>
       <td>-0.477851</td>
-      <td>BRD-A00147595-001-01-5::2.5::HTS</td>
       <td>BRD-A00147595-001-01-5</td>
-      <td>balaglitazone</td>
+      <td>BRD-A00147595-001-01-5::2.5::HTS</td>
+      <td>NaN</td>
       <td>2.5</td>
-      <td>HTS</td>
+      <td>NaN</td>
       <td>insulin sensitizer, PPAR receptor partial agonist</td>
-      <td>PPARG</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>Cn1c(COc2ccc(CC3SC(=O)NC3=O)cc2)nc2ccccc2c1=O</td>
+      <td>balaglitazone</td>
       <td>Phase 3</td>
+      <td>HTS</td>
+      <td>Cn1c(COc2ccc(CC3SC(=O)NC3=O)cc2)nc2ccccc2c1=O</td>
+      <td>PPARG</td>
     </tr>
   </tbody>
 </table>
@@ -14057,7 +14329,7 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">complete_results_df</span> <span class="o">=</span> <span class="n">complete_results_df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
@@ -14088,14 +14360,14 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(4686, 14)
+<pre>(17694, 14)
 </pre>
 </div>
 </div>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[11]:</div>
+    <div class="prompt output_prompt">Out[14]:</div>
 
 
 
@@ -14120,17 +14392,17 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
       <th></th>
       <th>treatment_id</th>
       <th>A549_LUNG</th>
-      <th>column_name</th>
       <th>broad_id</th>
-      <th>name</th>
-      <th>dose</th>
-      <th>screen_id</th>
-      <th>moa</th>
-      <th>target</th>
+      <th>column_name</th>
       <th>disease.area</th>
+      <th>dose</th>
       <th>indication</th>
-      <th>smiles</th>
+      <th>moa</th>
+      <th>name</th>
       <th>phase</th>
+      <th>screen_id</th>
+      <th>smiles</th>
+      <th>target</th>
       <th>dose_recode</th>
     </tr>
   </thead>
@@ -14139,56 +14411,104 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
       <th>0</th>
       <td>BRD-A00077618-236-07-6::2.5::HTS</td>
       <td>-0.253541</td>
-      <td>BRD-A00077618-236-07-6::2.5::HTS</td>
       <td>BRD-A00077618-236-07-6</td>
-      <td>8-bromo-cGMP</td>
+      <td>BRD-A00077618-236-07-6::2.5::HTS</td>
+      <td>NaN</td>
       <td>2.5</td>
-      <td>HTS</td>
+      <td>NaN</td>
       <td>PKA activator</td>
-      <td>PRKG1</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>Nc1nc(O)c2nc(Br)n([C@@H]3O[C@@H]4COP(O)(=O)O[C...</td>
+      <td>8-bromo-cGMP</td>
       <td>Preclinical</td>
+      <td>HTS</td>
+      <td>Nc1nc(O)c2nc(Br)n([C@@H]3O[C@@H]4COP(O)(=O)O[C...</td>
+      <td>PRKG1</td>
       <td>5</td>
     </tr>
     <tr>
       <th>1</th>
       <td>BRD-A00100033-001-08-9::2.5::HTS</td>
       <td>-0.506751</td>
-      <td>BRD-A00100033-001-08-9::2.5::HTS</td>
       <td>BRD-A00100033-001-08-9</td>
-      <td>nifurtimox</td>
-      <td>2.5</td>
-      <td>HTS</td>
-      <td>DNA inhibitor</td>
-      <td>NaN</td>
+      <td>BRD-A00100033-001-08-9::2.5::HTS</td>
       <td>infectious disease</td>
+      <td>2.5</td>
       <td>Chagas disease, African trypanosomiasis</td>
-      <td>CC1CS(=O)(=O)CCN1N=Cc1ccc(o1)[N+]([O-])=O</td>
+      <td>DNA inhibitor</td>
+      <td>nifurtimox</td>
       <td>Launched</td>
+      <td>HTS</td>
+      <td>CC1CS(=O)(=O)CCN1N=Cc1ccc(o1)[N+]([O-])=O</td>
+      <td>NaN</td>
       <td>5</td>
     </tr>
     <tr>
       <th>2</th>
       <td>BRD-A00147595-001-01-5::2.5::HTS</td>
       <td>-0.477851</td>
-      <td>BRD-A00147595-001-01-5::2.5::HTS</td>
       <td>BRD-A00147595-001-01-5</td>
-      <td>balaglitazone</td>
+      <td>BRD-A00147595-001-01-5::2.5::HTS</td>
+      <td>NaN</td>
       <td>2.5</td>
-      <td>HTS</td>
+      <td>NaN</td>
       <td>insulin sensitizer, PPAR receptor partial agonist</td>
-      <td>PPARG</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>Cn1c(COc2ccc(CC3SC(=O)NC3=O)cc2)nc2ccccc2c1=O</td>
+      <td>balaglitazone</td>
       <td>Phase 3</td>
+      <td>HTS</td>
+      <td>Cn1c(COc2ccc(CC3SC(=O)NC3=O)cc2)nc2ccccc2c1=O</td>
+      <td>PPARG</td>
       <td>5</td>
     </tr>
   </tbody>
 </table>
 </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">complete_results_df</span><span class="o">.</span><span class="n">dose</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[15]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x11f7e9c88&gt;</pre>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
 </div>
 
 </div>
@@ -14206,7 +14526,7 @@ See <a href="data/"><code>data/</code></a> for more licensing details.</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>

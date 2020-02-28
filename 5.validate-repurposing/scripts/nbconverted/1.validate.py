@@ -119,15 +119,35 @@ full_df = (
         right_on=["broad_id", "dose_recode"],
         how="inner"
     )
+    .dropna(subset=["depmap_viability"])
 )
 
 print(full_df.shape)
 full_df.head(3)
 
 
+# In[10]:
+
+
+dose_differences_gg = (
+    gg.ggplot(full_df, gg.aes(x="dose", y="Metadata_mmoles_per_liter")) +
+    gg.geom_point(size = 0.5, alpha = 0.6) +
+    gg.theme_bw() +
+    gg.geom_abline(slope=1, intercept=0, linetype="dashed", color="red") +
+    gg.xlab("PRISM Dose") +
+    gg.ylab("Dependency Map Dose") +
+    gg.coord_fixed()
+)
+
+output_file = os.path.join("figures", "dose_differences.png")
+dose_differences_gg.save(output_file, dpi = 400, height = 3, width = 3)
+
+dose_differences_gg
+
+
 # ## Obtain Results
 
-# In[10]:
+# In[11]:
 
 
 spearman_cor = stats.spearmanr(full_df.cell_health_viability, full_df.depmap_viability)
@@ -135,7 +155,7 @@ spearman_cor = pd.DataFrame(spearman_cor, index=["stat", "p"]).transpose()
 spearman_cor
 
 
-# In[11]:
+# In[12]:
 
 
 result_text = "Spearman = {0:.2f}\np = {1:.2E}".format(
@@ -146,7 +166,7 @@ result_text = "Spearman = {0:.2f}\np = {1:.2E}".format(
 result_text
 
 
-# In[12]:
+# In[13]:
 
 
 viability_gg = (
@@ -154,7 +174,7 @@ viability_gg = (
     gg.geom_point(size = 0.5, alpha = 0.6) +
     gg.theme_bw() +
     gg.geom_smooth() +
-    gg.annotate("text", label = result_text, x = -8.5, y = 1) +
+    gg.annotate("text", label = result_text, x = -2, y = -8.5) +
     gg.xlab("Cell Health Model Predictions (Number of Objects)") +
     gg.ylab("Dependency Map Viability") +
     gg.coord_fixed()

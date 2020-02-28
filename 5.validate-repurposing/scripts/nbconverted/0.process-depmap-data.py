@@ -86,31 +86,60 @@ depmap_id
 # In[7]:
 
 
-treatment_file = os.path.join(data_dir, "primary-screen-replicate-collapsed-treatment-info.csv")
-treatment_df = pd.read_csv(treatment_file)
+primary_treatment_file = os.path.join(data_dir, "primary-screen-replicate-collapsed-treatment-info.csv")
+primary_treatment_df = pd.read_csv(primary_treatment_file)
 
-print(treatment_df.shape)
-treatment_df.head()
+print(primary_treatment_df.shape)
+primary_treatment_df.head(2)
 
-
-# ## Load Viability Estimates
 
 # In[8]:
 
 
-viability_file = os.path.join(data_dir, "primary-screen-replicate-collapsed-logfold-change.csv")
-viability_df = pd.read_csv(viability_file, index_col=0)
+secondary_treatment_file = os.path.join(data_dir, "secondary-screen-replicate-collapsed-treatment-info.csv")
+secondary_treatment_df = pd.read_csv(secondary_treatment_file).drop("compound_plate", axis="columns")
 
-print(viability_df.shape)
-viability_df.head()
+print(secondary_treatment_df.shape)
+secondary_treatment_df.head(2)
 
 
 # In[9]:
 
 
-viability_df = (
+treatment_df = pd.concat([primary_treatment_df, secondary_treatment_df], axis="rows", sort=True)
+
+print(treatment_df.shape)
+treatment_df.head(2)
+
+
+# ## Load Viability Estimates
+
+# In[10]:
+
+
+primary_viability_file = os.path.join(data_dir, "primary-screen-replicate-collapsed-logfold-change.csv")
+primary_viability_df = pd.read_csv(primary_viability_file, index_col=0)
+
+print(primary_viability_df.shape)
+primary_viability_df.head(2)
+
+
+# In[11]:
+
+
+secondary_viability_file = os.path.join(data_dir, "secondary-screen-replicate-collapsed-logfold-change.csv")
+secondary_viability_df = pd.read_csv(secondary_viability_file, index_col=0)
+
+print(secondary_viability_df.shape)
+secondary_viability_df.head(2)
+
+
+# In[12]:
+
+
+primary_viability_df = (
     pd.DataFrame(
-        viability_df
+        primary_viability_df
         .loc[depmap_id, :]
     )
     .reset_index()
@@ -123,12 +152,30 @@ viability_df = (
     )
 )
 
+secondary_viability_df = (
+    pd.DataFrame(
+        secondary_viability_df
+        .loc[depmap_id, :]
+    )
+    .reset_index()
+    .rename(
+        {
+            "index": "treatment_id",
+            depmap_id: cell_line_id
+        },
+        axis="columns"
+    )
+)
+
+viability_df = pd.concat([primary_viability_df, secondary_viability_df], axis="rows")
+
+print(viability_df.shape)
 viability_df.head()
 
 
 # ## Merge Results
 
-# In[10]:
+# In[13]:
 
 
 complete_results_df = (
@@ -149,7 +196,7 @@ complete_results_df.head(3)
 # 
 # Transform to same scale of Drug Repurposing Hub compound doses.
 
-# In[11]:
+# In[14]:
 
 
 complete_results_df = complete_results_df.assign(
@@ -166,9 +213,15 @@ print(complete_results_df.shape)
 complete_results_df.head(3)
 
 
+# In[15]:
+
+
+complete_results_df.dose.hist(bins=100)
+
+
 # ## Output Processed File
 
-# In[12]:
+# In[16]:
 
 
 output_file = os.path.join(
