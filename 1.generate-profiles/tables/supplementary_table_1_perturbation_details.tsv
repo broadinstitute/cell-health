@@ -1,0 +1,128 @@
+gene_name	pert_name	broad_sample	cell_process	cell_health_data	cell_painting_data
+AKT1	AKT1-1	BRDN0001054908	PIK3CA	True	True
+AKT1	AKT1-2	BRDN0001055115	PIK3CA	True	True
+ARID1B	ARID1B-1		Chromatin Modifiers	True	True
+ARID1B	ARID1B-2		Chromatin Modifiers	True	True
+ATF4	ATF4-1		ER Stress/UPR	True	True
+ATF4	ATF4-2		ER Stress/UPR	True	True
+ATP50	ATP50-1			True	True
+ATP50	ATP50-2			True	True
+AURKB	AURKB-2		Cell Cycle	True	True
+BCL2	BCL2-1		Apoptosis	True	True
+BCL2	BCL2-2		Apoptosis	True	True
+BCL2L2	BCL2L2-1		Apoptosis	True	True
+BCL2L2	BCL2L2-2		Apoptosis	True	True
+BCL2L2	BCL2L2-4		Apoptosis	True	True
+BRAF	BRAF-2	BRDN0000986702	MAPK	True	True
+BRAF1	BRAF1-1	BRDN0000986682		True	True
+BRCA1	BRCA1-1		DNA Damage	True	True
+BRCA1	BRCA1-2		DNA Damage	True	True
+BRD4	BRD4-1	BRDN0000733514	Chromatin Modifiers	True	True
+BRD4	BRD4-2	BRDN0000733577	Chromatin Modifiers	True	True
+CCND1	CCND1-1		Cell Cycle	True	True
+CCND1	CCND1-2		Cell Cycle	True	True
+CCNE1	CCNE1-1		Cell Cycle	True	True
+CCNE1	CCNE1-2		Cell Cycle	True	True
+CDK2	CDK2-1		Cell Cycle	True	True
+CDK2	CDK2-2		Cell Cycle	True	True
+CDK4	CDK4-1	BRDN0001053869	Cell Cycle	True	True
+CDK4	CDK4-2	BRDN0001053895	Cell Cycle	True	True
+CDK4	CDK4-3		Cell Cycle	True	True
+CDK4-CYP27B1-2F	CDK4-CYP27B1-2F		Intergenic cutting control	True	False
+CHEK2	CHEK2-1	BRDN0000586287	DNA damage	True	True
+CHEK2	CHEK2-2	BRDN0000585854	DNA damage	True	True
+COX5B	COX5B-1		Metabolism	True	True
+COX5B	COX5B-2		Metabolism	True	True
+CSNK1A1	CSNK1A1-1	BRDN0001065659	WNT	True	True
+CSNK1A1	CSNK1A1-2	BRDN0000585480	WNT	True	True
+CTNNB1	CTNNB1-1	BRDN0001065286	WNT	True	True
+CTNNB1	CTNNB1-2	BRDN0000579714	WNT	True	True
+Chr2	Chr2-1		Negative Ctrl	True	True
+Chr2	Chr2-2		Negative Ctrl	True	True
+Chr2	Chr2-3		Negative Ctrl	True	True
+Chr2	Chr2-4		Negative Ctrl	True	True
+Chr2	Chr2-5		Negative Ctrl	True	True
+Chr2	Chr2-6		Negative Ctrl	True	True
+DOT1L	DOT1L-1	BRDN0001057300	Chromatin Modifiers	True	True
+DOT1L	DOT1L-2	BRDN0001057286	Chromatin Modifiers	True	True
+EGFR	EGFR-1	BRDN0001054960	RTK	True	True
+EGFR	EGFR-2	BRDN0001054761	RTK	True	True
+EGLN1	EGLN1-8		Hypoxia	True	True
+EGLN1	EGLN1-9		Hypoxia	True	True
+EMPTY	EMPTY		Negative Ctrl	True	True
+ERBB2	ERBB2-1		RTK	True	True
+ERBB2	ERBB2-2		RTK	True	True
+ERBB3	ERBB3-1	BRDN0001054818	RTK	True	True
+ERBB3	ERBB3-2	BRDN0001054867	RTK	True	True
+EZH2	EZH2-1	BRDN0000733051	Chromatin Modifiers	True	True
+EZH2	EZH2-2	BRDN0000733144	Chromatin Modifiers	True	True
+Empty	EMPTY			True	False
+GLS	GLS-1		Metabolism	True	True
+GLS	GLS-2		Metabolism	True	True
+GPX4	GPX4-1		ROS	True	True
+GPX4	GPX4-2		ROS	True	True
+HIF1a	HIF1a-1		Hypoxia	True	True
+HIF1a	HIF1a-2		Hypoxia	True	True
+ITGAV	ITGAV-1	BRDN0001052092	Cytoskeletal Re-org/Integrin	True	True
+ITGAV	ITGAV-2	BRDN0001052667	Cytoskeletal Re-org/Integrin	True	True
+JAK3	JAK3-1	BRDN0001065886	JAK/STAT	True	True
+JAK3	JAK3-2	BRDN0001065702	JAK/STAT	True	True
+KIF11	KIF11-1	BRDN0000734411	Spindle Dynamics	True	True
+KIF11	KIF11-2	BRDN0000734657	Spindle Dynamics	True	True
+KRAS	KRAS-1		MAPK	True	True
+KRAS	KRAS-2A		RAS	True	True
+KRAS	KRAS-2B		RAS	True	True
+LacZ	LacZ-2	BRDN0000585793	Negative Ctrl	True	True
+LacZ	LacZ-3	BRDN0000585800	Negative Ctrl	True	True
+Luc	Luc-1	BRDN0000585635	Negative Ctrl	True	True
+Luc	Luc-2	BRDN0000585515	Negative Ctrl	True	True
+MAP4K1-ACTN4	MAP4K1-ACTN4		Intergenic cutting control	True	False
+MAPK1	MAPK1-1		MAPK	True	True
+MAPK1	MAPK1-2		MAPK	True	True
+MCL1	MCL1-2		Apoptosis	True	True
+MCL1	MCL1-5		Apoptosis	True	True
+MTOR	MTOR-1	BRDN0000734637	PIK3CA	True	True
+MTOR	MTOR-2	BRDN0000734053	PIK3CA	True	True
+MYC	MYC-1		Known cancer gene	True	True
+MYC	MYC-2		Known cancer gene	True	True
+ORC4	ORC4-1		DNA Replication	True	True
+ORC4	ORC4-2		DNA Replication	True	True
+PIK3CA	PIK3CA-1	BRDN0001054759	PIK3CA	True	True
+PIK3CA	PIK3CA-2	BRDN0001054804	PIK3CA	True	True
+POLR2D	POLR2D-1		RNA Polymerase II	True	True
+POLR2D	POLR2D-2		RNA Polymerase II	True	True
+PPIB	PPIB-1		Cyclosporin Binding Protein	True	True
+PPIB	PPIB-2		Cyclosporin Binding Protein	True	True
+PRDX1	PRDX1-1		ROS	True	True
+PRDX1	PRDX1-2		ROS	True	True
+PSMA1	PSMA1-1		Proteasome	True	True
+PSMA1	PSMA1-2		Proteasome	True	True
+PTK2	PTK2-1	BRDN0000990543	Cytoskeletal Re-org/Integrin	True	True
+PTK2	PTK2-2	BRDN0000990405	Cytoskeletal Re-org/Integrin	True	True
+RAC1	RAC1-1	BRDN0001062183	Cytoskeletal Re-org/Integrin	True	True
+RAC1	RAC1-2	BRDN0001062199	Cytoskeletal Re-org/Integrin	True	True
+RAF1	RAF1-1		MAPK	True	True
+RAF1	RAF1-2		MAPK	True	True
+RHOA	RHOA-1	BRDN0000990371	Cytoskeletal Re-org/Integrin	True	True
+RHOA	RHOA-2	BRDN0000990437	Cytoskeletal Re-org/Integrin	True	True
+SDHB	SDHB-1	BRDN0000986589	Metabolism	True	True
+SDHB	SDHB-2	BRDN0000986593	Metabolism	True	True
+SLC2A1	SLC2A1-1		Metabolism	True	True
+SLC2A2	SLC2A2-2			True	True
+SMARCB1	SMARCB1-1	BRDN0001062203	Chromatin Modifiers	True	True
+SMARCB1	SMARCB1-2	BRDN0001062218	Chromatin Modifiers	True	True
+STAT3	STAT3-1	BRDN0001063739	JAK/STAT	True	True
+STAT3	STAT3-2	BRDN0000579974	JAK/STAT	True	True
+SUZ12	SUZ12-1	BRDN0001057351	Chromatin Modifiers	True	True
+SUZ12	SUZ12-2	BRDN0001057661	Chromatin Modifiers	True	True
+TXN	TXN-1		ROS	True	True
+TXN	TXN-2		ROS	True	True
+Tsai-HEK293-4	Tsai-HEK293-4		Off-target cutting control	True	False
+Tsai-VEGFA-1	Tsai-VEGFA-1		Off-target cutting control	True	False
+Tsai-VEGFA-2	Tsai-VEGFA-2		Off-target cutting control	True	False
+Wang-K562-22-Nongenic-1	Wang-K562-22-Nongenic-1		Intergenic cutting control	True	False
+Wang-K562-22-Nongenic-2	Wang-K562-22-Nongenic-2		Intergenic cutting control	True	False
+XBP	XBP-1			True	True
+XBP	XBP-2			True	True
+YAP1	YAP1-1		Hippo	True	True
+YAP1	YAP1-2		Hippo	True	True
