@@ -8,8 +8,8 @@ Inf %	cc_infection_percentage	cell_cycle
 % Live	vb_percent_live	viability
 % Dead	vb_percent_dead	viability
 % All Apoptosis	vb_percent_all_apoptosis	viability
-% Early Apop	vb_percent_all_early_apoptosis	viability
-% Late Apop	vb_percent_all_late_apoptosis	viability
+% Early Apop	vb_percent_early_apoptosis	viability
+% Late Apop	vb_percent_late_apoptosis	viability
 % Dead Only	vb_percent_dead_only	viability
 # Live Cells	vb_num_live_cells	viability
 ROS Mean	vb_ros_mean	viability
@@ -19,58 +19,58 @@ Live Cell Roundness	vb_live_cell_roundness	viability
 Live Width:Length	vb_live_cell_width_length	viability
 % Caspase/%Dead Only	vb_percent_caspase_dead_only	viability
 CC - Number of Objects	cc_cc_n_objects	viability
-CC - Number of Spots - Mean per Well	cc_cc_n_spots_mean	cell_cycle
-CC - Number of Spots per Area of Nucleus - Mean per Well	cc_cc_n_spots_per_nucleus_area_mean	cell_cycle
-CC - High number of spots gH2AX - Mean per Well	cc_cc_high_n_spots_h2ax_mean	cell_cycle
-CC - edu positive - Mean per Well	cc_cc_edu_pos_mean	cell_cycle
-CC - G1 - Mean per Well	cc_cc_g1_mean	cell_cycle
-CC - G2-pH3 - Mean per Well	cc_cc_g2_ph3_neg_mean	cell_cycle
-CC - G2+pH3 (Early mitiosis) - Mean per Well	cc_cc_g2_ph3_pos_early_mitosis_mean	cell_cycle
-CC - pH3 positive, Hoechst condenced (mitosis) - Mean per ...	cc_cc_ph3_pos_hoechst_mitosis_mean	cell_cycle
-CC - pH3 neg, Hoechst cond (late mitosis) - Mean per Well	cc_cc_ph3_neg_hoechst_late_mitosis_mean	cell_cycle
+CC - Number of Spots - Mean per Well	cc_cc_n_spots_h2ax_mean	cell_cycle
+CC - Number of Spots per Area of Nucleus - Mean per Well	cc_cc_n_spots_h2ax_per_nucleus_area_mean	cell_cycle
+CC - High number of spots gH2AX - Mean per Well	cc_cc_high_h2ax	cell_cycle
+CC - edu positive - Mean per Well	cc_cc_s	cell_cycle
+CC - G1 - Mean per Well	cc_cc_g1	cell_cycle
+CC - G2-pH3 - Mean per Well	cc_cc_g2	cell_cycle
+CC - G2+pH3 (Early mitiosis) - Mean per Well	cc_cc_early_mitosis	cell_cycle
+CC - pH3 positive, Hoechst condenced (mitosis) - Mean per ...	cc_cc_mitosis	cell_cycle
+CC - pH3 neg, Hoechst cond (late mitosis) - Mean per Well	cc_cc_late_mitosis	cell_cycle
 ALL - Number of Objects	cc_all_n_objects	cell_cycle
 ALL - Nucleus Area [µm²] - Mean per Well	cc_all_nucleus_area_mean	cell_cycle
 ALL - Nucleus Roundness - Mean per Well	cc_all_nucleus_roundness_mean	cell_cycle
-ALL - Number of Spots - Mean per Well	cc_all_n_spots_mean	cell_cycle
-ALL - Number of Spots per Area of Nucleus - Mean per Well	cc_all_n_spots_per_nucleus_area_mean	cell_cycle
-ALL - High number of spots gH2AX - Mean per Well	cc_all_high_n_spots_h2ax_mean	cell_cycle
+ALL - Number of Spots - Mean per Well	cc_all_n_spots_h2ax_mean	cell_cycle
+ALL - Number of Spots per Area of Nucleus - Mean per Well	cc_all_n_spots_h2ax_per_nucleus_area_mean	cell_cycle
+ALL - High number of spots gH2AX - Mean per Well	cc_all_high_h2ax	cell_cycle
 ALL - Large round (polyploid) - Mean per Well	cc_all_large_round_polyploid_mean	cell_cycle
 ALL - large not round (polynuclear) - Mean per Well	cc_all_large_notround_polynuclear_mean	cell_cycle
 Large round (polyploid) - Number of Objects	cc_polyploid_n_objects	cell_cycle
-Large round (polyploid) - Number of Spots - Mean per Well	cc_polyploid_n_spots_mean	cell_cycle
-Large round (polyploid) - Number of Spots per Area of Nucleus - Mean per Well	cc_polyploid_n_spots_per_nucleus_area_mean	cell_cycle
-Large round (polyploid) - High number of spots gH2AX - Mean per Well	cc_polyploid_high_n_spots_h2ax_mean	cell_cycle
+Large round (polyploid) - Number of Spots - Mean per Well	cc_polyploid_n_spots_h2ax_mean	cell_cycle
+Large round (polyploid) - Number of Spots per Area of Nucleus - Mean per Well	cc_polyploid_n_spots_h2ax_per_nucleus_area_mean	cell_cycle
+Large round (polyploid) - High number of spots gH2AX - Mean per Well	cc_polyploid_high_h2ax	cell_cycle
 large not round (polynuclear) - Number of Objects	cc_polynuclear_n_objects	cell_cycle
-large not round (polynuclear) - Number of Spots - Mean per Well	cc_polynuclear_n_spots_mean	cell_cycle
-large not round (polynuclear) - Number of Spots per Area of Nucleus - Mean pe...	cc_polynuclear_n_spots_per_nucleus_area_mean	cell_cycle
-large not round (polynuclear) - High number of spots gH2AX - Mean per Well	cc_polynuclear_high_n_spots_h2ax_mean	cell_cycle
-edu positive - Number of Objects	cc_edu_pos_n_objects	cell_cycle
-edu positive - Intensity Nucleus Alexa 647 Mean - Mean per Well	cc_edu_pos_alexa647_intensity_nucleus_area_mean	cell_cycle
-edu positive - Intensity Nucleus Alexa 647 Sum - Sum per Well	cc_edu_pos_alexa647_intensity_nucleus_area_sum	cell_cycle
-edu positive - Number of Spots - Mean per Well	cc_edu_pos_n_spots_mean	cell_cycle
-edu positive - Number of Spots per Area of Nucleus - Mean per Well	cc_edu_pos_n_spots_per_nucleus_area_mean	cell_cycle
-edu positive - High number of spots gH2AX - Mean per Well	cc_edu_pos_high_n_spots_h2ax_mean	cell_cycle
+large not round (polynuclear) - Number of Spots - Mean per Well	cc_polynuclear_n_spots_h2ax_mean	cell_cycle
+large not round (polynuclear) - Number of Spots per Area of Nucleus - Mean pe...	cc_polynuclear_n_spots_h2ax_per_nucleus_area_mean	cell_cycle
+large not round (polynuclear) - High number of spots gH2AX - Mean per Well	cc_polynuclear_high_h2ax	cell_cycle
+edu positive - Number of Objects	cc_s_n_objects	cell_cycle
+edu positive - Intensity Nucleus Alexa 647 Mean - Mean per Well	cc_s_intensity_nucleus_area_mean	cell_cycle
+edu positive - Intensity Nucleus Alexa 647 Sum - Sum per Well	cc_s_intensity_nucleus_area_sum	cell_cycle
+edu positive - Number of Spots - Mean per Well	cc_s_n_spots_h2ax_mean	cell_cycle
+edu positive - Number of Spots per Area of Nucleus - Mean per Well	cc_s_n_spots_h2ax_per_nucleus_area_mean	cell_cycle
+edu positive - High number of spots gH2AX - Mean per Well	cc_s_high_h2ax	cell_cycle
 G1 - Number of Objects	cc_g1_n_objects	cell_cycle
-G1 - Number of Spots - Mean per Well	cc_g1_n_spots_mean	cell_cycle
-G1 - Number of Spots per Area of Nucleus - Mean per Well	cc_g1_n_spots_per_nucleus_area_mean	cell_cycle
-G1 - High number of spots gH2AX - Mean per Well	cc_g1_high_n_spots_h2ax_mean	cell_cycle
-G2-pH3 - Number of Objects	cc_g2_ph3_neg_n_objects	cell_cycle
-G2-pH3 - Number of Spots - Mean per Well	cc_g2_ph3_neg_n_spots_mean	cell_cycle
-G2-pH3 - Number of Spots per Area of Nucleus - Mean per Well	cc_g2_ph3_neg_n_spots_per_nucleus_area_mean	cell_cycle
-G2-pH3 - High number of spots gH2AX - Mean per Well	cc_g2_ph3_neg_high_n_spots_h2ax_mean	cell_cycle
-G2+pH3 (Early mitiosis) - Number of Objects	cc_g2_ph3_pos_n_objects	cell_cycle
-G2+pH3 (Early mitiosis) - Number of Spots - Mean per Well	cc_g2_ph3_pos_n_spots_mean	cell_cycle
-G2+pH3 (Early mitiosis) - Number of Spots per Area of Nucleus - Mean per Well	cc_g2_ph3_pos_n_spots_per_nucleus_area_mean	cell_cycle
-G2+pH3 (Early mitiosis) - High number of spots gH2AX - Mean per Well	cc_g2_ph3_pos_high_n_spots_h2ax_mean	cell_cycle
-pH3 positive, Hoechst condenced (mitosis) - Number of Objects	cc_mitosis_ph3_pos_n_objects	cell_cycle
-pH3 positive, Hoechst condenced (mitosis) - Number of Spots - Mean per Well	cc_mitosis_ph3_pos_n_spots_mean	cell_cycle
-pH3 positive, Hoechst condenced (mitosis) - Number of Spots per Area of Nucle...	cc_mitosis_ph3_pos_n_spots_per_nucleus_area_mean	cell_cycle
-pH3 positive, Hoechst condenced (mitosis) - High number of spots gH2AX - Mean...	cc_mitosis_ph3_pos_high_n_spots_h2ax_mean	cell_cycle
-pH3 neg, Hoechst cond (late mitosis) - Number of Objects	cc_mitosis_ph3_neg_n_objects	cell_cycle
-pH3 neg, Hoechst cond (late mitosis) - Number of Spots - Mean per Well	cc_mitosis_ph3_neg_n_spots_mean	cell_cycle
-pH3 neg, Hoechst cond (late mitosis) - Number of Spots per Area of Nucleus - ...	cc_mitosis_ph3_neg_n_spots_per_nucleus_area_mean	cell_cycle
-pH3 neg, Hoechst cond (late mitosis) - High number of spots gH2AX - Mean per ...	cc_mitosis_ph3_neg_high_n_spots_h2ax_mean	cell_cycle
-G1/S	cc_g1_s	cell_cycle
-G2/G1	cc_g2_g1	cell_cycle
-G1+G2	cc_g1_plus_g2	cell_cycle
-G2 + All M-phase	cc_g2_plus_all_m	cell_cycle
+G1 - Number of Spots - Mean per Well	cc_g1_n_spots_h2ax_mean	cell_cycle
+G1 - Number of Spots per Area of Nucleus - Mean per Well	cc_g1_n_spots_h2ax_per_nucleus_area_mean	cell_cycle
+G1 - High number of spots gH2AX - Mean per Well	cc_g1_high_h2ax	cell_cycle
+G2-pH3 - Number of Objects	cc_g2_n_objects	cell_cycle
+G2-pH3 - Number of Spots - Mean per Well	cc_g2_n_spots_h2ax_mean	cell_cycle
+G2-pH3 - Number of Spots per Area of Nucleus - Mean per Well	cc_g2_n_spots_h2ax_per_nucleus_area_mean	cell_cycle
+G2-pH3 - High number of spots gH2AX - Mean per Well	cc_g2_high_h2ax	cell_cycle
+G2+pH3 (Early mitiosis) - Number of Objects	cc_early_mitosis_n_objects	cell_cycle
+G2+pH3 (Early mitiosis) - Number of Spots - Mean per Well	cc_early_mitosis_n_spots_h2ax_mean	cell_cycle
+G2+pH3 (Early mitiosis) - Number of Spots per Area of Nucleus - Mean per Well	cc_early_mitosis_n_spots_h2ax_per_nucleus_area_mean	cell_cycle
+G2+pH3 (Early mitiosis) - High number of spots gH2AX - Mean per Well	cc_early_mitosis_high_h2ax	cell_cycle
+pH3 positive, Hoechst condenced (mitosis) - Number of Objects	cc_mitosis_n_objects	cell_cycle
+pH3 positive, Hoechst condenced (mitosis) - Number of Spots - Mean per Well	cc_mitosis_n_spots_h2ax_mean	cell_cycle
+pH3 positive, Hoechst condenced (mitosis) - Number of Spots per Area of Nucle...	cc_mitosis_n_spots_h2ax_per_nucleus_area_mean	cell_cycle
+pH3 positive, Hoechst condenced (mitosis) - High number of spots gH2AX - Mean...	cc_mitosis_high_h2ax	cell_cycle
+pH3 neg, Hoechst cond (late mitosis) - Number of Objects	cc_late_mitosis_n_objects	cell_cycle
+pH3 neg, Hoechst cond (late mitosis) - Number of Spots - Mean per Well	cc_late_mitosis_n_spots_h2ax_mean	cell_cycle
+pH3 neg, Hoechst cond (late mitosis) - Number of Spots per Area of Nucleus - ...	cc_late_mitosis_n_spots_h2ax_per_nucleus_area_mean	cell_cycle
+pH3 neg, Hoechst cond (late mitosis) - High number of spots gH2AX - Mean per ...	cc_late_mitosis_high_h2ax	cell_cycle
+G1/S	cc_g1_s_count	cell_cycle
+G2/G1	cc_g2_g1_count	cell_cycle
+G1+G2	cc_g1_plus_g2_count	cell_cycle
+G2 + All M-phase	cc_g2_plus_all_m_count	cell_cycle

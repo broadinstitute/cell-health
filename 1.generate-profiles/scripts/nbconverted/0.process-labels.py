@@ -33,6 +33,8 @@ files
 
 
 # ## Build Dictionaries for Feature Recoding
+# 
+# Note, these dictionaries were compiled manually.
 
 # In[4]:
 
@@ -47,8 +49,8 @@ viability_col_names = {
     '% Live': "vb_percent_live",
     '% Dead': "vb_percent_dead",
     '% All Apoptosis': "vb_percent_all_apoptosis",
-    '% Early Apop': "vb_percent_all_early_apoptosis",
-    '% Late Apop': "vb_percent_all_late_apoptosis",
+    '% Early Apop': "vb_percent_early_apoptosis",
+    '% Late Apop': "vb_percent_late_apoptosis",
     '% Dead Only': "vb_percent_dead_only",
     '# Live Cells': "vb_num_live_cells",
     'ROS Mean': "vb_ros_mean",
@@ -66,61 +68,61 @@ cell_cycle_col_names = {
     "sgRNA": "guide",
     "Inf %": "cc_infection_percentage",
     "CC - Number of Objects": "cc_cc_n_objects",
-    "CC - Number of Spots - Mean per Well": "cc_cc_n_spots_mean",
-    "CC - Number of Spots per Area of Nucleus - Mean per Well": "cc_cc_n_spots_per_nucleus_area_mean",
-    "CC - High number of spots gH2AX - Mean per Well": "cc_cc_high_n_spots_h2ax_mean",
-    "CC - edu positive - Mean per Well": "cc_cc_edu_pos_mean",
-    "CC - G1 - Mean per Well": "cc_cc_g1_mean",
-    "CC - G2-pH3 - Mean per Well": "cc_cc_g2_ph3_neg_mean",
-    "CC - G2+pH3 (Early mitiosis) - Mean per Well": "cc_cc_g2_ph3_pos_early_mitosis_mean",
-    "CC - pH3 positive, Hoechst condenced (mitosis) - Mean per ...": "cc_cc_ph3_pos_hoechst_mitosis_mean",
-    "CC - pH3 neg, Hoechst cond (late mitosis) - Mean per Well": "cc_cc_ph3_neg_hoechst_late_mitosis_mean",
+    "CC - Number of Spots - Mean per Well": "cc_cc_n_spots_h2ax_mean",
+    "CC - Number of Spots per Area of Nucleus - Mean per Well": "cc_cc_n_spots_h2ax_per_nucleus_area_mean",
+    "CC - High number of spots gH2AX - Mean per Well": "cc_cc_high_h2ax",
+    "CC - edu positive - Mean per Well": "cc_cc_s",
+    "CC - G1 - Mean per Well": "cc_cc_g1",
+    "CC - G2-pH3 - Mean per Well": "cc_cc_g2",
+    "CC - G2+pH3 (Early mitiosis) - Mean per Well": "cc_cc_early_mitosis",
+    "CC - pH3 positive, Hoechst condenced (mitosis) - Mean per ...": "cc_cc_mitosis",
+    "CC - pH3 neg, Hoechst cond (late mitosis) - Mean per Well": "cc_cc_late_mitosis",
     "ALL - Number of Objects": "cc_all_n_objects",
     'ALL - Nucleus Area [µm²] - Mean per Well': "cc_all_nucleus_area_mean",
     'ALL - Nucleus Roundness - Mean per Well': "cc_all_nucleus_roundness_mean",
-    'ALL - Number of Spots - Mean per Well': "cc_all_n_spots_mean",
-    'ALL - Number of Spots per Area of Nucleus - Mean per Well': "cc_all_n_spots_per_nucleus_area_mean",
-    'ALL - High number of spots gH2AX - Mean per Well': "cc_all_high_n_spots_h2ax_mean",
+    'ALL - Number of Spots - Mean per Well': "cc_all_n_spots_h2ax_mean",
+    'ALL - Number of Spots per Area of Nucleus - Mean per Well': "cc_all_n_spots_h2ax_per_nucleus_area_mean",
+    'ALL - High number of spots gH2AX - Mean per Well': "cc_all_high_h2ax",
     'ALL - Large round (polyploid) - Mean per Well': "cc_all_large_round_polyploid_mean",
     'ALL - large not round (polynuclear) - Mean per Well': "cc_all_large_notround_polynuclear_mean",
     'Large round (polyploid) - Number of Objects': "cc_polyploid_n_objects",
-    'Large round (polyploid) - Number of Spots - Mean per Well': "cc_polyploid_n_spots_mean",
-    'Large round (polyploid) - Number of Spots per Area of Nucleus - Mean per Well': "cc_polyploid_n_spots_per_nucleus_area_mean",
-    'Large round (polyploid) - High number of spots gH2AX - Mean per Well': "cc_polyploid_high_n_spots_h2ax_mean",
+    'Large round (polyploid) - Number of Spots - Mean per Well': "cc_polyploid_n_spots_h2ax_mean",
+    'Large round (polyploid) - Number of Spots per Area of Nucleus - Mean per Well': "cc_polyploid_n_spots_h2ax_per_nucleus_area_mean",
+    'Large round (polyploid) - High number of spots gH2AX - Mean per Well': "cc_polyploid_high_h2ax",
     'large not round (polynuclear) - Number of Objects': "cc_polynuclear_n_objects",
-    'large not round (polynuclear) - Number of Spots - Mean per Well': "cc_polynuclear_n_spots_mean",
-    'large not round (polynuclear) - Number of Spots per Area of Nucleus - Mean pe...': "cc_polynuclear_n_spots_per_nucleus_area_mean",
-    'large not round (polynuclear) - High number of spots gH2AX - Mean per Well': "cc_polynuclear_high_n_spots_h2ax_mean",
-    'edu positive - Number of Objects': "cc_edu_pos_n_objects",
-    'edu positive - Intensity Nucleus Alexa 647 Mean - Mean per Well': "cc_edu_pos_alexa647_intensity_nucleus_area_mean",
-    'edu positive - Intensity Nucleus Alexa 647 Sum - Sum per Well': "cc_edu_pos_alexa647_intensity_nucleus_area_sum",
-    'edu positive - Number of Spots - Mean per Well': "cc_edu_pos_n_spots_mean",
-    'edu positive - Number of Spots per Area of Nucleus - Mean per Well': "cc_edu_pos_n_spots_per_nucleus_area_mean",
-    'edu positive - High number of spots gH2AX - Mean per Well': "cc_edu_pos_high_n_spots_h2ax_mean",
+    'large not round (polynuclear) - Number of Spots - Mean per Well': "cc_polynuclear_n_spots_h2ax_mean",
+    'large not round (polynuclear) - Number of Spots per Area of Nucleus - Mean pe...': "cc_polynuclear_n_spots_h2ax_per_nucleus_area_mean",
+    'large not round (polynuclear) - High number of spots gH2AX - Mean per Well': "cc_polynuclear_high_h2ax",
+    'edu positive - Number of Objects': "cc_s_n_objects",
+    'edu positive - Intensity Nucleus Alexa 647 Mean - Mean per Well': "cc_s_intensity_nucleus_area_mean",
+    'edu positive - Intensity Nucleus Alexa 647 Sum - Sum per Well': "cc_s_intensity_nucleus_area_sum",
+    'edu positive - Number of Spots - Mean per Well': "cc_s_n_spots_h2ax_mean",
+    'edu positive - Number of Spots per Area of Nucleus - Mean per Well': "cc_s_n_spots_h2ax_per_nucleus_area_mean",
+    'edu positive - High number of spots gH2AX - Mean per Well': "cc_s_high_h2ax",
     'G1 - Number of Objects': "cc_g1_n_objects",
-    'G1 - Number of Spots - Mean per Well': "cc_g1_n_spots_mean",
-    'G1 - Number of Spots per Area of Nucleus - Mean per Well': "cc_g1_n_spots_per_nucleus_area_mean",
-    'G1 - High number of spots gH2AX - Mean per Well': "cc_g1_high_n_spots_h2ax_mean",
-    'G2-pH3 - Number of Objects': "cc_g2_ph3_neg_n_objects",
-    'G2-pH3 - Number of Spots - Mean per Well': "cc_g2_ph3_neg_n_spots_mean",
-    'G2-pH3 - Number of Spots per Area of Nucleus - Mean per Well': "cc_g2_ph3_neg_n_spots_per_nucleus_area_mean",
-    'G2-pH3 - High number of spots gH2AX - Mean per Well': "cc_g2_ph3_neg_high_n_spots_h2ax_mean",
-    'G2+pH3 (Early mitiosis) - Number of Objects': "cc_g2_ph3_pos_n_objects",
-    'G2+pH3 (Early mitiosis) - Number of Spots - Mean per Well': "cc_g2_ph3_pos_n_spots_mean",
-    'G2+pH3 (Early mitiosis) - Number of Spots per Area of Nucleus - Mean per Well': "cc_g2_ph3_pos_n_spots_per_nucleus_area_mean",
-    'G2+pH3 (Early mitiosis) - High number of spots gH2AX - Mean per Well': "cc_g2_ph3_pos_high_n_spots_h2ax_mean",
-    'pH3 positive, Hoechst condenced (mitosis) - Number of Objects': "cc_mitosis_ph3_pos_n_objects",
-    'pH3 positive, Hoechst condenced (mitosis) - Number of Spots - Mean per Well': "cc_mitosis_ph3_pos_n_spots_mean",
-    'pH3 positive, Hoechst condenced (mitosis) - Number of Spots per Area of Nucle...': "cc_mitosis_ph3_pos_n_spots_per_nucleus_area_mean",
-    'pH3 positive, Hoechst condenced (mitosis) - High number of spots gH2AX - Mean...': "cc_mitosis_ph3_pos_high_n_spots_h2ax_mean",
-    'pH3 neg, Hoechst cond (late mitosis) - Number of Objects': "cc_mitosis_ph3_neg_n_objects",
-    'pH3 neg, Hoechst cond (late mitosis) - Number of Spots - Mean per Well': "cc_mitosis_ph3_neg_n_spots_mean",
-    'pH3 neg, Hoechst cond (late mitosis) - Number of Spots per Area of Nucleus - ...': "cc_mitosis_ph3_neg_n_spots_per_nucleus_area_mean",
-    'pH3 neg, Hoechst cond (late mitosis) - High number of spots gH2AX - Mean per ...': "cc_mitosis_ph3_neg_high_n_spots_h2ax_mean",
-    'G1/S': "cc_g1_s",
-    'G2/G1': "cc_g2_g1",
-    'G1+G2': "cc_g1_plus_g2",
-    'G2 + All M-phase': "cc_g2_plus_all_m"
+    'G1 - Number of Spots - Mean per Well': "cc_g1_n_spots_h2ax_mean",
+    'G1 - Number of Spots per Area of Nucleus - Mean per Well': "cc_g1_n_spots_h2ax_per_nucleus_area_mean",
+    'G1 - High number of spots gH2AX - Mean per Well': "cc_g1_high_h2ax",
+    'G2-pH3 - Number of Objects': "cc_g2_n_objects",
+    'G2-pH3 - Number of Spots - Mean per Well': "cc_g2_n_spots_h2ax_mean",
+    'G2-pH3 - Number of Spots per Area of Nucleus - Mean per Well': "cc_g2_n_spots_h2ax_per_nucleus_area_mean",
+    'G2-pH3 - High number of spots gH2AX - Mean per Well': "cc_g2_high_h2ax",
+    'G2+pH3 (Early mitiosis) - Number of Objects': "cc_early_mitosis_n_objects",
+    'G2+pH3 (Early mitiosis) - Number of Spots - Mean per Well': "cc_early_mitosis_n_spots_h2ax_mean",
+    'G2+pH3 (Early mitiosis) - Number of Spots per Area of Nucleus - Mean per Well': "cc_early_mitosis_n_spots_h2ax_per_nucleus_area_mean",
+    'G2+pH3 (Early mitiosis) - High number of spots gH2AX - Mean per Well': "cc_early_mitosis_high_h2ax",
+    'pH3 positive, Hoechst condenced (mitosis) - Number of Objects': "cc_mitosis_n_objects",
+    'pH3 positive, Hoechst condenced (mitosis) - Number of Spots - Mean per Well': "cc_mitosis_n_spots_h2ax_mean",
+    'pH3 positive, Hoechst condenced (mitosis) - Number of Spots per Area of Nucle...': "cc_mitosis_n_spots_h2ax_per_nucleus_area_mean",
+    'pH3 positive, Hoechst condenced (mitosis) - High number of spots gH2AX - Mean...': "cc_mitosis_high_h2ax",
+    'pH3 neg, Hoechst cond (late mitosis) - Number of Objects': "cc_late_mitosis_n_objects",
+    'pH3 neg, Hoechst cond (late mitosis) - Number of Spots - Mean per Well': "cc_late_mitosis_n_spots_h2ax_mean",
+    'pH3 neg, Hoechst cond (late mitosis) - Number of Spots per Area of Nucleus - ...': "cc_late_mitosis_n_spots_h2ax_per_nucleus_area_mean",
+    'pH3 neg, Hoechst cond (late mitosis) - High number of spots gH2AX - Mean per ...': "cc_late_mitosis_high_h2ax",
+    'G1/S': "cc_g1_s_count",
+    'G2/G1': "cc_g2_g1_count",
+    'G1+G2': "cc_g1_plus_g2_count",
+    'G2 + All M-phase': "cc_g2_plus_all_m_count"
 }
 
 
@@ -186,7 +188,7 @@ for file in files:
 
     # Drop a column for specific dataframe
     if cell_line == "A549" and file_type == "cell_cycle":
-        df = df.drop("cc_g1_s", axis="columns")
+        df = df.drop("cc_g1_s_count", axis="columns")
     
     # Recode the Empty guides
     df.loc[df.guide.str.capitalize() == "Empty", "guide"] = "EMPTY"
@@ -239,83 +241,13 @@ all_df.head(2)
 # In[9]:
 
 
-output_column_order = [
-    'cell_id',
-    'guide',
-    'plate_name',
-    'well_col',
-    'well_row',
-    'cc_all_high_n_spots_h2ax_mean',
-    'cc_all_large_notround_polynuclear_mean',
-    'cc_all_large_round_polyploid_mean',
-    'cc_all_n_objects',
-    'cc_all_n_spots_mean',
-    'cc_all_n_spots_per_nucleus_area_mean',
-    'cc_all_nucleus_area_mean',
-    'cc_all_nucleus_roundness_mean',
-    'cc_cc_edu_pos_mean',
-    'cc_cc_g1_mean',
-    'cc_cc_g2_ph3_neg_mean',
-    'cc_cc_g2_ph3_pos_early_mitosis_mean',
-    'cc_cc_high_n_spots_h2ax_mean',
-    'cc_cc_n_objects',
-    'cc_cc_n_spots_mean',
-    'cc_cc_n_spots_per_nucleus_area_mean',
-    'cc_cc_ph3_neg_hoechst_late_mitosis_mean',
-    'cc_cc_ph3_pos_hoechst_mitosis_mean',
-    'cc_edu_pos_alexa647_intensity_nucleus_area_mean',
-    'cc_edu_pos_alexa647_intensity_nucleus_area_sum',
-    'cc_edu_pos_high_n_spots_h2ax_mean',
-    'cc_edu_pos_n_objects',
-    'cc_edu_pos_n_spots_mean',
-    'cc_edu_pos_n_spots_per_nucleus_area_mean',
-    'cc_g1_high_n_spots_h2ax_mean',
-    'cc_g1_n_objects',
-    'cc_g1_n_spots_mean',
-    'cc_g1_n_spots_per_nucleus_area_mean',
-    'cc_g1_plus_g2',
-    'cc_g2_g1',
-    'cc_g2_ph3_neg_high_n_spots_h2ax_mean',
-    'cc_g2_ph3_neg_n_objects',
-    'cc_g2_ph3_neg_n_spots_mean',
-    'cc_g2_ph3_neg_n_spots_per_nucleus_area_mean',
-    'cc_g2_ph3_pos_high_n_spots_h2ax_mean',
-    'cc_g2_ph3_pos_n_objects',
-    'cc_g2_ph3_pos_n_spots_mean',
-    'cc_g2_ph3_pos_n_spots_per_nucleus_area_mean',
-    'cc_g2_plus_all_m',
-    'cc_infection_percentage',
-    'cc_mitosis_ph3_neg_high_n_spots_h2ax_mean',
-    'cc_mitosis_ph3_neg_n_objects',
-    'cc_mitosis_ph3_neg_n_spots_mean',
-    'cc_mitosis_ph3_neg_n_spots_per_nucleus_area_mean',
-    'cc_mitosis_ph3_pos_high_n_spots_h2ax_mean',
-    'cc_mitosis_ph3_pos_n_objects',
-    'cc_mitosis_ph3_pos_n_spots_mean',
-    'cc_mitosis_ph3_pos_n_spots_per_nucleus_area_mean',
-    'cc_polynuclear_high_n_spots_h2ax_mean',
-    'cc_polynuclear_n_objects',
-    'cc_polynuclear_n_spots_mean',
-    'cc_polynuclear_n_spots_per_nucleus_area_mean',
-    'cc_polyploid_high_n_spots_h2ax_mean',
-    'cc_polyploid_n_objects',
-    'cc_polyploid_n_spots_mean',
-    'cc_polyploid_n_spots_per_nucleus_area_mean',
-    'vb_infection_percentage',
-    'vb_live_cell_area',
-    'vb_live_cell_roundness',
-    'vb_live_cell_width_length',
-    'vb_num_live_cells',
-    'vb_percent_all_apoptosis',
-    'vb_percent_all_early_apoptosis',
-    'vb_percent_all_late_apoptosis',
-    'vb_percent_caspase_dead_only',
-    'vb_percent_dead',
-    'vb_percent_dead_only',
-    'vb_percent_live',
-    'vb_ros_back_mean',
-    'vb_ros_mean'
-]
+cell_cycle_order = sorted([x for x in all_df.columns if x.startswith("cc_")])
+viability_order = sorted([x for x in all_df.columns if x.startswith("vb_")])
+
+meta_cols = all_df.drop(cell_cycle_order + viability_order, axis="columns").columns.tolist()
+
+output_column_order = meta_cols + cell_cycle_order + viability_order
+output_column_order
 
 
 # In[10]:
@@ -405,7 +337,12 @@ guide_count_df = (
     )['plate_name']
     .count()
     .reset_index()
-    .rename({'plate_name': 'num_guides'}, axis='columns')
+    .rename(
+        {
+            'plate_name': 'num_guides'
+        },
+        axis='columns'
+    )
     .sort_values(by=['num_guides', 'guide'])
     .reset_index(drop=True)
 )
