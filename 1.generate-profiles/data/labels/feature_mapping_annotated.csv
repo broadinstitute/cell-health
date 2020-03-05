@@ -1,76 +1,76 @@
-original_name,updated_name,feature_type,measurement,maria_thumbs_up,assay,description
-Row,well_row,metadata,metadata,,,
-Column,well_col,metadata,metadata,,,
-Plate Name,plate_name,metadata,metadata,,,
-sgRNA,guide,metadata,metadata,,,
-Inf %,cc_infection_percentage,metadata,metadata,,crispr_efficiency,
-% Inf,vb_infection_percentage,metadata,metadata,,crispr_efficiency,
-% Live,vb_percent_live,viability,death,1,draq,fraction of live cells
-% Dead,vb_percent_dead,viability,death,1,draq,fraction of DRAQ7 positive cells
-% All Apoptosis,vb_percent_all_apoptosis,viability,apoptosis,1,caspase,fraction of casp positive cells
-% Early Apop,vb_percent_all_early_apoptosis,viability,apoptosis,0,draq_caspase,fraction of casp positive (no DRAQ7) cells
-% Late Apop,vb_percent_all_late_apoptosis,viability,apoptosis,0,draq_caspase,"fraction of both, casp and DRAQ7 positive cells"
-% Dead Only,vb_percent_dead_only,viability,apoptosis,0,draq_caspase,fraction of DRAQ7 positive / Casp negative cells
-# Live Cells,vb_num_live_cells,viability,death,1,draq,number of live cells
-ROS Mean,vb_ros_mean,viability,ros,1,caspase,mean intensity of ROS marker per cell
-ROS-back Mean,vb_ros_back_mean,viability,ros,0,caspase,Background
-Live Cell Area,vb_live_cell_area,viability,shape,0,draq,cell size
-Live Cell Roundness,vb_live_cell_roundness,viability,shape,0,draq,cell roundness
-Live Width:Length,vb_live_cell_width_length,viability,shape,0,draq,width/length
-% Caspase/%Dead Only,vb_percent_caspase_dead_only,viability,apoptosis,0,draq_caspase,
-CC - Number of Objects,cc_cc_n_objects,cell_cycle,cell_viability,0,hoechst,Number of cells selected for cell cycle
-CC - Number of Spots - Mean per Well,cc_cc_n_spots_mean,cell_cycle,dna_damage,0,gh2ax,Within cells selected for cell cycle: average number of gH2AX spots 
-CC - Number of Spots per Area of Nucleus - Mean per Well,cc_cc_n_spots_per_nucleus_area_mean,cell_cycle,dna_damage,0,gh2ax,Within cells selected for cell cycle: average number of gH2AX spots per area of nucleus 
-CC - High number of spots gH2AX - Mean per Well,cc_cc_high_n_spots_h2ax_mean,cell_cycle,dna_damage,0,gh2ax,"Within cells selected for cell cycle (round, not large): fraction of cells containing more than 3 gH2AX spots"
-CC - edu positive - Mean per Well,cc_cc_edu_pos_mean,cell_cycle,s_arrest,1,edu,fraction of EdU positive cells (S-phase of cell cycle)
-CC - G1 - Mean per Well,cc_cc_g1_mean,cell_cycle,g1_arrest,1,many_cell_cycle,fraction of G1 cells
-CC - G2-pH3 - Mean per Well,cc_cc_g2_ph3_neg_mean,cell_cycle,g2_arrest,1,many_cell_cycle,fraction of G2 cells
-CC - G2+pH3 (Early mitiosis) - Mean per Well,cc_cc_g2_ph3_pos_early_mitosis_mean,cell_cycle,g2_m_arrest,1,many_cell_cycle,fraction of G2/M cells
-"CC - pH3 positive, Hoechst condenced (mitosis) - Mean per Well",cc_cc_ph3_pos_hoechst_mitosis_mean,cell_cycle,mitosis,0,hoechst_edu,fraction of cells in late mitosis
-"CC - pH3 neg, Hoechst cond (late mitosis) - Mean per Well",cc_cc_ph3_neg_hoechst_late_mitosis_mean,cell_cycle,mitosis,0,hoechst_edu,
-ALL - Number of Objects,cc_all_n_objects,cell_cycle,cell_viability,1,hoechst,total number of cells
-ALL - Nucleus Area - Mean per Well,cc_all_nucleus_area_mean,cell_cycle,shape,0,hoechst,average nucleus area
-ALL - Nucleus Roundness - Mean per Well,cc_all_nucleus_roundness_mean,cell_cycle,shape,0,hoechst,average nucleus roundness
-ALL - Number of Spots - Mean per Well,cc_all_n_spots_mean,cell_cycle,dna_damage,0,gh2ax,average number of gH2AX spots per nucleus
-ALL - Number of Spots per Area of Nucleus - Mean per Well,cc_all_n_spots_per_nucleus_area_mean,cell_cycle,dna_damage,0,gh2ax,average number of gH2AX spots per area of nucleus
-ALL - High number of spots gH2AX - Mean per Well,cc_all_high_n_spots_h2ax_mean,cell_cycle,dna_damage,0,gh2ax,Within all cells: fraction of cells containing more than 3 gH2AX spots
-ALL - Large round (polyploid) - Mean per Well,cc_all_large_round_polyploid_mean,cell_cycle,,0,hoechst,
-ALL - large not round (polynuclear) - Mean per Well,cc_all_large_notround_polynuclear_mean,cell_cycle,,0,hoechst,Fraction of cells with large non-round nuclei
-Large round (polyploid) - Number of Objects,cc_polyploid_n_objects,cell_cycle,,0,hoechst,number of late polypl cells
-Large round (polyploid) - Number of Spots - Mean per Well,cc_polyploid_n_spots_mean,cell_cycle,dna_damage,0,hoechst_gh2ax,In polypl cells: average number of gH2Ax spots
-Large round (polyploid) - Number of Spots per Area of Nucleus - Mean per Well,cc_polyploid_n_spots_per_nucleus_area_mean,cell_cycle,dna_damage,0,hoechst_gh2ax,In polypl cells: average number of gH2Ax spots per nucleus area
-Large round (polyploid) - High number of spots gH2AX - Mean per Well,cc_polyploid_high_n_spots_h2ax_mean,cell_cycle,dna_damage,0,hoechst_gh2ax,In polypl cells: fraction of >3 gH2Ax spots
-large not round (polynuclear) - Number of Objects,cc_polynuclear_n_objects,cell_cycle,,0,hoechst,number of late polynuc cells
-large not round (polynuclear) - Number of Spots - Mean per Well,cc_polynuclear_n_spots_mean,cell_cycle,dna_damage,0,hoechst_gh2ax,In polynuc cells: average number of gH2Ax spots
-large not round (polynuclear) - Number of Spots per Area of Nucleus - Mean per Well,cc_polynuclear_n_spots_per_nucleus_area_mean,cell_cycle,dna_damage,0,hoechst_gh2ax,In polynuc cells: average number of gH2Ax spots per nucleus area
-large not round (polynuclear) - High number of spots gH2AX - Mean per Well,cc_polynuclear_high_n_spots_h2ax_mean,cell_cycle,dna_damage,0,hoechst_gh2ax,In polynuc cells: fraction of >3 gH2Ax spots
-edu positive - Number of Objects,cc_edu_pos_n_objects,cell_cycle,s_arrest,0,edu,number of S-phase cells
-edu positive - Intensity Nucleus Alexa 647 Mean - Mean per Well,cc_edu_pos_alexa647_intensity_nucleus_area_mean,cell_cycle,s_arrest,1,edu,In S phase cells: how much EdU was incorporated (average intensity per cell)
-edu positive - Intensity Nucleus Alexa 647 Sum - Sum per Well,cc_edu_pos_alexa647_intensity_nucleus_area_sum,cell_cycle,s_arrest,0,edu,In S phase cells: how much EdU was incorporated (average total signal per cell)
-edu positive - Number of Spots - Mean per Well,cc_edu_pos_n_spots_mean,cell_cycle,dna_damage,0,edu,In S phase cells: average number of gH2Ax spots
-edu positive - Number of Spots per Area of Nucleus - Mean per Well,cc_edu_pos_n_spots_per_nucleus_area_mean,cell_cycle,dna_damage,0,edu_gh2ax,In S phase cells: average number of gH2Ax spots per nucleus area
-edu positive - High number of spots gH2AX - Mean per Well,cc_edu_pos_high_n_spots_h2ax_mean,cell_cycle,dna_damage,0,edu_gh2ax,In S phase cells: fraction of >3 gH2Ax spots
-G1 - Number of Objects,cc_g1_n_objects,cell_cycle,g1_arrest,0,many_cell_cycle,number of G1 cells
-G1 - Number of Spots - Mean per Well,cc_g1_n_spots_mean,cell_cycle,g1_arrest,0,many_cell_cycle,In G1 cells: average number of gH2Ax spots
-G1 - Number of Spots per Area of Nucleus - Mean per Well,cc_g1_n_spots_per_nucleus_area_mean,cell_cycle,g1_arrest,0,many_cell_cycle,In G1 cells: average number of gH2Ax spots per nucleus area
-G1 - Number of gH2AX Spots - Mean per Well,cc_g1_high_n_spots_h2ax_mean,cell_cycle,dna_damage,0,many_cell_cycle,In G1 cells: fraction of >3 gH2Ax spots
-G2-pH3 - Number of Objects,cc_g2_ph3_neg_n_objects,cell_cycle,g2_arrest,0,many_cell_cycle,number of G2 cells
-G2-pH3 - Number of Spots - Mean per Well,cc_g2_ph3_neg_n_spots_mean,cell_cycle,g2_arrest,0,many_cell_cycle,In G2 cells: average number of gH2Ax spots
-G2-pH3 - Number of Spots per Area of Nucleus - Mean per Well,cc_g2_ph3_neg_n_spots_per_nucleus_area_mean,cell_cycle,g2_arrest,0,many_cell_cycle,In G2 cells: average number of gH2Ax spots per nucleus area
-G2-pH3 - High number of spots gH2AX - Mean per Well,cc_g2_ph3_neg_high_n_spots_h2ax_mean,cell_cycle,dna_damage,0,many_cell_cycle,In G2 cells: fraction of >3 gH2Ax spots
-G2+pH3 (Early mitiosis) - Number of Objects,cc_g2_ph3_pos_n_objects,cell_cycle,g2_m_arrest,0,many_cell_cycle,number of early M cells
-G2+pH3 (Early mitiosis) - Number of Spots - Mean per Well,cc_g2_ph3_pos_n_spots_mean,cell_cycle,g2_m_arrest,0,many_cell_cycle,In early M cells: average number of gH2Ax spots
-G2+pH3 (Early mitiosis) - Number of Spots per Area of Nucleus - Mean per Well,cc_g2_ph3_pos_n_spots_per_nucleus_area_mean,cell_cycle,g2_m_arrest,0,many_cell_cycle,In early M cells: average number of gH2Ax spots per nucleus area
-G2+pH3 (Early mitiosis) - High number of spots gH2AX - Mean per Well,cc_g2_ph3_pos_high_n_spots_h2ax_mean,cell_cycle,dna_damage,0,many_cell_cycle,In erly M cells: fraction of >3 gH2Ax spots
-"pH3 positive, Hoechst condenced (mitosis) - Number of Objects",cc_mitosis_ph3_pos_n_objects,cell_cycle,mitosis,0,many_cell_cycle,number of late M cells
-"pH3 positive, Hoechst condenced (mitosis) - Number of Spots - Mean per Well",cc_mitosis_ph3_pos_n_spots_mean,cell_cycle,mitosis,0,ph3,In late M cells: average number of gH2Ax spots
-"pH3 positive, Hoechst condenced (mitosis) - Number of Spots per Area of Nucleus",cc_mitosis_ph3_pos_n_spots_per_nucleus_area_mean,cell_cycle,mitosis,0,ph3,In late M cells: average number of gH2Ax spots per nucleus area
-"pH3 positive, Hoechst condenced (mitosis) - High number of spots gH2AX - Mean per Well",cc_mitosis_ph3_pos_high_n_spots_h2ax_mean,cell_cycle,dna_damage,0,ph3,In M cells: fraction of >3 gH2Ax spots
-"pH3 neg, Hoechst cond (late mitosis) - Number of Objects",cc_mitosis_ph3_neg_n_objects,cell_cycle,mitosis,0,ph3,
-"pH3 neg, Hoechst cond (late mitosis) - Number of Spots - Mean per Well",cc_mitosis_ph3_neg_n_spots_mean,cell_cycle,mitosis,0,ph3,
-"pH3 neg, Hoechst cond (late mitosis) - Number of Spots per Area of Nucleus - Mean per Well",cc_mitosis_ph3_neg_n_spots_per_nucleus_area_mean,cell_cycle,mitosis,0,ph3,
-"pH3 neg, Hoechst cond (late mitosis) - High number of spots gH2AX - Mean per Well",cc_mitosis_ph3_neg_high_n_spots_h2ax_mean,cell_cycle,dna_damage,0,ph3,
-G1/S,cc_g1_s,cell_cycle,cell_cycle,0,many_cell_cycle,
-G2/G1,cc_g2_g1,cell_cycle,cell_cycle,1,many_cell_cycle,G1-G2
-G1+G2,cc_g1_plus_g2,cell_cycle,cell_cycle,0,many_cell_cycle,G1+G2
-G2 + All M-phase,cc_g2_plus_all_m,cell_cycle,cell_cycle,0,many_cell_cycle,G2+M
+original_name,updated_name,feature_type,measurement,gate_required,assay,hoechst,edu,ph3,gh2ax,caspase,draq7,cell_rox,dpc,description
+Row,well_row,metadata,metadata,,,,,,,,,,,
+Column,well_col,metadata,metadata,,,,,,,,,,,
+Plate Name,plate_name,metadata,metadata,,,,,,,,,,,
+sgRNA,guide,metadata,metadata,,,,,,,,,,,
+Inf %,cc_infection_percentage,metadata,metadata,,qc,,,,,,,,,
+% Inf,vb_infection_percentage,metadata,metadata,,qc,,,,,,,,,
+% Live (DRAQ7-; CASP-),vb_percent_live,viability,death,1,draq_caspase,0,0,0,0,1,1,0,0,Fraction of live cells (subtract DRAQ7 and Caspase dyes)
+% All Dead (DRAQ7+),vb_percent_dead,viability,death,1,draq,0,0,0,0,0,1,0,0,Fraction of DRAQ7 positive cells
+% All Apoptosis (CASP+),vb_percent_all_apoptosis,viability,apoptosis,0,draq_caspase,0,0,0,0,1,1,0,0,% Early Apop + % Late Apop + % Dead Only
+% Early Apop (CASP+; DRAQ7-),vb_percent_early_apoptosis,viability,apoptosis,1,draq_caspase,0,0,0,0,1,1,0,0,Fraction of caspase positive in live cells (no DRAQ7)
+% Late Apop (CASP+; DRAQ7+),vb_percent_late_apoptosis,viability,apoptosis,1,draq_caspase,0,0,0,0,1,1,0,0,Fraction of caspase positive in dead cells
+% Dead Only (CASP-; DRAQ7+),vb_percent_dead_only,viability,apoptosis,1,draq_caspase,0,0,0,0,1,1,0,0,Fraction of caspase negative in dead cells
+# Live Cells,vb_num_live_cells,viability,death,1,draq,0,0,0,0,0,1,0,0,Number of live cells
+ROS,vb_ros_mean,viability,ros,0,cell_rox,0,0,0,0,0,0,1,0,Mean intensity of ROS marker per cell
+ROS-back,vb_ros_back_mean,viability,ros,0,cell_rox,0,0,0,0,0,0,1,0,CellROX background
+Live Cell Area,vb_live_cell_area,viability,shape,0,dpc,0,0,0,0,0,0,0,0,Cell Size
+Live Cell Roundness,vb_live_cell_roundness,viability,shape,0,dpc,0,0,0,0,0,0,0,0,Cell Roundness
+Live Width / Length,vb_live_cell_width_length,viability,shape,0,dpc,0,0,0,0,0,0,0,0,Width/Length
+% Caspase / % Dead Only,vb_percent_caspase_dead_only,viability,apoptosis,0,draq_caspase,0,0,0,0,1,1,0,0,This is only calculated for strong hits
+CC - # cells,cc_cc_n_objects,cell_cycle,cell_viability,1,hoechst,1,0,0,0,0,0,0,0,Number of cells selected for cell cycle
+CC - # of gH2AX Spots,cc_cc_n_spots_h2ax_mean,cell_cycle,dna_damage,1,hoechst_gh2ax,1,0,0,1,0,0,0,0,Within cells selected for cell cycle: average number of gH2AX spots
+CC - # of gH2AX Spots per Area of Nucleus,cc_cc_n_spots_h2ax_per_nucleus_area_mean,cell_cycle,dna_damage,1,hoechst_gh2ax,1,0,0,1,0,0,0,0,Within cells selected for cell cycle: average number of gH2AX spots per area of nucleus
+CC - % High gH2AX spots,cc_cc_high_h2ax,cell_cycle,dna_damage,1,hoechst_gh2ax,1,0,0,1,0,0,0,0,Within cells selected for cell cycle: fraction of cells containing more than 3 gH2AX spots
+CC - % S,cc_cc_s,cell_cycle,s_phase,1,edu,0,1,0,0,0,0,0,0,Fraction of EdU positive cells (S-phase of cell cycle)
+CC - % G1,cc_cc_g1,cell_cycle,g1_phase,1,hoechst_edu_ph3,1,1,1,0,0,0,0,0,Fraction of G1 cells
+CC - % G2,cc_cc_g2,cell_cycle,g2_phase,1,hoechst_edu_ph3,1,1,1,0,0,0,0,0,Fraction of G2 cells (Hoechst - EdU)
+CC - % early M,cc_cc_early_mitosis,cell_cycle,early_mitosis,1,hoechst_edu_ph3,1,1,1,0,0,0,0,0,Fraction of G2/M cells (Hoechst + EdU)
+CC - % M,cc_cc_mitosis,cell_cycle,mitosis,1,hoechst_edu_ph3,1,1,1,0,0,0,0,0,"Fraction of cells in mitosis (pH3 positive, Hoechst condensed)"
+CC - % Late M,cc_cc_late_mitosis,cell_cycle,late_mitosis,1,hoechst_edu_ph3,1,1,1,0,0,0,0,0,"Fraction of cells in late mitosis (pH3 negative, Hoechst condensed)"
+ALL - # cells,cc_all_n_objects,cell_cycle,cell_viability,0,hoechst,1,0,0,0,0,0,0,0,Total number of cells
+ALL - Nucleus Area,cc_all_nucleus_area_mean,cell_cycle,shape,0,hoechst,1,0,0,0,0,0,0,0,Average nucleus area
+ALL - Nucleus Roundness,cc_all_nucleus_roundness_mean,cell_cycle,shape,0,hoechst,1,0,0,0,0,0,0,0,Average nucleus roundness
+ALL - # of gH2AX Spots,cc_all_n_spots_h2ax_mean,cell_cycle,dna_damage,0,hoechst_gh2ax,1,0,0,1,0,0,0,0,Within all cells: average number of gH2AX spots per nucleus
+ALL - # of gH2AX Spots per Area of Nucleus,cc_all_n_spots_h2ax_per_nucleus_area_mean,cell_cycle,dna_damage,0,hoechst_gh2ax,1,0,0,1,0,0,0,0,Within all cells: average number of gH2AX spots per area of nucleus
+ALL - % High gH2AX Spots,cc_all_high_h2ax,cell_cycle,dna_damage,0,hoechst_gh2ax,1,0,0,1,0,0,0,0,Within all cells: fraction of cells containing more than 3 gH2AX spots
+ALL - Polyploid,cc_all_large_round_polyploid_mean,cell_cycle,shape,1,hoechst,1,0,0,0,0,0,0,0,Large and round cells (Polyploid)
+ALL - Polynuclear,cc_all_large_notround_polynuclear_mean,cell_cycle,shape,1,hoechst,1,0,0,0,0,0,0,0,Fraction of cells with large non-round nuclei (Polynuclear)
+Polyploid - # cells,cc_polyploid_n_objects,cell_cycle,shape,1,hoechst,1,0,0,0,0,0,0,0,Number of late polyploid cells
+Polyploid - # of gH2AX Spots,cc_polyploid_n_spots_h2ax_mean,cell_cycle,dna_damage,1,hoechst_gh2ax,1,0,0,1,0,0,0,0,In polyploid cells: average number of gH2Ax spots
+Polyploid - # of gH2AX Spots per Area of Nucleus,cc_polyploid_n_spots_h2ax_per_nucleus_area_mean,cell_cycle,dna_damage,1,hoechst_gh2ax,1,0,0,1,0,0,0,0,In polyploid cells: average number of gH2Ax spots per nucleus area
+Polyploid - % High gH2AX Spots,cc_polyploid_high_h2ax,cell_cycle,dna_damage,1,hoechst_gh2ax,1,0,0,1,0,0,0,0,In polyploid cells: fraction of >3 gH2Ax spots
+Polynuclear - # cells,cc_polynuclear_n_objects,cell_cycle,shape,1,hoechst,1,0,0,0,0,0,0,0,Number of late polynuclear cells
+Polynuclear - # of gH2AX Spots,cc_polynuclear_n_spots_h2ax_mean,cell_cycle,dna_damage,1,hoechst_gh2ax,1,0,0,1,0,0,0,0,In polynuclear cells: average number of gH2Ax spots
+Polynuclear - # of gH2AX Spots per Area of Nucleus,cc_polynuclear_n_spots_h2ax_per_nucleus_area_mean,cell_cycle,dna_damage,1,hoechst_gh2ax,1,0,0,1,0,0,0,0,In polynuclear cells: average number of gH2Ax spots per nucleus area
+Polynuclear - % High gH2AX Spots,cc_polynuclear_high_h2ax,cell_cycle,dna_damage,1,hoechst_gh2ax,1,0,0,1,0,0,0,0,In polynuclear cells: fraction of >3 gH2Ax spots
+S - # cells,cc_s_n_objects,cell_cycle,s_phase,0,edu,,1,0,0,0,0,0,0,Number of S-phase cells
+S - Intensity Nucleus EdU Mean,cc_s_intensity_nucleus_area_mean,cell_cycle,s_phase,1,hoechst_edu,1,1,0,0,0,0,0,0,In S phase cells: how much EdU was incorporated (average intensity per cell)
+S - Intensity Nucleus EdU Sum,cc_s_intensity_nucleus_area_sum,cell_cycle,s_phase,1,hoechst_edu,1,1,0,0,0,0,0,0,In S phase cells: how much EdU was incorporated (average total signal per cell)
+S - # of gH2AX Spots,cc_s_n_spots_h2ax_mean,cell_cycle,dna_damage,1,hoechst_edu_gh2ax,1,1,0,1,0,0,0,0,In S phase cells: average number of gH2Ax spots
+S - # of gH2AX Spots per Area of Nucleus,cc_s_n_spots_h2ax_per_nucleus_area_mean,cell_cycle,dna_damage,1,hoechst_edu_gh2ax,1,1,0,1,0,0,0,0,In S phase cells: average number of gH2Ax spots per nucleus area
+S - % High gH2AX Spots,cc_s_high_h2ax,cell_cycle,dna_damage,1,hoechst_edu_gh2ax,1,1,0,1,0,0,0,0,In S phase cells: fraction of >3 gH2Ax spots
+G1 - # cells,cc_g1_n_objects,cell_cycle,g1_phase,1,hoechst_edu_ph3,1,1,1,0,0,0,0,0,Number of G1 cells
+G1 - # of gH2AX Spots,cc_g1_n_spots_h2ax_mean,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In G1 cells: average number of gH2Ax spots
+G1 - # of gH2AX Spots per Area of Nucleus,cc_g1_n_spots_h2ax_per_nucleus_area_mean,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In G1 cells: average number of gH2Ax spots per nucleus area
+G1 - % High gH2AX Spots,cc_g1_high_h2ax,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In G1 cells: fraction of >3 gH2Ax spots
+G2 - # cells,cc_g2_n_objects,cell_cycle,g2_phase,1,hoechst_edu_ph3,1,1,1,0,0,0,0,0,Number of G2 cells
+G2 - # of gH2AX Spots,cc_g2_n_spots_h2ax_mean,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In G2 cells: average number of gH2Ax spots
+G2 - # of gH2AX Spots per Area of Nucleus,cc_g2_n_spots_h2ax_per_nucleus_area_mean,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In G2 cells: average number of gH2Ax spots per nucleus area
+G2 - % High gH2AX Spots,cc_g2_high_h2ax,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In G2 cells: fraction of >3 gH2Ax spots
+early M - # cells,cc_early_mitosis_n_objects,cell_cycle,early_mitosis,1,hoechst_edu_ph3,1,1,1,0,0,0,0,0,Number of early M cells
+early M - # of gH2AX Spots,cc_early_mitosis_n_spots_h2ax_mean,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In early M cells: average number of gH2Ax spots
+early M - # of gH2AX Spots per Area of Nucleus,cc_early_mitosis_n_spots_h2ax_per_nucleus_area_mean,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In early M cells: average number of gH2Ax spots per nucleus area
+early M - % High gH2AX Spots,cc_early_mitosis_high_h2ax,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In early M cells: fraction of >3 gH2Ax spots
+M - # cells,cc_mitosis_n_objects,cell_cycle,mitosis,1,hoechst_edu_ph3,1,1,1,0,0,0,0,0,Number of M cells
+M - # of gH2AX Spots,cc_mitosis_n_spots_h2ax_mean,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In M cells: average number of gH2Ax spots
+M - # of gH2AX Spots per Area of Nucleus,cc_mitosis_n_spots_h2ax_per_nucleus_area_mean,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In M cells: average number of gH2Ax spots per nucleus area
+M - % High gH2AX Spots,cc_mitosis_high_h2ax,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In M cells: fraction of >3 gH2Ax spots
+Late M - # cells,cc_late_mitosis_n_objects,cell_cycle,late_mitosis,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,Number of late M cells
+Late M - # of gH2AX Spots,cc_late_mitosis_n_spots_h2ax_mean,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In late M cells: average number of gH2Ax spots
+Late M - # of gH2AX Spots per Area of Nucleus,cc_late_mitosis_n_spots_h2ax_per_nucleus_area_mean,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In late M cells: average number of gH2Ax spots per nucleus area
+Late M - % High gH2AX Spots,cc_late_mitosis_high_h2ax,cell_cycle,dna_damage,1,hoechst_edu_ph3_gh2ax,1,1,1,1,0,0,0,0,In late M cells: fraction of >3 gH2Ax spots
+Cell Count - G1/S,cc_g1_s_count,cell_cycle,cell_cycle_count,1,hoechst_edu_ph3,1,1,1,0,0,0,0,0,G1/S
+Cell Count - G2/G1,cc_g2_g1_count,cell_cycle,cell_cycle_count,1,hoechst_edu_ph3,1,1,1,0,0,0,0,0,G2/G1
+Cell Count - G1+G2,cc_g1_plus_g2_count,cell_cycle,cell_cycle_count,1,hoechst_edu_ph3,1,1,1,0,0,0,0,0,G1+G2
+Cell Count - G2 + M,cc_g2_plus_all_m_count,cell_cycle,cell_cycle_count,1,hoechst_edu_ph3,1,1,1,0,0,0,0,0,G2+M
