@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>2.build-consensus-signatures</title>
+<title>3.perturbation-table</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13077,21 +13077,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Generate-Consensus-Signatures">Generate Consensus Signatures<a class="anchor-link" href="#Generate-Consensus-Signatures">&#182;</a></h1><p><strong>Gregory Way, 2019</strong></p>
-<p>We do not have well-level information for the cell health data.
-Therefore, we cannot map to cell painting replicates.</p>
-<p>Instead, we generate consensus signatures for each treatment.
-We generate consensus signatures in two ways.</p>
-<ol>
-<li>Median consensus</li>
-<li>MODZ (moderated z-score) transform used in the L1000 analysis paper (<a href="https://doi.org/10.1016/j.cell.2017.10.049">Subramanian et al. 2017</a>).</li>
-</ol>
-<p>We apply these transformations to both:</p>
-<ul>
-<li>Cell Painting Data</li>
-<li>Cell Health Assay Readout Data</li>
-</ul>
-
+<h1 id="Build-Table-Describing-Perturbations-Used-in-this-Experiment">Build Table Describing Perturbations Used in this Experiment<a class="anchor-link" href="#Build-Table-Describing-Perturbations-Used-in-this-Experiment">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13101,11 +13087,21 @@ We generate consensus signatures in two ways.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
 
-<span class="kn">from</span> <span class="nn">pycytominer.consensus</span> <span class="kn">import</span> <span class="n">modz</span>
-<span class="kn">from</span> <span class="nn">pycytominer</span> <span class="kn">import</span> <span class="n">get_na_columns</span><span class="p">,</span> <span class="n">aggregate</span>
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cell_health_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_health_guides&quot;</span><span class="p">)</span>
+<span class="n">cell_painting_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="s2">&quot;platemap&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13116,73 +13112,32 @@ We generate consensus signatures in two ways.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Load-Cell-Painting-Data">Load Cell Painting Data<a class="anchor-link" href="#Load-Cell-Painting-Data">&#182;</a></h2><p>This will be our x matrix in machine learning appications.</p>
-
+<h2 id="Load-and-Process-Cell-Health-Data">Load and Process Cell Health Data<a class="anchor-link" href="#Load-and-Process-Cell-Health-Data">&#182;</a></h2>
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">profile_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;profiles&quot;</span><span class="p">)</span>
-
-<span class="n">all_profile_files</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">plate</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">profile_dir</span><span class="p">):</span>
-    <span class="n">plate_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">profile_dir</span><span class="p">,</span> <span class="n">plate</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="n">plate</span> <span class="o">==</span> <span class="s1">&#39;.DS_Store&#39;</span><span class="p">:</span>
-        <span class="k">continue</span>
-
-    <span class="k">for</span> <span class="n">profile_file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">plate_dir</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s2">&quot;feature_select&quot;</span> <span class="ow">in</span> <span class="n">profile_file</span><span class="p">:</span>
-            <span class="n">all_profile_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plate_dir</span><span class="p">,</span> <span class="n">profile_file</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_profile_files</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cell_health_cols</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;gene_name&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pert_name&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Clone ID&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Pathway/Cellular Process&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">cell_painting_cols</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;gene_name&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pert_name&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;broad_sample&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">cell_lines</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A549&quot;</span><span class="p">,</span> <span class="s2">&quot;ES2&quot;</span><span class="p">,</span> <span class="s2">&quot;HCC44&quot;</span><span class="p">]</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[3]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[&#39;data/profiles/SQ00014618/SQ00014618_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/SQ00014611/SQ00014611_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/SQ00014616/SQ00014616_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/SQ00014617/SQ00014617_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/SQ00014610/SQ00014610_normalized_feature_select.csv&#39;,
- &#39;data/profiles/SQ00014610/SQ00014610_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/SQ00014615/SQ00014615_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/SQ00014612/SQ00014612_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/SQ00014613/SQ00014613_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/SQ00014614/SQ00014614_normalized_feature_select.csv.gz&#39;]</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -13192,40 +13147,17 @@ We generate consensus signatures in two ways.</p>
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Concatentate all cell painting datasets</span>
-<span class="n">x_df</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">all_profile_files</span><span class="p">],</span>
-        <span class="n">sort</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;Image_Metadata_Plate&quot;</span><span class="p">:</span> <span class="s2">&quot;Metadata_Plate&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Image_Metadata_Well&quot;</span><span class="p">:</span> <span class="s2">&quot;Metadata_Well&quot;</span>
-        <span class="p">},</span>
-        <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;Metadata_broad_sample&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cell_health_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cell_health_dir</span><span class="p">,</span> <span class="s2">&quot;HCI_BenchmarksV1-2_platemap.csv&quot;</span><span class="p">)</span>
+
+<span class="n">cell_health_platemap_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cell_health_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<span class="n">cell_health_platemap_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;gene_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">cell_health_platemap_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;gene_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
 <span class="p">)</span>
-
-<span class="c1"># Realign metadata column names</span>
-<span class="n">x_metadata_cols</span> <span class="o">=</span> <span class="n">x_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">x_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Metadata&quot;</span><span class="p">)]</span>
-<span class="n">x_metadata_df</span> <span class="o">=</span> <span class="n">x_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">x_metadata_cols</span><span class="p">]</span>
-
-<span class="n">x_df</span> <span class="o">=</span> <span class="n">x_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">x_metadata_cols</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
-<span class="n">x_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">x_metadata_df</span><span class="p">,</span> <span class="n">x_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
-
-<span class="c1"># Drop columns with na values</span>
-<span class="n">na_cols_to_drop</span> <span class="o">=</span> <span class="n">get_na_columns</span><span class="p">(</span><span class="n">x_df</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dropping </span><span class="si">{}</span><span class="s2"> columns because of missing data&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">na_cols_to_drop</span><span class="p">)))</span>
-<span class="n">x_df</span> <span class="o">=</span> <span class="n">x_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">na_cols_to_drop</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
-
-<span class="c1"># Also drop Costes features</span>
-<span class="n">costes_cols_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s2">&quot;costes&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dropping </span><span class="si">{}</span><span class="s2"> costes features&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">costes_cols_to_drop</span><span class="p">)))</span>
-<span class="n">x_df</span> <span class="o">=</span> <span class="n">x_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">costes_cols_to_drop</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">x_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">x_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">cell_health_platemap_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;pert_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">cell_health_platemap_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;pert_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cell_health_platemap_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">cell_health_platemap_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13242,9 +13174,7 @@ We generate consensus signatures in two ways.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Dropping 34 columns because of missing data
-Dropping 2 costes features
-(3840, 1605)
+<pre>(384, 6)
 </pre>
 </div>
 </div>
@@ -13274,81 +13204,35 @@ Dropping 2 costes features
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Metadata_Plate</th>
-      <th>Metadata_Well</th>
-      <th>Metadata_WellCol</th>
-      <th>Metadata_WellRow</th>
-      <th>Metadata_cell_line</th>
-      <th>Metadata_gene_name</th>
-      <th>Metadata_pert_name</th>
-      <th>Cells_AreaShape_Area</th>
-      <th>Cells_AreaShape_Center_X</th>
-      <th>Cells_AreaShape_Center_Y</th>
-      <th>...</th>
-      <th>Nuclei_Texture_Variance_DNA_5_0</th>
-      <th>Nuclei_Texture_Variance_ER_10_0</th>
-      <th>Nuclei_Texture_Variance_ER_20_0</th>
-      <th>Nuclei_Texture_Variance_ER_5_0</th>
-      <th>Nuclei_Texture_Variance_Mito_10_0</th>
-      <th>Nuclei_Texture_Variance_Mito_20_0</th>
-      <th>Nuclei_Texture_Variance_Mito_5_0</th>
-      <th>Nuclei_Texture_Variance_RNA_10_0</th>
-      <th>Nuclei_Texture_Variance_RNA_20_0</th>
-      <th>Nuclei_Texture_Variance_RNA_5_0</th>
+      <th>WellRow</th>
+      <th>WellCol</th>
+      <th>well_position</th>
+      <th>gene_name</th>
+      <th>pert_name</th>
+      <th>Clone ID</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>SQ00014618</td>
-      <td>A01</td>
-      <td>1</td>
       <td>A</td>
-      <td>HCC44</td>
+      <td>1</td>
+      <td>A01</td>
+      <td>Empty</td>
       <td>EMPTY</td>
-      <td>EMPTY</td>
-      <td>-0.891801</td>
-      <td>0.870588</td>
-      <td>-0.683168</td>
-      <td>...</td>
-      <td>-0.888368</td>
-      <td>-0.273388</td>
-      <td>-0.136467</td>
-      <td>-0.709549</td>
-      <td>-0.754013</td>
-      <td>-0.834143</td>
-      <td>-0.937134</td>
-      <td>0.829446</td>
-      <td>0.692030</td>
-      <td>0.691189</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>SQ00014618</td>
-      <td>A02</td>
-      <td>2</td>
-      <td>A</td>
-      <td>HCC44</td>
-      <td>MCL1</td>
-      <td>MCL1-5</td>
-      <td>0.739305</td>
-      <td>1.247059</td>
-      <td>-0.366337</td>
-      <td>...</td>
-      <td>0.485662</td>
-      <td>1.515287</td>
-      <td>1.430190</td>
-      <td>1.170855</td>
-      <td>0.487870</td>
-      <td>0.880912</td>
-      <td>0.231417</td>
-      <td>0.937816</td>
-      <td>1.829701</td>
-      <td>0.636011</td>
+      <td>B</td>
+      <td>1</td>
+      <td>B01</td>
+      <td>Chr2</td>
+      <td>Chr2-1</td>
+      <td>NaN</td>
     </tr>
   </tbody>
 </table>
-<p>2 rows × 1605 columns</p>
 </div>
 </div>
 
@@ -13357,25 +13241,31 @@ Dropping 2 costes features
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Load-Cell-Health-Assay-Data">Load Cell Health Assay Data<a class="anchor-link" href="#Load-Cell-Health-Assay-Data">&#182;</a></h2><p>This will be the y matrix in machine learning applications.</p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;labels&quot;</span><span class="p">,</span> <span class="s2">&quot;normalized_cell_health_labels.tsv&quot;</span><span class="p">)</span>
-<span class="n">y_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;plate_name&quot;</span><span class="p">,</span> <span class="s2">&quot;well_col&quot;</span><span class="p">,</span> <span class="s2">&quot;well_row&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cell_health_annotation_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cell_health_dir</span><span class="p">,</span> <span class="s2">&quot;HCI_benchmarks_sgRNA_annotation.xlsx&quot;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">y_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">y_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">cell_health_annotation_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">cell_health_annotation_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<span class="n">cell_health_annotation_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;guide id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">cell_health_annotation_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;guide id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">cell_health_annotation_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;gene symbol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">cell_health_annotation_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;gene symbol&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">cell_health_annotation_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+    <span class="n">cell_health_annotation_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;gene symbol&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span>
+    <span class="s2">&quot;gene symbol&quot;</span>
+<span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">cell_health_annotation_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;guide id&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cell_health_annotation_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">cell_health_annotation_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13392,7 +13282,7 @@ Dropping 2 costes features
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(2302, 72)
+<pre>(132, 31)
 </pre>
 </div>
 </div>
@@ -13422,81 +13312,81 @@ Dropping 2 costes features
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>cell_id</th>
-      <th>guide</th>
-      <th>cc_all_high_h2ax</th>
-      <th>cc_all_large_notround_polynuclear_mean</th>
-      <th>cc_all_large_round_polyploid_mean</th>
-      <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_h2ax_mean</th>
-      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
-      <th>cc_all_nucleus_area_mean</th>
-      <th>cc_all_nucleus_roundness_mean</th>
+      <th>guide_seq</th>
+      <th>guide id</th>
+      <th>gene symbol</th>
+      <th>Pathway/Cellular Process</th>
+      <th>class</th>
+      <th>HCC44_Demeter</th>
+      <th>HCC44_CRISPR Global Z</th>
+      <th>HCC44_Copy Number</th>
+      <th>ES2_gZ_3.12</th>
+      <th>A549_gZ_3.12</th>
       <th>...</th>
-      <th>vb_num_live_cells</th>
-      <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_caspase_dead_only</th>
-      <th>vb_percent_dead</th>
-      <th>vb_percent_dead_only</th>
-      <th>vb_percent_early_apoptosis</th>
-      <th>vb_percent_late_apoptosis</th>
-      <th>vb_percent_live</th>
-      <th>vb_ros_back_mean</th>
-      <th>vb_ros_mean</th>
+      <th># Off-Target Tier III Match Bin III Matches</th>
+      <th># Off-Target Tier IV Match Bin III Matches</th>
+      <th># Off-Target Tier I Match Bin IV Matches</th>
+      <th># Off-Target Tier II Match Bin IV Matches</th>
+      <th># Off-Target Tier III Match Bin IV Matches</th>
+      <th># Off-Target Tier IV Match Bin IV Matches</th>
+      <th>RS2 Score</th>
+      <th>ATARIS_cscore</th>
+      <th>ATARIS_pval</th>
+      <th>ATARIS_qval</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>ES2</td>
-      <td>AKT1-1</td>
-      <td>0.655229</td>
-      <td>-0.565658</td>
-      <td>-0.839186</td>
-      <td>-0.513748</td>
-      <td>0.313600</td>
-      <td>0.263062</td>
-      <td>0.109983</td>
-      <td>-0.226513</td>
+      <td>NaN</td>
+      <td>MYC-1</td>
+      <td>MYC</td>
+      <td>Known cancer gene</td>
+      <td>exp</td>
+      <td>-2.214323</td>
+      <td>NaN</td>
+      <td>50.658132</td>
+      <td>-0.2016</td>
+      <td>-0.9548</td>
       <td>...</td>
-      <td>0.281397</td>
-      <td>-0.279051</td>
-      <td>-0.920300</td>
-      <td>-0.139875</td>
-      <td>-0.016549</td>
-      <td>-0.429141</td>
-      <td>-0.177258</td>
-      <td>0.140570</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>ES2</td>
-      <td>AKT1-1</td>
-      <td>-0.251336</td>
-      <td>-0.816445</td>
-      <td>-0.525940</td>
-      <td>-0.819810</td>
-      <td>-0.450799</td>
-      <td>-0.811628</td>
-      <td>-0.468875</td>
-      <td>-0.167787</td>
+      <td>NaN</td>
+      <td>MYC-2</td>
+      <td>MYC</td>
+      <td>Known cancer gene</td>
+      <td>exp</td>
+      <td>-2.214323</td>
+      <td>NaN</td>
+      <td>50.658132</td>
+      <td>-0.2016</td>
+      <td>-0.9548</td>
       <td>...</td>
-      <td>0.543716</td>
-      <td>-0.221588</td>
-      <td>-1.070176</td>
-      <td>-0.046783</td>
-      <td>0.268559</td>
-      <td>-0.311041</td>
-      <td>-0.149198</td>
-      <td>0.040163</td>
-      <td>-0.29248</td>
-      <td>0.008339</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
   </tbody>
 </table>
-<p>2 rows × 72 columns</p>
+<p>2 rows × 31 columns</p>
 </div>
 </div>
 
@@ -13505,36 +13395,29 @@ Dropping 2 costes features
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Determine-how-many-Cell-Painting-profiles-have-Cell-Health-status-labels">Determine how many Cell Painting profiles have Cell Health status labels<a class="anchor-link" href="#Determine-how-many-Cell-Painting-profiles-have-Cell-Health-status-labels">&#182;</a></h2>
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_groupby_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Metadata_gene_name&quot;</span><span class="p">,</span> <span class="s2">&quot;Metadata_pert_name&quot;</span><span class="p">,</span> <span class="s2">&quot;Metadata_cell_line&quot;</span><span class="p">]</span>
-
-<span class="n">x_metacount_df</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">x_df</span>
-    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">x_groupby_cols</span><span class="p">]</span>
-    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">n_measurements</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">x_groupby_cols</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">count</span><span class="p">()</span>
-    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">data_type</span><span class="o">=</span><span class="s2">&quot;cell_painting&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">x_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">x_groupby_cols</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Metadata_Well&quot;</span><span class="p">,</span> <span class="s2">&quot;Metadata_Plate&quot;</span><span class="p">]],</span>
-           <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
-           <span class="n">on</span><span class="o">=</span><span class="n">x_groupby_cols</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cell_health_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">cell_health_platemap_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">cell_health_annotation_df</span><span class="p">,</span>
+        <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gene_name&quot;</span><span class="p">,</span> <span class="s2">&quot;pert_name&quot;</span><span class="p">],</span>
+        <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gene symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;guide id&quot;</span><span class="p">],</span>
+        <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cell_health_cols</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;gene_name&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">cell_health_data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gene_name&quot;</span><span class="p">])</span>
 <span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">x_metacount_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">x_metacount_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cell_health_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">cell_health_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13551,7 +13434,7 @@ Dropping 2 costes features
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(3840, 7)
+<pre>(127, 5)
 </pre>
 </div>
 </div>
@@ -13581,13 +13464,11 @@ Dropping 2 costes features
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Metadata_gene_name</th>
-      <th>Metadata_pert_name</th>
-      <th>Metadata_cell_line</th>
-      <th>n_measurements</th>
-      <th>data_type</th>
-      <th>Metadata_Well</th>
-      <th>Metadata_Plate</th>
+      <th>gene_name</th>
+      <th>pert_name</th>
+      <th>Clone ID</th>
+      <th>Pathway/Cellular Process</th>
+      <th>cell_health_data</th>
     </tr>
   </thead>
   <tbody>
@@ -13595,21 +13476,17 @@ Dropping 2 costes features
       <th>0</th>
       <td>AKT1</td>
       <td>AKT1-1</td>
-      <td>A549</td>
-      <td>8</td>
-      <td>cell_painting</td>
-      <td>A03</td>
-      <td>SQ00014611</td>
+      <td>BRDN0001054908</td>
+      <td>PIK3CA</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>1</th>
       <td>AKT1</td>
-      <td>AKT1-1</td>
-      <td>A549</td>
-      <td>8</td>
-      <td>cell_painting</td>
-      <td>O22</td>
-      <td>SQ00014611</td>
+      <td>AKT1-2</td>
+      <td>BRDN0001055115</td>
+      <td>PIK3CA</td>
+      <td>True</td>
     </tr>
   </tbody>
 </table>
@@ -13622,25 +13499,28 @@ Dropping 2 costes features
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Load-and-Process-Cell-Painting-Data">Load and Process Cell Painting Data<a class="anchor-link" href="#Load-and-Process-Cell-Painting-Data">&#182;</a></h2>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_groupby_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;guide&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_id&quot;</span><span class="p">]</span>
-
-<span class="n">y_metacount_df</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">y_df</span>
-    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">y_groupby_cols</span><span class="p">]</span>
-    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">n_measurements</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">y_groupby_cols</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">count</span><span class="p">()</span>
-    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">data_type</span><span class="o">=</span><span class="s2">&quot;cell_health&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cp_platemap_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cell_painting_dir</span><span class="p">,</span> <span class="s2">&quot;DEPENDENCIES1_A549.csv&quot;</span><span class="p">)</span>
+<span class="n">cp_platemap_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cp_platemap_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cell_painting_cols</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">cell_painting_data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">y_metacount_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">y_metacount_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cp_platemap_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">cp_platemap_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -13657,7 +13537,7 @@ Dropping 2 costes features
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(364, 4)
+<pre>(119, 4)
 </pre>
 </div>
 </div>
@@ -13687,26 +13567,47 @@ Dropping 2 costes features
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>guide</th>
-      <th>cell_id</th>
-      <th>n_measurements</th>
-      <th>data_type</th>
+      <th>gene_name</th>
+      <th>pert_name</th>
+      <th>broad_sample</th>
+      <th>cell_painting_data</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>AKT1-1</td>
-      <td>A549</td>
-      <td>4</td>
-      <td>cell_health</td>
+      <td>EMPTY</td>
+      <td>EMPTY</td>
+      <td>NaN</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>1</th>
+      <td>MCL1</td>
+      <td>MCL1-5</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>AKT1</td>
       <td>AKT1-1</td>
-      <td>ES2</td>
-      <td>4</td>
-      <td>cell_health</td>
+      <td>BRDN0001054908</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>KRAS</td>
+      <td>KRAS-2B</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>AKT1</td>
+      <td>AKT1-2</td>
+      <td>BRDN0001055115</td>
+      <td>True</td>
     </tr>
   </tbody>
 </table>
@@ -13724,24 +13625,37 @@ Dropping 2 costes features
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_measurements_df</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">x_metacount_df</span>
-    <span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-        <span class="n">y_metacount_df</span><span class="p">,</span>
-        <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Metadata_pert_name&quot;</span><span class="p">,</span> <span class="s2">&quot;Metadata_cell_line&quot;</span><span class="p">],</span>
-        <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;guide&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_id&quot;</span><span class="p">],</span>
-        <span class="n">suffixes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;_paint&quot;</span><span class="p">,</span> <span class="s2">&quot;_health&quot;</span><span class="p">],</span>
-        <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Metadata_cell_line&quot;</span><span class="p">,</span> <span class="s2">&quot;Metadata_pert_name&quot;</span><span class="p">])</span>
-    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;Metadata_Well&quot;</span><span class="p">,</span> <span class="s2">&quot;guide&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_id&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">full_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">cell_health_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">cp_platemap_df</span><span class="p">,</span>
+        <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gene_name&quot;</span><span class="p">,</span> <span class="s2">&quot;pert_name&quot;</span><span class="p">,</span> <span class="s2">&quot;Clone ID&quot;</span><span class="p">],</span>
+        <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gene_name&quot;</span><span class="p">,</span> <span class="s2">&quot;pert_name&quot;</span><span class="p">,</span> <span class="s2">&quot;broad_sample&quot;</span><span class="p">],</span>
+        <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Pathway/Cellular Process&quot;</span><span class="p">:</span> <span class="s2">&quot;cell_process&quot;</span>
+        <span class="p">},</span>
+        <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span>
+         <span class="p">[</span>
+             <span class="s2">&quot;gene_name&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;pert_name&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;broad_sample&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;cell_process&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;cell_health_data&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;cell_painting_data&quot;</span>
+         <span class="p">]</span>
+        <span class="p">]</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gene_name&quot;</span><span class="p">,</span> <span class="s2">&quot;pert_name&quot;</span><span class="p">])</span>
 <span class="p">)</span>
 
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="s2">&quot;all_profile_metadata.tsv&quot;</span><span class="p">)</span>
-<span class="n">all_measurements_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">full_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">full_df</span><span class="o">.</span><span class="n">cell_health_data</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="s2">&quot;cell_health_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">full_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">full_df</span><span class="o">.</span><span class="n">cell_painting_data</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="s2">&quot;cell_painting_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">all_measurements_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">all_measurements_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">full_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">full_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -13758,7 +13672,7 @@ Dropping 2 costes features
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(3840, 8)
+<pre>(127, 6)
 </pre>
 </div>
 </div>
@@ -13788,14 +13702,12 @@ Dropping 2 costes features
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Metadata_gene_name</th>
-      <th>Metadata_pert_name</th>
-      <th>Metadata_cell_line</th>
-      <th>n_measurements_paint</th>
-      <th>data_type_paint</th>
-      <th>Metadata_Plate</th>
-      <th>n_measurements_health</th>
-      <th>data_type_health</th>
+      <th>gene_name</th>
+      <th>pert_name</th>
+      <th>broad_sample</th>
+      <th>cell_process</th>
+      <th>cell_health_data</th>
+      <th>cell_painting_data</th>
     </tr>
   </thead>
   <tbody>
@@ -13803,56 +13715,46 @@ Dropping 2 costes features
       <th>0</th>
       <td>AKT1</td>
       <td>AKT1-1</td>
-      <td>A549</td>
-      <td>8</td>
-      <td>cell_painting</td>
-      <td>SQ00014611</td>
-      <td>4</td>
-      <td>cell_health</td>
+      <td>BRDN0001054908</td>
+      <td>PIK3CA</td>
+      <td>True</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>1</th>
       <td>AKT1</td>
-      <td>AKT1-1</td>
-      <td>A549</td>
-      <td>8</td>
-      <td>cell_painting</td>
-      <td>SQ00014611</td>
-      <td>4</td>
-      <td>cell_health</td>
+      <td>AKT1-2</td>
+      <td>BRDN0001055115</td>
+      <td>PIK3CA</td>
+      <td>True</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>AKT1</td>
-      <td>AKT1-1</td>
-      <td>A549</td>
-      <td>8</td>
-      <td>cell_painting</td>
-      <td>SQ00014610</td>
-      <td>4</td>
-      <td>cell_health</td>
+      <td>ARID1B</td>
+      <td>ARID1B-1</td>
+      <td>NaN</td>
+      <td>Chromatin Modifiers</td>
+      <td>True</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>AKT1</td>
-      <td>AKT1-1</td>
-      <td>A549</td>
-      <td>8</td>
-      <td>cell_painting</td>
-      <td>SQ00014610</td>
-      <td>4</td>
-      <td>cell_health</td>
+      <td>ARID1B</td>
+      <td>ARID1B-2</td>
+      <td>NaN</td>
+      <td>Chromatin Modifiers</td>
+      <td>True</td>
+      <td>True</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>AKT1</td>
-      <td>AKT1-1</td>
-      <td>A549</td>
-      <td>8</td>
-      <td>cell_painting</td>
-      <td>SQ00014610</td>
-      <td>4</td>
-      <td>cell_health</td>
+      <th>5</th>
+      <td>ATF4</td>
+      <td>ATF4-1</td>
+      <td>NaN</td>
+      <td>ER Stress/UPR</td>
+      <td>True</td>
+      <td>True</td>
     </tr>
   </tbody>
 </table>
@@ -13868,7 +13770,7 @@ Dropping 2 costes features
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="A.-Apply-Median-Consensus-Aggregation">A. Apply Median Consensus Aggregation<a class="anchor-link" href="#A.-Apply-Median-Consensus-Aggregation">&#182;</a></h2><h3 id="1)-To-the-Cell-Painting-Data">1) To the Cell Painting Data<a class="anchor-link" href="#1)-To-the-Cell-Painting-Data">&#182;</a></h3>
+<h2 id="Output-Supplementary-Table">Output Supplementary Table<a class="anchor-link" href="#Output-Supplementary-Table">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -13877,1818 +13779,8 @@ Dropping 2 costes features
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_median_df</span> <span class="o">=</span> <span class="n">aggregate</span><span class="p">(</span>
-    <span class="n">x_df</span><span class="p">,</span>
-    <span class="n">strata</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Metadata_cell_line&quot;</span><span class="p">,</span> <span class="s2">&quot;Metadata_pert_name&quot;</span><span class="p">],</span>
-    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;infer&quot;</span><span class="p">,</span>
-    <span class="n">operation</span><span class="o">=</span><span class="s2">&quot;median&quot;</span>
-<span class="p">)</span>
-
-
-<span class="n">x_median_df</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">x_median_df</span>
-    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Metadata_pert_name in @all_measurements_df.Metadata_pert_name.unique()&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Metadata_cell_line in @all_measurements_df.Metadata_cell_line.unique()&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
-<span class="p">)</span>
-<span class="n">x_median_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;profile_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_median_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">]</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">x_median_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">x_median_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(357, 1601)
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[9]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Metadata_profile_id</th>
-      <th>Metadata_cell_line</th>
-      <th>Metadata_pert_name</th>
-      <th>Cells_AreaShape_Area</th>
-      <th>Cells_AreaShape_Center_X</th>
-      <th>Cells_AreaShape_Center_Y</th>
-      <th>Cells_AreaShape_Compactness</th>
-      <th>Cells_AreaShape_Eccentricity</th>
-      <th>Cells_AreaShape_Extent</th>
-      <th>Cells_AreaShape_FormFactor</th>
-      <th>...</th>
-      <th>Nuclei_Texture_Variance_DNA_5_0</th>
-      <th>Nuclei_Texture_Variance_ER_10_0</th>
-      <th>Nuclei_Texture_Variance_ER_20_0</th>
-      <th>Nuclei_Texture_Variance_ER_5_0</th>
-      <th>Nuclei_Texture_Variance_Mito_10_0</th>
-      <th>Nuclei_Texture_Variance_Mito_20_0</th>
-      <th>Nuclei_Texture_Variance_Mito_5_0</th>
-      <th>Nuclei_Texture_Variance_RNA_10_0</th>
-      <th>Nuclei_Texture_Variance_RNA_20_0</th>
-      <th>Nuclei_Texture_Variance_RNA_5_0</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>profile_0</td>
-      <td>A549</td>
-      <td>AKT1-1</td>
-      <td>0.724439</td>
-      <td>-0.650193</td>
-      <td>0.633381</td>
-      <td>0.115707</td>
-      <td>0.322093</td>
-      <td>-0.160304</td>
-      <td>-0.469180</td>
-      <td>...</td>
-      <td>0.896247</td>
-      <td>0.530926</td>
-      <td>0.674430</td>
-      <td>0.712245</td>
-      <td>0.408771</td>
-      <td>0.102697</td>
-      <td>0.504129</td>
-      <td>0.212517</td>
-      <td>0.189997</td>
-      <td>0.253847</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>profile_1</td>
-      <td>A549</td>
-      <td>AKT1-2</td>
-      <td>0.045949</td>
-      <td>0.116115</td>
-      <td>0.445820</td>
-      <td>-0.118672</td>
-      <td>0.052351</td>
-      <td>0.231665</td>
-      <td>-0.081538</td>
-      <td>...</td>
-      <td>0.421047</td>
-      <td>0.035434</td>
-      <td>0.010126</td>
-      <td>0.200546</td>
-      <td>-0.150230</td>
-      <td>-0.097422</td>
-      <td>0.011910</td>
-      <td>0.096723</td>
-      <td>0.106332</td>
-      <td>-0.153813</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>profile_2</td>
-      <td>A549</td>
-      <td>ARID1B-1</td>
-      <td>0.249454</td>
-      <td>0.702219</td>
-      <td>-0.286093</td>
-      <td>0.857301</td>
-      <td>0.856635</td>
-      <td>-0.603966</td>
-      <td>0.200036</td>
-      <td>...</td>
-      <td>-0.396349</td>
-      <td>0.068137</td>
-      <td>0.212118</td>
-      <td>0.064007</td>
-      <td>-0.151543</td>
-      <td>0.002750</td>
-      <td>-0.350798</td>
-      <td>0.008363</td>
-      <td>0.180860</td>
-      <td>-0.070350</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>profile_3</td>
-      <td>A549</td>
-      <td>ARID1B-2</td>
-      <td>1.105407</td>
-      <td>-0.404669</td>
-      <td>0.594427</td>
-      <td>0.233926</td>
-      <td>0.508465</td>
-      <td>-0.178178</td>
-      <td>-0.070928</td>
-      <td>...</td>
-      <td>-0.023804</td>
-      <td>-0.140058</td>
-      <td>0.052110</td>
-      <td>-0.091973</td>
-      <td>0.052738</td>
-      <td>-0.141271</td>
-      <td>0.069102</td>
-      <td>0.593044</td>
-      <td>0.191046</td>
-      <td>0.431945</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>profile_4</td>
-      <td>A549</td>
-      <td>ATF4-1</td>
-      <td>4.092510</td>
-      <td>0.583658</td>
-      <td>-0.206819</td>
-      <td>-0.160101</td>
-      <td>0.164711</td>
-      <td>-0.008267</td>
-      <td>-1.220911</td>
-      <td>...</td>
-      <td>0.186003</td>
-      <td>0.121742</td>
-      <td>0.746229</td>
-      <td>0.200480</td>
-      <td>-0.251447</td>
-      <td>-0.372899</td>
-      <td>-0.130677</td>
-      <td>0.858518</td>
-      <td>2.205523</td>
-      <td>-0.366361</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 1601 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Output Profile Mapping for Downstream Analysis</span>
-<span class="n">profile_id_mapping_df</span> <span class="o">=</span> <span class="n">x_median_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">x_median_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Metadata&quot;</span><span class="p">)]</span>
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;profile_id_metadata_mapping.tsv&quot;</span><span class="p">)</span>
-<span class="n">profile_id_mapping_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="n">profile_id_mapping_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[10]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Metadata_profile_id</th>
-      <th>Metadata_cell_line</th>
-      <th>Metadata_pert_name</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>profile_0</td>
-      <td>A549</td>
-      <td>AKT1-1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>profile_1</td>
-      <td>A549</td>
-      <td>AKT1-2</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>profile_2</td>
-      <td>A549</td>
-      <td>ARID1B-1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>profile_3</td>
-      <td>A549</td>
-      <td>ARID1B-2</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>profile_4</td>
-      <td>A549</td>
-      <td>ATF4-1</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2)-To-the-Cell-Health-Assay-Data">2) To the Cell Health Assay Data<a class="anchor-link" href="#2)-To-the-Cell-Health-Assay-Data">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cell_health_meta_features</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cell_id&quot;</span><span class="p">,</span> <span class="s2">&quot;guide&quot;</span><span class="p">]</span>
-<span class="n">cell_health_features</span> <span class="o">=</span> <span class="n">y_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">cell_health_meta_features</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="n">y_meta_merge_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">,</span> <span class="s2">&quot;Metadata_pert_name&quot;</span><span class="p">,</span> <span class="s2">&quot;Metadata_cell_line&quot;</span><span class="p">]</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_median_df</span> <span class="o">=</span> <span class="n">aggregate</span><span class="p">(</span>
-    <span class="n">y_df</span><span class="p">,</span>
-    <span class="n">strata</span><span class="o">=</span><span class="n">cell_health_meta_features</span><span class="p">,</span>
-    <span class="n">features</span><span class="o">=</span><span class="n">cell_health_features</span><span class="p">,</span>
-    <span class="n">operation</span><span class="o">=</span><span class="s2">&quot;median&quot;</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">y_median_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">y_median_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(364, 72)
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[12]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>cell_id</th>
-      <th>guide</th>
-      <th>cc_all_high_h2ax</th>
-      <th>cc_all_large_notround_polynuclear_mean</th>
-      <th>cc_all_large_round_polyploid_mean</th>
-      <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_h2ax_mean</th>
-      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
-      <th>cc_all_nucleus_area_mean</th>
-      <th>cc_all_nucleus_roundness_mean</th>
-      <th>...</th>
-      <th>vb_num_live_cells</th>
-      <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_caspase_dead_only</th>
-      <th>vb_percent_dead</th>
-      <th>vb_percent_dead_only</th>
-      <th>vb_percent_early_apoptosis</th>
-      <th>vb_percent_late_apoptosis</th>
-      <th>vb_percent_live</th>
-      <th>vb_ros_back_mean</th>
-      <th>vb_ros_mean</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>A549</td>
-      <td>AKT1-1</td>
-      <td>0.008156</td>
-      <td>0.587977</td>
-      <td>0.018820</td>
-      <td>0.381501</td>
-      <td>0.176564</td>
-      <td>0.187675</td>
-      <td>-0.170616</td>
-      <td>0.039147</td>
-      <td>...</td>
-      <td>0.399842</td>
-      <td>0.000000</td>
-      <td>-0.118976</td>
-      <td>-0.132871</td>
-      <td>-0.121090</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.132882</td>
-      <td>0.806970</td>
-      <td>1.293984</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>A549</td>
-      <td>AKT1-2</td>
-      <td>0.056667</td>
-      <td>1.264627</td>
-      <td>0.241450</td>
-      <td>0.568443</td>
-      <td>0.235304</td>
-      <td>0.372684</td>
-      <td>-0.276888</td>
-      <td>-0.183445</td>
-      <td>...</td>
-      <td>0.101670</td>
-      <td>0.318027</td>
-      <td>0.621374</td>
-      <td>0.100032</td>
-      <td>0.074036</td>
-      <td>0.132751</td>
-      <td>0.467027</td>
-      <td>-0.099917</td>
-      <td>0.558041</td>
-      <td>1.151867</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>A549</td>
-      <td>ARID1B-1</td>
-      <td>0.111163</td>
-      <td>1.092964</td>
-      <td>0.151393</td>
-      <td>0.290203</td>
-      <td>0.402121</td>
-      <td>0.481700</td>
-      <td>-0.276980</td>
-      <td>-0.149979</td>
-      <td>...</td>
-      <td>0.080701</td>
-      <td>0.339100</td>
-      <td>0.598093</td>
-      <td>0.055951</td>
-      <td>0.042014</td>
-      <td>0.165161</td>
-      <td>0.247058</td>
-      <td>-0.055920</td>
-      <td>-0.393937</td>
-      <td>0.103202</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>A549</td>
-      <td>ARID1B-2</td>
-      <td>-0.061528</td>
-      <td>0.320829</td>
-      <td>-0.091007</td>
-      <td>0.141819</td>
-      <td>-0.378769</td>
-      <td>-0.288693</td>
-      <td>-0.108741</td>
-      <td>-0.300783</td>
-      <td>...</td>
-      <td>0.265754</td>
-      <td>0.098699</td>
-      <td>0.371930</td>
-      <td>-0.063935</td>
-      <td>-0.055160</td>
-      <td>0.138654</td>
-      <td>0.000000</td>
-      <td>0.063946</td>
-      <td>0.210005</td>
-      <td>0.055291</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>A549</td>
-      <td>ATF4-1</td>
-      <td>3.967818</td>
-      <td>0.003400</td>
-      <td>3.268615</td>
-      <td>-2.246887</td>
-      <td>2.891737</td>
-      <td>2.878938</td>
-      <td>2.853995</td>
-      <td>1.243444</td>
-      <td>...</td>
-      <td>-2.343919</td>
-      <td>0.000000</td>
-      <td>-0.089544</td>
-      <td>0.141535</td>
-      <td>0.131393</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>-0.141397</td>
-      <td>-0.631390</td>
-      <td>0.106477</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 72 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_median_df</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">y_median_df</span>
-    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-        <span class="n">x_median_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">y_meta_merge_cols</span><span class="p">],</span>
-        <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;guide&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_id&quot;</span><span class="p">],</span>
-        <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Metadata_pert_name&quot;</span><span class="p">,</span> <span class="s2">&quot;Metadata_cell_line&quot;</span><span class="p">],</span>
-        <span class="n">how</span><span class="o">=</span><span class="s2">&quot;right&quot;</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-
-<span class="c1"># Get columns in correct order</span>
-<span class="n">y_columns</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">y_meta_merge_cols</span> <span class="o">+</span>
-    <span class="n">y_median_df</span>
-    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="o">~</span><span class="n">y_median_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Metadata_&quot;</span><span class="p">)]</span>
-    <span class="o">.</span><span class="n">columns</span>
-    <span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="p">)</span>
-
-<span class="n">y_median_df</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">y_median_df</span>
-    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">y_columns</span><span class="p">]</span>
-    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;guide&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_id&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">y_median_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">y_median_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(357, 73)
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[13]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Metadata_profile_id</th>
-      <th>Metadata_pert_name</th>
-      <th>Metadata_cell_line</th>
-      <th>cc_all_high_h2ax</th>
-      <th>cc_all_large_notround_polynuclear_mean</th>
-      <th>cc_all_large_round_polyploid_mean</th>
-      <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_h2ax_mean</th>
-      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
-      <th>cc_all_nucleus_area_mean</th>
-      <th>...</th>
-      <th>vb_num_live_cells</th>
-      <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_caspase_dead_only</th>
-      <th>vb_percent_dead</th>
-      <th>vb_percent_dead_only</th>
-      <th>vb_percent_early_apoptosis</th>
-      <th>vb_percent_late_apoptosis</th>
-      <th>vb_percent_live</th>
-      <th>vb_ros_back_mean</th>
-      <th>vb_ros_mean</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>profile_0</td>
-      <td>AKT1-1</td>
-      <td>A549</td>
-      <td>0.008156</td>
-      <td>0.587977</td>
-      <td>0.018820</td>
-      <td>0.381501</td>
-      <td>0.176564</td>
-      <td>0.187675</td>
-      <td>-0.170616</td>
-      <td>...</td>
-      <td>0.399842</td>
-      <td>0.000000</td>
-      <td>-0.118976</td>
-      <td>-0.132871</td>
-      <td>-0.121090</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.132882</td>
-      <td>0.806970</td>
-      <td>1.293984</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>profile_1</td>
-      <td>AKT1-2</td>
-      <td>A549</td>
-      <td>0.056667</td>
-      <td>1.264627</td>
-      <td>0.241450</td>
-      <td>0.568443</td>
-      <td>0.235304</td>
-      <td>0.372684</td>
-      <td>-0.276888</td>
-      <td>...</td>
-      <td>0.101670</td>
-      <td>0.318027</td>
-      <td>0.621374</td>
-      <td>0.100032</td>
-      <td>0.074036</td>
-      <td>0.132751</td>
-      <td>0.467027</td>
-      <td>-0.099917</td>
-      <td>0.558041</td>
-      <td>1.151867</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>profile_2</td>
-      <td>ARID1B-1</td>
-      <td>A549</td>
-      <td>0.111163</td>
-      <td>1.092964</td>
-      <td>0.151393</td>
-      <td>0.290203</td>
-      <td>0.402121</td>
-      <td>0.481700</td>
-      <td>-0.276980</td>
-      <td>...</td>
-      <td>0.080701</td>
-      <td>0.339100</td>
-      <td>0.598093</td>
-      <td>0.055951</td>
-      <td>0.042014</td>
-      <td>0.165161</td>
-      <td>0.247058</td>
-      <td>-0.055920</td>
-      <td>-0.393937</td>
-      <td>0.103202</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>profile_3</td>
-      <td>ARID1B-2</td>
-      <td>A549</td>
-      <td>-0.061528</td>
-      <td>0.320829</td>
-      <td>-0.091007</td>
-      <td>0.141819</td>
-      <td>-0.378769</td>
-      <td>-0.288693</td>
-      <td>-0.108741</td>
-      <td>...</td>
-      <td>0.265754</td>
-      <td>0.098699</td>
-      <td>0.371930</td>
-      <td>-0.063935</td>
-      <td>-0.055160</td>
-      <td>0.138654</td>
-      <td>0.000000</td>
-      <td>0.063946</td>
-      <td>0.210005</td>
-      <td>0.055291</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>profile_4</td>
-      <td>ATF4-1</td>
-      <td>A549</td>
-      <td>3.967818</td>
-      <td>0.003400</td>
-      <td>3.268615</td>
-      <td>-2.246887</td>
-      <td>2.891737</td>
-      <td>2.878938</td>
-      <td>2.853995</td>
-      <td>...</td>
-      <td>-2.343919</td>
-      <td>0.000000</td>
-      <td>-0.089544</td>
-      <td>0.141535</td>
-      <td>0.131393</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>-0.141397</td>
-      <td>-0.631390</td>
-      <td>0.106477</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 73 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Confirm that matrices are aligned</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span>
-    <span class="n">x_median_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">,</span>
-    <span class="n">y_median_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">,</span>
-    <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-
-<span class="c1"># Are the guides aligned?</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span>
-    <span class="n">x_median_df</span><span class="o">.</span><span class="n">Metadata_pert_name</span><span class="p">,</span>
-    <span class="n">y_median_df</span><span class="o">.</span><span class="n">Metadata_pert_name</span><span class="p">,</span>
-    <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-
-<span class="c1"># Are the cells aligned?</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span>
-    <span class="n">x_median_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">,</span>
-    <span class="n">y_median_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">,</span>
-    <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="B.-Apply-the-MODZ-Consensus-Aggregation">B. Apply the MODZ Consensus Aggregation<a class="anchor-link" href="#B.-Apply-the-MODZ-Consensus-Aggregation">&#182;</a></h2><h3 id="1)-To-the-Cell-Painting-Data">1) To the Cell Painting Data<a class="anchor-link" href="#1)-To-the-Cell-Painting-Data">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_consensus_df</span> <span class="o">=</span> <span class="n">modz</span><span class="p">(</span>
-    <span class="n">x_df</span><span class="p">,</span>
-    <span class="n">replicate_columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Metadata_cell_line&quot;</span><span class="p">,</span> <span class="s2">&quot;Metadata_pert_name&quot;</span><span class="p">],</span>
-    <span class="n">precision</span><span class="o">=</span><span class="mi">5</span>
-<span class="p">)</span>
-
-<span class="n">x_consensus_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[15]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th></th>
-      <th>Cells_AreaShape_Area</th>
-      <th>Cells_AreaShape_Center_X</th>
-      <th>Cells_AreaShape_Center_Y</th>
-      <th>Cells_AreaShape_Compactness</th>
-      <th>Cells_AreaShape_Eccentricity</th>
-      <th>Cells_AreaShape_Extent</th>
-      <th>Cells_AreaShape_FormFactor</th>
-      <th>Cells_AreaShape_MajorAxisLength</th>
-      <th>Cells_AreaShape_MaxFeretDiameter</th>
-      <th>Cells_AreaShape_MaximumRadius</th>
-      <th>...</th>
-      <th>Nuclei_Texture_Variance_DNA_5_0</th>
-      <th>Nuclei_Texture_Variance_ER_10_0</th>
-      <th>Nuclei_Texture_Variance_ER_20_0</th>
-      <th>Nuclei_Texture_Variance_ER_5_0</th>
-      <th>Nuclei_Texture_Variance_Mito_10_0</th>
-      <th>Nuclei_Texture_Variance_Mito_20_0</th>
-      <th>Nuclei_Texture_Variance_Mito_5_0</th>
-      <th>Nuclei_Texture_Variance_RNA_10_0</th>
-      <th>Nuclei_Texture_Variance_RNA_20_0</th>
-      <th>Nuclei_Texture_Variance_RNA_5_0</th>
-    </tr>
-    <tr>
-      <th>Metadata_cell_line</th>
-      <th>Metadata_pert_name</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th rowspan="5" valign="top">A549</th>
-      <th>AKT1-1</th>
-      <td>0.670523</td>
-      <td>-0.421956</td>
-      <td>0.369371</td>
-      <td>-0.361163</td>
-      <td>-0.329740</td>
-      <td>0.260786</td>
-      <td>-0.599924</td>
-      <td>0.611636</td>
-      <td>0.607799</td>
-      <td>0.679412</td>
-      <td>...</td>
-      <td>0.611298</td>
-      <td>0.646691</td>
-      <td>0.644430</td>
-      <td>0.710131</td>
-      <td>0.005886</td>
-      <td>-0.035807</td>
-      <td>0.047475</td>
-      <td>0.276696</td>
-      <td>0.354144</td>
-      <td>0.324910</td>
-    </tr>
-    <tr>
-      <th>AKT1-2</th>
-      <td>0.315056</td>
-      <td>0.073426</td>
-      <td>0.361172</td>
-      <td>-0.169501</td>
-      <td>0.041794</td>
-      <td>0.300945</td>
-      <td>0.104729</td>
-      <td>0.203060</td>
-      <td>0.215892</td>
-      <td>0.321806</td>
-      <td>...</td>
-      <td>0.419474</td>
-      <td>0.207831</td>
-      <td>0.072583</td>
-      <td>0.331507</td>
-      <td>-0.076044</td>
-      <td>-0.057505</td>
-      <td>-0.009035</td>
-      <td>0.097609</td>
-      <td>0.238902</td>
-      <td>-0.084303</td>
-    </tr>
-    <tr>
-      <th>ARID1B-1</th>
-      <td>0.398408</td>
-      <td>0.531508</td>
-      <td>-0.219315</td>
-      <td>0.691981</td>
-      <td>0.653327</td>
-      <td>-0.491261</td>
-      <td>0.248884</td>
-      <td>0.459665</td>
-      <td>0.472018</td>
-      <td>0.300343</td>
-      <td>...</td>
-      <td>-0.405672</td>
-      <td>0.042035</td>
-      <td>0.229941</td>
-      <td>-0.022572</td>
-      <td>-0.113600</td>
-      <td>0.046531</td>
-      <td>-0.310386</td>
-      <td>0.165331</td>
-      <td>0.159108</td>
-      <td>0.152701</td>
-    </tr>
-    <tr>
-      <th>ARID1B-2</th>
-      <td>0.966051</td>
-      <td>-0.120241</td>
-      <td>0.401286</td>
-      <td>0.315643</td>
-      <td>0.555941</td>
-      <td>-0.277779</td>
-      <td>-0.011663</td>
-      <td>1.005366</td>
-      <td>1.006955</td>
-      <td>0.762127</td>
-      <td>...</td>
-      <td>-0.034680</td>
-      <td>-0.229785</td>
-      <td>-0.193600</td>
-      <td>-0.126474</td>
-      <td>-0.173597</td>
-      <td>-0.105045</td>
-      <td>-0.037416</td>
-      <td>0.550343</td>
-      <td>0.493814</td>
-      <td>0.531058</td>
-    </tr>
-    <tr>
-      <th>ATF4-1</th>
-      <td>4.766608</td>
-      <td>0.017547</td>
-      <td>0.059990</td>
-      <td>0.030708</td>
-      <td>0.528382</td>
-      <td>0.279634</td>
-      <td>-1.681518</td>
-      <td>4.481815</td>
-      <td>4.531292</td>
-      <td>3.948448</td>
-      <td>...</td>
-      <td>0.248363</td>
-      <td>-0.071396</td>
-      <td>0.268053</td>
-      <td>0.058940</td>
-      <td>-0.166151</td>
-      <td>-0.284426</td>
-      <td>0.013087</td>
-      <td>1.024920</td>
-      <td>2.123737</td>
-      <td>-0.102910</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 1598 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_consensus_df</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">x_consensus_df</span>
-    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Metadata_pert_name in @all_measurements_df.Metadata_pert_name.unique()&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Metadata_cell_line in @all_measurements_df.Metadata_cell_line.unique()&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;Metadata_profile_id&quot;</span>
-        <span class="p">},</span>
-        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-<span class="n">x_consensus_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;profile_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">]</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">x_consensus_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">x_consensus_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(357, 1601)
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[16]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Metadata_profile_id</th>
-      <th>Metadata_cell_line</th>
-      <th>Metadata_pert_name</th>
-      <th>Cells_AreaShape_Area</th>
-      <th>Cells_AreaShape_Center_X</th>
-      <th>Cells_AreaShape_Center_Y</th>
-      <th>Cells_AreaShape_Compactness</th>
-      <th>Cells_AreaShape_Eccentricity</th>
-      <th>Cells_AreaShape_Extent</th>
-      <th>Cells_AreaShape_FormFactor</th>
-      <th>...</th>
-      <th>Nuclei_Texture_Variance_DNA_5_0</th>
-      <th>Nuclei_Texture_Variance_ER_10_0</th>
-      <th>Nuclei_Texture_Variance_ER_20_0</th>
-      <th>Nuclei_Texture_Variance_ER_5_0</th>
-      <th>Nuclei_Texture_Variance_Mito_10_0</th>
-      <th>Nuclei_Texture_Variance_Mito_20_0</th>
-      <th>Nuclei_Texture_Variance_Mito_5_0</th>
-      <th>Nuclei_Texture_Variance_RNA_10_0</th>
-      <th>Nuclei_Texture_Variance_RNA_20_0</th>
-      <th>Nuclei_Texture_Variance_RNA_5_0</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>profile_0</td>
-      <td>A549</td>
-      <td>AKT1-1</td>
-      <td>0.670523</td>
-      <td>-0.421956</td>
-      <td>0.369371</td>
-      <td>-0.361163</td>
-      <td>-0.329740</td>
-      <td>0.260786</td>
-      <td>-0.599924</td>
-      <td>...</td>
-      <td>0.611298</td>
-      <td>0.646691</td>
-      <td>0.644430</td>
-      <td>0.710131</td>
-      <td>0.005886</td>
-      <td>-0.035807</td>
-      <td>0.047475</td>
-      <td>0.276696</td>
-      <td>0.354144</td>
-      <td>0.324910</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>profile_1</td>
-      <td>A549</td>
-      <td>AKT1-2</td>
-      <td>0.315056</td>
-      <td>0.073426</td>
-      <td>0.361172</td>
-      <td>-0.169501</td>
-      <td>0.041794</td>
-      <td>0.300945</td>
-      <td>0.104729</td>
-      <td>...</td>
-      <td>0.419474</td>
-      <td>0.207831</td>
-      <td>0.072583</td>
-      <td>0.331507</td>
-      <td>-0.076044</td>
-      <td>-0.057505</td>
-      <td>-0.009035</td>
-      <td>0.097609</td>
-      <td>0.238902</td>
-      <td>-0.084303</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>profile_2</td>
-      <td>A549</td>
-      <td>ARID1B-1</td>
-      <td>0.398408</td>
-      <td>0.531508</td>
-      <td>-0.219315</td>
-      <td>0.691981</td>
-      <td>0.653327</td>
-      <td>-0.491261</td>
-      <td>0.248884</td>
-      <td>...</td>
-      <td>-0.405672</td>
-      <td>0.042035</td>
-      <td>0.229941</td>
-      <td>-0.022572</td>
-      <td>-0.113600</td>
-      <td>0.046531</td>
-      <td>-0.310386</td>
-      <td>0.165331</td>
-      <td>0.159108</td>
-      <td>0.152701</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>profile_3</td>
-      <td>A549</td>
-      <td>ARID1B-2</td>
-      <td>0.966051</td>
-      <td>-0.120241</td>
-      <td>0.401286</td>
-      <td>0.315643</td>
-      <td>0.555941</td>
-      <td>-0.277779</td>
-      <td>-0.011663</td>
-      <td>...</td>
-      <td>-0.034680</td>
-      <td>-0.229785</td>
-      <td>-0.193600</td>
-      <td>-0.126474</td>
-      <td>-0.173597</td>
-      <td>-0.105045</td>
-      <td>-0.037416</td>
-      <td>0.550343</td>
-      <td>0.493814</td>
-      <td>0.531058</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>profile_4</td>
-      <td>A549</td>
-      <td>ATF4-1</td>
-      <td>4.766608</td>
-      <td>0.017547</td>
-      <td>0.059990</td>
-      <td>0.030708</td>
-      <td>0.528382</td>
-      <td>0.279634</td>
-      <td>-1.681518</td>
-      <td>...</td>
-      <td>0.248363</td>
-      <td>-0.071396</td>
-      <td>0.268053</td>
-      <td>0.058940</td>
-      <td>-0.166151</td>
-      <td>-0.284426</td>
-      <td>0.013087</td>
-      <td>1.024920</td>
-      <td>2.123737</td>
-      <td>-0.102910</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 1601 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2)-To-the-Cell-Health-Assay-Data">2) To the Cell Health Assay Data<a class="anchor-link" href="#2)-To-the-Cell-Health-Assay-Data">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_consensus_df</span> <span class="o">=</span> <span class="n">modz</span><span class="p">(</span>
-    <span class="n">y_df</span><span class="p">,</span>
-    <span class="n">features</span><span class="o">=</span><span class="n">cell_health_features</span><span class="p">,</span>
-    <span class="n">replicate_columns</span><span class="o">=</span><span class="n">cell_health_meta_features</span><span class="p">,</span>
-    <span class="n">precision</span><span class="o">=</span><span class="mi">5</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">y_consensus_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">y_consensus_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(364, 70)
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[17]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th></th>
-      <th>cc_all_high_h2ax</th>
-      <th>cc_all_large_notround_polynuclear_mean</th>
-      <th>cc_all_large_round_polyploid_mean</th>
-      <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_h2ax_mean</th>
-      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
-      <th>cc_all_nucleus_area_mean</th>
-      <th>cc_all_nucleus_roundness_mean</th>
-      <th>cc_cc_early_mitosis</th>
-      <th>cc_cc_g1</th>
-      <th>...</th>
-      <th>vb_num_live_cells</th>
-      <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_caspase_dead_only</th>
-      <th>vb_percent_dead</th>
-      <th>vb_percent_dead_only</th>
-      <th>vb_percent_early_apoptosis</th>
-      <th>vb_percent_late_apoptosis</th>
-      <th>vb_percent_live</th>
-      <th>vb_ros_back_mean</th>
-      <th>vb_ros_mean</th>
-    </tr>
-    <tr>
-      <th>cell_id</th>
-      <th>guide</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th rowspan="5" valign="top">A549</th>
-      <th>AKT1-1</th>
-      <td>-0.005795</td>
-      <td>0.580351</td>
-      <td>0.013975</td>
-      <td>0.381958</td>
-      <td>0.150696</td>
-      <td>0.162511</td>
-      <td>-0.167603</td>
-      <td>0.040322</td>
-      <td>0.375966</td>
-      <td>0.043915</td>
-      <td>...</td>
-      <td>0.438339</td>
-      <td>0.059414</td>
-      <td>-0.065050</td>
-      <td>-0.020236</td>
-      <td>-0.007970</td>
-      <td>0.082424</td>
-      <td>0.000000</td>
-      <td>0.020263</td>
-      <td>0.408214</td>
-      <td>0.654575</td>
-    </tr>
-    <tr>
-      <th>AKT1-2</th>
-      <td>0.050169</td>
-      <td>1.277730</td>
-      <td>0.241808</td>
-      <td>0.577422</td>
-      <td>0.220829</td>
-      <td>0.366989</td>
-      <td>-0.278044</td>
-      <td>-0.182571</td>
-      <td>0.736046</td>
-      <td>-1.023968</td>
-      <td>...</td>
-      <td>0.067568</td>
-      <td>0.256141</td>
-      <td>0.575026</td>
-      <td>0.225091</td>
-      <td>0.220461</td>
-      <td>0.132834</td>
-      <td>0.386327</td>
-      <td>-0.224965</td>
-      <td>0.284962</td>
-      <td>0.567898</td>
-    </tr>
-    <tr>
-      <th>ARID1B-1</th>
-      <td>0.118598</td>
-      <td>1.198685</td>
-      <td>0.165140</td>
-      <td>0.330071</td>
-      <td>0.417723</td>
-      <td>0.514065</td>
-      <td>-0.308749</td>
-      <td>-0.172735</td>
-      <td>0.148168</td>
-      <td>-0.606599</td>
-      <td>...</td>
-      <td>0.100365</td>
-      <td>0.299229</td>
-      <td>0.501941</td>
-      <td>0.055517</td>
-      <td>0.047697</td>
-      <td>0.249557</td>
-      <td>0.283246</td>
-      <td>-0.055445</td>
-      <td>-0.363766</td>
-      <td>-0.205937</td>
-    </tr>
-    <tr>
-      <th>ARID1B-2</th>
-      <td>-0.072919</td>
-      <td>0.317079</td>
-      <td>-0.089281</td>
-      <td>0.155305</td>
-      <td>-0.385316</td>
-      <td>-0.300279</td>
-      <td>-0.120261</td>
-      <td>-0.299718</td>
-      <td>0.012239</td>
-      <td>-0.221492</td>
-      <td>...</td>
-      <td>0.283802</td>
-      <td>0.143096</td>
-      <td>0.493883</td>
-      <td>-0.084415</td>
-      <td>-0.085658</td>
-      <td>0.136790</td>
-      <td>0.111855</td>
-      <td>0.084439</td>
-      <td>0.198285</td>
-      <td>-0.162976</td>
-    </tr>
-    <tr>
-      <th>ATF4-1</th>
-      <td>4.286179</td>
-      <td>0.007467</td>
-      <td>3.284383</td>
-      <td>-2.246762</td>
-      <td>3.015881</td>
-      <td>3.065773</td>
-      <td>2.854124</td>
-      <td>1.246508</td>
-      <td>0.049095</td>
-      <td>0.923187</td>
-      <td>...</td>
-      <td>-2.434136</td>
-      <td>0.315381</td>
-      <td>0.509217</td>
-      <td>0.100668</td>
-      <td>0.104857</td>
-      <td>0.332291</td>
-      <td>0.192878</td>
-      <td>-0.100596</td>
-      <td>-0.811271</td>
-      <td>-0.092505</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 70 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_consensus_df</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">y_consensus_df</span>
-    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-        <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">y_meta_merge_cols</span><span class="p">],</span>
-        <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;guide&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_id&quot;</span><span class="p">],</span>
-        <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Metadata_pert_name&quot;</span><span class="p">,</span> <span class="s2">&quot;Metadata_cell_line&quot;</span><span class="p">],</span>
-        <span class="n">how</span><span class="o">=</span><span class="s2">&quot;right&quot;</span>
-    <span class="p">)</span>
-    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">y_columns</span><span class="p">]</span>
-    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;guide&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_id&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">y_consensus_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">y_consensus_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(357, 73)
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[18]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Metadata_profile_id</th>
-      <th>Metadata_pert_name</th>
-      <th>Metadata_cell_line</th>
-      <th>cc_all_high_h2ax</th>
-      <th>cc_all_large_notround_polynuclear_mean</th>
-      <th>cc_all_large_round_polyploid_mean</th>
-      <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_h2ax_mean</th>
-      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
-      <th>cc_all_nucleus_area_mean</th>
-      <th>...</th>
-      <th>vb_num_live_cells</th>
-      <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_caspase_dead_only</th>
-      <th>vb_percent_dead</th>
-      <th>vb_percent_dead_only</th>
-      <th>vb_percent_early_apoptosis</th>
-      <th>vb_percent_late_apoptosis</th>
-      <th>vb_percent_live</th>
-      <th>vb_ros_back_mean</th>
-      <th>vb_ros_mean</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>profile_0</td>
-      <td>AKT1-1</td>
-      <td>A549</td>
-      <td>-0.005795</td>
-      <td>0.580351</td>
-      <td>0.013975</td>
-      <td>0.381958</td>
-      <td>0.150696</td>
-      <td>0.162511</td>
-      <td>-0.167603</td>
-      <td>...</td>
-      <td>0.438339</td>
-      <td>0.059414</td>
-      <td>-0.065050</td>
-      <td>-0.020236</td>
-      <td>-0.007970</td>
-      <td>0.082424</td>
-      <td>0.000000</td>
-      <td>0.020263</td>
-      <td>0.408214</td>
-      <td>0.654575</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>profile_1</td>
-      <td>AKT1-2</td>
-      <td>A549</td>
-      <td>0.050169</td>
-      <td>1.277730</td>
-      <td>0.241808</td>
-      <td>0.577422</td>
-      <td>0.220829</td>
-      <td>0.366989</td>
-      <td>-0.278044</td>
-      <td>...</td>
-      <td>0.067568</td>
-      <td>0.256141</td>
-      <td>0.575026</td>
-      <td>0.225091</td>
-      <td>0.220461</td>
-      <td>0.132834</td>
-      <td>0.386327</td>
-      <td>-0.224965</td>
-      <td>0.284962</td>
-      <td>0.567898</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>profile_2</td>
-      <td>ARID1B-1</td>
-      <td>A549</td>
-      <td>0.118598</td>
-      <td>1.198685</td>
-      <td>0.165140</td>
-      <td>0.330071</td>
-      <td>0.417723</td>
-      <td>0.514065</td>
-      <td>-0.308749</td>
-      <td>...</td>
-      <td>0.100365</td>
-      <td>0.299229</td>
-      <td>0.501941</td>
-      <td>0.055517</td>
-      <td>0.047697</td>
-      <td>0.249557</td>
-      <td>0.283246</td>
-      <td>-0.055445</td>
-      <td>-0.363766</td>
-      <td>-0.205937</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>profile_3</td>
-      <td>ARID1B-2</td>
-      <td>A549</td>
-      <td>-0.072919</td>
-      <td>0.317079</td>
-      <td>-0.089281</td>
-      <td>0.155305</td>
-      <td>-0.385316</td>
-      <td>-0.300279</td>
-      <td>-0.120261</td>
-      <td>...</td>
-      <td>0.283802</td>
-      <td>0.143096</td>
-      <td>0.493883</td>
-      <td>-0.084415</td>
-      <td>-0.085658</td>
-      <td>0.136790</td>
-      <td>0.111855</td>
-      <td>0.084439</td>
-      <td>0.198285</td>
-      <td>-0.162976</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>profile_4</td>
-      <td>ATF4-1</td>
-      <td>A549</td>
-      <td>4.286179</td>
-      <td>0.007467</td>
-      <td>3.284383</td>
-      <td>-2.246762</td>
-      <td>3.015881</td>
-      <td>3.065773</td>
-      <td>2.854124</td>
-      <td>...</td>
-      <td>-2.434136</td>
-      <td>0.315381</td>
-      <td>0.509217</td>
-      <td>0.100668</td>
-      <td>0.104857</td>
-      <td>0.332291</td>
-      <td>0.192878</td>
-      <td>-0.100596</td>
-      <td>-0.811271</td>
-      <td>-0.092505</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 73 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Confirm that matrices are aligned</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span>
-    <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">,</span>
-    <span class="n">y_consensus_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">,</span>
-    <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-
-<span class="c1"># Are the guides aligned?</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span>
-    <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">Metadata_pert_name</span><span class="p">,</span>
-    <span class="n">y_consensus_df</span><span class="o">.</span><span class="n">Metadata_pert_name</span><span class="p">,</span>
-    <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-
-<span class="c1"># Are the cells aligned?</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span>
-    <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">,</span>
-    <span class="n">y_consensus_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">,</span>
-    <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Output-Median-and-MODZ-Consensus-Signatures">Output Median and MODZ Consensus Signatures<a class="anchor-link" href="#Output-Median-and-MODZ-Consensus-Signatures">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">consensus_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;consensus&quot;</span><span class="p">)</span>
-
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">consensus_dir</span><span class="p">,</span> <span class="s2">&quot;cell_painting_median.tsv.gz&quot;</span><span class="p">)</span>
-<span class="n">x_median_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">consensus_dir</span><span class="p">,</span> <span class="s2">&quot;cell_health_median.tsv.gz&quot;</span><span class="p">)</span>
-<span class="n">y_median_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">consensus_dir</span><span class="p">,</span> <span class="s2">&quot;cell_painting_modz.tsv.gz&quot;</span><span class="p">)</span>
-<span class="n">x_consensus_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">consensus_dir</span><span class="p">,</span> <span class="s2">&quot;cell_health_modz.tsv.gz&quot;</span><span class="p">)</span>
-<span class="n">y_consensus_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;tables&quot;</span><span class="p">,</span> <span class="s2">&quot;supplementary_table_1_perturbation_details.tsv&quot;</span><span class="p">)</span>
+<span class="n">full_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
     </div>
