@@ -109,11 +109,22 @@ normalized_label_df.head(2)
 # Load feature map
 file = os.path.join("data", "labels", "feature_mapping_annotated.csv")
 feature_map = (
-    pd.read_csv(file, index_col=1)
+    pd.read_csv(file, index_col=0)
+    .rename(
+        {
+            "id": "variable_name"
+        },
+        axis="columns"
+    )
     .transpose()
     .reset_index()
     .transpose()
-    .rename({"index": "id"}, axis="rows")
+    .rename(
+        {
+            "index": "id"
+        },
+        axis="rows"
+    )
 )
 
 feature_map.head()
@@ -126,9 +137,11 @@ feature_map.head()
 cell_health_features = [x for x in normalized_label_df.columns if not x.startswith("Metadata_")]
 output_file = os.path.join("data", "labels", "normalized_cell_health_labels.gct")
 
-write_gct(profiles=normalized_label_df,
-          output_file=output_file,
-          features=cell_health_features,
-          meta_features="infer",
-          feature_metadata=feature_map)
+write_gct(
+    profiles=normalized_label_df,
+    output_file=output_file,
+    features=cell_health_features,
+    meta_features="infer",
+    feature_metadata=feature_map
+)
 
