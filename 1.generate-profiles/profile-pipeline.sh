@@ -37,3 +37,10 @@ jupyter nbconvert --to=html \
         --ExecutePreprocessor.kernel_name=python \
         --ExecutePreprocessor.timeout=10000000 \
         --execute 2.build-consensus-signatures.ipynb
+
+# Step 5: Build a supplementary table describing perturbations
+jupyter nbconvert --to=html \
+        --FilesWriter.build_directory=scripts/html \
+        --ExecutePreprocessor.kernel_name=python \
+        --ExecutePreprocessor.timeout=10000000 \
+        --execute 3.perturbation-table.ipynb

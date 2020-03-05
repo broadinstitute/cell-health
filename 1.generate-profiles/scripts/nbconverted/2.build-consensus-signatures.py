@@ -277,16 +277,25 @@ y_median_df.head(5)
 
 
 # Confirm that matrices are aligned
-pd.testing.assert_series_equal(x_median_df.Metadata_profile_id,
-                               y_median_df.Metadata_profile_id, check_names=True)
+pd.testing.assert_series_equal(
+    x_median_df.Metadata_profile_id,
+    y_median_df.Metadata_profile_id,
+    check_names=True
+)
 
 # Are the guides aligned?
-pd.testing.assert_series_equal(x_median_df.Metadata_pert_name,
-                               y_median_df.Metadata_pert_name, check_names=True)
+pd.testing.assert_series_equal(
+    x_median_df.Metadata_pert_name,
+    y_median_df.Metadata_pert_name,
+    check_names=True
+)
 
 # Are the cells aligned?
-pd.testing.assert_series_equal(x_median_df.Metadata_cell_line,
-                               y_median_df.Metadata_cell_line, check_names=True)
+pd.testing.assert_series_equal(
+    x_median_df.Metadata_cell_line,
+    y_median_df.Metadata_cell_line,
+    check_names=True
+)
 
 
 # ## B. Apply the MODZ Consensus Aggregation
@@ -315,7 +324,12 @@ x_consensus_df = (
     .query("Metadata_cell_line in @all_measurements_df.Metadata_cell_line.unique()")
     .reset_index(drop=True)
     .reset_index()
-    .rename({"index": "Metadata_profile_id"}, axis='columns')
+    .rename(
+        {
+            "index": "Metadata_profile_id"
+        },
+        axis='columns'
+    )
 )
 x_consensus_df.Metadata_profile_id = ["profile_{}".format(x) for x in x_consensus_df.Metadata_profile_id]
 
@@ -332,7 +346,8 @@ y_consensus_df = modz(
     y_df,
     features=cell_health_features,
     replicate_columns=cell_health_meta_features,
-    precision=5)
+    precision=5
+)
 
 print(y_consensus_df.shape)
 y_consensus_df.head()
@@ -363,16 +378,25 @@ y_consensus_df.head(5)
 
 
 # Confirm that matrices are aligned
-pd.testing.assert_series_equal(x_consensus_df.Metadata_profile_id,
-                               y_consensus_df.Metadata_profile_id, check_names=True)
+pd.testing.assert_series_equal(
+    x_consensus_df.Metadata_profile_id,
+    y_consensus_df.Metadata_profile_id,
+    check_names=True
+)
 
 # Are the guides aligned?
-pd.testing.assert_series_equal(x_consensus_df.Metadata_pert_name,
-                               y_consensus_df.Metadata_pert_name, check_names=True)
+pd.testing.assert_series_equal(
+    x_consensus_df.Metadata_pert_name,
+    y_consensus_df.Metadata_pert_name,
+    check_names=True
+)
 
 # Are the cells aligned?
-pd.testing.assert_series_equal(x_consensus_df.Metadata_cell_line,
-                               y_consensus_df.Metadata_cell_line, check_names=True)
+pd.testing.assert_series_equal(
+    x_consensus_df.Metadata_cell_line,
+    y_consensus_df.Metadata_cell_line,
+    check_names=True
+)
 
 
 # ## Output Median and MODZ Consensus Signatures

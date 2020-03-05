@@ -13126,8 +13126,7 @@ We generate consensus signatures in two ways.</p>
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">batch</span> <span class="o">=</span> <span class="s2">&quot;CRISPR_PILOT_B1&quot;</span>
-<span class="n">profile_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;profiles&quot;</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">profile_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;profiles&quot;</span><span class="p">)</span>
 
 <span class="n">all_profile_files</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">plate</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">profile_dir</span><span class="p">):</span>
@@ -13170,15 +13169,16 @@ We generate consensus signatures in two ways.</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[&#39;data/profiles/CRISPR_PILOT_B1/SQ00014618/SQ00014618_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/CRISPR_PILOT_B1/SQ00014611/SQ00014611_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/CRISPR_PILOT_B1/SQ00014616/SQ00014616_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/CRISPR_PILOT_B1/SQ00014617/SQ00014617_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/CRISPR_PILOT_B1/SQ00014610/SQ00014610_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/CRISPR_PILOT_B1/SQ00014615/SQ00014615_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/CRISPR_PILOT_B1/SQ00014612/SQ00014612_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/CRISPR_PILOT_B1/SQ00014613/SQ00014613_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/CRISPR_PILOT_B1/SQ00014614/SQ00014614_normalized_feature_select.csv.gz&#39;]</pre>
+<pre>[&#39;data/profiles/SQ00014618/SQ00014618_normalized_feature_select.csv.gz&#39;,
+ &#39;data/profiles/SQ00014611/SQ00014611_normalized_feature_select.csv.gz&#39;,
+ &#39;data/profiles/SQ00014616/SQ00014616_normalized_feature_select.csv.gz&#39;,
+ &#39;data/profiles/SQ00014617/SQ00014617_normalized_feature_select.csv.gz&#39;,
+ &#39;data/profiles/SQ00014610/SQ00014610_normalized_feature_select.csv&#39;,
+ &#39;data/profiles/SQ00014610/SQ00014610_normalized_feature_select.csv.gz&#39;,
+ &#39;data/profiles/SQ00014615/SQ00014615_normalized_feature_select.csv.gz&#39;,
+ &#39;data/profiles/SQ00014612/SQ00014612_normalized_feature_select.csv.gz&#39;,
+ &#39;data/profiles/SQ00014613/SQ00014613_normalized_feature_select.csv.gz&#39;,
+ &#39;data/profiles/SQ00014614/SQ00014614_normalized_feature_select.csv.gz&#39;]</pre>
 </div>
 
 </div>
@@ -13214,6 +13214,16 @@ We generate consensus signatures in two ways.</p>
 <span class="n">x_df</span> <span class="o">=</span> <span class="n">x_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">x_metadata_cols</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
 <span class="n">x_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">x_metadata_df</span><span class="p">,</span> <span class="n">x_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
 
+<span class="c1"># Drop columns with na values</span>
+<span class="n">na_cols_to_drop</span> <span class="o">=</span> <span class="n">get_na_columns</span><span class="p">(</span><span class="n">x_df</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dropping </span><span class="si">{}</span><span class="s2"> columns because of missing data&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">na_cols_to_drop</span><span class="p">)))</span>
+<span class="n">x_df</span> <span class="o">=</span> <span class="n">x_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">na_cols_to_drop</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+
+<span class="c1"># Also drop Costes features</span>
+<span class="n">costes_cols_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s2">&quot;costes&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dropping </span><span class="si">{}</span><span class="s2"> costes features&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">costes_cols_to_drop</span><span class="p">)))</span>
+<span class="n">x_df</span> <span class="o">=</span> <span class="n">x_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">costes_cols_to_drop</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="n">x_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">x_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
@@ -13232,7 +13242,9 @@ We generate consensus signatures in two ways.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(3456, 1735)
+<pre>Dropping 34 columns because of missing data
+Dropping 2 costes features
+(3840, 1605)
 </pre>
 </div>
 </div>
@@ -13295,20 +13307,20 @@ We generate consensus signatures in two ways.</p>
       <td>HCC44</td>
       <td>EMPTY</td>
       <td>EMPTY</td>
-      <td>-0.958070</td>
-      <td>0.814507</td>
-      <td>-0.768176</td>
+      <td>-0.891801</td>
+      <td>0.870588</td>
+      <td>-0.683168</td>
       <td>...</td>
-      <td>-1.082920</td>
-      <td>-0.403869</td>
-      <td>-0.273727</td>
-      <td>-0.892703</td>
-      <td>-1.142401</td>
-      <td>-1.181333</td>
-      <td>-1.404747</td>
-      <td>1.008647</td>
-      <td>0.830481</td>
-      <td>1.025472</td>
+      <td>-0.888368</td>
+      <td>-0.273388</td>
+      <td>-0.136467</td>
+      <td>-0.709549</td>
+      <td>-0.754013</td>
+      <td>-0.834143</td>
+      <td>-0.937134</td>
+      <td>0.829446</td>
+      <td>0.692030</td>
+      <td>0.691189</td>
     </tr>
     <tr>
       <th>1</th>
@@ -13319,24 +13331,24 @@ We generate consensus signatures in two ways.</p>
       <td>HCC44</td>
       <td>MCL1</td>
       <td>MCL1-5</td>
-      <td>0.547816</td>
-      <td>1.209206</td>
-      <td>-0.413024</td>
+      <td>0.739305</td>
+      <td>1.247059</td>
+      <td>-0.366337</td>
       <td>...</td>
-      <td>0.746211</td>
-      <td>1.900085</td>
-      <td>1.554589</td>
-      <td>1.421829</td>
-      <td>0.556411</td>
-      <td>1.134919</td>
-      <td>0.348166</td>
-      <td>1.136893</td>
-      <td>1.948684</td>
-      <td>0.944716</td>
+      <td>0.485662</td>
+      <td>1.515287</td>
+      <td>1.430190</td>
+      <td>1.170855</td>
+      <td>0.487870</td>
+      <td>0.880912</td>
+      <td>0.231417</td>
+      <td>0.937816</td>
+      <td>1.829701</td>
+      <td>0.636011</td>
     </tr>
   </tbody>
 </table>
-<p>2 rows × 1735 columns</p>
+<p>2 rows × 1605 columns</p>
 </div>
 </div>
 
@@ -13412,22 +13424,22 @@ We generate consensus signatures in two ways.</p>
       <th></th>
       <th>cell_id</th>
       <th>guide</th>
-      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_high_h2ax</th>
       <th>cc_all_large_notround_polynuclear_mean</th>
       <th>cc_all_large_round_polyploid_mean</th>
       <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_mean</th>
-      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>cc_all_n_spots_h2ax_mean</th>
+      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
       <th>cc_all_nucleus_area_mean</th>
       <th>cc_all_nucleus_roundness_mean</th>
       <th>...</th>
       <th>vb_num_live_cells</th>
       <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_all_early_apoptosis</th>
-      <th>vb_percent_all_late_apoptosis</th>
       <th>vb_percent_caspase_dead_only</th>
       <th>vb_percent_dead</th>
       <th>vb_percent_dead_only</th>
+      <th>vb_percent_early_apoptosis</th>
+      <th>vb_percent_late_apoptosis</th>
       <th>vb_percent_live</th>
       <th>vb_ros_back_mean</th>
       <th>vb_ros_mean</th>
@@ -13449,11 +13461,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>0.281397</td>
       <td>-0.279051</td>
-      <td>-0.429141</td>
-      <td>-0.177258</td>
       <td>-0.920300</td>
       <td>-0.139875</td>
       <td>-0.016549</td>
+      <td>-0.429141</td>
+      <td>-0.177258</td>
       <td>0.140570</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -13473,11 +13485,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>0.543716</td>
       <td>-0.221588</td>
-      <td>-0.311041</td>
-      <td>-0.149198</td>
       <td>-1.070176</td>
       <td>-0.046783</td>
       <td>0.268559</td>
+      <td>-0.311041</td>
+      <td>-0.149198</td>
       <td>0.040163</td>
       <td>-0.29248</td>
       <td>0.008339</td>
@@ -13539,7 +13551,7 @@ We generate consensus signatures in two ways.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(3456, 7)
+<pre>(3840, 7)
 </pre>
 </div>
 </div>
@@ -13584,7 +13596,7 @@ We generate consensus signatures in two ways.</p>
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>6</td>
+      <td>8</td>
       <td>cell_painting</td>
       <td>A03</td>
       <td>SQ00014611</td>
@@ -13594,7 +13606,7 @@ We generate consensus signatures in two ways.</p>
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>6</td>
+      <td>8</td>
       <td>cell_painting</td>
       <td>O22</td>
       <td>SQ00014611</td>
@@ -13746,7 +13758,7 @@ We generate consensus signatures in two ways.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(3456, 8)
+<pre>(3840, 8)
 </pre>
 </div>
 </div>
@@ -13792,7 +13804,7 @@ We generate consensus signatures in two ways.</p>
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>6</td>
+      <td>8</td>
       <td>cell_painting</td>
       <td>SQ00014611</td>
       <td>4</td>
@@ -13803,7 +13815,7 @@ We generate consensus signatures in two ways.</p>
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>6</td>
+      <td>8</td>
       <td>cell_painting</td>
       <td>SQ00014611</td>
       <td>4</td>
@@ -13814,7 +13826,7 @@ We generate consensus signatures in two ways.</p>
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>6</td>
+      <td>8</td>
       <td>cell_painting</td>
       <td>SQ00014610</td>
       <td>4</td>
@@ -13825,7 +13837,7 @@ We generate consensus signatures in two ways.</p>
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>6</td>
+      <td>8</td>
       <td>cell_painting</td>
       <td>SQ00014610</td>
       <td>4</td>
@@ -13836,9 +13848,9 @@ We generate consensus signatures in two ways.</p>
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>6</td>
+      <td>8</td>
       <td>cell_painting</td>
-      <td>SQ00014612</td>
+      <td>SQ00014610</td>
       <td>4</td>
       <td>cell_health</td>
     </tr>
@@ -13901,7 +13913,7 @@ We generate consensus signatures in two ways.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(357, 1731)
+<pre>(357, 1601)
 </pre>
 </div>
 </div>
@@ -13939,8 +13951,8 @@ We generate consensus signatures in two ways.</p>
       <th>Cells_AreaShape_Center_Y</th>
       <th>Cells_AreaShape_Compactness</th>
       <th>Cells_AreaShape_Eccentricity</th>
-      <th>Cells_AreaShape_EulerNumber</th>
       <th>Cells_AreaShape_Extent</th>
+      <th>Cells_AreaShape_FormFactor</th>
       <th>...</th>
       <th>Nuclei_Texture_Variance_DNA_5_0</th>
       <th>Nuclei_Texture_Variance_ER_10_0</th>
@@ -13960,124 +13972,124 @@ We generate consensus signatures in two ways.</p>
       <td>profile_0</td>
       <td>A549</td>
       <td>AKT1-1</td>
-      <td>0.128119</td>
-      <td>-0.523081</td>
-      <td>0.656915</td>
-      <td>0.340118</td>
-      <td>0.287256</td>
-      <td>0.0</td>
-      <td>-0.216196</td>
+      <td>0.724439</td>
+      <td>-0.650193</td>
+      <td>0.633381</td>
+      <td>0.115707</td>
+      <td>0.322093</td>
+      <td>-0.160304</td>
+      <td>-0.469180</td>
       <td>...</td>
-      <td>0.943312</td>
-      <td>0.957411</td>
-      <td>0.980166</td>
-      <td>0.925170</td>
-      <td>0.694211</td>
-      <td>0.396416</td>
-      <td>0.943503</td>
-      <td>0.258312</td>
-      <td>0.146497</td>
-      <td>0.439103</td>
+      <td>0.896247</td>
+      <td>0.530926</td>
+      <td>0.674430</td>
+      <td>0.712245</td>
+      <td>0.408771</td>
+      <td>0.102697</td>
+      <td>0.504129</td>
+      <td>0.212517</td>
+      <td>0.189997</td>
+      <td>0.253847</td>
     </tr>
     <tr>
       <th>1</th>
       <td>profile_1</td>
       <td>A549</td>
       <td>AKT1-2</td>
-      <td>-0.151237</td>
-      <td>0.433182</td>
-      <td>0.560337</td>
-      <td>-0.279924</td>
-      <td>-0.018849</td>
-      <td>0.0</td>
-      <td>0.342880</td>
+      <td>0.045949</td>
+      <td>0.116115</td>
+      <td>0.445820</td>
+      <td>-0.118672</td>
+      <td>0.052351</td>
+      <td>0.231665</td>
+      <td>-0.081538</td>
       <td>...</td>
-      <td>0.606264</td>
-      <td>0.089609</td>
-      <td>-0.064143</td>
-      <td>0.230317</td>
-      <td>-0.062713</td>
-      <td>-0.133535</td>
-      <td>0.186883</td>
-      <td>0.225188</td>
-      <td>0.021131</td>
-      <td>0.002909</td>
+      <td>0.421047</td>
+      <td>0.035434</td>
+      <td>0.010126</td>
+      <td>0.200546</td>
+      <td>-0.150230</td>
+      <td>-0.097422</td>
+      <td>0.011910</td>
+      <td>0.096723</td>
+      <td>0.106332</td>
+      <td>-0.153813</td>
     </tr>
     <tr>
       <th>2</th>
       <td>profile_2</td>
       <td>A549</td>
       <td>ARID1B-1</td>
-      <td>-0.050721</td>
-      <td>0.866254</td>
-      <td>-0.412500</td>
-      <td>1.169758</td>
-      <td>1.014053</td>
-      <td>0.0</td>
-      <td>-0.821827</td>
+      <td>0.249454</td>
+      <td>0.702219</td>
+      <td>-0.286093</td>
+      <td>0.857301</td>
+      <td>0.856635</td>
+      <td>-0.603966</td>
+      <td>0.200036</td>
       <td>...</td>
-      <td>-0.537697</td>
-      <td>0.043528</td>
-      <td>0.328203</td>
-      <td>-0.029953</td>
-      <td>-0.033669</td>
-      <td>0.071269</td>
-      <td>-0.317794</td>
-      <td>0.186336</td>
-      <td>0.207975</td>
-      <td>0.258786</td>
+      <td>-0.396349</td>
+      <td>0.068137</td>
+      <td>0.212118</td>
+      <td>0.064007</td>
+      <td>-0.151543</td>
+      <td>0.002750</td>
+      <td>-0.350798</td>
+      <td>0.008363</td>
+      <td>0.180860</td>
+      <td>-0.070350</td>
     </tr>
     <tr>
       <th>3</th>
       <td>profile_3</td>
       <td>A549</td>
       <td>ARID1B-2</td>
-      <td>0.500161</td>
-      <td>-0.464468</td>
-      <td>0.568008</td>
-      <td>0.353008</td>
-      <td>0.582756</td>
-      <td>0.0</td>
-      <td>-0.325497</td>
+      <td>1.105407</td>
+      <td>-0.404669</td>
+      <td>0.594427</td>
+      <td>0.233926</td>
+      <td>0.508465</td>
+      <td>-0.178178</td>
+      <td>-0.070928</td>
       <td>...</td>
-      <td>0.087831</td>
-      <td>-0.230552</td>
-      <td>0.015408</td>
-      <td>-0.262526</td>
-      <td>0.010822</td>
-      <td>-0.025603</td>
-      <td>0.200284</td>
-      <td>0.725877</td>
-      <td>0.172991</td>
-      <td>0.567965</td>
+      <td>-0.023804</td>
+      <td>-0.140058</td>
+      <td>0.052110</td>
+      <td>-0.091973</td>
+      <td>0.052738</td>
+      <td>-0.141271</td>
+      <td>0.069102</td>
+      <td>0.593044</td>
+      <td>0.191046</td>
+      <td>0.431945</td>
     </tr>
     <tr>
       <th>4</th>
       <td>profile_4</td>
       <td>A549</td>
       <td>ATF4-1</td>
-      <td>3.247545</td>
-      <td>0.587303</td>
-      <td>-0.311460</td>
-      <td>-0.305051</td>
-      <td>0.083376</td>
-      <td>0.0</td>
-      <td>0.405565</td>
+      <td>4.092510</td>
+      <td>0.583658</td>
+      <td>-0.206819</td>
+      <td>-0.160101</td>
+      <td>0.164711</td>
+      <td>-0.008267</td>
+      <td>-1.220911</td>
       <td>...</td>
-      <td>0.225977</td>
-      <td>-0.167351</td>
-      <td>0.243971</td>
-      <td>-0.058260</td>
-      <td>-0.073743</td>
-      <td>-0.379313</td>
-      <td>0.288709</td>
-      <td>1.120616</td>
-      <td>2.423174</td>
-      <td>0.255682</td>
+      <td>0.186003</td>
+      <td>0.121742</td>
+      <td>0.746229</td>
+      <td>0.200480</td>
+      <td>-0.251447</td>
+      <td>-0.372899</td>
+      <td>-0.130677</td>
+      <td>0.858518</td>
+      <td>2.205523</td>
+      <td>-0.366361</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 1731 columns</p>
+<p>5 rows × 1601 columns</p>
 </div>
 </div>
 
@@ -14264,22 +14276,22 @@ We generate consensus signatures in two ways.</p>
       <th></th>
       <th>cell_id</th>
       <th>guide</th>
-      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_high_h2ax</th>
       <th>cc_all_large_notround_polynuclear_mean</th>
       <th>cc_all_large_round_polyploid_mean</th>
       <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_mean</th>
-      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>cc_all_n_spots_h2ax_mean</th>
+      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
       <th>cc_all_nucleus_area_mean</th>
       <th>cc_all_nucleus_roundness_mean</th>
       <th>...</th>
       <th>vb_num_live_cells</th>
       <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_all_early_apoptosis</th>
-      <th>vb_percent_all_late_apoptosis</th>
       <th>vb_percent_caspase_dead_only</th>
       <th>vb_percent_dead</th>
       <th>vb_percent_dead_only</th>
+      <th>vb_percent_early_apoptosis</th>
+      <th>vb_percent_late_apoptosis</th>
       <th>vb_percent_live</th>
       <th>vb_ros_back_mean</th>
       <th>vb_ros_mean</th>
@@ -14301,11 +14313,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>0.399842</td>
       <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
       <td>-0.118976</td>
       <td>-0.132871</td>
       <td>-0.121090</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>0.132882</td>
       <td>0.806970</td>
       <td>1.293984</td>
@@ -14325,11 +14337,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>0.101670</td>
       <td>0.318027</td>
-      <td>0.132751</td>
-      <td>0.467027</td>
       <td>0.621374</td>
       <td>0.100032</td>
       <td>0.074036</td>
+      <td>0.132751</td>
+      <td>0.467027</td>
       <td>-0.099917</td>
       <td>0.558041</td>
       <td>1.151867</td>
@@ -14349,11 +14361,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>0.080701</td>
       <td>0.339100</td>
-      <td>0.165161</td>
-      <td>0.247058</td>
       <td>0.598093</td>
       <td>0.055951</td>
       <td>0.042014</td>
+      <td>0.165161</td>
+      <td>0.247058</td>
       <td>-0.055920</td>
       <td>-0.393937</td>
       <td>0.103202</td>
@@ -14373,11 +14385,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>0.265754</td>
       <td>0.098699</td>
-      <td>0.138654</td>
-      <td>0.000000</td>
       <td>0.371930</td>
       <td>-0.063935</td>
       <td>-0.055160</td>
+      <td>0.138654</td>
+      <td>0.000000</td>
       <td>0.063946</td>
       <td>0.210005</td>
       <td>0.055291</td>
@@ -14397,11 +14409,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>-2.343919</td>
       <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
       <td>-0.089544</td>
       <td>0.141535</td>
       <td>0.131393</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>-0.141397</td>
       <td>-0.631390</td>
       <td>0.106477</td>
@@ -14500,21 +14512,21 @@ We generate consensus signatures in two ways.</p>
       <th>Metadata_profile_id</th>
       <th>Metadata_pert_name</th>
       <th>Metadata_cell_line</th>
-      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_high_h2ax</th>
       <th>cc_all_large_notround_polynuclear_mean</th>
       <th>cc_all_large_round_polyploid_mean</th>
       <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_mean</th>
-      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>cc_all_n_spots_h2ax_mean</th>
+      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
       <th>cc_all_nucleus_area_mean</th>
       <th>...</th>
       <th>vb_num_live_cells</th>
       <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_all_early_apoptosis</th>
-      <th>vb_percent_all_late_apoptosis</th>
       <th>vb_percent_caspase_dead_only</th>
       <th>vb_percent_dead</th>
       <th>vb_percent_dead_only</th>
+      <th>vb_percent_early_apoptosis</th>
+      <th>vb_percent_late_apoptosis</th>
       <th>vb_percent_live</th>
       <th>vb_ros_back_mean</th>
       <th>vb_ros_mean</th>
@@ -14536,11 +14548,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>0.399842</td>
       <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
       <td>-0.118976</td>
       <td>-0.132871</td>
       <td>-0.121090</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>0.132882</td>
       <td>0.806970</td>
       <td>1.293984</td>
@@ -14560,11 +14572,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>0.101670</td>
       <td>0.318027</td>
-      <td>0.132751</td>
-      <td>0.467027</td>
       <td>0.621374</td>
       <td>0.100032</td>
       <td>0.074036</td>
+      <td>0.132751</td>
+      <td>0.467027</td>
       <td>-0.099917</td>
       <td>0.558041</td>
       <td>1.151867</td>
@@ -14584,11 +14596,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>0.080701</td>
       <td>0.339100</td>
-      <td>0.165161</td>
-      <td>0.247058</td>
       <td>0.598093</td>
       <td>0.055951</td>
       <td>0.042014</td>
+      <td>0.165161</td>
+      <td>0.247058</td>
       <td>-0.055920</td>
       <td>-0.393937</td>
       <td>0.103202</td>
@@ -14608,11 +14620,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>0.265754</td>
       <td>0.098699</td>
-      <td>0.138654</td>
-      <td>0.000000</td>
       <td>0.371930</td>
       <td>-0.063935</td>
       <td>-0.055160</td>
+      <td>0.138654</td>
+      <td>0.000000</td>
       <td>0.063946</td>
       <td>0.210005</td>
       <td>0.055291</td>
@@ -14632,11 +14644,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>-2.343919</td>
       <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
       <td>-0.089544</td>
       <td>0.141535</td>
       <td>0.131393</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>-0.141397</td>
       <td>-0.631390</td>
       <td>0.106477</td>
@@ -14659,16 +14671,25 @@ We generate consensus signatures in two ways.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Confirm that matrices are aligned</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span><span class="n">x_median_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">,</span>
-                               <span class="n">y_median_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">,</span> <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span>
+    <span class="n">x_median_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">,</span>
+    <span class="n">y_median_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">,</span>
+    <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
 
 <span class="c1"># Are the guides aligned?</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span><span class="n">x_median_df</span><span class="o">.</span><span class="n">Metadata_pert_name</span><span class="p">,</span>
-                               <span class="n">y_median_df</span><span class="o">.</span><span class="n">Metadata_pert_name</span><span class="p">,</span> <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span>
+    <span class="n">x_median_df</span><span class="o">.</span><span class="n">Metadata_pert_name</span><span class="p">,</span>
+    <span class="n">y_median_df</span><span class="o">.</span><span class="n">Metadata_pert_name</span><span class="p">,</span>
+    <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
 
 <span class="c1"># Are the cells aligned?</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span><span class="n">x_median_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">,</span>
-                               <span class="n">y_median_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">,</span> <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span>
+    <span class="n">x_median_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">,</span>
+    <span class="n">y_median_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">,</span>
+    <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14736,11 +14757,11 @@ We generate consensus signatures in two ways.</p>
       <th>Cells_AreaShape_Center_Y</th>
       <th>Cells_AreaShape_Compactness</th>
       <th>Cells_AreaShape_Eccentricity</th>
-      <th>Cells_AreaShape_EulerNumber</th>
       <th>Cells_AreaShape_Extent</th>
       <th>Cells_AreaShape_FormFactor</th>
       <th>Cells_AreaShape_MajorAxisLength</th>
       <th>Cells_AreaShape_MaxFeretDiameter</th>
+      <th>Cells_AreaShape_MaximumRadius</th>
       <th>...</th>
       <th>Nuclei_Texture_Variance_DNA_5_0</th>
       <th>Nuclei_Texture_Variance_ER_10_0</th>
@@ -14783,127 +14804,127 @@ We generate consensus signatures in two ways.</p>
     <tr>
       <th rowspan="5" valign="top">A549</th>
       <th>AKT1-1</th>
-      <td>0.082039</td>
-      <td>-0.005152</td>
-      <td>0.007516</td>
-      <td>-0.262496</td>
-      <td>-0.096337</td>
-      <td>0.0</td>
-      <td>0.111426</td>
-      <td>-0.195349</td>
-      <td>0.122201</td>
-      <td>0.121451</td>
+      <td>0.670523</td>
+      <td>-0.421956</td>
+      <td>0.369371</td>
+      <td>-0.361163</td>
+      <td>-0.329740</td>
+      <td>0.260786</td>
+      <td>-0.599924</td>
+      <td>0.611636</td>
+      <td>0.607799</td>
+      <td>0.679412</td>
       <td>...</td>
-      <td>0.911852</td>
-      <td>1.227693</td>
-      <td>1.103665</td>
-      <td>1.200197</td>
-      <td>0.596277</td>
-      <td>0.537276</td>
-      <td>0.552541</td>
-      <td>0.354905</td>
-      <td>0.183667</td>
-      <td>0.538379</td>
+      <td>0.611298</td>
+      <td>0.646691</td>
+      <td>0.644430</td>
+      <td>0.710131</td>
+      <td>0.005886</td>
+      <td>-0.035807</td>
+      <td>0.047475</td>
+      <td>0.276696</td>
+      <td>0.354144</td>
+      <td>0.324910</td>
     </tr>
     <tr>
       <th>AKT1-2</th>
-      <td>-0.127207</td>
-      <td>0.393959</td>
-      <td>0.456300</td>
-      <td>-0.193656</td>
-      <td>-0.020202</td>
-      <td>0.0</td>
-      <td>0.273250</td>
-      <td>0.357932</td>
-      <td>-0.136260</td>
-      <td>-0.144039</td>
+      <td>0.315056</td>
+      <td>0.073426</td>
+      <td>0.361172</td>
+      <td>-0.169501</td>
+      <td>0.041794</td>
+      <td>0.300945</td>
+      <td>0.104729</td>
+      <td>0.203060</td>
+      <td>0.215892</td>
+      <td>0.321806</td>
       <td>...</td>
-      <td>0.526762</td>
-      <td>0.365948</td>
-      <td>0.192068</td>
-      <td>0.406909</td>
-      <td>0.006834</td>
-      <td>0.051908</td>
-      <td>0.087319</td>
-      <td>0.156875</td>
-      <td>0.146667</td>
-      <td>0.082659</td>
+      <td>0.419474</td>
+      <td>0.207831</td>
+      <td>0.072583</td>
+      <td>0.331507</td>
+      <td>-0.076044</td>
+      <td>-0.057505</td>
+      <td>-0.009035</td>
+      <td>0.097609</td>
+      <td>0.238902</td>
+      <td>-0.084303</td>
     </tr>
     <tr>
       <th>ARID1B-1</th>
-      <td>0.160263</td>
-      <td>0.706940</td>
-      <td>-0.351952</td>
-      <td>0.821411</td>
-      <td>0.657121</td>
-      <td>0.0</td>
-      <td>-0.506445</td>
-      <td>0.324896</td>
-      <td>0.302098</td>
-      <td>0.303744</td>
+      <td>0.398408</td>
+      <td>0.531508</td>
+      <td>-0.219315</td>
+      <td>0.691981</td>
+      <td>0.653327</td>
+      <td>-0.491261</td>
+      <td>0.248884</td>
+      <td>0.459665</td>
+      <td>0.472018</td>
+      <td>0.300343</td>
       <td>...</td>
-      <td>-0.536363</td>
-      <td>-0.028874</td>
-      <td>0.112922</td>
-      <td>-0.104128</td>
-      <td>-0.048906</td>
-      <td>0.072595</td>
-      <td>-0.198982</td>
-      <td>0.325876</td>
-      <td>0.186032</td>
-      <td>0.342683</td>
+      <td>-0.405672</td>
+      <td>0.042035</td>
+      <td>0.229941</td>
+      <td>-0.022572</td>
+      <td>-0.113600</td>
+      <td>0.046531</td>
+      <td>-0.310386</td>
+      <td>0.165331</td>
+      <td>0.159108</td>
+      <td>0.152701</td>
     </tr>
     <tr>
       <th>ARID1B-2</th>
-      <td>0.489093</td>
-      <td>-0.007086</td>
-      <td>0.368221</td>
-      <td>0.430873</td>
-      <td>0.707579</td>
-      <td>0.0</td>
-      <td>-0.367911</td>
-      <td>0.094606</td>
-      <td>0.630956</td>
-      <td>0.629834</td>
+      <td>0.966051</td>
+      <td>-0.120241</td>
+      <td>0.401286</td>
+      <td>0.315643</td>
+      <td>0.555941</td>
+      <td>-0.277779</td>
+      <td>-0.011663</td>
+      <td>1.005366</td>
+      <td>1.006955</td>
+      <td>0.762127</td>
       <td>...</td>
-      <td>0.006326</td>
-      <td>-0.334649</td>
-      <td>-0.269844</td>
-      <td>-0.255930</td>
-      <td>-0.107642</td>
-      <td>-0.099935</td>
-      <td>0.093797</td>
-      <td>0.606730</td>
-      <td>0.427497</td>
-      <td>0.672805</td>
+      <td>-0.034680</td>
+      <td>-0.229785</td>
+      <td>-0.193600</td>
+      <td>-0.126474</td>
+      <td>-0.173597</td>
+      <td>-0.105045</td>
+      <td>-0.037416</td>
+      <td>0.550343</td>
+      <td>0.493814</td>
+      <td>0.531058</td>
     </tr>
     <tr>
       <th>ATF4-1</th>
-      <td>3.416773</td>
-      <td>-0.120053</td>
-      <td>-0.075411</td>
-      <td>-0.082592</td>
-      <td>0.454871</td>
-      <td>0.0</td>
-      <td>0.462898</td>
-      <td>-1.637233</td>
-      <td>3.408026</td>
-      <td>3.453786</td>
+      <td>4.766608</td>
+      <td>0.017547</td>
+      <td>0.059990</td>
+      <td>0.030708</td>
+      <td>0.528382</td>
+      <td>0.279634</td>
+      <td>-1.681518</td>
+      <td>4.481815</td>
+      <td>4.531292</td>
+      <td>3.948448</td>
       <td>...</td>
-      <td>0.410653</td>
-      <td>-0.249195</td>
-      <td>0.061380</td>
-      <td>-0.142925</td>
-      <td>0.008937</td>
-      <td>-0.204777</td>
-      <td>0.216734</td>
-      <td>1.356973</td>
-      <td>2.361216</td>
-      <td>0.344510</td>
+      <td>0.248363</td>
+      <td>-0.071396</td>
+      <td>0.268053</td>
+      <td>0.058940</td>
+      <td>-0.166151</td>
+      <td>-0.284426</td>
+      <td>0.013087</td>
+      <td>1.024920</td>
+      <td>2.123737</td>
+      <td>-0.102910</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 1728 columns</p>
+<p>5 rows × 1598 columns</p>
 </div>
 </div>
 
@@ -14925,7 +14946,12 @@ We generate consensus signatures in two ways.</p>
     <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Metadata_cell_line in @all_measurements_df.Metadata_cell_line.unique()&quot;</span><span class="p">)</span>
     <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;Metadata_profile_id&quot;</span>
+        <span class="p">},</span>
+        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span>
+    <span class="p">)</span>
 <span class="p">)</span>
 <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;profile_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">]</span>
 
@@ -14947,7 +14973,7 @@ We generate consensus signatures in two ways.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(357, 1731)
+<pre>(357, 1601)
 </pre>
 </div>
 </div>
@@ -14985,8 +15011,8 @@ We generate consensus signatures in two ways.</p>
       <th>Cells_AreaShape_Center_Y</th>
       <th>Cells_AreaShape_Compactness</th>
       <th>Cells_AreaShape_Eccentricity</th>
-      <th>Cells_AreaShape_EulerNumber</th>
       <th>Cells_AreaShape_Extent</th>
+      <th>Cells_AreaShape_FormFactor</th>
       <th>...</th>
       <th>Nuclei_Texture_Variance_DNA_5_0</th>
       <th>Nuclei_Texture_Variance_ER_10_0</th>
@@ -15006,124 +15032,124 @@ We generate consensus signatures in two ways.</p>
       <td>profile_0</td>
       <td>A549</td>
       <td>AKT1-1</td>
-      <td>0.082039</td>
-      <td>-0.005152</td>
-      <td>0.007516</td>
-      <td>-0.262496</td>
-      <td>-0.096337</td>
-      <td>0.0</td>
-      <td>0.111426</td>
+      <td>0.670523</td>
+      <td>-0.421956</td>
+      <td>0.369371</td>
+      <td>-0.361163</td>
+      <td>-0.329740</td>
+      <td>0.260786</td>
+      <td>-0.599924</td>
       <td>...</td>
-      <td>0.911852</td>
-      <td>1.227693</td>
-      <td>1.103665</td>
-      <td>1.200197</td>
-      <td>0.596277</td>
-      <td>0.537276</td>
-      <td>0.552541</td>
-      <td>0.354905</td>
-      <td>0.183667</td>
-      <td>0.538379</td>
+      <td>0.611298</td>
+      <td>0.646691</td>
+      <td>0.644430</td>
+      <td>0.710131</td>
+      <td>0.005886</td>
+      <td>-0.035807</td>
+      <td>0.047475</td>
+      <td>0.276696</td>
+      <td>0.354144</td>
+      <td>0.324910</td>
     </tr>
     <tr>
       <th>1</th>
       <td>profile_1</td>
       <td>A549</td>
       <td>AKT1-2</td>
-      <td>-0.127207</td>
-      <td>0.393959</td>
-      <td>0.456300</td>
-      <td>-0.193656</td>
-      <td>-0.020202</td>
-      <td>0.0</td>
-      <td>0.273250</td>
+      <td>0.315056</td>
+      <td>0.073426</td>
+      <td>0.361172</td>
+      <td>-0.169501</td>
+      <td>0.041794</td>
+      <td>0.300945</td>
+      <td>0.104729</td>
       <td>...</td>
-      <td>0.526762</td>
-      <td>0.365948</td>
-      <td>0.192068</td>
-      <td>0.406909</td>
-      <td>0.006834</td>
-      <td>0.051908</td>
-      <td>0.087319</td>
-      <td>0.156875</td>
-      <td>0.146667</td>
-      <td>0.082659</td>
+      <td>0.419474</td>
+      <td>0.207831</td>
+      <td>0.072583</td>
+      <td>0.331507</td>
+      <td>-0.076044</td>
+      <td>-0.057505</td>
+      <td>-0.009035</td>
+      <td>0.097609</td>
+      <td>0.238902</td>
+      <td>-0.084303</td>
     </tr>
     <tr>
       <th>2</th>
       <td>profile_2</td>
       <td>A549</td>
       <td>ARID1B-1</td>
-      <td>0.160263</td>
-      <td>0.706940</td>
-      <td>-0.351952</td>
-      <td>0.821411</td>
-      <td>0.657121</td>
-      <td>0.0</td>
-      <td>-0.506445</td>
+      <td>0.398408</td>
+      <td>0.531508</td>
+      <td>-0.219315</td>
+      <td>0.691981</td>
+      <td>0.653327</td>
+      <td>-0.491261</td>
+      <td>0.248884</td>
       <td>...</td>
-      <td>-0.536363</td>
-      <td>-0.028874</td>
-      <td>0.112922</td>
-      <td>-0.104128</td>
-      <td>-0.048906</td>
-      <td>0.072595</td>
-      <td>-0.198982</td>
-      <td>0.325876</td>
-      <td>0.186032</td>
-      <td>0.342683</td>
+      <td>-0.405672</td>
+      <td>0.042035</td>
+      <td>0.229941</td>
+      <td>-0.022572</td>
+      <td>-0.113600</td>
+      <td>0.046531</td>
+      <td>-0.310386</td>
+      <td>0.165331</td>
+      <td>0.159108</td>
+      <td>0.152701</td>
     </tr>
     <tr>
       <th>3</th>
       <td>profile_3</td>
       <td>A549</td>
       <td>ARID1B-2</td>
-      <td>0.489093</td>
-      <td>-0.007086</td>
-      <td>0.368221</td>
-      <td>0.430873</td>
-      <td>0.707579</td>
-      <td>0.0</td>
-      <td>-0.367911</td>
+      <td>0.966051</td>
+      <td>-0.120241</td>
+      <td>0.401286</td>
+      <td>0.315643</td>
+      <td>0.555941</td>
+      <td>-0.277779</td>
+      <td>-0.011663</td>
       <td>...</td>
-      <td>0.006326</td>
-      <td>-0.334649</td>
-      <td>-0.269844</td>
-      <td>-0.255930</td>
-      <td>-0.107642</td>
-      <td>-0.099935</td>
-      <td>0.093797</td>
-      <td>0.606730</td>
-      <td>0.427497</td>
-      <td>0.672805</td>
+      <td>-0.034680</td>
+      <td>-0.229785</td>
+      <td>-0.193600</td>
+      <td>-0.126474</td>
+      <td>-0.173597</td>
+      <td>-0.105045</td>
+      <td>-0.037416</td>
+      <td>0.550343</td>
+      <td>0.493814</td>
+      <td>0.531058</td>
     </tr>
     <tr>
       <th>4</th>
       <td>profile_4</td>
       <td>A549</td>
       <td>ATF4-1</td>
-      <td>3.416773</td>
-      <td>-0.120053</td>
-      <td>-0.075411</td>
-      <td>-0.082592</td>
-      <td>0.454871</td>
-      <td>0.0</td>
-      <td>0.462898</td>
+      <td>4.766608</td>
+      <td>0.017547</td>
+      <td>0.059990</td>
+      <td>0.030708</td>
+      <td>0.528382</td>
+      <td>0.279634</td>
+      <td>-1.681518</td>
       <td>...</td>
-      <td>0.410653</td>
-      <td>-0.249195</td>
-      <td>0.061380</td>
-      <td>-0.142925</td>
-      <td>0.008937</td>
-      <td>-0.204777</td>
-      <td>0.216734</td>
-      <td>1.356973</td>
-      <td>2.361216</td>
-      <td>0.344510</td>
+      <td>0.248363</td>
+      <td>-0.071396</td>
+      <td>0.268053</td>
+      <td>0.058940</td>
+      <td>-0.166151</td>
+      <td>-0.284426</td>
+      <td>0.013087</td>
+      <td>1.024920</td>
+      <td>2.123737</td>
+      <td>-0.102910</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 1731 columns</p>
+<p>5 rows × 1601 columns</p>
 </div>
 </div>
 
@@ -15149,7 +15175,8 @@ We generate consensus signatures in two ways.</p>
     <span class="n">y_df</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="n">cell_health_features</span><span class="p">,</span>
     <span class="n">replicate_columns</span><span class="o">=</span><span class="n">cell_health_meta_features</span><span class="p">,</span>
-    <span class="n">precision</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">precision</span><span class="o">=</span><span class="mi">5</span>
+<span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">y_consensus_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">y_consensus_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -15200,24 +15227,24 @@ We generate consensus signatures in two ways.</p>
     <tr style="text-align: right;">
       <th></th>
       <th></th>
-      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_high_h2ax</th>
       <th>cc_all_large_notround_polynuclear_mean</th>
       <th>cc_all_large_round_polyploid_mean</th>
       <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_mean</th>
-      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>cc_all_n_spots_h2ax_mean</th>
+      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
       <th>cc_all_nucleus_area_mean</th>
       <th>cc_all_nucleus_roundness_mean</th>
-      <th>cc_cc_edu_pos_mean</th>
-      <th>cc_cc_g1_mean</th>
+      <th>cc_cc_early_mitosis</th>
+      <th>cc_cc_g1</th>
       <th>...</th>
       <th>vb_num_live_cells</th>
       <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_all_early_apoptosis</th>
-      <th>vb_percent_all_late_apoptosis</th>
       <th>vb_percent_caspase_dead_only</th>
       <th>vb_percent_dead</th>
       <th>vb_percent_dead_only</th>
+      <th>vb_percent_early_apoptosis</th>
+      <th>vb_percent_late_apoptosis</th>
       <th>vb_percent_live</th>
       <th>vb_ros_back_mean</th>
       <th>vb_ros_mean</th>
@@ -15260,16 +15287,16 @@ We generate consensus signatures in two ways.</p>
       <td>0.162511</td>
       <td>-0.167603</td>
       <td>0.040322</td>
-      <td>0.091643</td>
+      <td>0.375966</td>
       <td>0.043915</td>
       <td>...</td>
       <td>0.438339</td>
       <td>0.059414</td>
-      <td>0.082424</td>
-      <td>0.000000</td>
       <td>-0.065050</td>
       <td>-0.020236</td>
       <td>-0.007970</td>
+      <td>0.082424</td>
+      <td>0.000000</td>
       <td>0.020263</td>
       <td>0.408214</td>
       <td>0.654575</td>
@@ -15284,16 +15311,16 @@ We generate consensus signatures in two ways.</p>
       <td>0.366989</td>
       <td>-0.278044</td>
       <td>-0.182571</td>
-      <td>0.893453</td>
+      <td>0.736046</td>
       <td>-1.023968</td>
       <td>...</td>
       <td>0.067568</td>
       <td>0.256141</td>
-      <td>0.132834</td>
-      <td>0.386327</td>
       <td>0.575026</td>
       <td>0.225091</td>
       <td>0.220461</td>
+      <td>0.132834</td>
+      <td>0.386327</td>
       <td>-0.224965</td>
       <td>0.284962</td>
       <td>0.567898</td>
@@ -15308,16 +15335,16 @@ We generate consensus signatures in two ways.</p>
       <td>0.514065</td>
       <td>-0.308749</td>
       <td>-0.172735</td>
-      <td>0.455015</td>
+      <td>0.148168</td>
       <td>-0.606599</td>
       <td>...</td>
       <td>0.100365</td>
       <td>0.299229</td>
-      <td>0.249557</td>
-      <td>0.283246</td>
       <td>0.501941</td>
       <td>0.055517</td>
       <td>0.047697</td>
+      <td>0.249557</td>
+      <td>0.283246</td>
       <td>-0.055445</td>
       <td>-0.363766</td>
       <td>-0.205937</td>
@@ -15332,16 +15359,16 @@ We generate consensus signatures in two ways.</p>
       <td>-0.300279</td>
       <td>-0.120261</td>
       <td>-0.299718</td>
-      <td>0.131195</td>
+      <td>0.012239</td>
       <td>-0.221492</td>
       <td>...</td>
       <td>0.283802</td>
       <td>0.143096</td>
-      <td>0.136790</td>
-      <td>0.111855</td>
       <td>0.493883</td>
       <td>-0.084415</td>
       <td>-0.085658</td>
+      <td>0.136790</td>
+      <td>0.111855</td>
       <td>0.084439</td>
       <td>0.198285</td>
       <td>-0.162976</td>
@@ -15356,16 +15383,16 @@ We generate consensus signatures in two ways.</p>
       <td>3.065773</td>
       <td>2.854124</td>
       <td>1.246508</td>
-      <td>-1.623145</td>
+      <td>0.049095</td>
       <td>0.923187</td>
       <td>...</td>
       <td>-2.434136</td>
       <td>0.315381</td>
-      <td>0.332291</td>
-      <td>0.192878</td>
       <td>0.509217</td>
       <td>0.100668</td>
       <td>0.104857</td>
+      <td>0.332291</td>
+      <td>0.192878</td>
       <td>-0.100596</td>
       <td>-0.811271</td>
       <td>-0.092505</td>
@@ -15452,21 +15479,21 @@ We generate consensus signatures in two ways.</p>
       <th>Metadata_profile_id</th>
       <th>Metadata_pert_name</th>
       <th>Metadata_cell_line</th>
-      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_high_h2ax</th>
       <th>cc_all_large_notround_polynuclear_mean</th>
       <th>cc_all_large_round_polyploid_mean</th>
       <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_mean</th>
-      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>cc_all_n_spots_h2ax_mean</th>
+      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
       <th>cc_all_nucleus_area_mean</th>
       <th>...</th>
       <th>vb_num_live_cells</th>
       <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_all_early_apoptosis</th>
-      <th>vb_percent_all_late_apoptosis</th>
       <th>vb_percent_caspase_dead_only</th>
       <th>vb_percent_dead</th>
       <th>vb_percent_dead_only</th>
+      <th>vb_percent_early_apoptosis</th>
+      <th>vb_percent_late_apoptosis</th>
       <th>vb_percent_live</th>
       <th>vb_ros_back_mean</th>
       <th>vb_ros_mean</th>
@@ -15488,11 +15515,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>0.438339</td>
       <td>0.059414</td>
-      <td>0.082424</td>
-      <td>0.000000</td>
       <td>-0.065050</td>
       <td>-0.020236</td>
       <td>-0.007970</td>
+      <td>0.082424</td>
+      <td>0.000000</td>
       <td>0.020263</td>
       <td>0.408214</td>
       <td>0.654575</td>
@@ -15512,11 +15539,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>0.067568</td>
       <td>0.256141</td>
-      <td>0.132834</td>
-      <td>0.386327</td>
       <td>0.575026</td>
       <td>0.225091</td>
       <td>0.220461</td>
+      <td>0.132834</td>
+      <td>0.386327</td>
       <td>-0.224965</td>
       <td>0.284962</td>
       <td>0.567898</td>
@@ -15536,11 +15563,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>0.100365</td>
       <td>0.299229</td>
-      <td>0.249557</td>
-      <td>0.283246</td>
       <td>0.501941</td>
       <td>0.055517</td>
       <td>0.047697</td>
+      <td>0.249557</td>
+      <td>0.283246</td>
       <td>-0.055445</td>
       <td>-0.363766</td>
       <td>-0.205937</td>
@@ -15560,11 +15587,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>0.283802</td>
       <td>0.143096</td>
-      <td>0.136790</td>
-      <td>0.111855</td>
       <td>0.493883</td>
       <td>-0.084415</td>
       <td>-0.085658</td>
+      <td>0.136790</td>
+      <td>0.111855</td>
       <td>0.084439</td>
       <td>0.198285</td>
       <td>-0.162976</td>
@@ -15584,11 +15611,11 @@ We generate consensus signatures in two ways.</p>
       <td>...</td>
       <td>-2.434136</td>
       <td>0.315381</td>
-      <td>0.332291</td>
-      <td>0.192878</td>
       <td>0.509217</td>
       <td>0.100668</td>
       <td>0.104857</td>
+      <td>0.332291</td>
+      <td>0.192878</td>
       <td>-0.100596</td>
       <td>-0.811271</td>
       <td>-0.092505</td>
@@ -15611,16 +15638,25 @@ We generate consensus signatures in two ways.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Confirm that matrices are aligned</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span><span class="n">x_consensus_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">,</span>
-                               <span class="n">y_consensus_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">,</span> <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span>
+    <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">,</span>
+    <span class="n">y_consensus_df</span><span class="o">.</span><span class="n">Metadata_profile_id</span><span class="p">,</span>
+    <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
 
 <span class="c1"># Are the guides aligned?</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span><span class="n">x_consensus_df</span><span class="o">.</span><span class="n">Metadata_pert_name</span><span class="p">,</span>
-                               <span class="n">y_consensus_df</span><span class="o">.</span><span class="n">Metadata_pert_name</span><span class="p">,</span> <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span>
+    <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">Metadata_pert_name</span><span class="p">,</span>
+    <span class="n">y_consensus_df</span><span class="o">.</span><span class="n">Metadata_pert_name</span><span class="p">,</span>
+    <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
 
 <span class="c1"># Are the cells aligned?</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span><span class="n">x_consensus_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">,</span>
-                               <span class="n">y_consensus_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">,</span> <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_series_equal</span><span class="p">(</span>
+    <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">,</span>
+    <span class="n">y_consensus_df</span><span class="o">.</span><span class="n">Metadata_cell_line</span><span class="p">,</span>
+    <span class="n">check_names</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
 </pre></div>
 
     </div>
@@ -15631,7 +15667,7 @@ We generate consensus signatures in two ways.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Output-Consensus-Signatures">Output Consensus Signatures<a class="anchor-link" href="#Output-Consensus-Signatures">&#182;</a></h2>
+<h2 id="Output-Median-and-MODZ-Consensus-Signatures">Output Median and MODZ Consensus Signatures<a class="anchor-link" href="#Output-Median-and-MODZ-Consensus-Signatures">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -15640,16 +15676,18 @@ We generate consensus signatures in two ways.</p>
 <div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;consensus&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_painting_median.tsv.gz&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">consensus_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;consensus&quot;</span><span class="p">)</span>
+
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">consensus_dir</span><span class="p">,</span> <span class="s2">&quot;cell_painting_median.tsv.gz&quot;</span><span class="p">)</span>
 <span class="n">x_median_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;consensus&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_health_median.tsv.gz&quot;</span><span class="p">)</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">consensus_dir</span><span class="p">,</span> <span class="s2">&quot;cell_health_median.tsv.gz&quot;</span><span class="p">)</span>
 <span class="n">y_median_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;consensus&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_painting_modz.tsv.gz&quot;</span><span class="p">)</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">consensus_dir</span><span class="p">,</span> <span class="s2">&quot;cell_painting_modz.tsv.gz&quot;</span><span class="p">)</span>
 <span class="n">x_consensus_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;consensus&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_health_modz.tsv.gz&quot;</span><span class="p">)</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">consensus_dir</span><span class="p">,</span> <span class="s2">&quot;cell_health_modz.tsv.gz&quot;</span><span class="p">)</span>
 <span class="n">y_consensus_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
