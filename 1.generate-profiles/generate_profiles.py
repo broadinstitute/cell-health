@@ -78,7 +78,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
         features="infer",
         meta_features=meta_features,
         samples="Metadata_pert_name == 'EMPTY'",
-        method="robustize",
+        method="mad_robustize",
         output_file=norm_file,
         compression="gzip",
     )
