@@ -96,11 +96,20 @@ print(x_df.shape)
 x_df.head(2)
 
 
+# ## Output Full Merged Profiles DataFrame
+
+# In[5]:
+
+
+profile_file = os.path.join("data", "processed", "cell_health_profiles_merged.tsv.gz")
+x_df.to_csv(profile_file, index=False, sep='\t')
+
+
 # ## Load Cell Health Assay Data
 # 
 # This will be the y matrix in machine learning applications.
 
-# In[5]:
+# In[6]:
 
 
 file = os.path.join("data", "labels", "normalized_cell_health_labels.tsv")
@@ -112,7 +121,7 @@ y_df.head(2)
 
 # ## Determine how many Cell Painting profiles have Cell Health status labels
 
-# In[6]:
+# In[7]:
 
 
 x_groupby_cols = ["Metadata_gene_name", "Metadata_pert_name", "Metadata_cell_line"]
@@ -134,7 +143,7 @@ print(x_metacount_df.shape)
 x_metacount_df.head(2)
 
 
-# In[7]:
+# In[8]:
 
 
 y_groupby_cols = ["guide", "cell_id"]
@@ -153,7 +162,7 @@ print(y_metacount_df.shape)
 y_metacount_df.head(2)
 
 
-# In[8]:
+# In[9]:
 
 
 all_measurements_df = (
@@ -180,7 +189,7 @@ all_measurements_df.head()
 # 
 # ### 1) To the Cell Painting Data
 
-# In[9]:
+# In[10]:
 
 
 x_median_df = aggregate(
@@ -205,7 +214,7 @@ print(x_median_df.shape)
 x_median_df.head()
 
 
-# In[10]:
+# In[11]:
 
 
 # Output Profile Mapping for Downstream Analysis
@@ -218,7 +227,7 @@ profile_id_mapping_df.head()
 
 # ### 2) To the Cell Health Assay Data
 
-# In[11]:
+# In[12]:
 
 
 cell_health_meta_features = ["cell_id", "guide"]
@@ -226,7 +235,7 @@ cell_health_features = y_df.drop(cell_health_meta_features, axis="columns").colu
 y_meta_merge_cols = ["Metadata_profile_id", "Metadata_pert_name", "Metadata_cell_line"]
 
 
-# In[12]:
+# In[13]:
 
 
 y_median_df = aggregate(
@@ -240,7 +249,7 @@ print(y_median_df.shape)
 y_median_df.head()
 
 
-# In[13]:
+# In[14]:
 
 
 y_median_df = (
@@ -273,7 +282,7 @@ print(y_median_df.shape)
 y_median_df.head(5)
 
 
-# In[14]:
+# In[15]:
 
 
 # Confirm that matrices are aligned
@@ -302,7 +311,7 @@ pd.testing.assert_series_equal(
 # 
 # ### 1) To the Cell Painting Data
 
-# In[15]:
+# In[16]:
 
 
 x_consensus_df = modz(
@@ -314,7 +323,7 @@ x_consensus_df = modz(
 x_consensus_df.head()
 
 
-# In[16]:
+# In[17]:
 
 
 x_consensus_df = (
@@ -339,7 +348,7 @@ x_consensus_df.head(5)
 
 # ### 2) To the Cell Health Assay Data
 
-# In[17]:
+# In[18]:
 
 
 y_consensus_df = modz(
@@ -353,7 +362,7 @@ print(y_consensus_df.shape)
 y_consensus_df.head()
 
 
-# In[18]:
+# In[19]:
 
 
 y_consensus_df = (
@@ -374,7 +383,7 @@ print(y_consensus_df.shape)
 y_consensus_df.head(5)
 
 
-# In[19]:
+# In[20]:
 
 
 # Confirm that matrices are aligned
@@ -401,7 +410,7 @@ pd.testing.assert_series_equal(
 
 # ## Output Median and MODZ Consensus Signatures
 
-# In[20]:
+# In[21]:
 
 
 consensus_dir = os.path.join("data", "consensus")
