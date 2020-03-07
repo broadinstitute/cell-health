@@ -32,3 +32,5 @@ vignettes/*.pdf
 __pycache__/
 # SQLite Single Cell Profiles
 0.download-data/data/*
+# Full morpheus gct file
+2.replicate-reproducibility/results/morpheus/full*
