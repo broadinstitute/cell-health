@@ -84,6 +84,7 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
     )
 
     # Perform feature selection (just drop columns with high number of missingness)
+    # Drop columns with high number of missingness, extreme values, and blacklist
     feat_file = os.path.join(
         output_dir, "{}_normalized_feature_select.csv.gz".format(plate)
     )
@@ -91,7 +92,12 @@ def get_profiles(plate, backend_dir, metadata_dir, barcode_platemap_df):
         profiles=norm_file,
         features="infer",
         samples="none",
-        operation=["drop_na_columns", "blacklist", "variance_threshold"],
+        operation=[
+            "drop_na_columns",
+            "blacklist",
+            "variance_threshold",
+            "drop_outliers",
+        ],
         output_file=feat_file,
         compression="gzip",
     )
