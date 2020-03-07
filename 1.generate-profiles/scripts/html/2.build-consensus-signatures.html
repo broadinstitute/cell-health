@@ -13173,7 +13173,6 @@ We generate consensus signatures in two ways.</p>
  &#39;data/profiles/SQ00014611/SQ00014611_normalized_feature_select.csv.gz&#39;,
  &#39;data/profiles/SQ00014616/SQ00014616_normalized_feature_select.csv.gz&#39;,
  &#39;data/profiles/SQ00014617/SQ00014617_normalized_feature_select.csv.gz&#39;,
- &#39;data/profiles/SQ00014610/SQ00014610_normalized_feature_select.csv&#39;,
  &#39;data/profiles/SQ00014610/SQ00014610_normalized_feature_select.csv.gz&#39;,
  &#39;data/profiles/SQ00014615/SQ00014615_normalized_feature_select.csv.gz&#39;,
  &#39;data/profiles/SQ00014612/SQ00014612_normalized_feature_select.csv.gz&#39;,
@@ -13242,9 +13241,9 @@ We generate consensus signatures in two ways.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Dropping 34 columns because of missing data
-Dropping 2 costes features
-(3840, 1605)
+<pre>Dropping 675 columns because of missing data
+Dropping 1 costes features
+(3456, 956)
 </pre>
 </div>
 </div>
@@ -13281,20 +13280,20 @@ Dropping 2 costes features
       <th>Metadata_cell_line</th>
       <th>Metadata_gene_name</th>
       <th>Metadata_pert_name</th>
-      <th>Cells_AreaShape_Area</th>
-      <th>Cells_AreaShape_Center_X</th>
       <th>Cells_AreaShape_Center_Y</th>
+      <th>Cells_AreaShape_Compactness</th>
+      <th>Cells_AreaShape_Eccentricity</th>
       <th>...</th>
+      <th>Nuclei_Texture_SumEntropy_RNA_5_0</th>
+      <th>Nuclei_Texture_SumVariance_AGP_20_0</th>
+      <th>Nuclei_Texture_SumVariance_AGP_5_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_10_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_20_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_5_0</th>
+      <th>Nuclei_Texture_Variance_AGP_5_0</th>
+      <th>Nuclei_Texture_Variance_DNA_10_0</th>
+      <th>Nuclei_Texture_Variance_DNA_20_0</th>
       <th>Nuclei_Texture_Variance_DNA_5_0</th>
-      <th>Nuclei_Texture_Variance_ER_10_0</th>
-      <th>Nuclei_Texture_Variance_ER_20_0</th>
-      <th>Nuclei_Texture_Variance_ER_5_0</th>
-      <th>Nuclei_Texture_Variance_Mito_10_0</th>
-      <th>Nuclei_Texture_Variance_Mito_20_0</th>
-      <th>Nuclei_Texture_Variance_Mito_5_0</th>
-      <th>Nuclei_Texture_Variance_RNA_10_0</th>
-      <th>Nuclei_Texture_Variance_RNA_20_0</th>
-      <th>Nuclei_Texture_Variance_RNA_5_0</th>
     </tr>
   </thead>
   <tbody>
@@ -13307,20 +13306,20 @@ Dropping 2 costes features
       <td>HCC44</td>
       <td>EMPTY</td>
       <td>EMPTY</td>
-      <td>-0.891801</td>
-      <td>0.870588</td>
-      <td>-0.683168</td>
+      <td>-0.894997</td>
+      <td>-1.515696</td>
+      <td>-1.787667</td>
       <td>...</td>
-      <td>-0.888368</td>
-      <td>-0.273388</td>
-      <td>-0.136467</td>
-      <td>-0.709549</td>
-      <td>-0.754013</td>
-      <td>-0.834143</td>
-      <td>-0.937134</td>
-      <td>0.829446</td>
-      <td>0.692030</td>
-      <td>0.691189</td>
+      <td>0.107581</td>
+      <td>-0.659049</td>
+      <td>-0.676846</td>
+      <td>-1.229791</td>
+      <td>-1.336051</td>
+      <td>-1.125138</td>
+      <td>-0.972360</td>
+      <td>-1.393856</td>
+      <td>-1.244227</td>
+      <td>-1.308729</td>
     </tr>
     <tr>
       <th>1</th>
@@ -13331,24 +13330,24 @@ Dropping 2 costes features
       <td>HCC44</td>
       <td>MCL1</td>
       <td>MCL1-5</td>
-      <td>0.739305</td>
-      <td>1.247059</td>
-      <td>-0.366337</td>
+      <td>-0.479926</td>
+      <td>0.246423</td>
+      <td>0.629901</td>
       <td>...</td>
-      <td>0.485662</td>
-      <td>1.515287</td>
-      <td>1.430190</td>
-      <td>1.170855</td>
-      <td>0.487870</td>
-      <td>0.880912</td>
-      <td>0.231417</td>
-      <td>0.937816</td>
-      <td>1.829701</td>
-      <td>0.636011</td>
+      <td>0.165935</td>
+      <td>1.999006</td>
+      <td>1.204036</td>
+      <td>0.560228</td>
+      <td>0.686189</td>
+      <td>0.601634</td>
+      <td>1.154001</td>
+      <td>0.596441</td>
+      <td>0.680359</td>
+      <td>0.715469</td>
     </tr>
   </tbody>
 </table>
-<p>2 rows × 1605 columns</p>
+<p>2 rows × 956 columns</p>
 </div>
 </div>
 
@@ -13551,7 +13550,7 @@ Dropping 2 costes features
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(3840, 7)
+<pre>(3456, 7)
 </pre>
 </div>
 </div>
@@ -13596,7 +13595,7 @@ Dropping 2 costes features
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>8</td>
+      <td>6</td>
       <td>cell_painting</td>
       <td>A03</td>
       <td>SQ00014611</td>
@@ -13606,7 +13605,7 @@ Dropping 2 costes features
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>8</td>
+      <td>6</td>
       <td>cell_painting</td>
       <td>O22</td>
       <td>SQ00014611</td>
@@ -13758,7 +13757,7 @@ Dropping 2 costes features
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(3840, 8)
+<pre>(3456, 8)
 </pre>
 </div>
 </div>
@@ -13804,7 +13803,7 @@ Dropping 2 costes features
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>8</td>
+      <td>6</td>
       <td>cell_painting</td>
       <td>SQ00014611</td>
       <td>4</td>
@@ -13815,7 +13814,7 @@ Dropping 2 costes features
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>8</td>
+      <td>6</td>
       <td>cell_painting</td>
       <td>SQ00014611</td>
       <td>4</td>
@@ -13826,7 +13825,7 @@ Dropping 2 costes features
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>8</td>
+      <td>6</td>
       <td>cell_painting</td>
       <td>SQ00014610</td>
       <td>4</td>
@@ -13837,7 +13836,7 @@ Dropping 2 costes features
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>8</td>
+      <td>6</td>
       <td>cell_painting</td>
       <td>SQ00014610</td>
       <td>4</td>
@@ -13848,9 +13847,9 @@ Dropping 2 costes features
       <td>AKT1</td>
       <td>AKT1-1</td>
       <td>A549</td>
-      <td>8</td>
+      <td>6</td>
       <td>cell_painting</td>
-      <td>SQ00014610</td>
+      <td>SQ00014612</td>
       <td>4</td>
       <td>cell_health</td>
     </tr>
@@ -13913,7 +13912,7 @@ Dropping 2 costes features
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(357, 1601)
+<pre>(357, 952)
 </pre>
 </div>
 </div>
@@ -13946,24 +13945,24 @@ Dropping 2 costes features
       <th>Metadata_profile_id</th>
       <th>Metadata_cell_line</th>
       <th>Metadata_pert_name</th>
-      <th>Cells_AreaShape_Area</th>
-      <th>Cells_AreaShape_Center_X</th>
       <th>Cells_AreaShape_Center_Y</th>
       <th>Cells_AreaShape_Compactness</th>
       <th>Cells_AreaShape_Eccentricity</th>
       <th>Cells_AreaShape_Extent</th>
-      <th>Cells_AreaShape_FormFactor</th>
+      <th>Cells_AreaShape_Orientation</th>
+      <th>Cells_AreaShape_Zernike_0_0</th>
+      <th>Cells_AreaShape_Zernike_1_1</th>
       <th>...</th>
+      <th>Nuclei_Texture_SumEntropy_RNA_5_0</th>
+      <th>Nuclei_Texture_SumVariance_AGP_20_0</th>
+      <th>Nuclei_Texture_SumVariance_AGP_5_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_10_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_20_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_5_0</th>
+      <th>Nuclei_Texture_Variance_AGP_5_0</th>
+      <th>Nuclei_Texture_Variance_DNA_10_0</th>
+      <th>Nuclei_Texture_Variance_DNA_20_0</th>
       <th>Nuclei_Texture_Variance_DNA_5_0</th>
-      <th>Nuclei_Texture_Variance_ER_10_0</th>
-      <th>Nuclei_Texture_Variance_ER_20_0</th>
-      <th>Nuclei_Texture_Variance_ER_5_0</th>
-      <th>Nuclei_Texture_Variance_Mito_10_0</th>
-      <th>Nuclei_Texture_Variance_Mito_20_0</th>
-      <th>Nuclei_Texture_Variance_Mito_5_0</th>
-      <th>Nuclei_Texture_Variance_RNA_10_0</th>
-      <th>Nuclei_Texture_Variance_RNA_20_0</th>
-      <th>Nuclei_Texture_Variance_RNA_5_0</th>
     </tr>
   </thead>
   <tbody>
@@ -13972,124 +13971,124 @@ Dropping 2 costes features
       <td>profile_0</td>
       <td>A549</td>
       <td>AKT1-1</td>
-      <td>0.724439</td>
-      <td>-0.650193</td>
-      <td>0.633381</td>
-      <td>0.115707</td>
-      <td>0.322093</td>
-      <td>-0.160304</td>
-      <td>-0.469180</td>
+      <td>0.596128</td>
+      <td>0.391280</td>
+      <td>0.463658</td>
+      <td>-0.221246</td>
+      <td>1.011500</td>
+      <td>-0.305663</td>
+      <td>-0.440232</td>
       <td>...</td>
-      <td>0.896247</td>
-      <td>0.530926</td>
-      <td>0.674430</td>
-      <td>0.712245</td>
-      <td>0.408771</td>
-      <td>0.102697</td>
-      <td>0.504129</td>
-      <td>0.212517</td>
-      <td>0.189997</td>
-      <td>0.253847</td>
+      <td>0.647205</td>
+      <td>0.827639</td>
+      <td>0.863358</td>
+      <td>0.929565</td>
+      <td>0.886017</td>
+      <td>0.985453</td>
+      <td>0.892091</td>
+      <td>1.071022</td>
+      <td>1.072497</td>
+      <td>1.120483</td>
     </tr>
     <tr>
       <th>1</th>
       <td>profile_1</td>
       <td>A549</td>
       <td>AKT1-2</td>
-      <td>0.045949</td>
-      <td>0.116115</td>
-      <td>0.445820</td>
-      <td>-0.118672</td>
-      <td>0.052351</td>
-      <td>0.231665</td>
-      <td>-0.081538</td>
+      <td>0.515609</td>
+      <td>-0.156584</td>
+      <td>0.092082</td>
+      <td>0.330569</td>
+      <td>-0.208782</td>
+      <td>0.083119</td>
+      <td>0.506794</td>
       <td>...</td>
-      <td>0.421047</td>
-      <td>0.035434</td>
-      <td>0.010126</td>
-      <td>0.200546</td>
-      <td>-0.150230</td>
-      <td>-0.097422</td>
-      <td>0.011910</td>
-      <td>0.096723</td>
-      <td>0.106332</td>
-      <td>-0.153813</td>
+      <td>-0.071948</td>
+      <td>0.597993</td>
+      <td>0.455386</td>
+      <td>0.537999</td>
+      <td>0.664216</td>
+      <td>0.527794</td>
+      <td>0.528653</td>
+      <td>0.608856</td>
+      <td>0.747248</td>
+      <td>0.555587</td>
     </tr>
     <tr>
       <th>2</th>
       <td>profile_2</td>
       <td>A549</td>
       <td>ARID1B-1</td>
-      <td>0.249454</td>
-      <td>0.702219</td>
-      <td>-0.286093</td>
-      <td>0.857301</td>
-      <td>0.856635</td>
-      <td>-0.603966</td>
-      <td>0.200036</td>
+      <td>-0.363977</td>
+      <td>1.120855</td>
+      <td>1.093451</td>
+      <td>-0.812694</td>
+      <td>0.625135</td>
+      <td>-1.211121</td>
+      <td>-0.490666</td>
       <td>...</td>
-      <td>-0.396349</td>
-      <td>0.068137</td>
-      <td>0.212118</td>
-      <td>0.064007</td>
-      <td>-0.151543</td>
-      <td>0.002750</td>
-      <td>-0.350798</td>
-      <td>0.008363</td>
-      <td>0.180860</td>
-      <td>-0.070350</td>
+      <td>0.082424</td>
+      <td>-0.650126</td>
+      <td>-0.749495</td>
+      <td>-0.560240</td>
+      <td>-0.310823</td>
+      <td>-0.490446</td>
+      <td>-0.649800</td>
+      <td>-0.529150</td>
+      <td>-0.357135</td>
+      <td>-0.516982</td>
     </tr>
     <tr>
       <th>3</th>
       <td>profile_3</td>
       <td>A549</td>
       <td>ARID1B-2</td>
-      <td>1.105407</td>
-      <td>-0.404669</td>
-      <td>0.594427</td>
-      <td>0.233926</td>
-      <td>0.508465</td>
-      <td>-0.178178</td>
-      <td>-0.070928</td>
+      <td>0.494768</td>
+      <td>0.304200</td>
+      <td>0.731194</td>
+      <td>-0.233966</td>
+      <td>-0.048039</td>
+      <td>-0.725937</td>
+      <td>0.088292</td>
       <td>...</td>
-      <td>-0.023804</td>
-      <td>-0.140058</td>
-      <td>0.052110</td>
-      <td>-0.091973</td>
-      <td>0.052738</td>
-      <td>-0.141271</td>
-      <td>0.069102</td>
-      <td>0.593044</td>
-      <td>0.191046</td>
-      <td>0.431945</td>
+      <td>0.475349</td>
+      <td>-0.502658</td>
+      <td>-0.790581</td>
+      <td>0.077721</td>
+      <td>0.463475</td>
+      <td>0.008737</td>
+      <td>-0.694479</td>
+      <td>-0.125924</td>
+      <td>0.020210</td>
+      <td>-0.030855</td>
     </tr>
     <tr>
       <th>4</th>
       <td>profile_4</td>
       <td>A549</td>
       <td>ATF4-1</td>
-      <td>4.092510</td>
-      <td>0.583658</td>
-      <td>-0.206819</td>
-      <td>-0.160101</td>
-      <td>0.164711</td>
-      <td>-0.008267</td>
-      <td>-1.220911</td>
+      <td>-0.260876</td>
+      <td>-0.214451</td>
+      <td>0.202429</td>
+      <td>0.560428</td>
+      <td>0.506326</td>
+      <td>-1.213235</td>
+      <td>1.060490</td>
       <td>...</td>
-      <td>0.186003</td>
-      <td>0.121742</td>
-      <td>0.746229</td>
-      <td>0.200480</td>
-      <td>-0.251447</td>
-      <td>-0.372899</td>
-      <td>-0.130677</td>
-      <td>0.858518</td>
-      <td>2.205523</td>
-      <td>-0.366361</td>
+      <td>-0.400131</td>
+      <td>0.782377</td>
+      <td>0.310806</td>
+      <td>0.459031</td>
+      <td>1.301323</td>
+      <td>0.362271</td>
+      <td>0.188553</td>
+      <td>-0.016442</td>
+      <td>0.200450</td>
+      <td>0.251894</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 1601 columns</p>
+<p>5 rows × 952 columns</p>
 </div>
 </div>
 
@@ -14752,27 +14751,27 @@ Dropping 2 costes features
     <tr style="text-align: right;">
       <th></th>
       <th></th>
-      <th>Cells_AreaShape_Area</th>
-      <th>Cells_AreaShape_Center_X</th>
       <th>Cells_AreaShape_Center_Y</th>
       <th>Cells_AreaShape_Compactness</th>
       <th>Cells_AreaShape_Eccentricity</th>
       <th>Cells_AreaShape_Extent</th>
-      <th>Cells_AreaShape_FormFactor</th>
-      <th>Cells_AreaShape_MajorAxisLength</th>
-      <th>Cells_AreaShape_MaxFeretDiameter</th>
-      <th>Cells_AreaShape_MaximumRadius</th>
+      <th>Cells_AreaShape_Orientation</th>
+      <th>Cells_AreaShape_Zernike_0_0</th>
+      <th>Cells_AreaShape_Zernike_1_1</th>
+      <th>Cells_AreaShape_Zernike_2_0</th>
+      <th>Cells_AreaShape_Zernike_2_2</th>
+      <th>Cells_AreaShape_Zernike_3_3</th>
       <th>...</th>
+      <th>Nuclei_Texture_SumEntropy_RNA_5_0</th>
+      <th>Nuclei_Texture_SumVariance_AGP_20_0</th>
+      <th>Nuclei_Texture_SumVariance_AGP_5_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_10_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_20_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_5_0</th>
+      <th>Nuclei_Texture_Variance_AGP_5_0</th>
+      <th>Nuclei_Texture_Variance_DNA_10_0</th>
+      <th>Nuclei_Texture_Variance_DNA_20_0</th>
       <th>Nuclei_Texture_Variance_DNA_5_0</th>
-      <th>Nuclei_Texture_Variance_ER_10_0</th>
-      <th>Nuclei_Texture_Variance_ER_20_0</th>
-      <th>Nuclei_Texture_Variance_ER_5_0</th>
-      <th>Nuclei_Texture_Variance_Mito_10_0</th>
-      <th>Nuclei_Texture_Variance_Mito_20_0</th>
-      <th>Nuclei_Texture_Variance_Mito_5_0</th>
-      <th>Nuclei_Texture_Variance_RNA_10_0</th>
-      <th>Nuclei_Texture_Variance_RNA_20_0</th>
-      <th>Nuclei_Texture_Variance_RNA_5_0</th>
     </tr>
     <tr>
       <th>Metadata_cell_line</th>
@@ -14804,127 +14803,127 @@ Dropping 2 costes features
     <tr>
       <th rowspan="5" valign="top">A549</th>
       <th>AKT1-1</th>
-      <td>0.670523</td>
-      <td>-0.421956</td>
-      <td>0.369371</td>
-      <td>-0.361163</td>
-      <td>-0.329740</td>
-      <td>0.260786</td>
-      <td>-0.599924</td>
-      <td>0.611636</td>
-      <td>0.607799</td>
-      <td>0.679412</td>
+      <td>-0.180160</td>
+      <td>-0.155631</td>
+      <td>0.014646</td>
+      <td>0.188053</td>
+      <td>1.231056</td>
+      <td>0.031064</td>
+      <td>-0.585477</td>
+      <td>0.467976</td>
+      <td>0.254203</td>
+      <td>0.129446</td>
       <td>...</td>
-      <td>0.611298</td>
-      <td>0.646691</td>
-      <td>0.644430</td>
-      <td>0.710131</td>
-      <td>0.005886</td>
-      <td>-0.035807</td>
-      <td>0.047475</td>
-      <td>0.276696</td>
-      <td>0.354144</td>
-      <td>0.324910</td>
+      <td>0.562585</td>
+      <td>0.988876</td>
+      <td>0.879950</td>
+      <td>0.904785</td>
+      <td>0.906875</td>
+      <td>0.923143</td>
+      <td>0.944998</td>
+      <td>0.984938</td>
+      <td>1.122724</td>
+      <td>0.961945</td>
     </tr>
     <tr>
       <th>AKT1-2</th>
-      <td>0.315056</td>
-      <td>0.073426</td>
-      <td>0.361172</td>
-      <td>-0.169501</td>
-      <td>0.041794</td>
-      <td>0.300945</td>
-      <td>0.104729</td>
-      <td>0.203060</td>
-      <td>0.215892</td>
-      <td>0.321806</td>
+      <td>0.370572</td>
+      <td>-0.247842</td>
+      <td>-0.030773</td>
+      <td>0.433778</td>
+      <td>0.062456</td>
+      <td>0.266860</td>
+      <td>0.838679</td>
+      <td>-0.467417</td>
+      <td>0.340793</td>
+      <td>-0.024450</td>
       <td>...</td>
-      <td>0.419474</td>
-      <td>0.207831</td>
-      <td>0.072583</td>
-      <td>0.331507</td>
-      <td>-0.076044</td>
-      <td>-0.057505</td>
-      <td>-0.009035</td>
-      <td>0.097609</td>
-      <td>0.238902</td>
-      <td>-0.084303</td>
+      <td>0.018933</td>
+      <td>0.446225</td>
+      <td>0.359496</td>
+      <td>0.557998</td>
+      <td>0.631931</td>
+      <td>0.504751</td>
+      <td>0.407462</td>
+      <td>0.522251</td>
+      <td>0.644370</td>
+      <td>0.519441</td>
     </tr>
     <tr>
       <th>ARID1B-1</th>
-      <td>0.398408</td>
-      <td>0.531508</td>
-      <td>-0.219315</td>
-      <td>0.691981</td>
-      <td>0.653327</td>
-      <td>-0.491261</td>
-      <td>0.248884</td>
-      <td>0.459665</td>
-      <td>0.472018</td>
-      <td>0.300343</td>
+      <td>-0.360905</td>
+      <td>0.794740</td>
+      <td>0.743296</td>
+      <td>-0.438752</td>
+      <td>0.827288</td>
+      <td>-0.728499</td>
+      <td>-0.422394</td>
+      <td>-0.147624</td>
+      <td>0.083870</td>
+      <td>-0.160722</td>
       <td>...</td>
-      <td>-0.405672</td>
-      <td>0.042035</td>
-      <td>0.229941</td>
-      <td>-0.022572</td>
-      <td>-0.113600</td>
-      <td>0.046531</td>
-      <td>-0.310386</td>
-      <td>0.165331</td>
-      <td>0.159108</td>
-      <td>0.152701</td>
+      <td>-0.042733</td>
+      <td>-0.721832</td>
+      <td>-0.840771</td>
+      <td>-0.536215</td>
+      <td>-0.330336</td>
+      <td>-0.497296</td>
+      <td>-0.748232</td>
+      <td>-0.515240</td>
+      <td>-0.421440</td>
+      <td>-0.526734</td>
     </tr>
     <tr>
       <th>ARID1B-2</th>
-      <td>0.966051</td>
-      <td>-0.120241</td>
-      <td>0.401286</td>
-      <td>0.315643</td>
-      <td>0.555941</td>
-      <td>-0.277779</td>
-      <td>-0.011663</td>
-      <td>1.005366</td>
-      <td>1.006955</td>
-      <td>0.762127</td>
+      <td>0.262450</td>
+      <td>0.480421</td>
+      <td>0.821096</td>
+      <td>-0.337898</td>
+      <td>0.054479</td>
+      <td>-0.662314</td>
+      <td>0.067979</td>
+      <td>0.025010</td>
+      <td>0.158138</td>
+      <td>-0.342062</td>
       <td>...</td>
-      <td>-0.034680</td>
-      <td>-0.229785</td>
-      <td>-0.193600</td>
-      <td>-0.126474</td>
-      <td>-0.173597</td>
-      <td>-0.105045</td>
-      <td>-0.037416</td>
-      <td>0.550343</td>
-      <td>0.493814</td>
-      <td>0.531058</td>
+      <td>0.688435</td>
+      <td>-0.345377</td>
+      <td>-0.521766</td>
+      <td>0.124801</td>
+      <td>0.457536</td>
+      <td>0.063444</td>
+      <td>-0.560178</td>
+      <td>-0.062851</td>
+      <td>0.085026</td>
+      <td>0.026056</td>
     </tr>
     <tr>
       <th>ATF4-1</th>
-      <td>4.766608</td>
-      <td>0.017547</td>
-      <td>0.059990</td>
-      <td>0.030708</td>
-      <td>0.528382</td>
-      <td>0.279634</td>
-      <td>-1.681518</td>
-      <td>4.481815</td>
-      <td>4.531292</td>
-      <td>3.948448</td>
+      <td>-0.110264</td>
+      <td>-0.074895</td>
+      <td>0.569377</td>
+      <td>0.571678</td>
+      <td>0.976504</td>
+      <td>-1.111947</td>
+      <td>1.348542</td>
+      <td>0.584906</td>
+      <td>-3.128483</td>
+      <td>-2.324773</td>
       <td>...</td>
-      <td>0.248363</td>
-      <td>-0.071396</td>
-      <td>0.268053</td>
-      <td>0.058940</td>
-      <td>-0.166151</td>
-      <td>-0.284426</td>
-      <td>0.013087</td>
-      <td>1.024920</td>
-      <td>2.123737</td>
-      <td>-0.102910</td>
+      <td>-0.638839</td>
+      <td>1.133282</td>
+      <td>0.753884</td>
+      <td>0.808944</td>
+      <td>1.721671</td>
+      <td>0.594059</td>
+      <td>0.674015</td>
+      <td>0.140325</td>
+      <td>0.291230</td>
+      <td>0.417465</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 1598 columns</p>
+<p>5 rows × 949 columns</p>
 </div>
 </div>
 
@@ -14973,7 +14972,7 @@ Dropping 2 costes features
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(357, 1601)
+<pre>(357, 952)
 </pre>
 </div>
 </div>
@@ -15006,24 +15005,24 @@ Dropping 2 costes features
       <th>Metadata_profile_id</th>
       <th>Metadata_cell_line</th>
       <th>Metadata_pert_name</th>
-      <th>Cells_AreaShape_Area</th>
-      <th>Cells_AreaShape_Center_X</th>
       <th>Cells_AreaShape_Center_Y</th>
       <th>Cells_AreaShape_Compactness</th>
       <th>Cells_AreaShape_Eccentricity</th>
       <th>Cells_AreaShape_Extent</th>
-      <th>Cells_AreaShape_FormFactor</th>
+      <th>Cells_AreaShape_Orientation</th>
+      <th>Cells_AreaShape_Zernike_0_0</th>
+      <th>Cells_AreaShape_Zernike_1_1</th>
       <th>...</th>
+      <th>Nuclei_Texture_SumEntropy_RNA_5_0</th>
+      <th>Nuclei_Texture_SumVariance_AGP_20_0</th>
+      <th>Nuclei_Texture_SumVariance_AGP_5_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_10_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_20_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_5_0</th>
+      <th>Nuclei_Texture_Variance_AGP_5_0</th>
+      <th>Nuclei_Texture_Variance_DNA_10_0</th>
+      <th>Nuclei_Texture_Variance_DNA_20_0</th>
       <th>Nuclei_Texture_Variance_DNA_5_0</th>
-      <th>Nuclei_Texture_Variance_ER_10_0</th>
-      <th>Nuclei_Texture_Variance_ER_20_0</th>
-      <th>Nuclei_Texture_Variance_ER_5_0</th>
-      <th>Nuclei_Texture_Variance_Mito_10_0</th>
-      <th>Nuclei_Texture_Variance_Mito_20_0</th>
-      <th>Nuclei_Texture_Variance_Mito_5_0</th>
-      <th>Nuclei_Texture_Variance_RNA_10_0</th>
-      <th>Nuclei_Texture_Variance_RNA_20_0</th>
-      <th>Nuclei_Texture_Variance_RNA_5_0</th>
     </tr>
   </thead>
   <tbody>
@@ -15032,124 +15031,124 @@ Dropping 2 costes features
       <td>profile_0</td>
       <td>A549</td>
       <td>AKT1-1</td>
-      <td>0.670523</td>
-      <td>-0.421956</td>
-      <td>0.369371</td>
-      <td>-0.361163</td>
-      <td>-0.329740</td>
-      <td>0.260786</td>
-      <td>-0.599924</td>
+      <td>-0.180160</td>
+      <td>-0.155631</td>
+      <td>0.014646</td>
+      <td>0.188053</td>
+      <td>1.231056</td>
+      <td>0.031064</td>
+      <td>-0.585477</td>
       <td>...</td>
-      <td>0.611298</td>
-      <td>0.646691</td>
-      <td>0.644430</td>
-      <td>0.710131</td>
-      <td>0.005886</td>
-      <td>-0.035807</td>
-      <td>0.047475</td>
-      <td>0.276696</td>
-      <td>0.354144</td>
-      <td>0.324910</td>
+      <td>0.562585</td>
+      <td>0.988876</td>
+      <td>0.879950</td>
+      <td>0.904785</td>
+      <td>0.906875</td>
+      <td>0.923143</td>
+      <td>0.944998</td>
+      <td>0.984938</td>
+      <td>1.122724</td>
+      <td>0.961945</td>
     </tr>
     <tr>
       <th>1</th>
       <td>profile_1</td>
       <td>A549</td>
       <td>AKT1-2</td>
-      <td>0.315056</td>
-      <td>0.073426</td>
-      <td>0.361172</td>
-      <td>-0.169501</td>
-      <td>0.041794</td>
-      <td>0.300945</td>
-      <td>0.104729</td>
+      <td>0.370572</td>
+      <td>-0.247842</td>
+      <td>-0.030773</td>
+      <td>0.433778</td>
+      <td>0.062456</td>
+      <td>0.266860</td>
+      <td>0.838679</td>
       <td>...</td>
-      <td>0.419474</td>
-      <td>0.207831</td>
-      <td>0.072583</td>
-      <td>0.331507</td>
-      <td>-0.076044</td>
-      <td>-0.057505</td>
-      <td>-0.009035</td>
-      <td>0.097609</td>
-      <td>0.238902</td>
-      <td>-0.084303</td>
+      <td>0.018933</td>
+      <td>0.446225</td>
+      <td>0.359496</td>
+      <td>0.557998</td>
+      <td>0.631931</td>
+      <td>0.504751</td>
+      <td>0.407462</td>
+      <td>0.522251</td>
+      <td>0.644370</td>
+      <td>0.519441</td>
     </tr>
     <tr>
       <th>2</th>
       <td>profile_2</td>
       <td>A549</td>
       <td>ARID1B-1</td>
-      <td>0.398408</td>
-      <td>0.531508</td>
-      <td>-0.219315</td>
-      <td>0.691981</td>
-      <td>0.653327</td>
-      <td>-0.491261</td>
-      <td>0.248884</td>
+      <td>-0.360905</td>
+      <td>0.794740</td>
+      <td>0.743296</td>
+      <td>-0.438752</td>
+      <td>0.827288</td>
+      <td>-0.728499</td>
+      <td>-0.422394</td>
       <td>...</td>
-      <td>-0.405672</td>
-      <td>0.042035</td>
-      <td>0.229941</td>
-      <td>-0.022572</td>
-      <td>-0.113600</td>
-      <td>0.046531</td>
-      <td>-0.310386</td>
-      <td>0.165331</td>
-      <td>0.159108</td>
-      <td>0.152701</td>
+      <td>-0.042733</td>
+      <td>-0.721832</td>
+      <td>-0.840771</td>
+      <td>-0.536215</td>
+      <td>-0.330336</td>
+      <td>-0.497296</td>
+      <td>-0.748232</td>
+      <td>-0.515240</td>
+      <td>-0.421440</td>
+      <td>-0.526734</td>
     </tr>
     <tr>
       <th>3</th>
       <td>profile_3</td>
       <td>A549</td>
       <td>ARID1B-2</td>
-      <td>0.966051</td>
-      <td>-0.120241</td>
-      <td>0.401286</td>
-      <td>0.315643</td>
-      <td>0.555941</td>
-      <td>-0.277779</td>
-      <td>-0.011663</td>
+      <td>0.262450</td>
+      <td>0.480421</td>
+      <td>0.821096</td>
+      <td>-0.337898</td>
+      <td>0.054479</td>
+      <td>-0.662314</td>
+      <td>0.067979</td>
       <td>...</td>
-      <td>-0.034680</td>
-      <td>-0.229785</td>
-      <td>-0.193600</td>
-      <td>-0.126474</td>
-      <td>-0.173597</td>
-      <td>-0.105045</td>
-      <td>-0.037416</td>
-      <td>0.550343</td>
-      <td>0.493814</td>
-      <td>0.531058</td>
+      <td>0.688435</td>
+      <td>-0.345377</td>
+      <td>-0.521766</td>
+      <td>0.124801</td>
+      <td>0.457536</td>
+      <td>0.063444</td>
+      <td>-0.560178</td>
+      <td>-0.062851</td>
+      <td>0.085026</td>
+      <td>0.026056</td>
     </tr>
     <tr>
       <th>4</th>
       <td>profile_4</td>
       <td>A549</td>
       <td>ATF4-1</td>
-      <td>4.766608</td>
-      <td>0.017547</td>
-      <td>0.059990</td>
-      <td>0.030708</td>
-      <td>0.528382</td>
-      <td>0.279634</td>
-      <td>-1.681518</td>
+      <td>-0.110264</td>
+      <td>-0.074895</td>
+      <td>0.569377</td>
+      <td>0.571678</td>
+      <td>0.976504</td>
+      <td>-1.111947</td>
+      <td>1.348542</td>
       <td>...</td>
-      <td>0.248363</td>
-      <td>-0.071396</td>
-      <td>0.268053</td>
-      <td>0.058940</td>
-      <td>-0.166151</td>
-      <td>-0.284426</td>
-      <td>0.013087</td>
-      <td>1.024920</td>
-      <td>2.123737</td>
-      <td>-0.102910</td>
+      <td>-0.638839</td>
+      <td>1.133282</td>
+      <td>0.753884</td>
+      <td>0.808944</td>
+      <td>1.721671</td>
+      <td>0.594059</td>
+      <td>0.674015</td>
+      <td>0.140325</td>
+      <td>0.291230</td>
+      <td>0.417465</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 1601 columns</p>
+<p>5 rows × 952 columns</p>
 </div>
 </div>
 
