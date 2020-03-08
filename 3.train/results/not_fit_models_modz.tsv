@@ -1,8 +1,8 @@
 target	y_transform	shuffle
 cc_all_nucleus_roundness_mean	binarize	True
 cc_all_nucleus_roundness_mean	binarize	False
-cc_cc_ph3_neg_hoechst_late_mitosis_mean	binarize	True
-cc_cc_ph3_neg_hoechst_late_mitosis_mean	binarize	False
+cc_cc_late_mitosis	binarize	True
+cc_cc_late_mitosis	binarize	False
 vb_live_cell_roundness	binarize	True
 vb_live_cell_roundness	binarize	False
 vb_live_cell_width_length	binarize	True
