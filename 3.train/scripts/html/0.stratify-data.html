@@ -13165,7 +13165,7 @@ We use the same training and testing samples for both consensus profiles.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(357, 1601)
+<pre>(357, 952)
 </pre>
 </div>
 </div>
@@ -13198,24 +13198,24 @@ We use the same training and testing samples for both consensus profiles.</p>
       <th>Metadata_profile_id</th>
       <th>Metadata_cell_line</th>
       <th>Metadata_pert_name</th>
-      <th>Cells_AreaShape_Area</th>
-      <th>Cells_AreaShape_Center_X</th>
       <th>Cells_AreaShape_Center_Y</th>
       <th>Cells_AreaShape_Compactness</th>
       <th>Cells_AreaShape_Eccentricity</th>
       <th>Cells_AreaShape_Extent</th>
-      <th>Cells_AreaShape_FormFactor</th>
+      <th>Cells_AreaShape_Orientation</th>
+      <th>Cells_AreaShape_Zernike_0_0</th>
+      <th>Cells_AreaShape_Zernike_1_1</th>
       <th>...</th>
+      <th>Nuclei_Texture_SumEntropy_RNA_5_0</th>
+      <th>Nuclei_Texture_SumVariance_AGP_20_0</th>
+      <th>Nuclei_Texture_SumVariance_AGP_5_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_10_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_20_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_5_0</th>
+      <th>Nuclei_Texture_Variance_AGP_5_0</th>
+      <th>Nuclei_Texture_Variance_DNA_10_0</th>
+      <th>Nuclei_Texture_Variance_DNA_20_0</th>
       <th>Nuclei_Texture_Variance_DNA_5_0</th>
-      <th>Nuclei_Texture_Variance_ER_10_0</th>
-      <th>Nuclei_Texture_Variance_ER_20_0</th>
-      <th>Nuclei_Texture_Variance_ER_5_0</th>
-      <th>Nuclei_Texture_Variance_Mito_10_0</th>
-      <th>Nuclei_Texture_Variance_Mito_20_0</th>
-      <th>Nuclei_Texture_Variance_Mito_5_0</th>
-      <th>Nuclei_Texture_Variance_RNA_10_0</th>
-      <th>Nuclei_Texture_Variance_RNA_20_0</th>
-      <th>Nuclei_Texture_Variance_RNA_5_0</th>
     </tr>
   </thead>
   <tbody>
@@ -13224,52 +13224,52 @@ We use the same training and testing samples for both consensus profiles.</p>
       <td>profile_0</td>
       <td>A549</td>
       <td>AKT1-1</td>
-      <td>0.390141</td>
-      <td>-0.472324</td>
-      <td>0.454178</td>
-      <td>0.300041</td>
-      <td>0.322093</td>
-      <td>-0.160304</td>
-      <td>0.093525</td>
+      <td>0.596128</td>
+      <td>0.391280</td>
+      <td>0.463658</td>
+      <td>-0.221246</td>
+      <td>1.011500</td>
+      <td>-0.305663</td>
+      <td>-0.440232</td>
       <td>...</td>
-      <td>0.896247</td>
-      <td>0.678922</td>
-      <td>0.798388</td>
-      <td>0.950740</td>
-      <td>0.520392</td>
-      <td>0.225345</td>
-      <td>0.714348</td>
-      <td>0.212517</td>
-      <td>0.189997</td>
-      <td>0.253847</td>
+      <td>0.647205</td>
+      <td>0.827639</td>
+      <td>0.863358</td>
+      <td>0.929565</td>
+      <td>0.886017</td>
+      <td>0.985453</td>
+      <td>0.892091</td>
+      <td>1.071022</td>
+      <td>1.072497</td>
+      <td>1.120483</td>
     </tr>
     <tr>
       <th>1</th>
       <td>profile_1</td>
       <td>A549</td>
       <td>AKT1-2</td>
-      <td>0.045949</td>
-      <td>0.436621</td>
-      <td>0.403512</td>
-      <td>-0.118672</td>
-      <td>0.052351</td>
-      <td>0.231665</td>
-      <td>-0.081538</td>
+      <td>0.515609</td>
+      <td>-0.156584</td>
+      <td>0.092082</td>
+      <td>0.330569</td>
+      <td>-0.208782</td>
+      <td>0.083119</td>
+      <td>0.506794</td>
       <td>...</td>
-      <td>0.421047</td>
-      <td>0.035434</td>
-      <td>0.010126</td>
-      <td>0.200546</td>
-      <td>-0.150230</td>
-      <td>-0.097422</td>
-      <td>0.011910</td>
-      <td>0.176618</td>
-      <td>0.060610</td>
-      <td>-0.153813</td>
+      <td>-0.071948</td>
+      <td>0.597993</td>
+      <td>0.455386</td>
+      <td>0.537999</td>
+      <td>0.664216</td>
+      <td>0.527794</td>
+      <td>0.528653</td>
+      <td>0.608856</td>
+      <td>0.747248</td>
+      <td>0.555587</td>
     </tr>
   </tbody>
 </table>
-<p>2 rows × 1601 columns</p>
+<p>2 rows × 952 columns</p>
 </div>
 </div>
 
@@ -13338,21 +13338,21 @@ We use the same training and testing samples for both consensus profiles.</p>
       <th>Metadata_profile_id</th>
       <th>Metadata_pert_name</th>
       <th>Metadata_cell_line</th>
-      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_high_h2ax</th>
       <th>cc_all_large_notround_polynuclear_mean</th>
       <th>cc_all_large_round_polyploid_mean</th>
       <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_mean</th>
-      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>cc_all_n_spots_h2ax_mean</th>
+      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
       <th>cc_all_nucleus_area_mean</th>
       <th>...</th>
       <th>vb_num_live_cells</th>
       <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_all_early_apoptosis</th>
-      <th>vb_percent_all_late_apoptosis</th>
       <th>vb_percent_caspase_dead_only</th>
       <th>vb_percent_dead</th>
       <th>vb_percent_dead_only</th>
+      <th>vb_percent_early_apoptosis</th>
+      <th>vb_percent_late_apoptosis</th>
       <th>vb_percent_live</th>
       <th>vb_ros_back_mean</th>
       <th>vb_ros_mean</th>
@@ -13374,11 +13374,11 @@ We use the same training and testing samples for both consensus profiles.</p>
       <td>...</td>
       <td>0.399842</td>
       <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
       <td>-0.118976</td>
       <td>-0.132871</td>
       <td>-0.121090</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>0.132882</td>
       <td>0.806970</td>
       <td>1.293984</td>
@@ -13398,11 +13398,11 @@ We use the same training and testing samples for both consensus profiles.</p>
       <td>...</td>
       <td>0.101670</td>
       <td>0.318027</td>
-      <td>0.132751</td>
-      <td>0.467027</td>
       <td>0.621374</td>
       <td>0.100032</td>
       <td>0.074036</td>
+      <td>0.132751</td>
+      <td>0.467027</td>
       <td>-0.099917</td>
       <td>0.558041</td>
       <td>1.151867</td>
@@ -13468,8 +13468,8 @@ We use the same training and testing samples for both consensus profiles.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(303, 1601)
-(54, 1601)
+<pre>(303, 952)
+(54, 952)
 </pre>
 </div>
 </div>
@@ -13548,7 +13548,7 @@ We use the same training and testing samples for both consensus profiles.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(357, 1601)
+<pre>(357, 952)
 </pre>
 </div>
 </div>
@@ -13581,24 +13581,24 @@ We use the same training and testing samples for both consensus profiles.</p>
       <th>Metadata_profile_id</th>
       <th>Metadata_cell_line</th>
       <th>Metadata_pert_name</th>
-      <th>Cells_AreaShape_Area</th>
-      <th>Cells_AreaShape_Center_X</th>
       <th>Cells_AreaShape_Center_Y</th>
       <th>Cells_AreaShape_Compactness</th>
       <th>Cells_AreaShape_Eccentricity</th>
       <th>Cells_AreaShape_Extent</th>
-      <th>Cells_AreaShape_FormFactor</th>
+      <th>Cells_AreaShape_Orientation</th>
+      <th>Cells_AreaShape_Zernike_0_0</th>
+      <th>Cells_AreaShape_Zernike_1_1</th>
       <th>...</th>
+      <th>Nuclei_Texture_SumEntropy_RNA_5_0</th>
+      <th>Nuclei_Texture_SumVariance_AGP_20_0</th>
+      <th>Nuclei_Texture_SumVariance_AGP_5_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_10_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_20_0</th>
+      <th>Nuclei_Texture_SumVariance_DNA_5_0</th>
+      <th>Nuclei_Texture_Variance_AGP_5_0</th>
+      <th>Nuclei_Texture_Variance_DNA_10_0</th>
+      <th>Nuclei_Texture_Variance_DNA_20_0</th>
       <th>Nuclei_Texture_Variance_DNA_5_0</th>
-      <th>Nuclei_Texture_Variance_ER_10_0</th>
-      <th>Nuclei_Texture_Variance_ER_20_0</th>
-      <th>Nuclei_Texture_Variance_ER_5_0</th>
-      <th>Nuclei_Texture_Variance_Mito_10_0</th>
-      <th>Nuclei_Texture_Variance_Mito_20_0</th>
-      <th>Nuclei_Texture_Variance_Mito_5_0</th>
-      <th>Nuclei_Texture_Variance_RNA_10_0</th>
-      <th>Nuclei_Texture_Variance_RNA_20_0</th>
-      <th>Nuclei_Texture_Variance_RNA_5_0</th>
     </tr>
   </thead>
   <tbody>
@@ -13607,52 +13607,52 @@ We use the same training and testing samples for both consensus profiles.</p>
       <td>profile_0</td>
       <td>A549</td>
       <td>AKT1-1</td>
-      <td>0.42668</td>
-      <td>0.016416</td>
-      <td>-0.057528</td>
-      <td>-0.178226</td>
-      <td>-0.083852</td>
-      <td>0.172003</td>
-      <td>-0.280522</td>
+      <td>-0.180160</td>
+      <td>-0.155631</td>
+      <td>0.014646</td>
+      <td>0.188053</td>
+      <td>1.231056</td>
+      <td>0.031064</td>
+      <td>-0.585477</td>
       <td>...</td>
-      <td>0.718460</td>
-      <td>0.877260</td>
-      <td>0.811628</td>
-      <td>1.068138</td>
-      <td>0.370770</td>
-      <td>0.287482</td>
-      <td>0.387510</td>
-      <td>0.264552</td>
-      <td>0.258830</td>
-      <td>0.354644</td>
+      <td>0.562585</td>
+      <td>0.988876</td>
+      <td>0.879950</td>
+      <td>0.904785</td>
+      <td>0.906875</td>
+      <td>0.923143</td>
+      <td>0.944998</td>
+      <td>0.984938</td>
+      <td>1.122724</td>
+      <td>0.961945</td>
     </tr>
     <tr>
       <th>1</th>
       <td>profile_1</td>
       <td>A549</td>
       <td>AKT1-2</td>
-      <td>0.29864</td>
-      <td>0.371576</td>
-      <td>0.295355</td>
-      <td>-0.176274</td>
-      <td>-0.003109</td>
-      <td>0.319832</td>
-      <td>0.247319</td>
+      <td>0.370572</td>
+      <td>-0.247842</td>
+      <td>-0.030773</td>
+      <td>0.433778</td>
+      <td>0.062456</td>
+      <td>0.266860</td>
+      <td>0.838679</td>
       <td>...</td>
-      <td>0.413436</td>
-      <td>0.281365</td>
-      <td>0.152485</td>
-      <td>0.386029</td>
-      <td>-0.062285</td>
-      <td>-0.011781</td>
-      <td>-0.011991</td>
-      <td>0.124322</td>
-      <td>0.221694</td>
-      <td>-0.008421</td>
+      <td>0.018933</td>
+      <td>0.446225</td>
+      <td>0.359496</td>
+      <td>0.557998</td>
+      <td>0.631931</td>
+      <td>0.504751</td>
+      <td>0.407462</td>
+      <td>0.522251</td>
+      <td>0.644370</td>
+      <td>0.519441</td>
     </tr>
   </tbody>
 </table>
-<p>2 rows × 1601 columns</p>
+<p>2 rows × 952 columns</p>
 </div>
 </div>
 
@@ -13721,21 +13721,21 @@ We use the same training and testing samples for both consensus profiles.</p>
       <th>Metadata_profile_id</th>
       <th>Metadata_pert_name</th>
       <th>Metadata_cell_line</th>
-      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_high_h2ax</th>
       <th>cc_all_large_notround_polynuclear_mean</th>
       <th>cc_all_large_round_polyploid_mean</th>
       <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_mean</th>
-      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>cc_all_n_spots_h2ax_mean</th>
+      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
       <th>cc_all_nucleus_area_mean</th>
       <th>...</th>
       <th>vb_num_live_cells</th>
       <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_all_early_apoptosis</th>
-      <th>vb_percent_all_late_apoptosis</th>
       <th>vb_percent_caspase_dead_only</th>
       <th>vb_percent_dead</th>
       <th>vb_percent_dead_only</th>
+      <th>vb_percent_early_apoptosis</th>
+      <th>vb_percent_late_apoptosis</th>
       <th>vb_percent_live</th>
       <th>vb_ros_back_mean</th>
       <th>vb_ros_mean</th>
@@ -13757,11 +13757,11 @@ We use the same training and testing samples for both consensus profiles.</p>
       <td>...</td>
       <td>0.438339</td>
       <td>0.059414</td>
-      <td>0.082424</td>
-      <td>0.000000</td>
       <td>-0.065050</td>
       <td>-0.020236</td>
       <td>-0.007970</td>
+      <td>0.082424</td>
+      <td>0.000000</td>
       <td>0.020263</td>
       <td>0.408214</td>
       <td>0.654575</td>
@@ -13781,11 +13781,11 @@ We use the same training and testing samples for both consensus profiles.</p>
       <td>...</td>
       <td>0.067568</td>
       <td>0.256141</td>
-      <td>0.132834</td>
-      <td>0.386327</td>
       <td>0.575026</td>
       <td>0.225091</td>
       <td>0.220461</td>
+      <td>0.132834</td>
+      <td>0.386327</td>
       <td>-0.224965</td>
       <td>0.284962</td>
       <td>0.567898</td>
@@ -13849,8 +13849,8 @@ We use the same training and testing samples for both consensus profiles.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(303, 1601)
-(54, 1601)
+<pre>(303, 952)
+(54, 952)
 </pre>
 </div>
 </div>
