@@ -210,11 +210,12 @@ file <- file.path(
     figure_dir,
     paste0("mse_test_summary_", consensus, ".png")
 )
+
 ggsave(file, dpi = 300, width = 6, height = 6)
 
 # Merge table with target labels
 mse_summary_df <- mse_df %>%
-    dplyr::left_join(label_df, by = c("target" = "updated_name")) %>%
+    dplyr::left_join(label_df, by = c("target" = "id")) %>%
     dplyr::filter(!is.na(measurement))
 
 # Split shuffle column for scatter plot
@@ -299,7 +300,7 @@ ggsave(file, dpi = 300, width = 6, height = 6)
 
 # Merge table with target labels
 r2_summary_df <- r2_df %>%
-    dplyr::left_join(label_df, by = c("target" = "updated_name")) %>%
+    dplyr::left_join(label_df, by = c("target" = "id")) %>%
     dplyr::filter(!is.na(measurement))
 
 # Split shuffle column for scatter plot

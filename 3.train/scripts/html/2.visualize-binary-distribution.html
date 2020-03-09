@@ -13078,8 +13078,11 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Visualize-Distribution-of-Recoded-Features">Visualize Distribution of Recoded Features<a class="anchor-link" href="#Visualize-Distribution-of-Recoded-Features">&#182;</a></h2><p><strong>Gregory Way, 2019</strong></p>
-<p>A major component of the machine learning procedure was to binarize target variables for input into a machine learning classification framework.</p>
-<p>Here, I visualize this recoding scheme.</p>
+<p>We tested the ability of classification models to predict high and low cell health features.
+Ultimately, we decided that these models were unstable and not reliable.
+Therefore, we did not use them in downstream applications.</p>
+<p>One potential reason the classification approach performed poorly is because the cell health input data must be first transformed to binary response variables.
+This notebook is used to visualize the binarization scheme to force the model input into a classification framework.</p>
 <p>I also determine the extend of confounding variables in the recoding scheme.
 Basically, asking if there are any plate effects or other potential technical artifacts.</p>
 
@@ -13105,7 +13108,10 @@ Basically, asking if there are any plate effects or other potential technical ar
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-r"><pre><span></span><span class="n">consensus</span> <span class="o">&lt;-</span> <span class="s">&quot;median&quot;</span>
+<div class=" highlight hl-r"><pre><span></span><span class="n">consensus</span> <span class="o">&lt;-</span> <span class="s">&quot;modz&quot;</span>
+<span class="n">output_dir</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="s">&quot;figures&quot;</span><span class="p">,</span> <span class="s">&quot;feature_distribution&quot;</span><span class="p">,</span> <span class="n">consensus</span><span class="p">)</span>
+
+<span class="nf">dir.create</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">showWarnings</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13194,9 +13200,9 @@ Basically, asking if there are any plate effects or other potential technical ar
 	<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;chr&gt;</th></tr>
 </thead>
 <tbody>
-	<tr><td>profile_340</td><td>0.43434296</td><td>cc_all_high_n_spots_h2ax_mean</td><td>Train</td><td>shuffle_false</td><td>raw</td><td>y_true</td><td>1</td><td>binarize</td></tr>
-	<tr><td>profile_6  </td><td>0.07824167</td><td>cc_all_high_n_spots_h2ax_mean</td><td>Train</td><td>shuffle_false</td><td>raw</td><td>y_true</td><td>0</td><td>binarize</td></tr>
-	<tr><td>profile_79 </td><td>0.15273802</td><td>cc_all_high_n_spots_h2ax_mean</td><td>Train</td><td>shuffle_false</td><td>raw</td><td>y_true</td><td>1</td><td>binarize</td></tr>
+	<tr><td>profile_340</td><td>0.46560759</td><td>cc_all_high_h2ax</td><td>Train</td><td>shuffle_false</td><td>raw</td><td>y_true</td><td>0</td><td>binarize</td></tr>
+	<tr><td>profile_6  </td><td>0.08417835</td><td>cc_all_high_h2ax</td><td>Train</td><td>shuffle_false</td><td>raw</td><td>y_true</td><td>0</td><td>binarize</td></tr>
+	<tr><td>profile_79 </td><td>0.15562496</td><td>cc_all_high_h2ax</td><td>Train</td><td>shuffle_false</td><td>raw</td><td>y_true</td><td>0</td><td>binarize</td></tr>
 </tbody>
 </table>
 
@@ -13214,8 +13220,11 @@ Basically, asking if there are any plate effects or other potential technical ar
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-r"><pre><span></span><span class="c1"># Generate and save figures</span>
-<span class="n">pdf_file</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="s">&quot;figures&quot;</span><span class="p">,</span>
-                      <span class="nf">paste0</span><span class="p">(</span><span class="s">&quot;all_binary_distributions_&quot;</span><span class="p">,</span> <span class="n">consensus</span><span class="p">,</span> <span class="s">&quot;.pdf&quot;</span><span class="p">))</span>
+<span class="n">pdf_file</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span>
+    <span class="n">output_dir</span><span class="p">,</span>
+    <span class="nf">paste0</span><span class="p">(</span><span class="s">&quot;all_binary_distributions_std_&quot;</span><span class="p">,</span> <span class="n">consensus</span><span class="p">,</span> <span class="s">&quot;.pdf&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
 <span class="nf">pdf</span><span class="p">(</span><span class="n">pdf_file</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">3.5</span><span class="p">,</span> <span class="n">onefile</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
 
 <span class="nf">for </span><span class="p">(</span><span class="n">target</span> <span class="n">in</span> <span class="nf">unique</span><span class="p">(</span><span class="n">y_plot_df</span><span class="o">$</span><span class="n">target</span><span class="p">))</span> <span class="p">{</span>
@@ -13244,14 +13253,12 @@ Basically, asking if there are any plate effects or other potential technical ar
                   <span class="n">strip.background</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">colour</span> <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span>
                                                   <span class="n">fill</span> <span class="o">=</span> <span class="s">&quot;#fdfff4&quot;</span><span class="p">))</span>
 
-    <span class="n">output_file</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="s">&quot;figures&quot;</span><span class="p">,</span>
-                             <span class="s">&quot;feature_distribution&quot;</span><span class="p">,</span>
-                             <span class="nf">paste0</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s">&quot;_dist_&quot;</span><span class="p">,</span> <span class="n">consensus</span><span class="p">,</span> <span class="s">&quot;.png&quot;</span><span class="p">))</span>
+    <span class="n">output_file</span> <span class="o">&lt;-</span> <span class="nf">file.path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="nf">paste0</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s">&quot;_dist_&quot;</span><span class="p">,</span> <span class="n">consensus</span><span class="p">,</span> <span class="s">&quot;.png&quot;</span><span class="p">))</span>
     
     <span class="nf">ggsave</span><span class="p">(</span><span class="n">filename</span> <span class="o">=</span> <span class="n">output_file</span><span class="p">,</span>
            <span class="n">plot</span> <span class="o">=</span> <span class="n">target_gg</span><span class="p">,</span>
            <span class="n">width</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
-           <span class="n">height</span> <span class="o">=</span> <span class="m">3.5</span><span class="p">,</span>
+           <span class="n">height</span> <span class="o">=</span> <span class="m">2.75</span><span class="p">,</span>
            <span class="n">dpi</span> <span class="o">=</span> <span class="m">400</span><span class="p">)</span>
     
     <span class="nf">print</span><span class="p">(</span><span class="n">target_gg</span><span class="p">)</span>
