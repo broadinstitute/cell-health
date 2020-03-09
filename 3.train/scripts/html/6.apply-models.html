@@ -13098,6 +13098,25 @@ div#notebook {
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/gway/miniconda3/envs/cell-health/lib/python3.7/site-packages/dask/array/random.py:27: FutureWarning: dask.array.random.doc_wraps is deprecated and will be removed in a future version
+  FutureWarning,
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -13173,7 +13192,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">consensus</span> <span class="o">=</span> <span class="s2">&quot;median&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">consensus</span> <span class="o">=</span> <span class="s2">&quot;modz&quot;</span>
 </pre></div>
 
     </div>
@@ -13347,7 +13366,7 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(1598, 70)
+<pre>(949, 70)
 </pre>
 </div>
 </div>
@@ -13377,27 +13396,27 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>cell_health_median_target_vb_live_cell_roundness</th>
-      <th>cell_health_median_target_cc_g1_plus_g2</th>
-      <th>cell_health_median_target_cc_g2_ph3_neg_n_objects</th>
-      <th>cell_health_median_target_cc_g2_plus_all_m</th>
-      <th>cell_health_median_target_cc_cc_g2_ph3_neg_mean</th>
-      <th>cell_health_median_target_cc_edu_pos_alexa647_intensity_nucleus_area_sum</th>
-      <th>cell_health_median_target_cc_edu_pos_n_spots_per_nucleus_area_mean</th>
-      <th>cell_health_median_target_vb_percent_all_early_apoptosis</th>
-      <th>cell_health_median_target_cc_g2_ph3_pos_high_n_spots_h2ax_mean</th>
-      <th>cell_health_median_target_cc_cc_high_n_spots_h2ax_mean</th>
+      <th>cell_health_modz_target_cc_late_mitosis_n_spots_h2ax_per_nucleus_area_mean</th>
+      <th>cell_health_modz_target_cc_all_nucleus_roundness_mean</th>
+      <th>cell_health_modz_target_cc_polyploid_n_objects</th>
+      <th>cell_health_modz_target_cc_g1_n_objects</th>
+      <th>cell_health_modz_target_cc_mitosis_n_objects</th>
+      <th>cell_health_modz_target_vb_num_live_cells</th>
+      <th>cell_health_modz_target_vb_percent_live</th>
+      <th>cell_health_modz_target_vb_live_cell_roundness</th>
+      <th>cell_health_modz_target_cc_all_large_notround_polynuclear_mean</th>
+      <th>cell_health_modz_target_cc_all_high_h2ax</th>
       <th>...</th>
-      <th>cell_health_median_target_cc_all_n_spots_per_nucleus_area_mean</th>
-      <th>cell_health_median_target_vb_ros_mean</th>
-      <th>cell_health_median_target_cc_polyploid_n_spots_per_nucleus_area_mean</th>
-      <th>cell_health_median_target_cc_polyploid_n_spots_mean</th>
-      <th>cell_health_median_target_cc_all_n_spots_mean</th>
-      <th>cell_health_median_target_cc_edu_pos_n_objects</th>
-      <th>cell_health_median_target_cc_all_nucleus_roundness_mean</th>
-      <th>cell_health_median_target_cc_mitosis_ph3_neg_n_objects</th>
-      <th>cell_health_median_target_vb_num_live_cells</th>
-      <th>cell_health_median_target_cc_mitosis_ph3_neg_n_spots_mean</th>
+      <th>cell_health_modz_target_cc_s_intensity_nucleus_area_mean</th>
+      <th>cell_health_modz_target_cc_g2_high_h2ax</th>
+      <th>cell_health_modz_target_cc_late_mitosis_n_spots_h2ax_mean</th>
+      <th>cell_health_modz_target_cc_cc_high_h2ax</th>
+      <th>cell_health_modz_target_vb_percent_dead_only</th>
+      <th>cell_health_modz_target_cc_s_high_h2ax</th>
+      <th>cell_health_modz_target_cc_cc_n_spots_h2ax_per_nucleus_area_mean</th>
+      <th>cell_health_modz_target_cc_s_n_spots_h2ax_per_nucleus_area_mean</th>
+      <th>cell_health_modz_target_cc_g1_plus_g2_count</th>
+      <th>cell_health_modz_target_vb_live_cell_width_length</th>
     </tr>
     <tr>
       <th>features</th>
@@ -13426,51 +13445,51 @@ div#notebook {
   </thead>
   <tbody>
     <tr>
-      <th>Cells_AreaShape_Area</th>
-      <td>-0.0</td>
-      <td>-0.0</td>
-      <td>-0.0</td>
-      <td>-0.0</td>
-      <td>-0.0</td>
+      <th>Cells_AreaShape_Center_Y</th>
+      <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>...</td>
-      <td>-0.0</td>
-      <td>-0.0</td>
-      <td>-0.0</td>
       <td>0.0</td>
       <td>-0.0</td>
       <td>0.0</td>
-      <td>0.063351</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
       <td>0.0</td>
       <td>-0.0</td>
       <td>-0.0</td>
     </tr>
     <tr>
-      <th>Cells_AreaShape_Center_X</th>
+      <th>Cells_AreaShape_Compactness</th>
+      <td>-0.0</td>
       <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>-0.0</td>
       <td>0.0</td>
       <td>-0.0</td>
       <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
       <td>-0.0</td>
       <td>...</td>
       <td>-0.0</td>
       <td>-0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>-0.0</td>
-      <td>0.0</td>
-      <td>0.000000</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
       <td>0.0</td>
     </tr>
   </tbody>
@@ -13517,7 +13536,7 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(1598, 70)
+<pre>(949, 70)
 </pre>
 </div>
 </div>
@@ -13547,27 +13566,27 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>cell_health_median_target_vb_infection_percentage</th>
-      <th>cell_health_median_target_cc_cc_ph3_neg_hoechst_late_mitosis_mean</th>
-      <th>cell_health_median_target_cc_edu_pos_n_objects</th>
-      <th>cell_health_median_target_cc_mitosis_ph3_neg_n_objects</th>
-      <th>cell_health_median_target_cc_g2_ph3_pos_n_objects</th>
-      <th>cell_health_median_target_vb_ros_mean</th>
-      <th>cell_health_median_target_vb_live_cell_area</th>
-      <th>cell_health_median_target_cc_edu_pos_n_spots_mean</th>
-      <th>cell_health_median_target_cc_g1_n_spots_mean</th>
-      <th>cell_health_median_target_cc_all_high_n_spots_h2ax_mean</th>
+      <th>cell_health_modz_target_cc_all_n_objects</th>
+      <th>cell_health_modz_target_cc_g1_high_h2ax</th>
+      <th>cell_health_modz_target_vb_num_live_cells</th>
+      <th>cell_health_modz_target_cc_all_high_h2ax</th>
+      <th>cell_health_modz_target_cc_g1_n_objects</th>
+      <th>cell_health_modz_target_cc_g1_n_spots_h2ax_per_nucleus_area_mean</th>
+      <th>cell_health_modz_target_cc_late_mitosis_n_spots_h2ax_mean</th>
+      <th>cell_health_modz_target_cc_cc_n_spots_h2ax_per_nucleus_area_mean</th>
+      <th>cell_health_modz_target_cc_cc_g1</th>
+      <th>cell_health_modz_target_cc_polynuclear_n_spots_h2ax_per_nucleus_area_mean</th>
       <th>...</th>
-      <th>cell_health_median_target_cc_cc_g2_ph3_neg_mean</th>
-      <th>cell_health_median_target_vb_percent_dead</th>
-      <th>cell_health_median_target_cc_all_n_spots_mean</th>
-      <th>cell_health_median_target_cc_polynuclear_high_n_spots_h2ax_mean</th>
-      <th>cell_health_median_target_cc_g2_ph3_pos_n_spots_mean</th>
-      <th>cell_health_median_target_cc_polynuclear_n_spots_mean</th>
-      <th>cell_health_median_target_cc_g2_ph3_neg_n_objects</th>
-      <th>cell_health_median_target_cc_mitosis_ph3_pos_n_objects</th>
-      <th>cell_health_median_target_cc_g2_g1</th>
-      <th>cell_health_median_target_vb_percent_all_late_apoptosis</th>
+      <th>cell_health_modz_target_cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
+      <th>cell_health_modz_target_cc_s_intensity_nucleus_area_sum</th>
+      <th>cell_health_modz_target_cc_early_mitosis_n_spots_h2ax_mean</th>
+      <th>cell_health_modz_target_cc_g1_n_spots_h2ax_mean</th>
+      <th>cell_health_modz_target_cc_cc_mitosis</th>
+      <th>cell_health_modz_target_cc_polynuclear_n_objects</th>
+      <th>cell_health_modz_target_cc_polynuclear_high_h2ax</th>
+      <th>cell_health_modz_target_cc_s_intensity_nucleus_area_mean</th>
+      <th>cell_health_modz_target_cc_early_mitosis_n_objects</th>
+      <th>cell_health_modz_target_cc_early_mitosis_high_h2ax</th>
     </tr>
     <tr>
       <th>features</th>
@@ -13596,52 +13615,52 @@ div#notebook {
   </thead>
   <tbody>
     <tr>
-      <th>Cells_AreaShape_Area</th>
+      <th>Cells_AreaShape_Center_Y</th>
       <td>0.0</td>
       <td>-0.0</td>
-      <td>-0.0</td>
       <td>0.0</td>
-      <td>0.0</td>
-      <td>-0.0</td>
-      <td>-0.0</td>
       <td>-0.0</td>
       <td>0.0</td>
       <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
       <td>...</td>
-      <td>-0.0</td>
+      <td>0.0</td>
       <td>0.0</td>
       <td>-0.0</td>
       <td>-0.0</td>
       <td>0.0</td>
       <td>-0.0</td>
       <td>-0.0</td>
-      <td>-0.0</td>
-      <td>-0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
       <td>-0.0</td>
     </tr>
     <tr>
-      <th>Cells_AreaShape_Center_X</th>
-      <td>-0.0</td>
-      <td>0.0</td>
-      <td>-0.0</td>
-      <td>-0.0</td>
+      <th>Cells_AreaShape_Compactness</th>
       <td>0.0</td>
       <td>-0.0</td>
       <td>0.0</td>
-      <td>-0.0</td>
+      <td>0.0</td>
       <td>-0.0</td>
       <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
       <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>-0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>-0.0</td>
       <td>-0.0</td>
       <td>-0.0</td>
       <td>-0.0</td>
       <td>0.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>0.00128</td>
+      <td>-0.0</td>
     </tr>
   </tbody>
 </table>
@@ -13716,9 +13735,11 @@ div#notebook {
 <span class="p">)</span>
 
 <span class="n">all_scores</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">metadata_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">all_scores</span><span class="p">,</span>
-                      <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">,</span>
-                      <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;profiles&quot;</span><span class="p">)</span>
+    <span class="n">metadata_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">all_scores</span><span class="p">,</span>
+        <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">,</span>
+        <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;profiles&quot;</span>
+    <span class="p">)</span>
     <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;profiles&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 
@@ -13730,8 +13751,9 @@ div#notebook {
 <span class="n">all_scores</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">strip_text</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">all_scores</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
 
 <span class="c1"># Output file</span>
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;all_model_predictions_</span><span class="si">{}</span><span class="s2">.tsv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">consensus</span><span class="p">))</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="s2">&quot;all_model_predictions_</span><span class="si">{}</span><span class="s2">.tsv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">consensus</span><span class="p">)</span>
+<span class="p">)</span>
 <span class="n">all_scores</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">all_scores</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -13785,21 +13807,21 @@ div#notebook {
       <th>Metadata_cell_line</th>
       <th>Metadata_pert_name</th>
       <th>Metadata_data_type</th>
-      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_high_h2ax</th>
       <th>cc_all_large_notround_polynuclear_mean</th>
       <th>cc_all_large_round_polyploid_mean</th>
       <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_mean</th>
-      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>cc_all_n_spots_h2ax_mean</th>
+      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
       <th>cc_all_nucleus_area_mean</th>
       <th>...</th>
       <th>vb_num_live_cells</th>
       <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_all_early_apoptosis</th>
-      <th>vb_percent_all_late_apoptosis</th>
       <th>vb_percent_caspase_dead_only</th>
       <th>vb_percent_dead</th>
       <th>vb_percent_dead_only</th>
+      <th>vb_percent_early_apoptosis</th>
+      <th>vb_percent_late_apoptosis</th>
       <th>vb_percent_live</th>
       <th>vb_ros_back_mean</th>
       <th>vb_ros_mean</th>
@@ -13835,48 +13857,48 @@ div#notebook {
       <td>A549</td>
       <td>AKT1-1</td>
       <td>train</td>
-      <td>0.194252</td>
-      <td>0.770066</td>
-      <td>0.432754</td>
-      <td>0.144081</td>
-      <td>0.373440</td>
-      <td>0.390171</td>
-      <td>-0.008175</td>
+      <td>0.219139</td>
+      <td>0.347752</td>
+      <td>-0.014601</td>
+      <td>0.151728</td>
+      <td>0.273698</td>
+      <td>0.216029</td>
+      <td>-0.090430</td>
       <td>...</td>
-      <td>-0.117877</td>
-      <td>0.043554</td>
-      <td>0.100592</td>
-      <td>-0.018492</td>
-      <td>0.072148</td>
-      <td>0.017899</td>
-      <td>0.033002</td>
-      <td>-0.018988</td>
-      <td>0.272452</td>
-      <td>0.782514</td>
+      <td>0.021872</td>
+      <td>0.144581</td>
+      <td>0.306686</td>
+      <td>0.150832</td>
+      <td>0.201712</td>
+      <td>0.150316</td>
+      <td>0.058777</td>
+      <td>-0.151460</td>
+      <td>0.281601</td>
+      <td>0.317835</td>
     </tr>
     <tr>
       <th>profile_1</th>
       <td>A549</td>
       <td>AKT1-2</td>
       <td>train</td>
-      <td>0.096767</td>
-      <td>0.310430</td>
-      <td>0.069082</td>
-      <td>0.267847</td>
-      <td>0.213499</td>
-      <td>0.153805</td>
-      <td>-0.186158</td>
+      <td>0.180354</td>
+      <td>0.313098</td>
+      <td>0.242201</td>
+      <td>0.215245</td>
+      <td>0.109491</td>
+      <td>0.138052</td>
+      <td>-0.114391</td>
       <td>...</td>
-      <td>0.136455</td>
-      <td>0.083848</td>
-      <td>0.092258</td>
-      <td>0.162315</td>
-      <td>0.068527</td>
-      <td>0.126104</td>
-      <td>0.127216</td>
-      <td>-0.126984</td>
-      <td>0.249835</td>
-      <td>0.656351</td>
+      <td>0.036097</td>
+      <td>0.085218</td>
+      <td>0.281135</td>
+      <td>0.190021</td>
+      <td>0.250567</td>
+      <td>0.110907</td>
+      <td>0.156190</td>
+      <td>-0.190896</td>
+      <td>0.081968</td>
+      <td>0.392189</td>
     </tr>
   </tbody>
 </table>
@@ -13920,8 +13942,9 @@ div#notebook {
 <span class="n">all_shuffle_scores</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">strip_text</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">all_shuffle_scores</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
 
 <span class="c1"># Output file</span>
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;all_model_predictions_shuffled_</span><span class="si">{}</span><span class="s2">.tsv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">consensus</span><span class="p">))</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="s2">&quot;all_model_predictions_shuffled_</span><span class="si">{}</span><span class="s2">.tsv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">consensus</span><span class="p">)</span>
+<span class="p">)</span>
 <span class="n">all_shuffle_scores</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">all_shuffle_scores</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -13975,21 +13998,21 @@ div#notebook {
       <th>Metadata_cell_line</th>
       <th>Metadata_pert_name</th>
       <th>Metadata_data_type</th>
-      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_high_h2ax</th>
       <th>cc_all_large_notround_polynuclear_mean</th>
       <th>cc_all_large_round_polyploid_mean</th>
       <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_mean</th>
-      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>cc_all_n_spots_h2ax_mean</th>
+      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
       <th>cc_all_nucleus_area_mean</th>
       <th>...</th>
       <th>vb_num_live_cells</th>
       <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_all_early_apoptosis</th>
-      <th>vb_percent_all_late_apoptosis</th>
       <th>vb_percent_caspase_dead_only</th>
       <th>vb_percent_dead</th>
       <th>vb_percent_dead_only</th>
+      <th>vb_percent_early_apoptosis</th>
+      <th>vb_percent_late_apoptosis</th>
       <th>vb_percent_live</th>
       <th>vb_ros_back_mean</th>
       <th>vb_ros_mean</th>
@@ -14025,48 +14048,48 @@ div#notebook {
       <td>A549</td>
       <td>AKT1-1</td>
       <td>train</td>
-      <td>0.232396</td>
-      <td>0.107642</td>
-      <td>0.076150</td>
-      <td>-0.199261</td>
-      <td>0.190197</td>
-      <td>0.260406</td>
-      <td>0.204475</td>
+      <td>0.283408</td>
+      <td>0.302838</td>
+      <td>0.261533</td>
+      <td>-0.052079</td>
+      <td>0.242281</td>
+      <td>0.276496</td>
+      <td>0.176105</td>
       <td>...</td>
-      <td>-0.073629</td>
-      <td>0.111316</td>
-      <td>0.098742</td>
-      <td>0.084216</td>
-      <td>0.065425</td>
-      <td>0.074725</td>
-      <td>0.129232</td>
-      <td>-0.170322</td>
-      <td>-0.061968</td>
-      <td>0.023458</td>
+      <td>-0.263365</td>
+      <td>0.222611</td>
+      <td>0.222697</td>
+      <td>0.179944</td>
+      <td>0.267044</td>
+      <td>0.152208</td>
+      <td>0.231602</td>
+      <td>-0.327383</td>
+      <td>-0.007581</td>
+      <td>0.027778</td>
     </tr>
     <tr>
       <th>profile_1</th>
       <td>A549</td>
       <td>AKT1-2</td>
       <td>train</td>
-      <td>0.283487</td>
-      <td>0.204544</td>
-      <td>0.085797</td>
-      <td>-0.164824</td>
-      <td>0.222316</td>
-      <td>0.260406</td>
-      <td>0.163884</td>
+      <td>0.301200</td>
+      <td>0.332812</td>
+      <td>0.261533</td>
+      <td>-0.070843</td>
+      <td>0.228718</td>
+      <td>0.276496</td>
+      <td>0.138127</td>
       <td>...</td>
-      <td>-0.078440</td>
-      <td>0.130736</td>
-      <td>0.098742</td>
-      <td>0.016159</td>
-      <td>0.066085</td>
-      <td>0.069688</td>
-      <td>0.097255</td>
-      <td>-0.144882</td>
-      <td>-0.066892</td>
-      <td>0.038054</td>
+      <td>-0.263365</td>
+      <td>0.223070</td>
+      <td>0.236935</td>
+      <td>0.264971</td>
+      <td>0.267044</td>
+      <td>0.152384</td>
+      <td>0.231602</td>
+      <td>-0.273873</td>
+      <td>-0.007581</td>
+      <td>0.027778</td>
     </tr>
   </tbody>
 </table>
@@ -14143,24 +14166,24 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_high_h2ax</th>
       <th>cc_all_large_notround_polynuclear_mean</th>
       <th>cc_all_large_round_polyploid_mean</th>
       <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_mean</th>
-      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>cc_all_n_spots_h2ax_mean</th>
+      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
       <th>cc_all_nucleus_area_mean</th>
       <th>cc_all_nucleus_roundness_mean</th>
-      <th>cc_cc_edu_pos_mean</th>
-      <th>cc_cc_g1_mean</th>
+      <th>cc_cc_early_mitosis</th>
+      <th>cc_cc_g1</th>
       <th>...</th>
       <th>vb_num_live_cells</th>
       <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_all_early_apoptosis</th>
-      <th>vb_percent_all_late_apoptosis</th>
       <th>vb_percent_caspase_dead_only</th>
       <th>vb_percent_dead</th>
       <th>vb_percent_dead_only</th>
+      <th>vb_percent_early_apoptosis</th>
+      <th>vb_percent_late_apoptosis</th>
       <th>vb_percent_live</th>
       <th>vb_ros_back_mean</th>
       <th>vb_ros_mean</th>
@@ -14193,51 +14216,51 @@ div#notebook {
   <tbody>
     <tr>
       <th>profile_0</th>
-      <td>0.008156</td>
-      <td>0.587977</td>
-      <td>0.01882</td>
-      <td>0.381501</td>
-      <td>0.176564</td>
-      <td>0.187675</td>
-      <td>-0.170616</td>
-      <td>0.039147</td>
-      <td>0.085392</td>
-      <td>0.040949</td>
+      <td>-0.005795</td>
+      <td>0.580351</td>
+      <td>0.013975</td>
+      <td>0.381958</td>
+      <td>0.150696</td>
+      <td>0.162511</td>
+      <td>-0.167603</td>
+      <td>0.040322</td>
+      <td>0.375966</td>
+      <td>0.043915</td>
       <td>...</td>
-      <td>0.399842</td>
+      <td>0.438339</td>
+      <td>0.059414</td>
+      <td>-0.065050</td>
+      <td>-0.020236</td>
+      <td>-0.007970</td>
+      <td>0.082424</td>
       <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>-0.118976</td>
-      <td>-0.132871</td>
-      <td>-0.121090</td>
-      <td>0.132882</td>
-      <td>0.806970</td>
-      <td>1.293984</td>
+      <td>0.020263</td>
+      <td>0.408214</td>
+      <td>0.654575</td>
     </tr>
     <tr>
       <th>profile_1</th>
-      <td>0.056667</td>
-      <td>1.264627</td>
-      <td>0.24145</td>
-      <td>0.568443</td>
-      <td>0.235304</td>
-      <td>0.372684</td>
-      <td>-0.276888</td>
-      <td>-0.183445</td>
-      <td>0.883316</td>
-      <td>-1.024142</td>
+      <td>0.050169</td>
+      <td>1.277730</td>
+      <td>0.241808</td>
+      <td>0.577422</td>
+      <td>0.220829</td>
+      <td>0.366989</td>
+      <td>-0.278044</td>
+      <td>-0.182571</td>
+      <td>0.736046</td>
+      <td>-1.023968</td>
       <td>...</td>
-      <td>0.101670</td>
-      <td>0.318027</td>
-      <td>0.132751</td>
-      <td>0.467027</td>
-      <td>0.621374</td>
-      <td>0.100032</td>
-      <td>0.074036</td>
-      <td>-0.099917</td>
-      <td>0.558041</td>
-      <td>1.151867</td>
+      <td>0.067568</td>
+      <td>0.256141</td>
+      <td>0.575026</td>
+      <td>0.225091</td>
+      <td>0.220461</td>
+      <td>0.132834</td>
+      <td>0.386327</td>
+      <td>-0.224965</td>
+      <td>0.284962</td>
+      <td>0.567898</td>
     </tr>
   </tbody>
 </table>
@@ -14259,14 +14282,17 @@ div#notebook {
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_score_error</span> <span class="o">=</span> <span class="n">sample_squared_error</span><span class="p">(</span><span class="n">scores</span><span class="o">=</span><span class="n">all_scores</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_df</span><span class="p">)</span>
 
 <span class="n">all_score_error</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">metadata_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">all_score_error</span><span class="p">,</span>
-                      <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">,</span>
-                      <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">metadata_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">all_score_error</span><span class="p">,</span>
+        <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">,</span>
+        <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
 <span class="p">)</span>
 
 <span class="c1"># Output file</span>
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;all_model_sample_squared_error_</span><span class="si">{}</span><span class="s2">.tsv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">consensus</span><span class="p">))</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="s2">&quot;all_model_sample_squared_error_</span><span class="si">{}</span><span class="s2">.tsv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">consensus</span><span class="p">)</span>
+<span class="p">)</span>
 <span class="n">all_score_error</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">all_score_error</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -14320,21 +14346,21 @@ div#notebook {
       <th>Metadata_profile_id</th>
       <th>Metadata_cell_line</th>
       <th>Metadata_pert_name</th>
-      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_high_h2ax</th>
       <th>cc_all_large_notround_polynuclear_mean</th>
       <th>cc_all_large_round_polyploid_mean</th>
       <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_mean</th>
-      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>cc_all_n_spots_h2ax_mean</th>
+      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
       <th>cc_all_nucleus_area_mean</th>
       <th>...</th>
       <th>vb_num_live_cells</th>
       <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_all_early_apoptosis</th>
-      <th>vb_percent_all_late_apoptosis</th>
       <th>vb_percent_caspase_dead_only</th>
       <th>vb_percent_dead</th>
       <th>vb_percent_dead_only</th>
+      <th>vb_percent_early_apoptosis</th>
+      <th>vb_percent_late_apoptosis</th>
       <th>vb_percent_live</th>
       <th>vb_ros_back_mean</th>
       <th>vb_ros_mean</th>
@@ -14346,48 +14372,48 @@ div#notebook {
       <td>profile_0</td>
       <td>A549</td>
       <td>AKT1-1</td>
-      <td>0.034631</td>
-      <td>0.033156</td>
-      <td>0.171341</td>
-      <td>0.056368</td>
-      <td>0.038760</td>
-      <td>0.041005</td>
-      <td>0.026387</td>
+      <td>0.050595</td>
+      <td>0.054102</td>
+      <td>8.165820e-04</td>
+      <td>0.053006</td>
+      <td>0.015129</td>
+      <td>0.002864</td>
+      <td>0.005956</td>
       <td>...</td>
-      <td>0.268033</td>
-      <td>0.001897</td>
-      <td>0.010119</td>
-      <td>0.000342</td>
-      <td>0.036528</td>
-      <td>0.022732</td>
-      <td>0.023745</td>
-      <td>0.023064</td>
-      <td>0.285710</td>
-      <td>0.261601</td>
+      <td>0.173445</td>
+      <td>0.007253</td>
+      <td>0.138188</td>
+      <td>0.029265</td>
+      <td>0.043966</td>
+      <td>0.004609</td>
+      <td>0.003455</td>
+      <td>0.029489</td>
+      <td>0.016031</td>
+      <td>0.113393</td>
     </tr>
     <tr>
       <th>1</th>
       <td>profile_1</td>
       <td>A549</td>
       <td>AKT1-2</td>
-      <td>0.001608</td>
-      <td>0.910491</td>
-      <td>0.029711</td>
-      <td>0.090358</td>
-      <td>0.000475</td>
-      <td>0.047908</td>
-      <td>0.008232</td>
+      <td>0.016948</td>
+      <td>0.930516</td>
+      <td>1.545028e-07</td>
+      <td>0.131172</td>
+      <td>0.012396</td>
+      <td>0.052412</td>
+      <td>0.026782</td>
       <td>...</td>
-      <td>0.001210</td>
-      <td>0.054839</td>
-      <td>0.001640</td>
-      <td>0.092850</td>
-      <td>0.305640</td>
-      <td>0.000680</td>
-      <td>0.002828</td>
-      <td>0.000733</td>
-      <td>0.094991</td>
-      <td>0.245537</td>
+      <td>0.000990</td>
+      <td>0.029215</td>
+      <td>0.086372</td>
+      <td>0.001230</td>
+      <td>0.000906</td>
+      <td>0.000481</td>
+      <td>0.052963</td>
+      <td>0.001161</td>
+      <td>0.041206</td>
+      <td>0.030874</td>
     </tr>
   </tbody>
 </table>
@@ -14409,14 +14435,17 @@ div#notebook {
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_shuffle_score_error</span> <span class="o">=</span> <span class="n">sample_squared_error</span><span class="p">(</span><span class="n">scores</span><span class="o">=</span><span class="n">all_shuffle_scores</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_df</span><span class="p">)</span>
 
 <span class="n">all_shuffle_score_error</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">metadata_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">all_shuffle_score_error</span><span class="p">,</span>
-                      <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">,</span>
-                      <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">metadata_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">all_shuffle_score_error</span><span class="p">,</span>
+        <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;Metadata_profile_id&quot;</span><span class="p">,</span>
+        <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
 <span class="p">)</span>
 
 <span class="c1"># Output file</span>
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;all_model_sample_squared_error_shuffled_</span><span class="si">{}</span><span class="s2">.tsv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">consensus</span><span class="p">))</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="s2">&quot;all_model_sample_squared_error_shuffled_</span><span class="si">{}</span><span class="s2">.tsv&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">consensus</span><span class="p">)</span>
+<span class="p">)</span>
 <span class="n">all_shuffle_score_error</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">all_shuffle_score_error</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -14470,21 +14499,21 @@ div#notebook {
       <th>Metadata_profile_id</th>
       <th>Metadata_cell_line</th>
       <th>Metadata_pert_name</th>
-      <th>cc_all_high_n_spots_h2ax_mean</th>
+      <th>cc_all_high_h2ax</th>
       <th>cc_all_large_notround_polynuclear_mean</th>
       <th>cc_all_large_round_polyploid_mean</th>
       <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_mean</th>
-      <th>cc_all_n_spots_per_nucleus_area_mean</th>
+      <th>cc_all_n_spots_h2ax_mean</th>
+      <th>cc_all_n_spots_h2ax_per_nucleus_area_mean</th>
       <th>cc_all_nucleus_area_mean</th>
       <th>...</th>
       <th>vb_num_live_cells</th>
       <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_all_early_apoptosis</th>
-      <th>vb_percent_all_late_apoptosis</th>
       <th>vb_percent_caspase_dead_only</th>
       <th>vb_percent_dead</th>
       <th>vb_percent_dead_only</th>
+      <th>vb_percent_early_apoptosis</th>
+      <th>vb_percent_late_apoptosis</th>
       <th>vb_percent_live</th>
       <th>vb_ros_back_mean</th>
       <th>vb_ros_mean</th>
@@ -14496,120 +14525,120 @@ div#notebook {
       <td>profile_0</td>
       <td>A549</td>
       <td>AKT1-1</td>
-      <td>0.050284</td>
-      <td>0.230722</td>
-      <td>0.003287</td>
-      <td>0.337285</td>
-      <td>0.000186</td>
-      <td>0.005290</td>
-      <td>0.140693</td>
+      <td>0.083638</td>
+      <td>0.077014</td>
+      <td>0.061285</td>
+      <td>0.188387</td>
+      <td>0.008388</td>
+      <td>0.012993</td>
+      <td>0.118136</td>
       <td>...</td>
-      <td>0.224174</td>
-      <td>0.012391</td>
-      <td>0.009750</td>
-      <td>0.007092</td>
-      <td>0.034004</td>
-      <td>0.043096</td>
-      <td>0.062661</td>
-      <td>0.091932</td>
-      <td>0.755053</td>
-      <td>1.614235</td>
+      <td>0.492389</td>
+      <td>0.026633</td>
+      <td>0.082798</td>
+      <td>0.040072</td>
+      <td>0.075633</td>
+      <td>0.004870</td>
+      <td>0.053640</td>
+      <td>0.120858</td>
+      <td>0.172885</td>
+      <td>0.392873</td>
     </tr>
     <tr>
       <th>1</th>
       <td>profile_1</td>
       <td>A549</td>
       <td>AKT1-2</td>
-      <td>0.051447</td>
-      <td>1.123775</td>
-      <td>0.024228</td>
-      <td>0.537680</td>
-      <td>0.000169</td>
-      <td>0.012606</td>
-      <td>0.194280</td>
+      <td>0.063016</td>
+      <td>0.892871</td>
+      <td>0.000389</td>
+      <td>0.420247</td>
+      <td>0.000062</td>
+      <td>0.008189</td>
+      <td>0.173199</td>
       <td>...</td>
-      <td>0.032440</td>
-      <td>0.035078</td>
-      <td>0.001157</td>
-      <td>0.203282</td>
-      <td>0.308346</td>
-      <td>0.000921</td>
-      <td>0.000539</td>
-      <td>0.002022</td>
-      <td>0.390541</td>
-      <td>1.240580</td>
+      <td>0.109516</td>
+      <td>0.001094</td>
+      <td>0.114305</td>
+      <td>0.001590</td>
+      <td>0.002170</td>
+      <td>0.000382</td>
+      <td>0.023940</td>
+      <td>0.002392</td>
+      <td>0.085581</td>
+      <td>0.291729</td>
     </tr>
     <tr>
       <th>2</th>
       <td>profile_2</td>
       <td>A549</td>
       <td>ARID1B-1</td>
-      <td>0.006693</td>
-      <td>0.619379</td>
-      <td>0.000105</td>
-      <td>0.174884</td>
-      <td>0.003084</td>
-      <td>0.048971</td>
-      <td>0.259567</td>
+      <td>0.001842</td>
+      <td>0.946663</td>
+      <td>0.009291</td>
+      <td>0.059281</td>
+      <td>0.009616</td>
+      <td>0.056439</td>
+      <td>0.194469</td>
       <td>...</td>
-      <td>0.078047</td>
-      <td>0.038643</td>
-      <td>0.004411</td>
-      <td>0.004668</td>
-      <td>0.286468</td>
-      <td>0.005216</td>
-      <td>0.039325</td>
-      <td>0.000061</td>
-      <td>0.153808</td>
-      <td>0.001152</td>
+      <td>0.132299</td>
+      <td>0.005449</td>
+      <td>0.047055</td>
+      <td>0.031011</td>
+      <td>0.048113</td>
+      <td>0.009442</td>
+      <td>0.002667</td>
+      <td>0.037270</td>
+      <td>0.126868</td>
+      <td>0.054623</td>
     </tr>
     <tr>
       <th>3</th>
       <td>profile_3</td>
       <td>A549</td>
       <td>ARID1B-2</td>
-      <td>0.044707</td>
-      <td>0.011251</td>
-      <td>0.051064</td>
-      <td>0.093901</td>
-      <td>0.515359</td>
-      <td>0.301510</td>
-      <td>0.107236</td>
+      <td>0.030760</td>
+      <td>0.015668</td>
+      <td>0.123070</td>
+      <td>0.000056</td>
+      <td>0.388985</td>
+      <td>0.332670</td>
+      <td>0.079861</td>
       <td>...</td>
-      <td>0.272981</td>
-      <td>0.000593</td>
-      <td>0.001593</td>
-      <td>0.032285</td>
-      <td>0.095200</td>
-      <td>0.014476</td>
-      <td>0.055421</td>
-      <td>0.041921</td>
-      <td>0.038849</td>
-      <td>0.000061</td>
+      <td>0.299392</td>
+      <td>0.006259</td>
+      <td>0.033898</td>
+      <td>0.100248</td>
+      <td>0.124399</td>
+      <td>0.000245</td>
+      <td>0.014339</td>
+      <td>0.151583</td>
+      <td>0.042381</td>
+      <td>0.036387</td>
     </tr>
     <tr>
       <th>4</th>
       <td>profile_4</td>
       <td>A549</td>
       <td>ATF4-1</td>
-      <td>17.250360</td>
-      <td>0.004613</td>
-      <td>7.726477</td>
-      <td>4.274692</td>
-      <td>5.035212</td>
-      <td>6.856712</td>
-      <td>4.985655</td>
+      <td>18.138688</td>
+      <td>0.056188</td>
+      <td>9.137624</td>
+      <td>6.662628</td>
+      <td>7.461677</td>
+      <td>7.780065</td>
+      <td>6.031018</td>
       <td>...</td>
-      <td>5.506620</td>
-      <td>0.000620</td>
-      <td>0.009750</td>
-      <td>0.135282</td>
-      <td>0.026209</td>
-      <td>0.126680</td>
-      <td>0.143393</td>
-      <td>0.003830</td>
-      <td>0.582192</td>
-      <td>0.001354</td>
+      <td>4.712250</td>
+      <td>0.010302</td>
+      <td>0.003566</td>
+      <td>0.007877</td>
+      <td>0.026305</td>
+      <td>0.032464</td>
+      <td>0.001500</td>
+      <td>0.225108</td>
+      <td>0.645918</td>
+      <td>0.014468</td>
     </tr>
   </tbody>
 </table>

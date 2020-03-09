@@ -175,9 +175,11 @@ all_scores = (
 )
 
 all_scores = (
-    metadata_df.merge(all_scores,
-                      left_on="Metadata_profile_id",
-                      right_on="profiles")
+    metadata_df.merge(
+        all_scores,
+        left_on="Metadata_profile_id",
+        right_on="profiles"
+    )
     .drop("profiles", axis="columns")
 )
 
@@ -189,8 +191,9 @@ strip_text = "cell_health_{}_target_".format(consensus)
 all_scores.columns = [x.replace(strip_text, "") for x in all_scores.columns]
 
 # Output file
-file = os.path.join("results",
-                    "all_model_predictions_{}.tsv".format(consensus))
+file = os.path.join(
+    "results", "all_model_predictions_{}.tsv".format(consensus)
+)
 all_scores.to_csv(file, sep='\t', index=True)
 
 print(all_scores.shape)
@@ -225,8 +228,9 @@ strip_text = "cell_health_{}_target_".format(consensus)
 all_shuffle_scores.columns = [x.replace(strip_text, "") for x in all_shuffle_scores.columns]
 
 # Output file
-file = os.path.join("results",
-                    "all_model_predictions_shuffled_{}.tsv".format(consensus))
+file = os.path.join(
+    "results", "all_model_predictions_shuffled_{}.tsv".format(consensus)
+)
 all_shuffle_scores.to_csv(file, sep='\t', index=True)
 
 print(all_shuffle_scores.shape)
@@ -252,14 +256,17 @@ y_df.head(2)
 all_score_error = sample_squared_error(scores=all_scores, y=y_df)
 
 all_score_error = (
-    metadata_df.merge(all_score_error,
-                      left_on="Metadata_profile_id",
-                      right_index=True)
+    metadata_df.merge(
+        all_score_error,
+        left_on="Metadata_profile_id",
+        right_index=True
+    )
 )
 
 # Output file
-file = os.path.join("results",
-                    "all_model_sample_squared_error_{}.tsv".format(consensus))
+file = os.path.join(
+    "results", "all_model_sample_squared_error_{}.tsv".format(consensus)
+)
 all_score_error.to_csv(file, sep='\t', index=False)
 
 print(all_score_error.shape)
@@ -272,14 +279,17 @@ all_score_error.head(2)
 all_shuffle_score_error = sample_squared_error(scores=all_shuffle_scores, y=y_df)
 
 all_shuffle_score_error = (
-    metadata_df.merge(all_shuffle_score_error,
-                      left_on="Metadata_profile_id",
-                      right_index=True)
+    metadata_df.merge(
+        all_shuffle_score_error,
+        left_on="Metadata_profile_id",
+        right_index=True
+    )
 )
 
 # Output file
-file = os.path.join("results",
-                    "all_model_sample_squared_error_shuffled_{}.tsv".format(consensus))
+file = os.path.join(
+    "results", "all_model_sample_squared_error_shuffled_{}.tsv".format(consensus)
+)
 all_shuffle_score_error.to_csv(file, sep='\t', index=False)
 
 print(all_shuffle_score_error.shape)
