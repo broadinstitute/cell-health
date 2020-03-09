@@ -162,11 +162,15 @@ coef_df <- readr::read_tsv(
         remove = FALSE
     )
 
-coef_df$shuffle <- dplyr::recode(coef_df$shuffle,
-                                 "shuffle_true" = "Permuted",
-                                 "shuffle_false" = "Real")
-coef_df$shuffle <- factor(coef_df$shuffle,
-                          levels = c("Real", "Permuted"))
+coef_df$shuffle <- dplyr::recode(
+    coef_df$shuffle,
+    "shuffle_true" = "Permuted",
+    "shuffle_false" = "Real"
+)
+coef_df$shuffle <- factor(
+    coef_df$shuffle,
+    levels = c("Real", "Permuted")
+)
 
 print(dim(coef_df))
 head(coef_df, 5)
