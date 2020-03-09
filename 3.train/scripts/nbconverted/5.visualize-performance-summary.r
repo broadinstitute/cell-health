@@ -3,6 +3,8 @@ suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(cowplot))
 suppressPackageStartupMessages(library(ggrepel))
 
+source(file.path("scripts", "assay_themes.R"))
+
 consensus <- "modz"
 
 results_dir <- "results"
@@ -106,44 +108,12 @@ auc_df <- train_auc_df %>%
 print(dim(auc_df))
 head(auc_df, 2)
 
-measurement_levels <- c(
-    "shape",
-    "apoptosis",
-    "death",
-    "cell_viability",
-    "dna_damage",
-    "ros",
-    "cell_cycle",
-    "g1_arrest",
-    "g2_arrest",
-    "g2_m_arrest",
-    "mitosis",
-    "s_arrest",
-    "other"
-)
-
-assay_levels <- c(
-    "hoechst",
-    "edu",
-    "gh2ax",
-    "ph3",
-    "hoechst_gh2ax",
-    "hoechst_edu",
-    "edu_gh2ax",
-    "caspase",
-    "draq",
-    "draq_caspase",
-    "many_cell_cycle",
-    "crispr_efficiency"
-)
-
 metric_df <- regression_subset_df %>%
     dplyr::inner_join(auc_df, by = c("target", "data_fit", "shuffle")) %>%
-    dplyr::left_join(label_df, by = c("target" = "updated_name"))
+    dplyr::left_join(label_df, by = c("target" = "id"))
 
 metric_df$mse = abs(metric_df$mse)
 
-metric_df$maria_thumbs_up <- tidyr::replace_na(metric_df$maria_thumbs_up, 0)
 metric_df$measurement <- tidyr::replace_na(metric_df$measurement, "other")
 
 metric_df$measurement <- factor(
@@ -153,80 +123,17 @@ metric_df$measurement <- factor(
 
 metric_df$assay <- factor(
     metric_df$assay,
-    levels = assay_levels
+    levels = dye_levels
 )
 
 print(dim(metric_df))
 head(metric_df, 3)
 
-# Set some plotting defaults
-measurement_colors <- c(
-    "shape" = "#6a3d9a",
-    "apoptosis" = "#a6cee3",
-    "death" = "#33a02c",
-    "cell_viability" = "#b2df8a",
-    "dna_damage" = "#fb9a99",
-    "ros" = "red",
-    "cell_cycle" = "#1f78b4",
-    "g1_arrest" = "#fdbf6f",
-    "g2_arrest" = "#ff7f00",
-    "g2_m_arrest" = "#005c8c",
-    "mitosis" = "green",
-    "s_arrest" = "#cab2d6",
-    "other" = "black"
-)
-
-measurement_labels <- c(
-    "shape" = "Shape",
-    "apoptosis" = "Apoptosis",
-    "death" = "Death",
-    "cell_viability" = "Cell Viability",
-    "dna_damage" = "DNA Damage",
-    "ros" = "Reactive Oxygen Species", 
-    "cell_cycle" = "Cell Cycle Gates",
-    "g1_arrest" = "G1 Arrest",
-    "g2_arrest" = "G2 Arrest",
-    "g2_m_arrest" = "G2/M Arrest",
-    "mitosis" = "Mitosis",
-    "s_arrest" = "S Arrest",
-    "other" = "Other"
-)
-
-dye_colors <- c(
-    "hoechst" = "#639B94",
-    "edu" = "#E45242",
-    "gh2ax" = "#E2C552",
-    "ph3" = "#7B9C32",
-    "hoechst_gh2ax" = "#535f52",
-    "hoechst_edu" = "#73414b",
-    "edu_gh2ax" = "#e37a48",
-    "caspase" = "#F7B1C1",
-    "draq" = "#FF6699",
-    "draq_caspase" = "#7f4a72",
-    "many_cell_cycle" = "#E9DFC3",
-    "crispr_efficiency" = "black"
-)
-
-dye_labels <- c(
-    "hoechst" = "Hoechst",
-    "edu" = "EdU",
-    "gh2ax" = "gH2AX",
-    "ph3" = "pH3",
-    "hoechst_gh2ax" = "Hoechst + gH2AX",
-    "hoechst_edu" = "Hoechst + EdU",
-    "edu_gh2ax" = "EdU + gH2AX",
-    "caspase" = "Caspase 3/7",
-    "draq" = "DRAQ7",
-    "draq_caspase" = "DRAQ7 + Caspase 3/7",
-    "many_cell_cycle" = "Cell Cycle (Many Dyes)",
-    "crispr_efficiency" = "CRISPR Efficiency"
-)
-
 # Note that the points that failed to plot did not contain enough positive samples in test set
 ggplot(metric_df,
        aes(x = AUROC_test,
            y = AUROC_train)) +
-    geom_point(alpha = 0.95,
+    geom_point(alpha = 0.6,
                size = 1.7,
                aes(color = assay)) +
     ggtitle("Classification Summary") +
@@ -242,8 +149,6 @@ ggplot(metric_df,
                 intercept = 0, 
                 color = "red",
                 linetype = "dashed") +
-    xlim(c(0.3, 1.01)) +
-    ylim(c(0.3, 1.01)) +
     coord_fixed() +
     scale_color_manual(name = "Assay",
                        values = dye_colors,
@@ -258,7 +163,7 @@ ggsave(file, dpi = 300, width = 6, height = 4.5)
 
 ggplot(metric_df, aes(x = AUROC_test,
                       y = r_two)) +
-    geom_point(alpha = 0.95,
+    geom_point(alpha = 0.6,
                size = 1.7,
                aes(color = assay)) +
     xlab("Test Set - AUROC") +
@@ -287,7 +192,7 @@ ggsave(file, dpi = 300, width = 6, height = 4.5)
 
 # Get data ready for plotting
 auc_test_full_df <- dplyr::bind_rows(auroc_df, aupr_df) %>%
-    dplyr::left_join(label_df, by = c("target" = "updated_name")) %>%
+    dplyr::left_join(label_df, by = c("target" = "id")) %>%
     dplyr::filter(data_fit == "test")
 
 auc_test_full_real_df <- auc_test_full_df %>%
@@ -332,7 +237,7 @@ r_two_df <- regression_metrics_df %>%
                   shuffle == "shuffle_false",
                   y_transform == "raw") %>%
     tidyr::spread(data_fit, value) %>%
-    dplyr::left_join(label_df, by=c("target" = "updated_name"))
+    dplyr::left_join(label_df, by=c("target" = "id"))
 
 r_two_df$measurement <- factor(
     r_two_df$measurement,
@@ -342,7 +247,7 @@ r_two_df$measurement <- tidyr::replace_na(r_two_df$measurement, "other")
 
 r_two_df$assay <- factor(
     r_two_df$assay,
-    levels = assay_levels
+    levels = dye_levels
 )
 
 print(dim(r_two_df))
@@ -350,7 +255,7 @@ head(r_two_df, 2)
 
 ggplot(r_two_df,
        aes(y = train, x = test)) +
-    geom_point(alpha = 0.95,
+    geom_point(alpha = 0.6,
                size = 2,
                aes(color = measurement)) +
     geom_vline(xintercept = 0,
@@ -367,8 +272,6 @@ ggplot(r_two_df,
             linetype = "dashed",
             color = "red",
             alpha = 0.7) +
-    xlim(c(-0.4, 1.1)) +
-    ylim(c(-0.4, 1.1)) +
     scale_color_manual(name = "Measurement",
                        values = measurement_colors,
                        labels = measurement_labels) +
@@ -382,7 +285,7 @@ ggsave(file, dpi = 300, width = 6, height = 4.25)
 
 ggplot(r_two_df,
        aes(y = train, x = test)) +
-    geom_point(alpha = 0.95,
+    geom_point(alpha = 0.6,
                size = 1.7,
                aes(color = assay)) +
     ylab("Training -  R squared") +
@@ -397,8 +300,6 @@ ggplot(r_two_df,
                 intercept = 0, 
                 color = "red",
                 linetype = "dashed") +
-    xlim(c(-0.4, 1.1)) +
-    ylim(c(-0.4, 1.1)) +
     coord_fixed() +
     scale_color_manual(name = "Assay",
                        values = dye_colors,
