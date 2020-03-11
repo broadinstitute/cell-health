@@ -310,7 +310,7 @@ output_file <- file.path(
     figure_dir,
     paste0("cell_line_differences_rsquared_", consensus, ".png")
 )
-ggsave(file, rsquared_bar_cellline_gg, dpi = 500, width = 7, height = 6)
+ggsave(output_file, rsquared_bar_cellline_gg, dpi = 500, width = 7, height = 6)
 rsquared_bar_cellline_gg
 
 regression_legend <- cowplot::get_legend(rsquared_bar_gg)
