@@ -39,9 +39,9 @@ measurement_colors <- c(
 measurement_labels <- c(
     "cell_viability"=  "Cell Viability",
     "dna_damage" = "DNA Damage",
-    "g1_phase" = "G1",
-    "s_phase" = "S",
-    "g2_phase" = "G2",
+    "g1_phase" = "G1 Phase",
+    "s_phase" = "S Phase",
+    "g2_phase" = "G2 Phase",
     "early_mitosis" = "Early Mitosis",
     "mitosis" = "Mitosis",
     "late_mitosis" = "Late Mitosis",
