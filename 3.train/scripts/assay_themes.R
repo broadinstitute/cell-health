@@ -1,5 +1,7 @@
 # Specific themes, colors, and text to be held consistent in visualizing assay model performance
 
+library(ggplot2)
+
 measurement_levels <- c(
     "cell_viability",
     "dna_damage",
@@ -37,9 +39,9 @@ measurement_colors <- c(
 measurement_labels <- c(
     "cell_viability"=  "Cell Viability",
     "dna_damage" = "DNA Damage",
-    "g1_phase" = "G1",
-    "s_phase" = "S",
-    "g2_phase" = "G2",
+    "g1_phase" = "G1 Phase",
+    "s_phase" = "S Phase",
+    "g2_phase" = "G2 Phase",
     "early_mitosis" = "Early Mitosis",
     "mitosis" = "Mitosis",
     "late_mitosis" = "Late Mitosis",
@@ -94,4 +96,23 @@ dye_labels <- c(
   'cell_rox' = "CellROX",
   "dpc" = "DPC (Shape)",
   "qc" = "CRISPR Efficiency"
+)
+
+dye_theme <- theme(
+    axis.title = element_text(size = 4),
+    axis.title.x = element_text(margin = margin(0, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 0, 0, 0)),
+    axis.text = element_text(size = 4),
+    axis.ticks = element_line(size = 0.1),
+    axis.ticks.length = unit(0.05, "cm"),
+    plot.title = element_text(size = 5, margin = margin(0, 0, 0, 0)),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "mm"),
+    legend.title = element_text(size = 3.5),
+    legend.text = element_text(size = 3.5),
+    legend.key.height = unit(0.2, "line"),
+    legend.key.width = unit(-0.2, "line"),
+    panel.grid.minor = element_line(size = 0.1),
+    panel.grid.major = element_line(size = 0.2),
+    legend.margin = margin(-5, 7, 0, 0),
+    legend.box.margin=margin(0, -5, 5, -5)
 )

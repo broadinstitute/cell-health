@@ -1,6 +1,9 @@
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(cowplot))
 suppressPackageStartupMessages(library(ggrepel))
+
+source(file.path("scripts", "assay_themes.R"))
 
 consensus <- "modz"
 
@@ -22,8 +25,7 @@ regression_file <- file.path(
     results_dir, 
     paste0("full_cell_health_regression_", consensus, ".tsv.gz")
 )
-regression_metrics_df <- readr::read_tsv(regression_file, col_types = readr::cols()) %>%
-    dplyr::filter(cell_line == "all")
+all_regression_metrics_df <- readr::read_tsv(regression_file, col_types = readr::cols())
 
 # Model coefficients
 coef_file <- file.path(
@@ -60,6 +62,8 @@ label_file <- file.path(
 )
 label_df <- readr::read_csv(label_file, col_types = readr::cols())
 
+head(label_df)
+
 # Combine data for downstream processing
 y_binary_subset_true_df <- y_df %>%
     dplyr::filter(y_type == "y_true")
@@ -88,118 +92,76 @@ y_plot_df$data_type <- dplyr::recode(
 print(dim(y_plot_df))
 head(y_plot_df, 3)
 
-regression_metrics_df$data_fit <- dplyr::recode(
-    regression_metrics_df$data_fit,
+all_regression_metrics_df$data_fit <- dplyr::recode(
+    all_regression_metrics_df$data_fit,
     "train" = "Train",
     "test" = "Test"
 )
 
-regression_metrics_df$shuffle <- dplyr::recode(
-    regression_metrics_df$shuffle,
+all_regression_metrics_df$shuffle <- dplyr::recode(
+    all_regression_metrics_df$shuffle,
     "shuffle_true" = "Shuffle",
     "shuffle_false" = "Real"
 )
 
-regression_metrics_df <- regression_metrics_df %>%
+all_regression_metrics_df <- all_regression_metrics_df %>%
     dplyr::rename(data_type = data_fit)
 
-regression_metrics_df$value <- round(regression_metrics_df$value, 2)
+all_regression_metrics_df$value <- round(all_regression_metrics_df$value, 2)
+
+regression_metrics_df <- all_regression_metrics_df %>%
+    dplyr::filter(cell_line == "all")
 
 print(dim(regression_metrics_df))
 head(regression_metrics_df, 3)
 
-measurement_colors <- c(
-    "shape" = "#6a3d9a",
-    "apoptosis" = "#a6cee3",
-    "death" = "#33a02c",
-    "cell_viability" = "#b2df8a",
-    "dna_damage" = "#fb9a99",
-    "ros" = "red",
-    "cell_cycle" = "#1f78b4",
-    "g1_arrest" = "#fdbf6f",
-    "g2_arrest" = "#ff7f00",
-    "g2_m_arrest" = "#005c8c",
-    "mitosis" = "green",
-    "s_arrest" = "#cab2d6",
-    "other" = "black",
-    "metadata" = "grey"
-)
-
-measurement_labels <- c(
-    "shape" = "Shape",
-    "apoptosis" = "Apoptosis",
-    "death" = "Death",
-    "cell_viability" = "Cell Viability",
-    "dna_damage" = "DNA Damage",
-    "ros" = "Reactive Oxygen Species", 
-    "cell_cycle" = "Cell Cycle Gates",
-    "g1_arrest" = "G1 Arrest",
-    "g2_arrest" = "G2 Arrest",
-    "g2_m_arrest" = "G2/M Arrest",
-    "mitosis" = "Mitosis",
-    "s_arrest" = "S Arrest",
-    "other" = "Other",
-    "metadata" = "Metadata"
-)
-
-dye_theme = theme(
-    axis.title = element_text(size = 4),
-    axis.title.x = element_text(margin = margin(0, 0, 0, 0)),
-    axis.title.y = element_text(margin = margin(0, 0, 0, 0)),
-    axis.text = element_text(size = 4),
-    axis.ticks = element_line(size = 0.1),
-    axis.ticks.length = unit(0.05, "cm"),
-    plot.title = element_text(size = 5, margin = margin(0, 0, 0, 0)),
-    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "mm"),
-    legend.title = element_text(size = 3.5),
-    legend.text = element_text(size = 3.5), 
-    legend.key.height = unit(0.2, "line"),
-    legend.key.width = unit(-0.2, "line"),
-    panel.grid.minor = element_line(size = 0.1),
-    panel.grid.major = element_line(size = 0.2),
-    legend.margin = margin(-5, 7, 0, 0),
-    legend.box.margin=margin(0, -5, 5, -5)
-)
-
 mse_df <- regression_metrics_df %>%
     dplyr::filter(metric == "mse",
                   y_transform == "raw",
-                  data_type == "Test")
+                  data_type == "Test") %>%
+    dplyr::left_join(label_df, by = c("target" = "id"))
 
 # Take absolute value of mean squared error
 # see https://github.com/scikit-learn/scikit-learn/issues/2439
 mse_df$value = abs(mse_df$value)
+
+# Recode metadata measurent to other
+mse_df$measurement <- dplyr::recode(mse_df$measurement, "metadata" = "other")
 
 # Sort mse by minimum MSE in test set
 target_order <- mse_df %>%
     dplyr::filter(data_type == "Test",
                   shuffle == "Real") %>%
     dplyr::arrange(desc(value)) %>%
-    dplyr::select(target)
+    dplyr::select(readable_name)
 
-mse_df$target <- factor(
-    mse_df$target,
-    levels=target_order$target
+mse_df$readable_name <- factor(
+    mse_df$readable_name,
+    levels=target_order$readable_name
 )
 
 print(dim(mse_df))
 head(mse_df, 4)
 
 ggplot(mse_df,
-       aes(x = target,
+       aes(x = readable_name,
            y = value)) +
-    geom_bar(stat = "identity",
-             alpha = 0.5,
+    geom_bar(aes(fill = measurement),
+             stat = "identity",
+             alpha = 0.7,
              position = position_dodge()) +
     facet_grid(~shuffle, scales="free_y") +
     coord_flip() +
     theme_bw() +
     ylab("Mean Squared Error") +
     xlab("Target") +
+    scale_fill_manual(name = "Measurement",
+                      values = measurement_colors,
+                      labels = measurement_labels) +
     theme(axis.text.x = element_text(size = 8, angle = 90),
-          axis.text.y = element_text(size = 6),
+          axis.text.y = element_text(size = 5.5),
           axis.title = element_text(size = 10),
-          legend.position = "none",
+          legend.position = "right",
           legend.text = element_text(size = 7),
           legend.title = element_text(size = 9),
           strip.text = element_text(size = 8),
@@ -211,15 +173,10 @@ file <- file.path(
     paste0("mse_test_summary_", consensus, ".png")
 )
 
-ggsave(file, dpi = 300, width = 6, height = 6)
-
-# Merge table with target labels
-mse_summary_df <- mse_df %>%
-    dplyr::left_join(label_df, by = c("target" = "id")) %>%
-    dplyr::filter(!is.na(measurement))
+ggsave(file, dpi = 500, width = 7, height = 6)
 
 # Split shuffle column for scatter plot
-mse_spread_df <- mse_summary_df %>% tidyr::spread(shuffle, value)
+mse_spread_df <- mse_df %>% tidyr::spread(shuffle, value)
 
 head(mse_spread_df, 2)
 
@@ -253,28 +210,33 @@ output_file <- file.path(
     figure_dir,
     paste0("mse_comparison_scatter_", consensus, ".png")
 )
-ggsave(output_file, width = 2, height = 1.5, dpi = 300, units = "in")
+ggsave(output_file, width = 2, height = 1.5, dpi = 500, units = "in")
 
 r2_df <- regression_metrics_df %>%
     dplyr::filter(metric == "r_two",
-                  y_transform == "raw")
+                  y_transform == "raw") %>%
+    dplyr::left_join(label_df, by = c("target" = "id"))
 
-# Sort mse by minimum MSE in test set
+# Sort mse by r2 in test set
 target_order <- r2_df %>%
     dplyr::filter(data_type == "Test",
                   shuffle == "Real") %>%
     dplyr::arrange(value) %>%
-    dplyr::select(target)
+    dplyr::select(readable_name)
 
-r2_df$target <- factor(r2_df$target, levels=target_order$target)
+r2_df$readable_name <- factor(r2_df$readable_name, levels=target_order$readable_name)
+
+# Recode metadata measurent to other
+r2_df$measurement <- dplyr::recode(r2_df$measurement, "metadata" = "other")
 
 head(r2_df, 4)
 
-ggplot(r2_df %>% dplyr::filter(shuffle == "Real"),
-       aes(x = target,
+rsquared_bar_gg <- ggplot(r2_df %>% dplyr::filter(shuffle == "Real"),
+       aes(x = readable_name,
            y = value)) +
-    geom_bar(stat = "identity",
-             alpha = 0.5,
+    geom_bar(aes(fill = measurement),
+             stat = "identity",
+             alpha = 0.7,
              position = position_dodge()) +
     facet_grid(~data_type, scales = "free_y") +
     coord_flip() +
@@ -282,10 +244,13 @@ ggplot(r2_df %>% dplyr::filter(shuffle == "Real"),
     geom_hline(yintercept = 0, linetype = "dashed") +
     ylab(bquote(R^2)) +
     xlab("Cell Health Target") +
+    scale_fill_manual(name = "Measurement",
+                      values = measurement_colors,
+                      labels = measurement_labels) +
     theme(axis.text.x = element_text(size = 8, angle = 90),
-          axis.text.y = element_text(size = 6),
+          axis.text.y = element_text(size = 5.5),
           axis.title = element_text(size = 10),
-          legend.position = "none",
+          legend.position = "right",
           legend.text = element_text(size = 7),
           legend.title = element_text(size = 9),
           strip.text = element_text(size = 8),
@@ -296,15 +261,99 @@ file <- file.path(
     figure_dir,
     paste0("r_squared_model_summary_", consensus, ".png")
 )
-ggsave(file, dpi = 300, width = 6, height = 6)
+ggsave(file, rsquared_bar_gg, dpi = 500, width = 7, height = 6)
 
-# Merge table with target labels
-r2_summary_df <- r2_df %>%
-    dplyr::left_join(label_df, by = c("target" = "id")) %>%
-    dplyr::filter(!is.na(measurement))
+rsquared_bar_gg
+
+# Process data for cell line specific plot
+cellline_compare_regression_df <- all_regression_metrics_df %>%
+    dplyr::filter(cell_line != "all",
+                  data_type == "Test",
+                  metric == "r_two",
+                  shuffle == "Real") %>%
+    dplyr::mutate(outlier = ifelse(value < 0, "R2: > 0", "R2: 0 to 1")) %>%
+    dplyr::left_join(label_df, by = c("target" = "id"))
+
+cellline_compare_regression_df$measurement <-
+    dplyr::recode(cellline_compare_regression_df$measurement, "metadata" = "other")
+
+cellline_compare_regression_df$readable_name <- factor(
+    cellline_compare_regression_df$readable_name,
+    levels=target_order$readable_name
+)
+
+head(cellline_compare_regression_df, 2)
+
+rsquared_bar_cellline_gg <- ggplot(cellline_compare_regression_df,
+       aes(x = value,
+           y = readable_name,
+           color = cell_line)) +
+    geom_point(alpha = 0.5) +
+    theme_bw() +
+    xlab(bquote("Test Set "~R^2~"")) +
+    ylab("Cell Health Target") +
+    facet_wrap(~outlier, scales="free_x") +
+    scale_color_manual(name = "Cell Line",
+                       values = c("A549" = "#A1473A", "ES2" = "#209481", "HCC44" = "#241B3B"),
+                       labels = c("A549" = "A549", "ES2" = "ES2", "HCC44" = "HCC44")) +
+    theme(axis.text.x = element_text(size = 8, angle = 90),
+          axis.text.y = element_text(size = 5.5),
+          axis.title = element_text(size = 10),
+          legend.position = "right",
+          legend.text = element_text(size = 7),
+          legend.title = element_text(size = 9),
+          strip.text = element_text(size = 8),
+          strip.background = element_rect(colour = "black",
+                                          fill = "#fdfff4"))
+
+output_file <- file.path(
+    figure_dir,
+    paste0("cell_line_differences_rsquared_", consensus, ".png")
+)
+ggsave(output_file, rsquared_bar_cellline_gg, dpi = 500, width = 7, height = 6)
+rsquared_bar_cellline_gg
+
+regression_legend <- cowplot::get_legend(rsquared_bar_gg)
+cell_legend <- cowplot::get_legend(rsquared_bar_cellline_gg)
+
+legend_grob <- cowplot::plot_grid(
+    cell_legend,
+    regression_legend,
+    nrow = 2,
+    rel_heights = c(0.25, 1),
+    align = "v"
+)
+
+panel_margin <- margin(l = -0.8, r = 0.5, t = 0.2, b = 0.2, unit="cm")
+
+plot_grob <- cowplot::plot_grid(
+    rsquared_bar_gg +
+        theme(legend.position = 'none',
+              plot.margin = panel_margin) + xlab("") ,
+    rsquared_bar_cellline_gg +
+        theme(legend.position = 'none',
+              plot.margin = panel_margin) + ylab(""),
+    labels = c("a", "b"),
+    ncol = 2,
+    nrow = 1,
+    align = "h"
+)
+
+regression_performance_figure = cowplot::plot_grid(
+    plot_grob,
+    legend_grob,
+    ncol = 2,
+    nrow = 1,
+    rel_widths = c(1, 0.2)
+)
+output_file <- file.path(
+    figure_dir,
+    paste0("regression_performance_figure_", consensus, ".png")
+)
+cowplot::save_plot(output_file, regression_performance_figure, base_width = 10, base_height = 6)
 
 # Split shuffle column for scatter plot
-r2_spread_df <- r2_summary_df %>% tidyr::spread(shuffle, value)
+r2_spread_df <- r2_df %>% tidyr::spread(shuffle, value)
 
 head(r2_spread_df, 2)
 
@@ -336,7 +385,7 @@ output_file <- file.path(
     figure_dir,
     paste0("r_squared_comparison_scatter_", consensus, ".png")
 )
-ggsave(output_file, width = 2, height = 1.5, dpi = 300, units = "in")
+ggsave(output_file, width = 2, height = 1.5, dpi = 500, units = "in")
 
 label_thresh_value = 0.925
 
