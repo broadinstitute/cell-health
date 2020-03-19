@@ -702,5 +702,3 @@ for (target in unique(y_plot_df$target)) {
 }
 
 dev.off()
-
-
