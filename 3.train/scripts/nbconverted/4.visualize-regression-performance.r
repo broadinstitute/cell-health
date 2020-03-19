@@ -354,6 +354,7 @@ cowplot::save_plot(output_file, regression_performance_figure, base_width = 10, 
 
 # Split shuffle column for scatter plot
 r2_spread_df <- r2_df %>% tidyr::spread(shuffle, value)
+r2_spread_df$data_type <- factor(r2_spread_df$data_type, levels = c("Train", "Test"))
 
 head(r2_spread_df, 2)
 
@@ -362,30 +363,179 @@ ggplot(r2_spread_df,
            y = Shuffle,
            color = measurement)) +
     geom_abline(intercept = 0,
-                lwd = 0.1,
+                lwd = 0.5,
                 slope = 1,
-                linetype = "dotted",
+                linetype = "dashed",
                 alpha = 0.7,
                 color = "red") +
-    geom_point(size = 0.4,
+    geom_point(size = 1,
                alpha = 0.7,
                pch = 16) +
-    xlab(bquote("Real Data R-Squared")) +
-    ylab(bquote("Permuted Data R-Squared")) +
+    xlab("Real Data R-Squared") +
+    ylab("Permuted Data R-Squared") +
     ggtitle("Regression Performance") +
     theme_bw() +
-    dye_theme +
+    facet_wrap("~data_type") +
     scale_color_manual(
         name = "Cell Health\nPhenotypes",
         values = measurement_colors,
         labels = measurement_labels
-    )
+    ) +
+    dye_theme +
+    theme(axis.text.x = element_text(size = 5.5),
+          axis.text.y = element_text(size = 5.5),
+          axis.title = element_text(size = 8),
+          strip.text = element_text(size = 7),
+          strip.background = element_rect(colour = "black",
+                                          fill = "#fdfff4"))
 
 output_file <- file.path(
     figure_dir,
     paste0("r_squared_comparison_scatter_", consensus, ".png")
 )
-ggsave(output_file, width = 2, height = 1.5, dpi = 500, units = "in")
+ggsave(output_file, width = 5.5, height = 3, dpi = 600, units = "in")
+
+good_example_models <- c(
+    "vb_percent_dead",
+    "cc_s_n_objects",
+    "cc_g1_n_spots_h2ax_mean",
+    "vb_percent_all_apoptosis"
+)
+
+bad_example_models <- c(
+    "cc_polynuclear_n_spots_h2ax_mean",
+    "cc_cc_late_mitosis"
+)
+
+plot_list <- list()
+for (good_model in c(good_example_models, bad_example_models)) {
+    
+    sup_fig_good_subset_df <- y_plot_df %>%
+        dplyr::filter(
+            target == !!good_model,
+            y_transform == "raw"
+        )
+    sup_fig_good_subset_df$shuffle <- sup_fig_good_subset_df$shuffle %>%
+        dplyr::recode_factor(
+            "shuffle_false" = "Real",
+            "shuffle_true" = "Permuted"
+        )
+    
+    r2_df <- regression_metrics_df %>%
+    dplyr::filter(
+        metric == "r_two",
+        target == !!good_model,
+        y_transform == "raw"
+    ) %>%
+    dplyr::rename(r2 = value) %>%
+    dplyr::mutate(x = max(sup_fig_good_subset_df$recode_target_value_true) -
+                  sd(sup_fig_good_subset_df$recode_target_value_true) * 3,
+                  y = max(sup_fig_good_subset_df$recode_target_value_pred) -
+                  sd(sup_fig_good_subset_df$recode_target_value_true) * 2.5)
+
+    r2_df$shuffle <- r2_df$shuffle %>%
+            dplyr::recode_factor(
+                "Shuffle" = "Permuted"
+            )
+    
+    readable_title <- label_df %>%
+        dplyr::filter(id == !!good_model) %>%
+        dplyr::pull(readable_name)
+    
+    plot_list[[good_model]] <- ggplot(sup_fig_good_subset_df,
+           aes(x = recode_target_value_true,
+               y = recode_target_value_pred)) +
+        geom_point(aes(color = Metadata_cell_line),
+                   size = 0.5,
+                   alpha = 0.8) +
+        facet_grid(data_type~shuffle) +
+        ggtitle(readable_title) +
+        theme_bw() +
+        xlab("True Values") +
+        ylab("Predicted Values") +
+        scale_color_manual(name = "Cell Line",
+                           labels = c("A549" = "A549",
+                                      "ES2" = "ES2",
+                                      "HCC44" = "HCC44"),
+                           values = c("A549" = "#7fc97f",
+                                      "ES2" = "#beaed4",
+                                      "HCC44" = "#fdc086")) +
+        geom_smooth(method='lm', formula=y~x) +
+        geom_text(data = r2_df, size = 3, aes(label = paste("R2 =", r2), x = x, y = y)) +
+        theme(strip.text = element_text(size = 10),
+              strip.background = element_rect(colour = "black",
+                                              fill = "#fdfff4"))
+}
+
+# Compile and save figure
+cell_line_legend <- get_legend(
+  plot_list[["vb_percent_dead"]] + theme(legend.box.margin = margin(0, 0, 0, 12))
+)
+
+top_row_gg <- cowplot::plot_grid(
+    plot_list[["vb_percent_dead"]] + theme(legend.position = "none"),
+    plot_list[["cc_s_n_objects"]] + theme(legend.position = "none"),
+    nrow = 1,
+    align = "h"
+)
+
+middle_row_gg <- cowplot::plot_grid(
+    plot_list[["cc_g1_n_spots_h2ax_mean"]] + theme(legend.position = "none"),
+    plot_list[["vb_percent_all_apoptosis"]] + theme(legend.position = "none"),
+    nrow = 1,
+    align = "h"
+)
+
+sup_fig_part_a <- cowplot::plot_grid(
+    top_row_gg,
+    middle_row_gg,
+    nrow = 2,
+    align = "h"
+)
+
+sup_fig_part_a <- cowplot::plot_grid(
+    sup_fig_part_a,
+    cell_line_legend,
+    rel_widths = c(3, 0.4),
+    ncol = 2
+)
+
+bottom_row_gg <- cowplot::plot_grid(
+    plot_list[["cc_polynuclear_n_spots_h2ax_mean"]] + theme(legend.position = "none"),
+    plot_list[["cc_cc_late_mitosis"]] + theme(legend.position = "none"),
+    nrow = 1,
+    align = "h"
+)
+
+sup_fig_part_b <- cowplot::plot_grid(
+    bottom_row_gg,
+    cell_line_legend,
+    rel_widths = c(3, 0.4),
+    ncol = 2,
+    align = "v"
+)
+
+sup_fig_full <- cowplot::plot_grid(
+    sup_fig_part_a,
+    sup_fig_part_b,
+    rel_heights = c(4, 2),
+    nrow = 2,
+    labels = c("a", "b"),
+    align = "v"
+)
+
+sup_fig_full
+
+ # Save figure
+supfig_file <- file.path(figure_dir, "supplementary_figure_example_distributions.png")
+
+cowplot::save_plot(
+    filename = supfig_file,
+    plot = sup_fig_full,
+    base_height = 8,
+    base_width = 8,
+    dpi = 600
+)
 
 label_thresh_value = 0.925
 
@@ -552,3 +702,5 @@ for (target in unique(y_plot_df$target)) {
 }
 
 dev.off()
+
+
