@@ -164,16 +164,20 @@ summary_df$data_type <- factor(summary_df$data_type, levels = c("Training", "Tes
 summary_df
 
 ggplot(summary_df, aes(x = mean_crispr_eff, y = mean_rsquared_diff, color = Metadata_cell_line)) +
-    geom_point(size = 2, alpha = 0.7) +
-    geom_errorbar(aes(ymin = low_r2err_conf, ymax = high_r2err_conf), alpha = 0.7, width = 0.2) +
-    geom_errorbarh(aes(xmin = low_crispr_conf, xmax = high_crispr_conf), alpha = 0.7, height = 0.2) +
+    geom_point(size = 2, alpha = 0.9) +
+    geom_errorbar(aes(ymin = low_r2err_conf, ymax = high_r2err_conf), alpha = 0.9, width = 0.2) +
+    geom_errorbarh(aes(xmin = low_crispr_conf, xmax = high_crispr_conf), alpha = 0.9, height = 0.2) +
     facet_grid(data_type~shuffle) +
     ylab("Model R-Squared") +
     xlab("CRISPR Efficiency") + 
     scale_color_manual(
         name = "Cell Line",
-        labels = c("A549" = "A549", "ES2" = "ES2", "HCC44" = "HCC44"),
-        values = c("A549" = "#CA2A30", "ES2" = "#5F9E83", "HCC44" = "#2E4754")
+        labels = c("A549" = "A549",
+                   "ES2" = "ES2",
+                   "HCC44" = "HCC44"),
+        values = c("A549" = "#7fc97f",
+                   "ES2" = "#beaed4",
+                   "HCC44" = "#fdc086")
     ) +
     coord_fixed() +
     theme_bw() +
