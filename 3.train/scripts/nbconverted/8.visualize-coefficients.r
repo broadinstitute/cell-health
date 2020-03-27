@@ -102,9 +102,13 @@ coef_plot <- function(
         coef_theme
 
     # Get cowplot title
+    use_title <- label_df %>%
+        dplyr::filter(id == !!target) %>%
+        dplyr::pull(readable_name)
+    
     full_title <- ggdraw() + 
       draw_label(
-          target_name,
+          use_title,
           fontface = 'bold',
           x = 0,
           hjust = -0.1
@@ -131,6 +135,16 @@ coef_plot <- function(
     
     return(coef_full_gg)
 }
+
+# Annotated Cell Health Features
+feat_file <- file.path(
+    "..",
+    "1.generate-profiles",
+    "data",
+    "labels",
+    "feature_mapping_annotated.csv"
+)
+label_df <- readr::read_csv(feat_file, col_types = readr::cols())
 
 coef_file <- file.path(
     "results", paste0("full_cell_health_coefficients_", consensus, ".tsv.gz")
