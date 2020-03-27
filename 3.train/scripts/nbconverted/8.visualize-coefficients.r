@@ -449,7 +449,9 @@ for (shuffle_option in c("Permuted", "Real")) {
         rel_widths = c(1, 0.15)
     )
 
-    output_file <- paste0("test_", shuffle_option, ".png")
+    output_file <- file.path(
+        coef_dir, paste0("coefficient_summary_", shuffle_option, "_", consensus, ".png")
+    )
     cowplot::save_plot(output_file, big_fig, base_height = 5, base_width = 6, dpi = 500)
 }
 
