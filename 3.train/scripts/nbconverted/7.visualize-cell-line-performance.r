@@ -172,12 +172,8 @@ ggplot(summary_df, aes(x = mean_crispr_eff, y = mean_rsquared_diff, color = Meta
     xlab("CRISPR Efficiency") + 
     scale_color_manual(
         name = "Cell Line",
-        labels = c("A549" = "A549",
-                   "ES2" = "ES2",
-                   "HCC44" = "HCC44"),
-        values = c("A549" = "#7fc97f",
-                   "ES2" = "#beaed4",
-                   "HCC44" = "#fdc086")
+        labels = cell_line_labels,
+        values = cell_line_colors
     ) +
     coord_fixed() +
     theme_bw() +
