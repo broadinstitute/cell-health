@@ -41,17 +41,33 @@ build_plot_data <- function(
     return(plot_df)
 }
 
-# Annotated Cell Health Features
-feat_file <- file.path(
+# Set label directory
+label_dir <- file.path(
     "..",
     "1.generate-profiles",
     "data",
-    "labels",
-    "feature_mapping_annotated.csv"
+    "labels"
 )
+
+# Annotated Cell Health Features
+feat_file <- file.path(label_dir, "feature_mapping_annotated.csv")
 label_df <- readr::read_csv(feat_file, col_types = readr::cols())
 
-head(label_df)
+# Normalized Readouts
+readouts_file <- file.path(label_dir, "normalized_cell_health_labels.tsv")
+readouts_df <- readr::read_tsv(readouts_file, col_types = readr::cols())
+
+# Metadata mapping
+mapping_file <- file.path("..", "1.generate-profiles", "data", "profile_id_metadata_mapping.tsv")
+mapping_df <- readr::read_tsv(mapping_file, col_types = readr::cols())
+
+# Model Predictions
+y_file <- file.path(
+    "results",
+    paste0("full_cell_health_y_labels_", consensus, ".tsv.gz")
+)
+y_df <- readr::read_tsv(y_file, col_types = readr::cols()) %>%
+    dplyr::filter(y_transform == "raw")
 
 regression_file <- file.path(
     results_dir,
@@ -61,6 +77,121 @@ regression_metrics_df <- readr::read_tsv(regression_file, col_types = readr::col
     dplyr::filter(cell_line %in% cell_lines)
     
 head(regression_metrics_df)
+
+all_model_error <- list()
+for (target in unique(y_df$target)) {
+    for (shuffle in c("shuffle_true", "shuffle_false")) {
+        y_train <- y_df %>%
+            dplyr::filter(target == !!target, data_type == "train", shuffle == !!shuffle) %>%
+            dplyr::arrange(Metadata_profile_id) %>%
+            tidyr::spread(key = "y_type", value = "recode_target_value") %>%
+            dplyr::mutate(squared_diff = (y_pred - y_true) ** 2)
+
+        y_test <- y_df %>%
+            dplyr::filter(target == !!target, data_type == "test", shuffle == !!shuffle) %>%
+            dplyr::arrange(Metadata_profile_id) %>%
+            tidyr::spread(key = "y_type", value = "recode_target_value") %>%
+            dplyr::mutate(squared_diff = (y_pred - y_true) ** 2)
+        
+        y_complete <- dplyr::bind_rows(y_train, y_test)
+        all_model_error[[paste0(target, shuffle)]] <- y_complete
+    }
+}
+
+
+all_model_error_df <- do.call(rbind, all_model_error)
+
+crispr_efficiency_df <- all_model_error_df %>%
+    dplyr::filter(target == "vb_infection_percentage") %>%
+    dplyr::select(Metadata_profile_id, y_true) %>%
+    dplyr::distinct() %>%
+    dplyr::rename(crispr_efficiency = y_true)
+
+all_model_error_df <- all_model_error_df %>%
+    dplyr::left_join(crispr_efficiency_df, by="Metadata_profile_id") %>%
+    dplyr::left_join(mapping_df, by = "Metadata_profile_id")
+
+print(dim(all_model_error_df))
+head(all_model_error_df)
+
+regression_summary_df <- regression_metrics_df %>%
+    dplyr::filter(metric == "r_two") %>%
+    dplyr::group_by(data_fit, shuffle, cell_line) %>%
+    dplyr::mutate(
+        mean_rsquared_diff = mean(value),
+        high_r2err_conf = quantile(value, 0.95),
+        low_r2err_conf = quantile(value, 0.05)
+    ) %>%
+    dplyr::select(data_fit, shuffle, cell_line, mean_rsquared_diff, high_r2err_conf, low_r2err_conf) %>%
+    dplyr::distinct()
+
+summary_df <- all_model_error_df %>%
+    dplyr::group_by(data_type, shuffle, Metadata_cell_line) %>%
+    dplyr::mutate(
+        mean_crispr_eff = mean(crispr_efficiency),
+        mean_squared_diff = mean(squared_diff),
+        high_crispr_conf = quantile(crispr_efficiency, 0.95),
+        low_crispr_conf = quantile(crispr_efficiency, 0.05),
+        high_err_conf = quantile(squared_diff, 0.95),
+        low_err_conf = quantile(squared_diff, 0.05)
+    ) %>%
+    dplyr::select(
+        data_type, shuffle, Metadata_cell_line, mean_crispr_eff, mean_squared_diff,
+        high_crispr_conf, low_crispr_conf, high_err_conf, low_err_conf
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::distinct() %>%
+    dplyr::left_join(
+        regression_summary_df,
+        by = c("shuffle" = "shuffle", "Metadata_cell_line" = "cell_line", "data_type" = "data_fit")
+    )
+
+summary_df$shuffle <- dplyr::recode_factor(
+    summary_df$shuffle,
+    "shuffle_true" = "Permuted",
+    "shuffle_false" = "Real"
+)
+summary_df$data_type <- dplyr::recode_factor(
+    summary_df$data_type,
+    "train" = "Training",
+    "test" = "Test"
+)
+
+summary_df$shuffle <- factor(summary_df$shuffle, levels = c("Real", "Permuted"))
+summary_df$data_type <- factor(summary_df$data_type, levels = c("Training", "Test"))
+
+
+summary_df
+
+ggplot(summary_df, aes(x = mean_crispr_eff, y = mean_rsquared_diff, color = Metadata_cell_line)) +
+    geom_point(size = 2, alpha = 0.9) +
+    geom_errorbar(aes(ymin = low_r2err_conf, ymax = high_r2err_conf), alpha = 0.9, width = 0.2) +
+    geom_errorbarh(aes(xmin = low_crispr_conf, xmax = high_crispr_conf), alpha = 0.9, height = 0.2) +
+    facet_grid(data_type~shuffle) +
+    ylab("Model R-Squared") +
+    xlab("CRISPR Efficiency") + 
+    scale_color_manual(
+        name = "Cell Line",
+        labels = c("A549" = "A549",
+                   "ES2" = "ES2",
+                   "HCC44" = "HCC44"),
+        values = c("A549" = "#7fc97f",
+                   "ES2" = "#beaed4",
+                   "HCC44" = "#fdc086")
+    ) +
+    coord_fixed() +
+    theme_bw() +
+    theme(axis.text = element_text(size = 9),
+          axis.title = element_text(size = 11),
+          strip.text = element_text(size = 8),
+          strip.background = element_rect(colour = "black",
+                                          fill = "#fdfff4"))
+
+output_file <- file.path(
+    figure_dir,
+    paste0("crispr_efficiency_regression_compare_", consensus, ".png")
+)
+ggsave(output_file, height = 4.5, width = 4.5, dpi = 500)
 
 ggplot(regression_metrics_df %>% dplyr::filter(metric == "mse"),
        aes(x = shuffle,
