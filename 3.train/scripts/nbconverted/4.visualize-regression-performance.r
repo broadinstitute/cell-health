@@ -378,6 +378,7 @@ ggplot(r2_spread_df,
     ggtitle("Regression Performance") +
     theme_bw() +
     facet_wrap("~data_type") +
+    coord_fixed() +
     scale_color_manual(
         name = "Cell Health\nPhenotypes",
         values = measurement_colors,
@@ -447,6 +448,7 @@ for (good_model in c(good_example_models, bad_example_models)) {
     plot_list[[good_model]] <- ggplot(sup_fig_good_subset_df,
            aes(x = recode_target_value_true,
                y = recode_target_value_pred)) +
+        geom_smooth(method='lm', formula=y~x) +
         geom_point(aes(color = Metadata_cell_line),
                    size = 0.5,
                    alpha = 0.8) +
@@ -460,7 +462,6 @@ for (good_model in c(good_example_models, bad_example_models)) {
             labels = cell_line_labels,
             values = cell_line_colors
         ) +
-        geom_smooth(method='lm', formula=y~x) +
         geom_text(data = r2_df, size = 3, aes(label = paste("R2 =", r2), x = x, y = y)) +
         theme(strip.text = element_text(size = 10),
               strip.background = element_rect(colour = "black",
