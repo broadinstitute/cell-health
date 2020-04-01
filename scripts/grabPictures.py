@@ -190,7 +190,7 @@ class grabPicture:
         self.crop_and_normalize_images(low_prop=low_prop, high_prop=high_prop)
         self.colorize_images()
 
-    def plot_images(self, cropped=True, color=True):
+    def plot_images(self, cropped=True, color=True, add_label=True):
         image_dict = self.get_image_dict(cropped=cropped, color=color)
 
         fig, ax = plt.subplots(nrows=1, ncols=len(self.channels), figsize=(10, 2))
@@ -201,7 +201,8 @@ class grabPicture:
 
             ax[channel_idx].imshow(image_dict[image_key], cmap="gray")
             ax[channel_idx].axis("off")
-            ax[channel_idx].set_title(channel)
+            if add_label:
+                ax[channel_idx].set_title(channel)
 
         plt.tight_layout(pad=0)
 
