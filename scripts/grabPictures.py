@@ -56,6 +56,7 @@ class grabPicture:
         self.aggregate_strata_cols = aggregate_strata_cols
         self.gene_name = gene_name
         self.pert_name = pert_name
+        self.site = site
 
 
     def load_image_table(self, get_well=True):
@@ -97,18 +98,19 @@ class grabPicture:
         if get_well:
             self.find_well()
 
-    def find_well(self, gene_name=None, pert_name=None):
+    def find_well(self, gene_name=None, pert_name=None, site=None):
         if not gene_name:
             gene_name = self.gene_name
         if not pert_name:
             pert_name = self.pert_name
+        if not site:
+            self.set_site(site)
 
         self.well = (
             self.platemap_df.query("gene_name == @gene_name")
             .query("pert_name == @pert_name")
             .well_position.values[0]
         )
-        self.site = site
 
     def set_site(self, site):
         self.site = site
