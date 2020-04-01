@@ -42,7 +42,7 @@ class grabPicture:
             metadata_path, "platemap", "{}.csv".format(self.platemap_name)
         )
 
-        self.platemap_df = pd.read_csv(platemap_path)
+        self.platemap_df = pd.read_csv(self.platemap_path)
 
         self.channels = ["DNA", "ER", "RNA", "AGP", "Mito"]
         self.channel_colors = {
