@@ -212,7 +212,7 @@ class grabPicture:
         for image_key in image_dict:
             combined_image += factor * image_dict[image_key].astype(np.uint16)
 
-        combined_image = normalize(combined_image)
+        combined_image = normalize_image(combined_image)
 
         plt.figure(figsize=(7, 5))
         plt.imshow(combined_image)
