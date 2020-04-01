@@ -58,7 +58,6 @@ class grabPicture:
         self.pert_name = pert_name
         self.site = site
 
-
     def load_image_table(self, get_well=True):
         # Prepare sql file for processing
         self.ap = AggregateProfiles(
