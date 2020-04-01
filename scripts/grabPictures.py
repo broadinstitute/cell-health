@@ -102,7 +102,7 @@ class grabPicture:
             gene_name = self.gene_name
         if not pert_name:
             pert_name = self.pert_name
-        if not site:
+        if site:
             self.set_site(site)
 
         self.well = (
