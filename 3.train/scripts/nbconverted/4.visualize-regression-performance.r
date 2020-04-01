@@ -293,9 +293,11 @@ rsquared_bar_cellline_gg <- ggplot(cellline_compare_regression_df,
     xlab(bquote("Test Set "~R^2~"")) +
     ylab("Cell Health Target") +
     facet_wrap(~outlier, scales="free_x") +
-    scale_color_manual(name = "Cell Line",
-                       values = c("A549" = "#A1473A", "ES2" = "#209481", "HCC44" = "#241B3B"),
-                       labels = c("A549" = "A549", "ES2" = "ES2", "HCC44" = "HCC44")) +
+    scale_color_manual(
+        name = "Cell Line",
+        labels = cell_line_labels,
+        values = cell_line_colors
+    ) +
     theme(axis.text.x = element_text(size = 8, angle = 90),
           axis.text.y = element_text(size = 5.5),
           axis.title = element_text(size = 10),
@@ -376,6 +378,7 @@ ggplot(r2_spread_df,
     ggtitle("Regression Performance") +
     theme_bw() +
     facet_wrap("~data_type") +
+    coord_fixed() +
     scale_color_manual(
         name = "Cell Health\nPhenotypes",
         values = measurement_colors,
@@ -445,6 +448,7 @@ for (good_model in c(good_example_models, bad_example_models)) {
     plot_list[[good_model]] <- ggplot(sup_fig_good_subset_df,
            aes(x = recode_target_value_true,
                y = recode_target_value_pred)) +
+        geom_smooth(method='lm', formula=y~x) +
         geom_point(aes(color = Metadata_cell_line),
                    size = 0.5,
                    alpha = 0.8) +
@@ -453,14 +457,11 @@ for (good_model in c(good_example_models, bad_example_models)) {
         theme_bw() +
         xlab("True Values") +
         ylab("Predicted Values") +
-        scale_color_manual(name = "Cell Line",
-                           labels = c("A549" = "A549",
-                                      "ES2" = "ES2",
-                                      "HCC44" = "HCC44"),
-                           values = c("A549" = "#7fc97f",
-                                      "ES2" = "#beaed4",
-                                      "HCC44" = "#fdc086")) +
-        geom_smooth(method='lm', formula=y~x) +
+        scale_color_manual(
+            name = "Cell Line",
+            labels = cell_line_labels,
+            values = cell_line_colors
+        ) +
         geom_text(data = r2_df, size = 3, aes(label = paste("R2 =", r2), x = x, y = y)) +
         theme(strip.text = element_text(size = 10),
               strip.background = element_rect(colour = "black",
@@ -580,13 +581,11 @@ for (target in unique(y_plot_df$target)) {
                 theme_bw() +
                 xlab("True Values") +
                 ylab("Predicted Values") +
-                scale_color_manual(name = "Cell Line",
-                                   labels = c("A549" = "A549",
-                                              "ES2" = "ES2",
-                                              "HCC44" = "HCC44"),
-                                   values = c("A549" = "#7fc97f",
-                                              "ES2" = "#beaed4",
-                                              "HCC44" = "#fdc086")) +
+                scale_color_manual(
+                    name = "Cell Line",
+                    labels = cell_line_labels,
+                    values = cell_line_colors
+                ) +
                 geom_smooth(method='lm', formula=y~x) +
                 theme(strip.text = element_text(size = 10),
                       strip.background = element_rect(colour = "black",

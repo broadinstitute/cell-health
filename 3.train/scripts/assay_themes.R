@@ -98,6 +98,18 @@ dye_labels <- c(
   "qc" = "CRISPR Efficiency"
 )
 
+cell_line_labels <- c(
+  "A549" = "A549",
+  "ES2" = "ES2",
+  "HCC44" = "HCC44"
+)
+
+cell_line_colors <- c(
+  "A549" = "#7fc97f",
+  "ES2" = "#beaed4",
+  "HCC44" = "#fdc086"
+)
+
 dye_theme <- theme(
     axis.title = element_text(size = 4),
     axis.title.x = element_text(margin = margin(0, 0, 0, 0)),
