@@ -104,6 +104,7 @@ example_image.prep_images(low_prop=0.1, high_prop=0.3)
 example_image.plot_images(cropped=True, color=False)
 
 output_file = os.path.join("figures", "example_images", "greyscale_channel.png")
+plt.subplots_adjust(top=0.8)
 plt.savefig(output_file, pad_inches=0.2, dpi=500)
 
 
@@ -113,6 +114,7 @@ plt.savefig(output_file, pad_inches=0.2, dpi=500)
 example_image.plot_images(cropped=True, color=True)
 
 output_file = os.path.join("figures", "example_images", "color_channel.png")
+plt.subplots_adjust(top=0.8)
 plt.savefig(output_file, pad_inches=0.2, dpi=500)
 
 
