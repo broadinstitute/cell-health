@@ -27,6 +27,8 @@ class grabPicture:
         gene_name,
         pert_name,
         site,
+        enable_single_cell=False,
+        channels=["DNA", "ER", "RNA", "AGP", "Mito"]
     ):
 
         self.sqlite_dir = os.path.join(sqlite_path, plate)
@@ -44,7 +46,7 @@ class grabPicture:
 
         self.platemap_df = pd.read_csv(self.platemap_path)
 
-        self.channels = ["DNA", "ER", "RNA", "AGP", "Mito"]
+        self.channels = channels
         self.channel_colors = {
             "DNA": ["blue", np.array([0, 0, 255], dtype=np.uint8)],
             "ER": ["green", np.array([0, 255, 0], dtype=np.uint8)],
@@ -57,6 +59,7 @@ class grabPicture:
         self.gene_name = gene_name
         self.pert_name = pert_name
         self.site = site
+        self.enable_single_cell = enable_single_cell
 
     def load_image_table(self, get_well=True):
         # Prepare sql file for processing
@@ -68,6 +71,7 @@ class grabPicture:
         image_df = pd.read_sql(sql=image_query, con=self.ap.conn)
 
         image_cols = [
+            "TableNumber",
             "Image_Metadata_Plate",
             "Image_Metadata_Well",
             "Image_Metadata_Site",
@@ -96,6 +100,9 @@ class grabPicture:
 
         if get_well:
             self.find_well()
+            
+        if self.enable_single_cell:
+            self.get_cell_locations()
 
     def find_well(self, gene_name=None, pert_name=None, site=None):
         if not gene_name:
@@ -116,12 +123,38 @@ class grabPicture:
 
     def set_well(self, well):
         self.well = well
+    
+    def get_cell_locations(self):
+        nuclei_query = "select TableNumber, ObjectNumber, Nuclei_Location_Center_X, Nuclei_Location_Center_Y from nuclei"
+        nuclei_df = pd.read_sql(sql=nuclei_query, con=self.ap.conn)
+        self.cell_location_df = nuclei_df.merge(
+            self.image_file_core_df,
+            on="TableNumber",
+            how="left"
+        )
+ 
+    def set_single_cell_object(self, objectNumber):
+        assert self.enable_single_cell, "Set enable_single_cell as True to find Cell locations"
+        self.single_cell_object = objectNumber
 
-    def get_image_paths(self):
-        self.site_subset_df = self.image_file_core_df.query(
-            "Image_Metadata_Well == @self.well"
-        ).query("Image_Metadata_Site == @self.site")
-
+    def get_image_paths(self, objectNum=None):
+        if self.enable_single_cell:
+            assert objectNum, "Need to specify objectNum!"
+            self.site_subset_df = (
+                self
+                .cell_location_df
+                .query("Image_Metadata_Well == @self.well")
+                .query("Image_Metadata_Site == @self.site")
+                .query("ObjectNumber == @objectNum")
+            )
+        else:
+            self.site_subset_df = (
+                self
+                .image_file_core_df
+                .query("Image_Metadata_Well == @self.well")
+                .query("Image_Metadata_Site == @self.site")
+            )
+        
         # Create an image channel dictionary
         self.channel_file_dict = {}
         for channel in self.channels:
@@ -149,27 +182,46 @@ class grabPicture:
                 self.channel_file_dict[channel]
             )
 
-    def crop_and_normalize_images(self, low_prop=0.3, high_prop=0.5):
-        # Crop and Normalize Images
-        mindim_row = np.rint(self.image_dict["ch1_DNA"].shape[0] * low_prop).astype(
-            np.int
-        )
-        maxdim_row = np.rint(self.image_dict["ch1_DNA"].shape[0] * high_prop).astype(
-            np.int
-        )
+    def crop_and_normalize_images(self, low_prop=0.3, high_prop=0.5, boxSize=None, normalize=True):
+        
+        if boxSize:
+            halfboxSize = boxSize / 2
+            assert self.enable_single_cell, "boxSize supported with single cell only"
+            row_center = self.site_subset_df.Nuclei_Location_Center_X.values[0]
+            col_center = self.site_subset_df.Nuclei_Location_Center_Y.values[0]
+        else:
+            mindim_row = np.rint(self.image_dict["ch1_DNA"].shape[0] * low_prop).astype(
+                np.int
+            )
+            maxdim_row = np.rint(self.image_dict["ch1_DNA"].shape[0] * high_prop).astype(
+                np.int
+            )
 
-        mindim_col = np.rint(self.image_dict["ch1_DNA"].shape[1] * low_prop).astype(
-            np.int
-        )
-        maxdim_col = np.rint(self.image_dict["ch1_DNA"].shape[1] * high_prop).astype(
-            np.int
-        )
+            mindim_col = np.rint(self.image_dict["ch1_DNA"].shape[1] * low_prop).astype(
+                np.int
+            )
+            maxdim_col = np.rint(self.image_dict["ch1_DNA"].shape[1] * high_prop).astype(
+                np.int
+            )
 
         self.image_dict_cropped = {}
         for image_key in self.image_dict:
-            self.image_dict_cropped[image_key] = normalize_image(
-                self.image_dict[image_key][mindim_row:maxdim_row, mindim_col:maxdim_col]
-            )
+            
+            if self.enable_single_cell:
+                assert boxSize, "boxSize must be set!"
+                im_max_height, im_max_width = self.image_dict[image_key].shape
+
+                mindim_row = max(0, int(col_center - halfboxSize))
+                maxdim_row = min(im_max_height, int(col_center + halfboxSize))
+                mindim_col = max(0, int(row_center - halfboxSize))
+                maxdim_col = min(im_max_width, int(row_center + halfboxSize))
+    
+            im_crop = self.image_dict[image_key][mindim_row:maxdim_row, mindim_col:maxdim_col]
+            
+            if normalize:
+                im_crop = normalize_image(im_crop)
+            
+            self.image_dict_cropped[image_key] = im_crop
 
     def colorize_images(self):
         self.image_color_dict = {}
@@ -184,10 +236,10 @@ class grabPicture:
                 img_crop, color_array
             )
 
-    def prep_images(self, low_prop=0.3, high_prop=0.5):
-        self.get_image_paths()
+    def prep_images(self, low_prop=0.3, high_prop=0.5, objectNum=None, boxSize=None):
+        self.get_image_paths(objectNum=objectNum)
         self.read_images()
-        self.crop_and_normalize_images(low_prop=low_prop, high_prop=high_prop)
+        self.crop_and_normalize_images(low_prop=low_prop, high_prop=high_prop, boxSize=boxSize)
         self.colorize_images()
 
     def plot_images(self, cropped=True, color=True, add_label=True):
@@ -197,7 +249,6 @@ class grabPicture:
         for channel_idx in range(0, len(self.channels)):
             channel = self.channels[channel_idx]
             image_key = "ch{}_{}".format(channel_idx + 1, channel)
-            channel = image_key.split("_")[1]
 
             ax[channel_idx].imshow(image_dict[image_key], cmap="gray")
             ax[channel_idx].axis("off")
