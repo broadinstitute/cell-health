@@ -259,9 +259,9 @@ for ax, row in zip(axarr[:,0], channels):
     ax.set_ylabel(row, rotation=90, size='large')
     
 f.tight_layout()
-plt.show()
 
 output_file = os.path.join("figures", "images", "example_images_{}_{}.png".format(model, consensus))
 plt.subplots_adjust(top=0.8)
 plt.savefig(output_file, pad_inches=0.2, dpi=500)
+plt.show()
 
