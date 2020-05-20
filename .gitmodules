@@ -1,0 +1,3 @@
+[submodule "lincs-cell-painting"]
+	path = lincs-cell-painting
+	url = https://github.com/broadinstitute/lincs-cell-painting
