@@ -2,6 +2,7 @@ suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(ggplot2))
 
 visualize_model <- function(
+    df,
     target_variable,
     legend_title,
     output_dir,
@@ -10,7 +11,7 @@ visualize_model <- function(
     save_figure = TRUE
 ) {
     
-    plot_gg <- ggplot(cp_embedding_df, aes(x = umap_x, y = umap_y)) +
+    plot_gg <- ggplot(df, aes(x = umap_x, y = umap_y)) +
         geom_point(aes_string(color = target_variable),
                    size = 0.5,
                    pch = 16,
@@ -54,18 +55,12 @@ real_file <- file.path(
 cp_embedding_df <- readr::read_tsv(real_file, col_types = readr::cols())
 
 cp_embedding_df <- cp_embedding_df %>%
-    dplyr::mutate(Metadata_Treatment = cp_embedding_df$Image_Metadata_Well)
+    dplyr::mutate(Metadata_Treatment = "Compound")
 
-cp_embedding_df$Metadata_Treatment[cp_embedding_df$Image_Metadata_Well == "collapsed"] = "Compound"
-cp_embedding_df$Metadata_Treatment[cp_embedding_df$Image_Metadata_Well != "collapsed"] = "DMSO"
+cp_embedding_df$Metadata_Treatment[cp_embedding_df$Metadata_broad_core_id == "DMSO"] = "DMSO"
 
 print(dim(cp_embedding_df))
 head(cp_embedding_df, 3)
-
-table(
-    cp_embedding_df$Metadata_dose_recode,
-    cp_embedding_df$Metadata_Treatment
-)
 
 ggplot(cp_embedding_df,
        aes(x = umap_x, y = umap_y)) +
@@ -76,7 +71,26 @@ ggplot(cp_embedding_df,
     theme_bw() +
     scale_color_viridis_c(name = "Dose\nRecoded") +
     scale_size_discrete("Treatment",
-                        range = c(0.5, 3)) +
+                        range = c(0.5, 2)) +
+    xlab("UMAP 1") +
+    ylab("UMAP 2")
+
+output_file <- file.path(
+    output_dir,
+    paste0("umap_repurposing_cell_painting_dose_consensus_", consensus, ".png")
+)
+ggsave(output_file, height = 5, width = 6, dpi = 500)
+
+ggplot(cp_embedding_df,
+       aes(x = umap_x, y = umap_y)) +
+    geom_point(aes(color = Metadata_dose_recode,
+                   size = paste(Metadata_Treatment)),
+               pch = 16,
+               alpha = 0.6) +
+    theme_bw() +
+    scale_color_viridis_c(name = "Dose\nRecoded") +
+    scale_size_discrete("Treatment",
+                        range = c(0.5, 2)) +
     xlab("UMAP 1") +
     ylab("UMAP 2")
 
@@ -88,12 +102,16 @@ ggsave(output_file, height = 5, width = 6, dpi = 500)
 
 ggplot(cp_embedding_df %>% dplyr::filter(Metadata_Treatment == "DMSO"),
        aes(x = umap_x, y = umap_y)) +
-    geom_point(aes(color = Image_Metadata_Well),
+    geom_point(aes(color = Metadata_pert_well),
                pch = 16,
-               size = 3,
+               size = 2,
                alpha = 0.6) +
-    geom_point(data = cp_embedding_df, color = "grey", alpha = 0.1, size = 0.5) +
+    geom_point(data = cp_embedding_df,
+               color = "grey",
+               alpha = 0.1,
+               size = 0.5) +
     theme_bw() +
+    theme(legend.position = "none") +
     xlab("UMAP 1") +
     ylab("UMAP 2")
 
@@ -113,9 +131,10 @@ map_df <- readr::read_csv(
 )
 
 print(dim(map_df))
-head(map_df, 3)
+tail(map_df, 3)
 
 visualize_model(
+    cp_embedding_df,
     target_variable = "cell_health_modz_target_vb_num_live_cells",
     legend_title = "Num Live Cells",
     output_dir = "none",
@@ -123,6 +142,7 @@ visualize_model(
 )
 
 visualize_model(
+    cp_embedding_df,
     target_variable = "cell_health_modz_target_vb_live_cell_width_length",
     legend_title = "Live Cell\n(Width:Length)",
     output_dir = "none",
@@ -130,6 +150,7 @@ visualize_model(
 )
 
 visualize_model(
+    cp_embedding_df,
     target_variable = "cell_health_modz_target_vb_live_cell_roundness",
     legend_title = "Live Cell Roundness",
     output_dir = "none",
@@ -137,6 +158,7 @@ visualize_model(
 )
 
 visualize_model(
+    cp_embedding_df,
     target_variable = "cell_health_modz_target_cc_all_n_objects",
     legend_title = "Number of Objects",
     output_dir = "none",
@@ -144,6 +166,7 @@ visualize_model(
 )
 
 visualize_model(
+    cp_embedding_df,
     target_variable = "cell_health_modz_target_vb_live_cell_area",
     legend_title = "Live Cell Area",
     output_dir = "none",
@@ -151,6 +174,7 @@ visualize_model(
 )
 
 visualize_model(
+    cp_embedding_df,
     target_variable = "cell_health_modz_target_cc_cc_n_objects",
     legend_title = "Num Cell\nCycle Objects",
     output_dir = "none",
@@ -158,6 +182,7 @@ visualize_model(
 )
 
 visualize_model(
+    cp_embedding_df,
     target_variable = "cell_health_modz_target_cc_g1_n_objects",
     legend_title = "G1 Objects",
     output_dir = "none",
@@ -165,13 +190,15 @@ visualize_model(
 )
 
 visualize_model(
-    target_variable = "cell_health_modz_target_cc_edu_pos_alexa647_intensity_nucleus_area_sum",
+    cp_embedding_df,
+    target_variable = "cell_health_modz_target_cc_s_intensity_nucleus_area_mean",
     legend_title = "Sum S phase",
     output_dir = "none",
     save = FALSE
 )
 
 visualize_model(
+    cp_embedding_df,
     target_variable = "cell_health_modz_target_vb_ros_back_mean",
     legend_title = "ROS Background",
     output_dir = "none",
@@ -193,6 +220,7 @@ pdf(pdf_file, width = 5, height = 5, onefile = TRUE)
 
 for (cell_health_variable in cell_health_variables) {
     umap_gg <- visualize_model(
+        df = cp_embedding_df,
         target_variable = cell_health_variable,
         legend_title = "Prediction:",
         title = cell_health_variable,
@@ -203,36 +231,8 @@ for (cell_health_variable in cell_health_variables) {
 
 dev.off()
 
-# Set some plotting defaults
-dye_colors <- c(
-    "hoechst" = "#639B94",
-    "edu" = "#E45242",
-    "gh2ax" = "#E2C552",
-    "ph3" = "#7B9C32",
-    "hoechst_gh2ax" = "#535f52",
-    "hoechst_edu" = "#73414b",
-    "edu_gh2ax" = "#e37a48",
-    "caspase" = "#F7B1C1",
-    "draq" = "#FF6699",
-    "draq_caspase" = "#7f4a72",
-    "many_cell_cycle" = "#E9DFC3",
-    "crispr_efficiency" = "black"
-)
-
-dye_labels <- c(
-    "hoechst" = "Hoechst",
-    "edu" = "EdU",
-    "gh2ax" = "gH2AX",
-    "ph3" = "pH3",
-    "hoechst_gh2ax" = "Hoechst + gH2AX",
-    "hoechst_edu" = "Hoechst + EdU",
-    "edu_gh2ax" = "EdU + gH2AX",
-    "caspase" = "Caspase 3/7",
-    "draq" = "DRAQ7",
-    "draq_caspase" = "DRAQ7 + Caspase 3/7",
-    "many_cell_cycle" = "Cell Cycle (Many Dyes)",
-    "crispr_efficiency" = "CRISPR Efficiency"
-)
+assay_theme_file <- file.path("..", "3.train", "scripts", "assay_themes.R")
+source(assay_theme_file)
 
 col_types <- readr::cols(
     .default = readr::col_character(),
