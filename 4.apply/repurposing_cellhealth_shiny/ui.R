@@ -16,13 +16,14 @@ shinyUI(
     
     # Setup multiple tabs
     tabsetPanel(
-      tabPanel("Getting Started"),
       tabPanel(
         "Model Explorer",
         # Sidebar with interactive layout
         sidebarLayout(
           
           sidebarPanel(
+            p(strong("Getting Started:", style="color:red"),
+              a("Documentation" ,href="https://github.com/broadinstitute/cell-health/tree/master/4.apply/repurposing_cellhealth_shiny/")),
             helpText("Select compounds and cell health models"),
             selectInput("scatter_type",
                         label = "Select Scatter Plot Type",
@@ -74,6 +75,8 @@ shinyUI(
         sidebarLayout(
           
           sidebarPanel(
+            p(strong("Getting Started:", style="color:red"),
+              a("Documentation" ,href="https://github.com/broadinstitute/cell-health/tree/master/4.apply/repurposing_cellhealth_shiny/")),
             helpText("Select compounds to explore"),
             autocomplete_input("compound_explorer",
                                label = "Select a Compound",
