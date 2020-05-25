@@ -11,12 +11,17 @@ We test all perturbations across ~6 doses per compound.
 We apply all [70 cell health machine learning models](https://github.com/broadinstitute/cell-health/blob/master/1.generate-profiles/data/labels/feature_mapping_annotated.csv) to the Drug Repurposing collection and present the results in the shiny app.
 The following document provides instructions on how to use the app.
 
+## Predicting Cell Health
+
+This application represents one piece of a larger project that aims to determine how well certain cell health measurements can be predicted from a Cell Painting assay.
+For more details about this larger project, see https://github.com/broadinstitute/cell-health.
+
 ## Getting Started
 
 The app can be viewed at https://gregway.shinyapps.io/repurposing_cellhealth_shiny/.
 There are two separate tabs, which are each useful for different explorations.
 The `Model Explorer` tab enables quick exploration of cell health predictions across the profiled Drug Repurposing compounds.
-The `Compound Explorer` tab focuses on specific compounds and multiple cell health model predictions.
+The `Compound Explorer` tab focuses on specific user-specified compounds and multiple cell health model predictions.
 We will describe specific options for each tab below:
 
 ## Model Explorer
@@ -101,3 +106,12 @@ Select the specific combination of cell health measurements to visualize.
 Compare your favorite compound of interest to controls and every other perturbation.
 
 We also highlight which cell health models are being viewed with their associated expected performance.
+
+### Select a Compound
+
+Select which compound to focus on.
+The form can accept copy and paste and will perform autocomplete.
+
+### Check Models to Visualize
+
+Use check boxes to select which cell health variables should be highlighted in the provided figures.
