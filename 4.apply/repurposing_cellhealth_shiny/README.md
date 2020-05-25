@@ -1,6 +1,8 @@
 # Exploring Cell Health Predictions for Repurposing Hub Compounds
 
 We present a shiny app to enable easy exploration of cell health predictions for 1,571 Drug Repurposing compound perturbations.
+The app can be viewed at http://broad.io/cell-health-app.
+
 Previously, we processed **a subset** of the [Broad Drug Repurposing Hub](https://clue.io/repurposing#home) compounds.
 The processing scripts and data can be found [here](https://github.com/broadinstitute/lincs-cell-painting).
 We use these processed data in this application.
@@ -18,7 +20,7 @@ For more details about this larger project, see https://github.com/broadinstitut
 
 ## Getting Started
 
-The app can be viewed at https://gregway.shinyapps.io/repurposing_cellhealth_shiny/.
+The app can be viewed at http://broad.io/cell-health-app.
 There are two separate tabs, which are each useful for different explorations.
 The `Model Explorer` tab enables quick exploration of cell health predictions across the profiled Drug Repurposing compounds.
 The `Compound Explorer` tab focuses on specific user-specified compounds and multiple cell health model predictions.
