@@ -17,6 +17,7 @@ dependencies:
 - conda-forge::jupyter=1.0.0
 - conda-forge::ipykernel=5.1.0
 - conda-forge::nb_conda_kernels=2.2.1
+- conda-forge::jupyter_contrib_nbextensions=0.5.1
 - conda-forge::rpy2=2.9.4
 - conda-forge::simplegeneric=0.8.1
 - conda-forge::pip=19.2.2

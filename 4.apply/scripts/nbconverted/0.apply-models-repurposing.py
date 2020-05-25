@@ -17,10 +17,12 @@ import os
 import sys
 import numpy as np
 import pandas as pd
+import scipy.stats
 from joblib import load
 import umap
 
-from pycytominer.consensus import modz
+from pycytominer import feature_select
+from pycytominer.cyto_utils import infer_cp_features
 
 sys.path.append("../3.train")
 from scripts.ml_utils import load_train_test, load_models
@@ -64,244 +66,80 @@ x_train_df, x_test_df, y_train_df, y_test_df = load_train_test(
 )
 
 
-# ## 2) Extract Repurposing Data Files
+# ## 2) Load Cell Painting Repurposing Data Files
 # 
-# **NOTE** - these files are not yet public!
+# These files are available from https://github.com/broadinstitute/lincs-cell-painting
 
 # In[6]:
 
 
-# List drug repurposing data
-repurposing_project_id = "2015_10_05_DrugRepurposing_AravindSubramanian_GolubLab_Broad"
+batch = "2016_04_01_a549_48hr_batch1"
+commit_hash = "27a2d7dd74067b5754c2c045e9b1a9cfb0581ae4"
 
-repurposing_profile_dir = os.path.join(
-    "/home",
-    "ubuntu",
-    "efs",
-    repurposing_project_id,
-    "workspace",
-    "software",
-    repurposing_project_id,
-    "subsampling",
-    "full_profile_data"
-)
-
-all_plates = list(set([x.split("_")[0] for x in os.listdir(repurposing_profile_dir)]))
+# We have noticed particular technical issues with this platemap
+# remove it from downstream consideration
+# https://github.com/broadinstitute/lincs-cell-painting/issues/43
+filter_platemap = "C-7161-01-LM6-011"
 
 
 # In[7]:
 
 
-# Build a single data frame that holds all profiles
-plate_info = {}
-all_dfs = []
-all_metadata_dfs = []
-for plate in all_plates:
-    norm_file = os.path.join(repurposing_profile_dir, 
-                             "{}_subsample_all_normalized.csv".format(plate))
+# Load data
+base_url = "https://media.githubusercontent.com/media/broadinstitute/lincs-cell-painting/"
+repurp_url = f"{base_url}/{commit_hash}/consensus/{batch}/{batch}_consensus_{consensus}.csv.gz"
 
-    plate_info[plate] = norm_file
-    
-    if os.path.exists(norm_file):
-        df = pd.read_csv(norm_file)
-
-        feature_df = df.reindex(x_test_df.columns, axis="columns").fillna(0)
-        metadata_df = df.loc[:, df.columns.str.contains("Metadata_")]
-        
-        all_dfs.append(feature_df)
-        all_metadata_dfs.append(metadata_df)
-
-
-# In[8]:
-
-
-# Merge feature data and metadata
-all_df = pd.concat(all_dfs, sort=True)
-all_metadata_df = pd.concat(all_metadata_dfs, sort=True)
-
-complete_df = pd.concat([all_metadata_df, all_df], axis="columns").reset_index(drop=True)
-
-# Fill in NaN in Metadata_broad_sample as DMSO
-complete_df.Metadata_broad_sample = complete_df.Metadata_broad_sample.fillna("DMSO")
-
-print(complete_df.shape)
-complete_df.head()
-
-
-# In[9]:
-
-
-# Confirm that all plates are loaded
-assert (
-    sorted(list(complete_df.Image_Metadata_Plate.unique())) == sorted(all_plates)
-)
-
-
-# ## Recode Dose Information
-
-# In[10]:
-
-
-def recode_dose(x, doses, return_level=False):
-    closest_index = np.argmin([np.abs(dose - x) for dose in doses])
-    if np.isnan(x):
-        return 0
-    if return_level:
-        return closest_index + 1
-    else:
-        return doses[closest_index]
-
-
-# In[11]:
-
-
-primary_dose_mapping = [0.04, 0.12, 0.37, 1.11, 3.33, 10, 20]
-
-
-# In[12]:
-
-
-complete_df = complete_df.assign(
-    Metadata_dose_recode=(
-        complete_df
-        .Metadata_mmoles_per_liter
-        .apply(
-            lambda x: recode_dose(x, primary_dose_mapping, return_level=True)
-        )
-    )
-)
-
-print(complete_df.shape)
-complete_df.head()
-
-
-# In[13]:
-
-
-complete_df.Metadata_dose_recode.value_counts()
-
-
-# ## Create Consensus Profiles
-# 
-# ### a) Generate different consensus profiles for DMSO
-# 
-# Include Well Level Information
-
-# In[14]:
-
-
-# Fill DMSO dose as zero
-complete_df.loc[:, "Metadata_mmoles_per_liter"] = complete_df.Metadata_mmoles_per_liter.fillna(0)
-
-
-# In[15]:
-
-
-replicate_cols = ["Metadata_broad_sample", "Metadata_dose_recode",
-                  "Metadata_mmoles_per_liter", "Image_Metadata_Well"]
-
-dmso_consensus_df = modz(
-    complete_df.query("Metadata_broad_sample == 'DMSO'"),
-    features="infer",
-    replicate_columns=replicate_cols,
-    precision=5
-)
-
-dmso_consensus_df = dmso_consensus_df.reset_index()
-
-print(dmso_consensus_df.shape)
-dmso_consensus_df.head(2)
-
-
-# ### b) Generate consensus profiles for all treatments
-
-# In[16]:
-
-
-replicate_cols = ["Metadata_broad_sample", "Metadata_dose_recode", "Metadata_mmoles_per_liter"]
-
-complete_consensus_df = modz(
-    complete_df.query("Metadata_broad_sample != 'DMSO'"),
-    features="infer",
-    replicate_columns=replicate_cols,
-    precision=5
-)
-
-complete_consensus_df = complete_consensus_df.reset_index()
-complete_consensus_df = complete_consensus_df.assign(Image_Metadata_Well="collapsed")
-
-print(complete_consensus_df.shape)
-complete_consensus_df.head(2)
-
-
-# ### c) Merge Together
-
-# In[17]:
-
-
-repurp_cp_cols = (
-    complete_consensus_df
-    .columns
-    [~complete_consensus_df.columns.str.contains("Metadata")]
-    .tolist()
-)
-
-meta_cols = (
-    complete_consensus_df
-    .drop(repurp_cp_cols, axis="columns")
-    .columns
-    .tolist()
-)
-
-
-# In[18]:
-
-
-complete_consensus_df = (
-    pd.concat(
-        [
-            complete_consensus_df,
-            dmso_consensus_df
-        ],
-        sort=True
-    )
-    .reset_index(drop=True)
-)
-
-complete_consensus_df = complete_consensus_df.loc[:, meta_cols + repurp_cp_cols]
+complete_consensus_df = pd.read_csv(repurp_url)
 
 print(complete_consensus_df.shape)
 complete_consensus_df.head()
 
 
-# ### d) Output Profiles
-
-# In[19]:
+# In[8]:
 
 
-# Output consensus profiles
-output_file = os.path.join(output_dir, "repurposing_{}_consensus.tsv.gz".format(consensus))
-complete_consensus_df.to_csv(output_file, sep='\t', compression="gzip", index=False)
+# Apply feature selection to the consensus profiles
+feature_ops = [
+    "variance_threshold",
+    "drop_na_columns",
+    "blacklist",
+    "drop_outliers"
+]
+
+consensus_feature_select_df = feature_select(
+    complete_consensus_df,
+    operation=feature_ops,
+    na_cutoff=0
+)
+
+print(consensus_feature_select_df.shape)
+consensus_feature_select_df.head()
 
 
-# In[20]:
+# In[9]:
 
 
-# Extract cell profiler and metadata features
-cp_features = x_test_df.columns[~x_test_df.columns.str.startswith("Metadata")].tolist()
+# Split metadata and CP Features
+cp_features = infer_cp_features(x_test_df)
+meta_features = infer_cp_features(complete_consensus_df, metadata=True)
+
+# Realign LINCS data to the same feature ordering as the test dataset
+feature_df = complete_consensus_df.reindex(cp_features, axis="columns")
+metadata_df = complete_consensus_df.loc[:, meta_features]
+
+print(feature_df.shape)
+feature_df.head()
 
 
 # ## 3) Apply all Regression Models to all Repurposing Plates
 
-# In[21]:
+# In[10]:
 
 
-feature_df = complete_consensus_df.reindex(x_test_df.columns, axis="columns")
-metadata_df = complete_consensus_df.loc[:, meta_cols]
+cell_health_features = list(model_dict.keys())
 
 all_scores = {}
-for cell_health_feature in model_dict.keys():
-    # Apply Real Model Classifiers
+for cell_health_feature in cell_health_features:
     model_clf = model_dict[cell_health_feature]
     pred_df = model_clf.predict(feature_df)
     all_scores[cell_health_feature] = pred_df
@@ -309,100 +147,116 @@ for cell_health_feature in model_dict.keys():
 
 # ## 4) Output Results
 
-# In[22]:
+# In[11]:
 
 
 # Output scores
 all_score_df = pd.DataFrame.from_dict(all_scores)
-full_df = (
+repurp_predict_df = (
     metadata_df
-    .merge(all_score_df,
-           left_index=True,
-           right_index=True)
+    .merge(
+        all_score_df,
+        left_index=True,
+        right_index=True
+    )
+    .query("Metadata_Plate_Map_Name != @filter_platemap")
 )
 
-output_real_file = os.path.join(output_dir,
-                                "repurposing_transformed_real_models_{}.tsv.gz".format(consensus))
-full_df.to_csv(output_real_file, sep="\t", index=False, compression="gzip")
+output_real_file = os.path.join(
+    output_dir,
+    "repurposing_transformed_real_models_{}.tsv.gz".format(consensus)
+)
+repurp_predict_df.to_csv(output_real_file, sep="\t", index=False, compression="gzip")
 
-print(full_df.shape)
-full_df.head()
+print(repurp_predict_df.shape)
+repurp_predict_df.head()
 
 
 # ## 5) Apply UMAP
 # 
 # ### Part 1: Apply UMAP to Cell Health Transformed Repurposing Hub Features
 
-# In[23]:
-
-
-cell_health_features = list(model_dict.keys())
-
-
-# In[24]:
+# In[12]:
 
 
 reducer = umap.UMAP(random_state=1234, n_components=2)
 
-metadata_df = full_df.drop(cell_health_features, axis="columns")
-
-real_embedding_df = pd.DataFrame(
-    reducer.fit_transform(full_df.loc[:, cell_health_features]),
+predict_embedding_df = pd.DataFrame(
+    reducer.fit_transform(repurp_predict_df.loc[:, cell_health_features]),
     columns=["umap_x", "umap_y"]
 )
 
-real_embedding_df = (
+predict_embedding_df = (
     metadata_df
-    .merge(real_embedding_df,
-           left_index=True,
-           right_index=True)
+    .merge(
+        predict_embedding_df,
+        left_index=True,
+        right_index=True
+    )
+    .query("Metadata_Plate_Map_Name != @filter_platemap")
 )
 
-output_real_file = os.path.join(output_dir,
-                                "repurposing_umap_transformed_real_models_{}.tsv.gz".format(consensus))
-real_embedding_df.to_csv(output_real_file, sep="\t", index=False, compression="gzip")
+output_real_file = os.path.join(
+    output_dir,
+    "repurposing_umap_transformed_real_models_{}.tsv.gz".format(consensus)
+)
+
+predict_embedding_df.to_csv(output_real_file, sep="\t", index=False, compression="gzip")
+
+print(predict_embedding_df.shape)
+predict_embedding_df.head()
 
 
 # ### Part 2: Apply UMAP to All Repurposing Hub Cell Painting Profiles
 
-# In[25]:
+# In[13]:
 
 
 reducer = umap.UMAP(random_state=1234, n_components=2)
 
-complete_metadata_df = complete_consensus_df.drop(cp_features, axis="columns")
-
-complete_embedding_df = pd.DataFrame(
-    reducer.fit_transform(complete_consensus_df.loc[:, cp_features]),
+repurp_embedding_df = pd.DataFrame(
+    reducer.fit_transform(
+        consensus_feature_select_df.loc[:, infer_cp_features(consensus_feature_select_df)]
+    ),
     columns=["umap_x", "umap_y"]
 )
 
-complete_embedding_df = (
-    complete_metadata_df
-    .merge(complete_embedding_df,
-           left_index=True,
-           right_index=True)
+repurp_embedding_df = (
+    metadata_df
+    .merge(
+        repurp_embedding_df,
+        left_index=True,
+        right_index=True
+    )
+    .query("Metadata_Plate_Map_Name != @filter_platemap")
 )
 
-output_real_file = os.path.join(output_dir,
-                                "repurposing_umap_transformed_cell_painting_{}.tsv.gz".format(consensus))
-complete_embedding_df.to_csv(output_real_file, sep="\t", index=False, compression="gzip")
+output_real_file = os.path.join(
+    output_dir,
+    "repurposing_umap_transformed_cell_painting_{}.tsv.gz".format(consensus)
+)
+repurp_embedding_df.to_csv(output_real_file, sep="\t", index=False, compression="gzip")
+
+print(repurp_embedding_df.shape)
+repurp_embedding_df.head()
 
 
 # ## Merge Data Together for Shiny App Exploration
 
-# In[26]:
+# In[14]:
 
 
-# Load perturbation information
-pert_info_file = os.path.join("data", "pert_info.txt")
-pert_info_df = pd.read_csv(pert_info_file, sep='\t')
+# Load MOA file
+moa_url = "https://raw.githubusercontent.com/broadinstitute/lincs-cell-painting/"
+moa_url = f"{moa_url}/{commit_hash}/metadata/moa/repurposing_info_external_moa_map_resolved.tsv"
 
-print(pert_info_df.shape)
-pert_info_df.head()
+moa_df = pd.read_csv(moa_url, sep="\t")
+
+print(moa_df.shape)
+moa_df.head(3)
 
 
-# In[27]:
+# In[15]:
 
 
 core_id = [
@@ -411,48 +265,113 @@ core_id = [
         x.split("-")[1]
     ) if x != "DMSO"
     else x
-    for x in full_df.Metadata_broad_sample
+    for x in repurp_embedding_df.Metadata_broad_sample
 ]
 
-pert_df = (
-    real_embedding_df
+repurp_embedding_with_pert_df = (
+    repurp_embedding_df
     .assign(Metadata_broad_core_id=core_id)
     .sort_index(axis="columns")
     .merge(
-        pert_info_df,
+        moa_df,
         left_on="Metadata_broad_core_id",
-        right_on="pert_id",
+        right_on="broad_id",
         how="left"
     )
 )
 
-print(pert_df.shape)
-pert_df.head()
+print(repurp_embedding_with_pert_df.shape)
+repurp_embedding_with_pert_df.head()
 
 
-# In[28]:
+# In[16]:
 
 
-shiny_merge_cols = ["Metadata_broad_sample", "Metadata_dose_recode",
-                    "Metadata_mmoles_per_liter", "Image_Metadata_Well"]
+shiny_merge_cols = [
+    "Metadata_Plate_Map_Name",
+    "Metadata_broad_sample",
+    "Metadata_dose_recode",
+    "Metadata_mmoles_per_liter",
+    "Metadata_pert_well"
+]
 
-shiny_df = pert_df.merge(
-    full_df,
-    left_on=shiny_merge_cols,
-    right_on=shiny_merge_cols,
-    how="inner"
+shiny_df = (
+    repurp_embedding_with_pert_df.merge(
+        repurp_predict_df,
+        left_on=shiny_merge_cols,
+        right_on=shiny_merge_cols,
+        how="inner"
+    )
+    .drop(["broad_sample"], axis="columns")
+    .query("Metadata_Plate_Map_Name != @filter_platemap")
 )
 
 print(shiny_df.shape)
 shiny_df.head()
 
 
-# In[29]:
+# In[17]:
 
 
-shiny_file = os.path.join("repurposing_cellhealth_shiny",
-                          "data",
-                          "moa_cell_health_{}.tsv.gz".format(consensus))
+shiny_file = os.path.join(
+    "repurposing_cellhealth_shiny",
+    "data",
+    "moa_cell_health_{}.tsv.gz".format(consensus)
+)
 
 shiny_df.to_csv(shiny_file, sep='\t', index=False, compression="gzip")
+
+
+# In[18]:
+
+
+shiny_combined_df = shiny_df.merge(
+    complete_consensus_df,
+    on=infer_cp_features(complete_consensus_df, metadata=True),
+    how="inner"
+)
+
+
+# ## Output Correlation Matrix
+
+# In[19]:
+
+
+shiny_features = infer_cp_features(consensus_feature_select_df)
+cell_health_features = [x for x in shiny_df if x.startswith("cell_health")]
+
+
+# In[20]:
+
+
+all_results = []
+for cell_health_feature in cell_health_features:
+    cell_health = shiny_combined_df.loc[:, cell_health_feature]
+    for cp_feature in shiny_features:
+        feature = shiny_combined_df.loc[:, cp_feature]
+        cor_result, pval = scipy.stats.pearsonr(cell_health, feature)
+        all_results.append([cell_health_feature, cp_feature, cor_result, pval])
+
+
+# In[21]:
+
+
+# Output correlation matrix for cell health predictions and CellProfiler features
+cor_results_df = (
+    pd.DataFrame(
+        np.array(all_results), columns=["cell_health", "cp_feature", "pearson_cor", "pval"]
+    )
+    .sort_values(by="pearson_cor", ascending=False)
+    .reset_index(drop=True)
+)
+
+cor_results_df.pearson_cor = cor_results_df.pearson_cor.astype(float)
+
+cor_results_df = (
+    cor_results_df
+    .pivot_table(columns=["cell_health"], index=["cp_feature"], values="pearson_cor")
+)
+
+print(cor_results_df.shape)
+cor_results_df.head(3)
 
