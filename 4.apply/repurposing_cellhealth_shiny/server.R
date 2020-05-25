@@ -121,19 +121,23 @@ shinyServer(function(input, output) {
       # Determine range of y axis
       ymax_compound_y <- max(compound_df[, cell_health_model_select_y])
       ymax_dmso_y <- max(dmso_df[, cell_health_model_select_y])
-      ymax_y <- max(c(ymax_compound_y, ymax_dmso_y))
+      ymax_control_y <- max(pos_control_df[, cell_health_model_select_y])
+      ymax_y <- max(c(ymax_compound_y, ymax_dmso_y, ymax_control_y))
       
       ymin_compound_y <- min(compound_df[, cell_health_model_select_y])
       ymin_dmso_y <- min(dmso_df[, cell_health_model_select_y])
-      ymin_y <- min(c(ymin_compound_y, ymin_dmso_y))
+      ymin_control_y <- min(pos_control_df[, cell_health_model_select_y])
+      ymin_y <- min(c(ymin_compound_y, ymin_dmso_y, ymin_control_y))
 
       ymax_compound_x <- max(compound_df[, cell_health_model_select_x])
       ymax_dmso_x <- max(dmso_df[, cell_health_model_select_x])
-      ymax_x <- max(c(ymax_compound_x, ymax_dmso_x))
+      ymax_control_x <- max(pos_control_df[, cell_health_model_select_x])
+      ymax_x <- max(c(ymax_compound_x, ymax_dmso_x, ymax_control_x))
       
       ymin_compound_x <- min(compound_df[, cell_health_model_select_x])
       ymin_dmso_x <- min(dmso_df[, cell_health_model_select_x])
-      ymin_x <- min(c(ymin_compound_x, ymin_dmso_x))
+      ymin_control_x <- min(pos_control_df[, cell_health_model_select_x])
+      ymin_x <- min(c(ymin_compound_x, ymin_dmso_x, ymin_control_x))
       
       # Plot! 1st - Generate the dose barplot
       bar_y_gg <- ggplot(compound_df,
