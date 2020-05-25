@@ -175,8 +175,7 @@ build_compound_explorer_plot <- function(moa_long_df, rank_df, compound, models)
       compound_type = ifelse(
         moa_long_df$pert_iname == compound, compound, "other"
         )
-      ) %>%
-    tidyr::drop_na(broad_id)
+      )
 
   moa_long_subset_df$compound_type[is.na(moa_long_subset_df$compound_type)] <- "other"
   moa_long_subset_df$compound_type[moa_long_subset_df$pert_iname == "bortezomib"] <- "bortezomib"
