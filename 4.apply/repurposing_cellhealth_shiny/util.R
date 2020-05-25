@@ -55,12 +55,6 @@ build_cell_health_scatter <- function(
              size = 1.25,
              pch = 16,
              alpha = 0.6) +
-  geom_point(data = compound_df,
-             aes(color = Metadata_dose_recode),
-             size = 5,
-             pch = 17,
-             alpha = 0.7,
-             show.legend = FALSE) +
   geom_point(data = control_df,
              aes(shape = pert_iname),
              fill = "grey",
@@ -68,7 +62,15 @@ build_cell_health_scatter <- function(
              size = 2,
              alpha = 0.4,
              show.legend = TRUE) +
+ geom_point(data = compound_df,
+            aes(fill = Metadata_dose_recode),
+            color = "black",
+            size = 5,
+            pch = 24,
+            alpha = 0.7,
+            show.legend = FALSE)+
   scale_color_viridis_c(name = "Dose\nLevel") +
+  scale_fill_viridis_c(name = "Dose\nLevel") +
   scale_shape_manual(
     name = "Controls",
     values = c("DMSO" = 21, "bortezomib" = 23, "MG-132" = 25),
@@ -93,10 +95,18 @@ build_umap_scatter <- function(moa_full_df, compound_df, control_df, model, targ
                size = 1.25,
                pch = 16,
                alpha = 0.6) +
+    geom_point(data = control_df,
+              aes(shape = pert_iname),
+              fill = "grey",
+              color = "black",
+              size = 2,
+              alpha = 0.4,
+              show.legend = TRUE) +
     geom_point(data = compound_df,
-               aes_string(color = model),
+               aes_string(fill = model),
+               color = "black",
                size = 5,
-               pch = 17,
+               pch = 24,
                alpha = 0.7,
                show.legend = FALSE) +
     geom_text_repel(data = compound_df,
@@ -108,15 +118,9 @@ build_umap_scatter <- function(moa_full_df, compound_df, control_df, model, targ
                     aes(label = paste0("Dose:", Metadata_dose_recode),
                         x = umap_x,
                         y = umap_y)) +
-    geom_point(data = control_df,
-               aes(shape = pert_iname),
-               fill = "grey",
-               color = "black",
-               size = 2,
-               alpha = 0.4,
-               show.legend = TRUE) +
     ggtitle(target) +
     scale_color_viridis_c(name = "") +
+    scale_fill_viridis_c(name = "") +
     scale_shape_manual(
       name = "Controls",
       values = c("DMSO" = 21, "bortezomib" = 23, "MG-132" = 25),
