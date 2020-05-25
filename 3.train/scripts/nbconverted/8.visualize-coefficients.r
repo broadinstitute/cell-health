@@ -91,13 +91,22 @@ coef_plot <- function(
     max_gradient <- max(subset_coef_df$abs_weight)
 
     # 1st Plot - Area Features
-    area_gg <- ggplot(area_df,
-                      aes(x = compartment, y = feature_group)) +
+    # First, create an area background to fill missing elements
+    area_comparments <- unique(area_df$compartment)
+    area_feature_groups <- unique(area_df$feature_group)
+    area_shuffle <- unique(area_df$shuffle)
+    area_background <- tidyr::crossing(area_comparments, area_feature_groups, area_shuffle)
+    colnames(area_background) <- c("compartment", "feature_group", "shuffle")
+    
+    # Now plot
+    area_gg <- ggplot(area_df, aes(x = compartment, y = feature_group)) +
+        geom_point(data = area_background, fill="grey", size = 3, pch = 21) +
         geom_point(aes(fill = abs_max_weight), size = 4, pch = 21) +
         facet_wrap(~shuffle) +
-        scale_fill_gradientn(
+        scale_fill_gradient2(
             name = "Max\nAbs. Weight",
-            colours = terrain.colors(10),
+            low = "white",
+            high = "blue",
             limits = c(min_gradient, max_gradient)
         ) +
         ylab("Feature Group") +
@@ -110,13 +119,24 @@ coef_plot <- function(
         theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
     # 2nd Plot - Other Compartment Features
+    # First, create a background to fill missing elements
+    comp_comparments <- unique(compartment_df$compartment)
+    comp_channels <- unique(compartment_df$channel)
+    comp_feature_groups <- unique(compartment_df$feature_group)
+    comp_shuffle <- unique(compartment_df$shuffle)
+    comp_background <- tidyr::crossing(comp_comparments, comp_channels, comp_feature_groups, comp_shuffle)
+    colnames(comp_background) <- c("compartment", "channel", "feature_group", "shuffle")
+    
+    # Now, plot
     compartment_gg <- ggplot(compartment_df,
                              aes(x = channel, y = feature_group)) +
+        geom_point(data = comp_background, fill="grey", size = 3, pch = 21) +
         geom_point(aes(fill = abs_max_weight), size = 4, pch = 21) +
         facet_grid(compartment~shuffle) +
-        scale_fill_gradientn(
+        scale_fill_gradient2(
             name = "Max\nAbs. Weight",
-            colours = terrain.colors(10),
+            low = "white",
+            high = "blue",
             limits = c(min_gradient, max_gradient)
         ) +
         ylab("Feature Group") +
@@ -128,12 +148,24 @@ coef_plot <- function(
         theme(axis.text.x = element_text(angle = 90))
 
     # 3rd Plot - Correlation Features
-    correlation_gg <- ggplot(correlation_df, aes(x = channel, y = parameter1)) +
+    # First, create a background to fill missing elements
+    corr_comparments <- unique(correlation_df$compartment)
+    corr_channels <- unique(correlation_df$channel)
+    corr_feature_groups <- unique(correlation_df$parameter1)
+    corr_shuffle <- unique(correlation_df$shuffle)
+    corr_background <- tidyr::crossing(corr_comparments, corr_channels, corr_feature_groups, corr_shuffle)
+    colnames(corr_background) <- c("compartment", "channel", "parameter1", "shuffle")
+    
+    # Now, plot
+    correlation_gg <- ggplot(correlation_df,
+                             aes(x = channel, y = parameter1)) +
+        geom_point(data = corr_background, fill="grey", size = 3, pch = 21) +
         geom_point(aes(fill = abs_max_weight), size = 4, pch = 21) +
         facet_wrap(~shuffle) +
-        scale_fill_gradientn(
-            name = "Max\nAbs. Weight", 
-            colours = terrain.colors(n_terrain_colors),
+        scale_fill_gradient2(
+            name = "Max\nAbs. Weight",
+            low = "white",
+            high = "blue",
             limits = c(min_gradient, max_gradient)
         ) +
         ylab("Channel Correlation") +
@@ -148,14 +180,21 @@ coef_plot <- function(
 
     # 4th Plot - Individual Feature Names
     feature_name_gg <- ggplot(subset_coef_features_df,
-                              aes(x = feature, y = weight)) +
-        geom_bar(fill = "#8DB495", color = "black", stat = "identity") +
+                              aes(x = feature, y = weight, fill = abs(weight))) +
+        geom_bar(color = "black", stat = "identity") +
+        scale_fill_gradient2(
+                name = "Abs. Weight",
+                low = "white",
+                high = "blue",
+                limits = c(min_gradient, max_gradient)
+            ) +
         ggtitle(feature_title) +
         coord_flip() +
         xlab("") +
         ylab("Model Coefficient") +
         theme_bw() +
-        coef_theme
+        coef_theme +
+        theme(legend.position = "none")
 
     # Get cowplot title
     use_title <- label_df %>%
@@ -312,14 +351,13 @@ coef_theme <- theme(
 
 point_size <- 5.5
 text_label_size <- 1.5
-n_terrain_colors <- 30
 
 pdf_file <- file.path(
     coef_dir,
     paste0("all_model_coefficients_", consensus, ".pdf")
 )
 
-pdf(pdf_file, width = 6.5, height = 7.5, onefile = TRUE)
+pdf(pdf_file, width = 7, height = 8, onefile = TRUE)
 for (target in unique(coef_df$target)) {
     coef_gg <- coef_plot(
         df = coef_df,
@@ -365,12 +403,23 @@ for (shuffle_option in c("Permuted", "Real")) {
         dplyr::select(channel, parameter1, compartment, shuffle, aggregated_max) %>%
         dplyr::distinct()
 
+    corr_comparments <- unique(correlation_df$compartment)
+    corr_channels <- unique(correlation_df$channel)
+    corr_feature_groups <- unique(correlation_df$parameter1)
+    corr_shuffle <- unique(correlation_df$shuffle)
+    corr_background <- tidyr::crossing(corr_comparments, corr_channels, corr_feature_groups, corr_shuffle)
+    colnames(corr_background) <- c("compartment", "channel", "parameter1", "shuffle")
+    
     correlation_gg <- ggplot(correlation_df, aes(x = channel, y = parameter1)) +
+        geom_point(data = corr_background, fill="grey", size = 4, pch = 21) +
         geom_point(aes(fill = aggregated_max), size = point_size, pch = 21) +
         facet_wrap(~shuffle) +
-        scale_fill_gradientn(name = "Max\nWeighted Coef", 
-                             colours = terrain.colors(n_terrain_colors),
-                             limits = c(min_gradient, max_gradient)) +
+        scale_fill_gradient2(
+            name = "Max\nWeighted Coef",
+            low = "white",
+            high = "blue",
+            limits = c(min_gradient, max_gradient)
+        ) +
         ylab("Channel Correlation") +
         xlab("Channel Correlation") +
         facet_grid(~compartment) + 
@@ -387,13 +436,22 @@ for (shuffle_option in c("Permuted", "Real")) {
         dplyr::mutate(aggregated_max = max(max_abs_weight_coef)) %>%
         dplyr::select(compartment, feature_group, shuffle, aggregated_max) %>%
         dplyr::distinct()
-
+    
+    area_comparments <- unique(area_df$compartment)
+    area_feature_groups <- unique(area_df$feature_group)
+    area_shuffle <- unique(area_df$shuffle)
+    area_background <- tidyr::crossing(area_comparments, area_feature_groups, area_shuffle)
+    colnames(area_background) <- c("compartment", "feature_group", "shuffle")
 
     area_gg <- ggplot(area_df, aes(x = compartment, y = feature_group)) +
+        geom_point(data = area_background, fill="grey", size = 4, pch = 21) +
         geom_point(aes(fill = aggregated_max), size = point_size, pch = 21) +
-        scale_fill_gradientn(name = "Max\nWeighted Coef",
-                             colours = terrain.colors(n_terrain_colors),
-                             limits = c(min_gradient, max_gradient)) +
+        scale_fill_gradient2(
+            name = "Max\nWeighted Coef",
+            low = "white",
+            high = "blue",
+            limits = c(min_gradient, max_gradient)
+        ) +
         ylab("Feature Group") +
         xlab("Compartment") +
         geom_text(aes(label = round(aggregated_max, 2)), size = text_label_size) +
@@ -410,14 +468,25 @@ for (shuffle_option in c("Permuted", "Real")) {
         dplyr::select(compartment, channel, feature_group, shuffle, aggregated_max) %>%
         dplyr::distinct()
 
+    comp_comparments <- unique(compartment_df$compartment)
+    comp_channels <- unique(compartment_df$channel)
+    comp_feature_groups <- unique(compartment_df$feature_group)
+    comp_shuffle <- unique(compartment_df$shuffle)
+    comp_background <- tidyr::crossing(comp_comparments, comp_channels, comp_feature_groups, comp_shuffle)
+    colnames(comp_background) <- c("compartment", "channel", "feature_group", "shuffle")
+
     compartment_gg <- ggplot(compartment_df,
                              aes(x = channel, y = feature_group)) +
+        geom_point(data = comp_background, fill="grey", size = 4, pch = 21) +
         geom_point(aes(fill = aggregated_max), size = point_size, pch = 21) +
         geom_text(aes(label = round(aggregated_max, 2)), size = text_label_size) +
         facet_grid(~compartment) +
-        scale_fill_gradientn(name = "Max\nWeighted Coef",
-                             colours = terrain.colors(n_terrain_colors),
-                             limits = c(min_gradient, max_gradient)) +
+        scale_fill_gradient2(
+            name = "Max\nWeighted Coef",
+            low = "white",
+            high = "blue",
+            limits = c(min_gradient, max_gradient)
+        ) +
         ylab("Feature Group") +
         xlab("Channel") +
         coord_fixed() +
@@ -448,11 +517,11 @@ for (shuffle_option in c("Permuted", "Real")) {
         ncol = 2,
         rel_widths = c(1, 0.15)
     )
+    
+    print(big_fig)
 
     output_file <- file.path(
         coef_dir, paste0("coefficient_summary_", shuffle_option, "_", consensus, ".png")
     )
     cowplot::save_plot(output_file, big_fig, base_height = 5, base_width = 6, dpi = 500)
 }
-
-big_fig
