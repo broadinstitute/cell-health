@@ -275,12 +275,21 @@ shinyServer(function(input, output) {
       # Now, visualize cell health models
       if (scatter_plot_type == "Cell Health") {
         scatter_gg <- build_cell_health_scatter(
-          moa_df, moa_compound_df, all_control_df,
-          cell_health_model_select_y, cell_health_model_select_x, target_y, target_x
+          moa_df,
+          moa_compound_df,
+          all_control_df,
+          cell_health_model_select_y,
+          cell_health_model_select_x,
+          target_y,
+          target_x
         )
       } else {
         scatter_gg <- build_umap_scatter(
-          moa_df, moa_compound_df, all_control_df, cell_health_model_select_y, target_y
+          moa_df,
+          moa_compound_df,
+          all_control_df, 
+          cell_health_model_select_y,
+          target_y
         )
       }
       scatter_gg

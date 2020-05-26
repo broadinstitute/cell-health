@@ -49,8 +49,9 @@ build_cell_health_scatter <- function(
   moa_scatter_gg <- ggplot(moa_full_df,
        aes_string(x = model_x,
                   y = model_y)) +
-  xlab(target_x) +
-  ylab(target_y) +
+  xlab(paste("Cell Health Model Predictions:\n", target_x)) +
+  ylab(paste("Cell Health Model Predictions:\n", target_y)) +
+  ggtitle("Click and Drag to Select Points!") +
   geom_point(aes(color = Metadata_dose_recode),
              size = 1.25,
              pch = 16,
@@ -118,7 +119,7 @@ build_umap_scatter <- function(moa_full_df, compound_df, control_df, model, targ
                     aes(label = paste0("Dose:", Metadata_dose_recode),
                         x = umap_x,
                         y = umap_y)) +
-    ggtitle(target) +
+    ggtitle(paste(target, "\nClick and Drag to Select Points!")) +
     scale_color_viridis_c(name = "") +
     scale_fill_viridis_c(name = "") +
     scale_shape_manual(
@@ -143,7 +144,7 @@ build_rank_plot <- function(rank_df) {
              lwd = 1.25,
              stat="identity") +
     ylab("Test Set Regression Performance") +
-    xlab("") +
+    xlab("Cell Health Models\nOrdered by How Much to Trust Predictions") +
     ggtitle("A549 Cell Line") +
     scale_color_manual(name = "",
                        values = c("black" = "black",
@@ -161,7 +162,8 @@ build_rank_plot <- function(rank_df) {
     theme_bw() +
     theme(axis.text.y = element_text(size = 9),
           axis.text.x = element_text(size = 8, angle = 90),
-          axis.title = element_text(size = 9),
+          axis.title.x = element_text(size = 9),
+          axis.title.y = element_text(size = 11),
           legend.title = element_text(size = 9),
           legend.text = element_text(size = 7),
           legend.key.size = unit(0.5, "cm"))
