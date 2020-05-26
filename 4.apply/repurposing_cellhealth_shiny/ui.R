@@ -31,20 +31,22 @@ shinyUI(
                         selected = "Cell Health"),
             selectInput("cell_health_model_yaxis",
                         label = "Select Cell Health Variable for Y axis (UMAP Toggle)",
-                        choices = rank_df$original_name,
+                        choices = sort(paste(rank_df$original_name)),
                         selected = "G1 - Number of Objects"),
             selectInput("cell_health_model_xaxis",
                         label = "Select Cell Health Variable for X axis",
-                        choices = rank_df$original_name,
-                        selected = "# Live Cells"),
+                        choices = sort(paste(rank_df$original_name)),
+                        selected = "ROS Mean"),
             autocomplete_input("compound",
                                label = "Select a Compound",
                                options = sort(unique(moa_df$pert_iname)),
                                max_options = 10,
-                               value = "YM-155"),
+                               value = "HMN-214"),
             checkboxInput("remove_controls",
                           label = "Remove Controls from Click and Drag",
-                          value = FALSE)
+                          value = FALSE),
+            downloadButton("downloadData", "Download Point Selection", class = "button"),
+            tags$head(tags$style(".button{background-color:orange;} .button{color: black;}")) 
             ),
 
           plotOutput("scatter_plot",
@@ -75,14 +77,14 @@ shinyUI(
         sidebarLayout(
           
           sidebarPanel(
-            p(strong("Getting Started:", style="color:red"),
-              a("Documentation" ,href="https://github.com/broadinstitute/cell-health/tree/master/4.apply/repurposing_cellhealth_shiny/")),
+            p(strong("Getting Started:", style = "color:red"),
+              a("Documentation", href="https://github.com/broadinstitute/cell-health/tree/master/4.apply/repurposing_cellhealth_shiny/")),
             helpText("Select compounds to explore"),
             autocomplete_input("compound_explorer",
                                label = "Select a Compound",
                                options = sort(unique(moa_df$pert_iname)),
                                max_options = 10,
-                               value = "YM-155"),
+                               value = "HMN-214"),
             checkboxGroupInput("model_select_explorer",
                                label = "Check Models to Visualize",
                                choices = rank_df$original_name,
@@ -102,7 +104,35 @@ shinyUI(
                        width = 550)
             )
           )
+        ),
+      tabPanel(
+        "Dose Fit Explorer",
+        sidebarLayout(
+          sidebarPanel(
+            p(strong("Getting Started:", style = "color:red"),
+              a("Documentation", href="https://github.com/broadinstitute/cell-health/tree/master/4.apply/repurposing_cellhealth_shiny/")),
+            helpText("Select compounds to explore"),
+            autocomplete_input("dose_explorer",
+                               label = "Select a Compound",
+                               options = sort(unique(moa_df$pert_iname)),
+                               max_options = 10,
+                               value = "HMN-214"),
+            selectInput("dose_model_select",
+                        label = "Select Cell Health Model to Fit Dose Response Curve",
+                        choices = sort(paste(rank_df$original_name)),
+                        selected = "G1 - Number of Objects")
+            ),
+          mainPanel(
+            plotOutput("dose_fit_curve",
+                       height = 400,
+                       width = 550)
+            )
+          ),
+        fluidRow(
+          h3("Dose Fitting Information"),
+          tableOutput("dose_info")
+          )
         )
       )
-    )
+  )
 )
