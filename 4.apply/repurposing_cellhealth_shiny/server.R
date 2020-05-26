@@ -6,6 +6,7 @@ suppressMessages(library(ggplot2))
 suppressMessages(library(ggrepel))
 suppressMessages(library(cowplot))
 suppressMessages(source("util.R"))
+suppressMessages(source("dose_utils.R"))
 
 set.seed(1234)
 
@@ -15,6 +16,7 @@ moa_df <- data[["moa"]]
 dmso_df <- data[["dmso"]]
 pos_control_df <- data[["pos_control"]]
 rank_df <- data[["rank"]]
+dose_df <- data[["dose"]]
 
 all_control_df <- dplyr::bind_rows(dmso_df, pos_control_df)
 
@@ -93,6 +95,16 @@ shinyServer(function(input, output) {
     paste(input$compound_explorer)
   })
   
+  # Cell Health Model to focus on in x axis
+  cell_health_model_dose <- reactive({
+    target_name <- input$dose_model_select
+    target <- rank_df %>%
+      dplyr::filter(original_name == !!target_name) %>%
+      dplyr::pull(target)
+
+    list("target" = paste(target), "target_name" = target_name)
+  })
+  
   model_select_explorer <- reactive({
     models <- input$model_select_explorer
     target <- rank_df %>%
@@ -100,6 +112,11 @@ shinyServer(function(input, output) {
       dplyr::pull(target)
     
     paste(target)
+  })
+  
+  # Set reactive elements for dose tab
+  dose_explorer <- reactive({
+    paste(input$dose_explorer)
   })
   
   # Generate a series of figures
@@ -305,13 +322,36 @@ shinyServer(function(input, output) {
     build_compound_explorer_plot(
       moa_long_df,
       rank_df,
+      dose_df,
       compound_select_explore,
       selected_models)
   })
   
-  # Build output text for print rendering
-  output$brush_info <- renderTable({
+  output$dose_fit_curve <- renderPlot({
+    dose_compound_select <- dose_explorer()
+    dose_model_info <- cell_health_model_dose()
     
+    model <- dose_model_info[["target"]]
+    model_name <- dose_model_info[["target_name"]]
+
+    get_dose_curve(moa_long_df, dose_df, model, dose_compound_select, model_name)
+  })
+  
+  make_dose_table <- reactive({
+    # Load reactive elements
+    dose_compound_select <- dose_explorer()
+    dose_model_info <- cell_health_model_dose()
+    
+    model <- paste0("cell_health_modz_target_", dose_model_info[["target"]])
+    
+    dose_df %>%
+      dplyr::filter(pert_iname == !!dose_compound_select, model == !!model)
+  })
+  
+  output$dose_info <- renderTable(make_dose_table())
+  
+  # Build output text for print rendering
+  make_table <- reactive({
     # Load reactive elements
     cell_health_model_select_y <- cell_health_model_y()
     cell_health_model_select_x <- cell_health_model_x()
@@ -321,7 +361,8 @@ shinyServer(function(input, output) {
   
     if (remove_controls) {
       output_df <- moa_df %>%
-          dplyr::filter(!(pert_iname %in% c("DMSO", "bortezomib", "MG-132")))
+          dplyr::filter(!(pert_iname %in% c("bortezomib", "MG-132"))) %>%
+          dplyr::filter(Metadata_broad_sample != 'DMSO')
     } else {
       output_df <- moa_df
     }
@@ -361,4 +402,16 @@ shinyServer(function(input, output) {
     
     brushedPoints(output_df, input$plot_brush)
     })
+  
+  output$brush_info <- renderTable(make_table())
+  
+  # Download selection
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste("perturbation_info.csv")
+    },
+    content = function(file) {
+      make_table() %>% readr::write_csv(file)
+    }
+  )
   })
