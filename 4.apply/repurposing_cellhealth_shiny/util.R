@@ -274,7 +274,7 @@ load_data <- function(pos_controls=c("bortezomib", "MG-132")) {
                                   levels = rev(unique(rank_df$original_name)))
 
   # Load dose Information
-  dose_file <- file.path("data", "dose_response_curve_fit_results.tsv")
+  dose_file <- file.path("data", "dose_response_curve_fit_results.tsv.gz")
 
   dose_cols <- readr::cols(
     .default = readr::col_double(),

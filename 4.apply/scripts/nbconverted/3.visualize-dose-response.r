@@ -59,7 +59,7 @@ moa_long_df <- moa_df %>% reshape2::melt(id.vars = c(
 print(dim(moa_long_df))
 head(moa_long_df, 3)
 
-dose_file <- file.path("repurposing_cellhealth_shiny", "data", "dose_response_curve_fit_results.tsv")
+dose_file <- file.path("repurposing_cellhealth_shiny", "data", "dose_response_curve_fit_results.tsv.gz")
 
 dose_cols <- readr::cols(
     .default = readr::col_character(),
