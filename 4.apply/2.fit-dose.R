@@ -18,8 +18,7 @@
 library(drc)
 library(dplyr)
 library(ggplot2)
-source(file.path("scripts", "dose_utils.R"))
-
+source(file.path("repurposing_cellhealth_shiny", "dose_utils.R"))
 
 moa_file <- file.path(
   "repurposing_cellhealth_shiny",
@@ -29,29 +28,42 @@ moa_file <- file.path(
 
 moa_cols <- readr::cols(
   .default = readr::col_double(),
-  Image_Metadata_Well = readr::col_character(),
+  Metadata_Plate_Map_Name = readr::col_character(),
   Metadata_broad_core_id = readr::col_character(),
   Metadata_broad_sample = readr::col_character(),
-  Metadata_dose_recode = readr::col_integer(),
-  pert_id = readr::col_character(),
+  Metadata_pert_well = readr::col_character(),
+  Metadata_dose_recode = readr::col_character(),
+  Metadata_mmoles_per_liter = readr::col_double(),
+  broad_id = readr::col_character(),
   pert_iname = readr::col_character(),
-  pert_type = readr::col_character(),
-  moa = readr::col_character()
+  InChIKey14 = readr::col_character(),
+  moa = readr::col_character(),
+  target = readr::col_character(),
+  broad_date = readr::col_character(),
+  clinical_phase = readr::col_character(),
+  alternative_moa = readr::col_character(),
+  alternative_target = readr::col_character()
 )
 
 moa_df <- readr::read_tsv(moa_file, col_types = moa_cols)
 moa_long_df <- moa_df %>% reshape2::melt(id.vars = c(
-  "Image_Metadata_Well",
+  "Metadata_Plate_Map_Name",
+  "Metadata_pert_well",
   "Metadata_broad_core_id",
+  "InChIKey14",
   "Metadata_broad_sample",
   "Metadata_dose_recode",
   "Metadata_mmoles_per_liter",
   "umap_x",
   "umap_y",
-  "pert_id",
+  "broad_id",
+  "broad_date",
+  "clinical_phase",
   "pert_iname",
-  "pert_type",
-  "moa"),
+  "moa",
+  "target",
+  "alternative_moa",
+  "alternative_target"),
   variable.name = "model",
   value.name = "model_score"
 )
@@ -74,21 +86,23 @@ for (model in all_models) {
                     model == !!model) %>%
       dplyr::select(
         Metadata_mmoles_per_liter,
-        pert_id,
+        broad_id,
         pert_iname,
         moa,
+        target,
         model,
         model_score
       ) %>%
       dplyr::mutate(model_score_transform = zero_one_normalize(model_score))
 
-    pert_id <- dose_focus_df$pert_id[1]
+    broad_id <- dose_focus_df$broad_id[1]
     pert_iname <- dose_focus_df$pert_iname[1]
     moa <- dose_focus_df$moa[1]
+    target <- dose_focus_df$target[1]
 
     if (nrow(dose_focus_df) < 4) {
       model_result <- c(
-          compound, model, pert_id, pert_iname, moa, rep(NA, 9), "not_enough_dose"
+          compound, model, broad_id, pert_iname, moa, rep(NA, 9), "not_enough_dose"
       )
       result_list[[model]][[compound]] <- model_result
       next
@@ -113,7 +127,7 @@ for (model in all_models) {
 
     if (model_output_status == "fail_convergence") {
       model_result <- c(
-          compound, model, pert_id, pert_iname, moa, rep(NA, 9), model_output_status
+          compound, model, broad_id, pert_iname, moa, rep(NA, 9), model_output_status
         )
       result_list[[model]][[compound]] <- model_result
       next
@@ -139,9 +153,10 @@ for (model in all_models) {
     model_result <- c(
         compound,
         model,
-        pert_id,
+        broad_id,
         pert_iname,
         moa,
+        target,
         slope,
         slope_error,
         slope_t,
@@ -163,9 +178,10 @@ for (model in all_models) {
   colnames(result_list[[model]]) <- c(
       "compound",
       "model",
-      "pert_id",
+      "broad_id",
       "pert_iname",
       "moa",
+      "target",
       "slope",
       "slope_error",
       "slope_t",
@@ -191,9 +207,10 @@ full_results_df$ic_fifty_p <- as.numeric(paste(full_results_df$ic_fifty_p))
 full_results_df$residual <- as.numeric(paste(full_results_df$residual))
 
 # Output results
-output_file <- file.path("results", "dose_response_curve_fit_results.tsv")
+output_file <- file.path("repurposing_cellhealth_shiny", "data", "dose_response_curve_fit_results.tsv.gz")
 
 full_results_df %>%
     dplyr::arrange(residual) %>%
-    dplyr::mutate(ic_fifty_transform = 2 ** ic_fifty) %>%
+    dplyr::mutate(slope_transform = 2 ** slope,
+                  ic_fifty_transform = 2 ** ic_fifty) %>%
     readr::write_tsv(output_file)
