@@ -115,7 +115,7 @@ dose_summary_gg <- cowplot::plot_grid(
     rel_heights = c(0.4, 0.6)
 )
 
-cowplot::save_plot(output_file, dose_summary_gg, base_height = 5, base_width = 5)
+cowplot::save_plot(output_file, dose_summary_gg, base_height = 5, base_width = 6.5)
 
 dose_summary_gg
 
