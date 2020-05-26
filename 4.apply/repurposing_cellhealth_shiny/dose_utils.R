@@ -1,5 +1,5 @@
 # Utility functions to import into dose response curve analysis
-
+options(warn=-1)
 zero_one_normalize <- function(x){(x - min(x)) / (max(x) - min(x))}
 
 
@@ -9,7 +9,7 @@ get_curve_fit <- function(moa_df, dose_df, compound, model) {
                   model == !!model) %>%
     dplyr::select(
       Metadata_mmoles_per_liter,
-      pert_id,
+      broad_id,
       pert_iname,
       moa,
       model,
@@ -46,17 +46,24 @@ get_dose_curve <- function(moa_long_df, dose_df, model, pert_name, cell_health_m
     # Sample data
     newdata <- expand.grid(conc=exp(seq(log(0.04), log(10), length=1000)))
     # predictions and confidence intervals
-    pm <- stats::predict(example_curve$fit, newdata=newdata, level = 0.95, interval="confidence")
+    pm <- stats::predict(
+      example_curve$fit, newdata = newdata, level = 0.95, interval = "confidence"
+    )
     newdata$p <- pm[,1]
     newdata$pmin <- pm[,2]
     newdata$pmax <- pm[,3]
 
     dose_curve_gg <- ggplot(example_curve$moa,
-                            aes(x = Metadata_mmoles_per_liter, y = model_score_transform)) +
-        geom_point() +
-        coord_trans(x="log10") +
-        geom_ribbon(data=newdata, aes(x=conc, y=p, ymin=pmin, ymax=pmax), alpha=0.2) +
-        geom_line(data=newdata, aes(x=conc, y=p)) +
+                            aes(x = Metadata_mmoles_per_liter,
+                              y = model_score_transform)) +
+        geom_point(size = 0.75) +
+        coord_trans(x = "log10") +
+        geom_ribbon(
+          data = newdata,
+          aes(x = conc, y = p, ymin = pmin, ymax = pmax),
+          alpha = 0.2
+        ) +
+        geom_line(data = newdata, aes(x = conc, y = p), alpha = 0.6, lwd = 0.4) +
         theme_bw() +
         xlab(paste0("Micromoles per Liter\n", pert_name)) +
         ylab(paste0("Cell Health Model\n", cell_health_model))
