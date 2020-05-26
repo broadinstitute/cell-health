@@ -1,30 +1,12 @@
 library(dplyr)
 library(shiny)
 library(dqshiny)
+suppressMessages(source("util.R"))
 
 # Load profiles
-moa_file <- file.path("data", "moa_cell_health_modz.tsv.gz")
-rank_file <- file.path("data", "A549_ranked_models_regression_modz.tsv")
-
-moa_cols <- readr::cols(
-  .default = readr::col_double(),
-  Metadata_broad_sample = readr::col_character(),
-  Image_Metadata_Well = readr::col_character(),
-  pert_iname = readr::col_character(),
-  Metadata_broad_core_id = readr::col_character(),
-  pert_id = readr::col_character(),
-  pert_type = readr::col_character(),
-  moa = readr::col_character()
-)
-
-moa_df <- readr::read_tsv(moa_file, col_types = moa_cols)
-colnames(moa_df) <- gsub("cell_health_modz_target_", "", colnames(moa_df))
-
-rank_df <- readr::read_tsv(rank_file, col_types = readr::cols()) %>%
-  dplyr::filter(shuffle_false > 0)
-rank_df$target <- factor(rank_df$target, levels = rev(unique(rank_df$target)))
-rank_df$original_name <- factor(rank_df$original_name,
-                                levels = rev(unique(rank_df$original_name)))
+data <- load_data()
+moa_df <- data[["moa"]]
+rank_df <- data[["rank"]]
 
 # Define UI for application that draws a histogram
 shinyUI(
@@ -40,6 +22,8 @@ shinyUI(
         sidebarLayout(
           
           sidebarPanel(
+            p(strong("Getting Started:", style="color:red"),
+              a("Documentation" ,href="https://github.com/broadinstitute/cell-health/tree/master/4.apply/repurposing_cellhealth_shiny/")),
             helpText("Select compounds and cell health models"),
             selectInput("scatter_type",
                         label = "Select Scatter Plot Type",
@@ -57,7 +41,10 @@ shinyUI(
                                label = "Select a Compound",
                                options = sort(unique(moa_df$pert_iname)),
                                max_options = 10,
-                               value = "bortezomib")
+                               value = "YM-155"),
+            checkboxInput("remove_controls",
+                          label = "Remove Controls from Click and Drag",
+                          value = FALSE)
             ),
 
           plotOutput("scatter_plot",
@@ -88,16 +75,18 @@ shinyUI(
         sidebarLayout(
           
           sidebarPanel(
+            p(strong("Getting Started:", style="color:red"),
+              a("Documentation" ,href="https://github.com/broadinstitute/cell-health/tree/master/4.apply/repurposing_cellhealth_shiny/")),
             helpText("Select compounds to explore"),
             autocomplete_input("compound_explorer",
                                label = "Select a Compound",
                                options = sort(unique(moa_df$pert_iname)),
                                max_options = 10,
-                               value = "bortezomib"),
+                               value = "YM-155"),
             checkboxGroupInput("model_select_explorer",
                                label = "Check Models to Visualize",
                                choices = rank_df$original_name,
-                               selected = c("Live Cell Area",
+                               selected = c("Live Cell Area [um2]",
                                             "G1 - Number of Objects",
                                             "edu positive - Number of Objects",
                                             "ROS Mean"))
