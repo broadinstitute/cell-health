@@ -49,8 +49,9 @@ build_cell_health_scatter <- function(
   moa_scatter_gg <- ggplot(moa_full_df,
        aes_string(x = model_x,
                   y = model_y)) +
-  xlab(target_x) +
-  ylab(target_y) +
+  xlab(paste("Cell Health Model Predictions:\n", target_x)) +
+  ylab(paste("Cell Health Model Predictions:\n", target_y)) +
+  ggtitle("Click and Drag to Select Points!") +
   geom_point(aes(color = Metadata_dose_recode),
              size = 1.25,
              pch = 16,
@@ -118,7 +119,7 @@ build_umap_scatter <- function(moa_full_df, compound_df, control_df, model, targ
                     aes(label = paste0("Dose:", Metadata_dose_recode),
                         x = umap_x,
                         y = umap_y)) +
-    ggtitle(target) +
+    ggtitle(paste(target, "\nClick and Drag to Select Points!")) +
     scale_color_viridis_c(name = "") +
     scale_fill_viridis_c(name = "") +
     scale_shape_manual(
@@ -143,7 +144,7 @@ build_rank_plot <- function(rank_df) {
              lwd = 1.25,
              stat="identity") +
     ylab("Test Set Regression Performance") +
-    xlab("") +
+    xlab("Cell Health Models\nOrdered by How Much to Trust Predictions") +
     ggtitle("A549 Cell Line") +
     scale_color_manual(name = "",
                        values = c("black" = "black",
@@ -161,14 +162,15 @@ build_rank_plot <- function(rank_df) {
     theme_bw() +
     theme(axis.text.y = element_text(size = 9),
           axis.text.x = element_text(size = 8, angle = 90),
-          axis.title = element_text(size = 9),
+          axis.title.x = element_text(size = 9),
+          axis.title.y = element_text(size = 11),
           legend.title = element_text(size = 9),
           legend.text = element_text(size = 7),
           legend.key.size = unit(0.5, "cm"))
 }
 
 
-build_compound_explorer_plot <- function(moa_long_df, rank_df, compound, models) {
+build_compound_explorer_plot <- function(moa_long_df, rank_df, dose_df, compound, models) {
   # Create a variable to plot different results
   moa_long_subset_df <- moa_long_df %>%
     dplyr::mutate(
@@ -196,7 +198,7 @@ build_compound_explorer_plot <- function(moa_long_df, rank_df, compound, models)
   moa_long_subset_df$compound_type <- factor(moa_long_subset_df$compound_type,
                                              levels = compound_levels)
 
-  full_scatter_gg <- ggplot(moa_long_subset_df,
+  full_boxplot_gg <- ggplot(moa_long_subset_df,
          aes(x = compound_type, y = model_score, fill = compound_type)) +
     geom_boxplot(outlier.size = 0.1) +
     facet_wrap("~original_name", nrow = length(models)) +
@@ -223,7 +225,7 @@ build_compound_explorer_plot <- function(moa_long_df, rank_df, compound, models)
 
   main_plot <- (
     cowplot::plot_grid(
-      full_scatter_gg,
+      full_boxplot_gg,
       compound_dose_gg,
       labels = c("", ""),
       ncol = 2,
@@ -273,12 +275,30 @@ load_data <- function(pos_controls=c("bortezomib", "MG-132")) {
   rank_df$original_name <- factor(rank_df$original_name,
                                   levels = rev(unique(rank_df$original_name)))
 
+  # Load dose Information
+  dose_file <- file.path("data", "dose_response_curve_fit_results.tsv.gz")
+
+  dose_cols <- readr::cols(
+    .default = readr::col_double(),
+    compound = readr::col_character(),
+    model = readr::col_character(),
+    broad_id = readr::col_character(),
+    pert_iname = readr::col_character(),
+    moa = readr::col_character(),
+    target = readr::col_character(),
+    slope = readr::col_double(),
+    status = readr::col_character()
+  )
+
+  dose_df <- readr::read_tsv(dose_file, col_types = dose_cols)
+
   return(
     list(
       "rank" = rank_df,
       "moa" = moa_df,
       "pos_control" = pos_controls_df,
-      "dmso" = dmso_df
+      "dmso" = dmso_df,
+      "dose" = dose_df
     )
   )
 }

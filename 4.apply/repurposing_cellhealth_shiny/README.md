@@ -21,9 +21,12 @@ For more details about this larger project, see https://github.com/broadinstitut
 ## Getting Started
 
 The app can be viewed at http://broad.io/cell-health-app.
-There are two separate tabs, which are each useful for different explorations.
-The `Model Explorer` tab enables quick exploration of cell health predictions across the profiled Drug Repurposing compounds.
-The `Compound Explorer` tab focuses on specific user-specified compounds and multiple cell health model predictions.
+There are three separate tabs, which are each useful for different explorations.
+
+1. The `Model Explorer` tab enables quick exploration of cell health predictions across the profiled Drug Repurposing compounds.
+2. The `Compound Explorer` tab focuses on specific user-specified compounds and multiple cell health model predictions.
+3. The `Dose Fit Explorer` tab will fit and plot dose response curves to the specified compound and cell health model
+
 We will describe specific options for each tab below:
 
 ## Model Explorer
@@ -101,6 +104,10 @@ The form can accept copy and paste and will perform autocomplete.
 
 Check this box to remove DMSO, Bortezomib, and MG-132 from the table view.
 
+### Download Point Selection
+
+After selecting scatter plot points, click to download the table.
+
 ## Compound Explorer
 
 This tab focuses exclusively on a single compound at a time.
@@ -117,3 +124,14 @@ The form can accept copy and paste and will perform autocomplete.
 ### Check Models to Visualize
 
 Use check boxes to select which cell health variables should be highlighted in the provided figures.
+
+## Dose Fit Explorer
+
+This tab will fit a dose response curve based on a 4 parameter Hill equation.
+We fit models using the CRAN package [`drc`](https://cran.r-project.org/web/packages/drc/index.html).
+
+Note that we fit models to _calibrated_ cell health model output scores.
+The highest score per dose is assigned one and the lowest is assigned zero.
+The intermediate doses are transformed via this "zero-one normalization" procedure.
+
+The "Select a Compound" and "Select Cell Health Model" options mirror the option descriptions as specified above.
