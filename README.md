@@ -36,7 +36,7 @@ This is ok since we are not actually interested in the CRISPR treatment specific
 The full analysis pipeline consists of the following steps:
 
 | Order | Module | Description |
-| :---- | :----- | :---------- | 
+| :---- | :----- | :---------- |
 | 0 | Download cell painting data | Retrieve single cell profiles archived on Figshare |
 | 1 | Generate profiles | Generate and process cell painting and cell health assay readouts |
 | 2 | Determine replicate reproducibility | Determine the extent to which the CRISPR perturbations result in reproducible signatures |
@@ -63,14 +63,17 @@ We also trained logistic regression classifiers using the same approach above.
 
 ## Results
 
-![Regression Model Performance](https://raw.githubusercontent.com/broadinstitute/cell-health/master/3.train/figures/performance_summary_rsquared_assay.png)
+![Regression Model Performance](https://raw.githubusercontent.com/broadinstitute/cell-health/master/3.train/figures/regression/modz/regression_performance_figure_modz.png)
 
 Initial results indicate that many of the cell health phenotypes can be predicted with our approach.
+However, there are many cell line specific differences.
 
 ## Computational Environment
 
 We use conda as a package manager.
 To install conda see [instructions](https://docs.conda.io/en/latest/miniconda.html).
+
+We recommend installing conda by downloading and executing the `.sh` file and accepting defaults.
 
 To create the computational environment, run the following:
 
