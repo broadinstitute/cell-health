@@ -59,10 +59,11 @@ depmap_df.head(3)
 
 
 focus_columns = [
+    "Metadata_Plate_Map_Name",
     "Metadata_broad_sample",
     "Metadata_dose_recode",
     "Metadata_mmoles_per_liter",
-    "Image_Metadata_Well",
+    "Metadata_pert_well",
     cell_health_model
 ]
 
@@ -79,7 +80,7 @@ cell_health_file = os.path.join(
 
 cell_health_df = (
     pd.read_csv(cell_health_file, sep='\t')
-    .loc[:, focus_columns]
+    #.loc[:, focus_columns]
     .rename(
         {
             cell_health_model: "cell_health_viability"
@@ -171,7 +172,7 @@ result_text
 
 viability_gg = (
     gg.ggplot(full_df, gg.aes(x="cell_health_viability", y="depmap_viability")) +
-    gg.geom_point(size = 0.5, alpha = 0.6) +
+    gg.geom_point(size = 0.5, alpha = 0.3) +
     gg.theme_bw() +
     gg.geom_smooth() +
     gg.annotate("text", label = result_text, x = -2, y = -8.5) +
