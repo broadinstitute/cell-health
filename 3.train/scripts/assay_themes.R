@@ -105,9 +105,9 @@ cell_line_labels <- c(
 )
 
 cell_line_colors <- c(
-  "A549" = "#7fc97f",
-  "ES2" = "#beaed4",
-  "HCC44" = "#fdc086"
+  "A549" = "#861613",
+  "ES2" = "#1CADA8",
+  "HCC44" = "#2A364D"
 )
 
 dye_theme <- theme(

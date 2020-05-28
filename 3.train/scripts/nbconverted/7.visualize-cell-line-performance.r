@@ -164,7 +164,7 @@ summary_df$data_type <- factor(summary_df$data_type, levels = c("Training", "Tes
 summary_df
 
 ggplot(summary_df, aes(x = mean_crispr_eff, y = mean_rsquared_diff, color = Metadata_cell_line)) +
-    geom_point(size = 2, alpha = 0.9) +
+    geom_point(size = 2, alpha = 0.8) +
     geom_errorbar(aes(ymin = low_r2err_conf, ymax = high_r2err_conf), alpha = 0.9, width = 0.2) +
     geom_errorbarh(aes(xmin = low_crispr_conf, xmax = high_crispr_conf), alpha = 0.9, height = 0.2) +
     facet_grid(data_type~shuffle) +
