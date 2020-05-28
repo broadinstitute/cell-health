@@ -20,9 +20,9 @@ dose_df <- data[["dose"]]
 
 all_control_df <- dplyr::bind_rows(dmso_df, pos_control_df)
 
-model_dict_df <- rank_df %>% dplyr::select(target, original_name)
+model_dict_df <- rank_df %>% dplyr::select(target, readable_name)
 model_dict_df$target <- paste(model_dict_df$target)
-model_dict_df$original_name <- paste(model_dict_df$original_name)
+model_dict_df$readable_name <- paste(model_dict_df$readable_name)
 
 # Reshape the moa dataframe for different variable plotting
 melt_id_vars <- c(
@@ -66,7 +66,7 @@ shinyServer(function(input, output) {
   cell_health_model_y <- reactive({
     target_name <- input$cell_health_model_yaxis
     target <- rank_df %>%
-        dplyr::filter(original_name == !!target_name) %>%
+        dplyr::filter(readable_name == !!target_name) %>%
         dplyr::pull(target)
     paste(target)
   })
@@ -75,7 +75,7 @@ shinyServer(function(input, output) {
   cell_health_model_x <- reactive({
     target_name <- input$cell_health_model_xaxis
     target <- rank_df %>%
-      dplyr::filter(original_name == !!target_name) %>%
+      dplyr::filter(readable_name == !!target_name) %>%
       dplyr::pull(target)
     paste(target)
   })
@@ -99,7 +99,7 @@ shinyServer(function(input, output) {
   cell_health_model_dose <- reactive({
     target_name <- input$dose_model_select
     target <- rank_df %>%
-      dplyr::filter(original_name == !!target_name) %>%
+      dplyr::filter(readable_name == !!target_name) %>%
       dplyr::pull(target)
 
     list("target" = paste(target), "target_name" = target_name)
@@ -108,7 +108,7 @@ shinyServer(function(input, output) {
   model_select_explorer <- reactive({
     models <- input$model_select_explorer
     target <- rank_df %>%
-      dplyr::filter(original_name %in% !!models) %>%
+      dplyr::filter(readable_name %in% !!models) %>%
       dplyr::pull(target)
     
     paste(target)
