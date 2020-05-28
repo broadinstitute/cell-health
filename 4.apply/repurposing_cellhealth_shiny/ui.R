@@ -31,12 +31,12 @@ shinyUI(
                         selected = "Cell Health"),
             selectInput("cell_health_model_yaxis",
                         label = "Select Cell Health Model for Y axis (UMAP Toggle)",
-                        choices = sort(paste(rank_df$original_name)),
-                        selected = "G1 - Number of Objects"),
+                        choices = sort(paste(rank_df$readable_name)),
+                        selected = "G1 - # cells"),
             selectInput("cell_health_model_xaxis",
                         label = "Select Cell Health Model for X axis",
-                        choices = sort(paste(rank_df$original_name)),
-                        selected = "ROS Mean"),
+                        choices = sort(paste(rank_df$readable_name)),
+                        selected = "ROS"),
             autocomplete_input("compound",
                                label = "Select a Compound to Highlight",
                                options = sort(unique(moa_df$pert_iname)),
@@ -87,11 +87,11 @@ shinyUI(
                                value = "HMN-214"),
             checkboxGroupInput("model_select_explorer",
                                label = "Check Models to Visualize",
-                               choices = rank_df$original_name,
-                               selected = c("Live Cell Area [um2]",
-                                            "G1 - Number of Objects",
-                                            "edu positive - Number of Objects",
-                                            "ROS Mean"))
+                               choices = rank_df$readable_name,
+                               selected = c("Live Cell Area",
+                                            "G1 - # cells",
+                                            "S - Intensity Nucleus EdU Mean",
+                                            "ROS"))
           ),
           
           # Show a plot of the generated distribution
@@ -119,8 +119,8 @@ shinyUI(
                                value = "HMN-214"),
             selectInput("dose_model_select",
                         label = "Select Cell Health Model to Fit Dose Response Curve",
-                        choices = sort(paste(rank_df$original_name)),
-                        selected = "G1 - Number of Objects")
+                        choices = sort(paste(rank_df$readable_name)),
+                        selected = "G1 - # cells")
             ),
           mainPanel(
             plotOutput("dose_fit_curve",

@@ -37,7 +37,7 @@ dye_labels <- c(
 get_target <- function(rank, model) {
   target <- rank %>%
     dplyr::filter(target == !!model) %>%
-    dplyr::pull(original_name)
+    dplyr::pull(readable_name)
 
   return(target)
 }
@@ -138,7 +138,7 @@ build_umap_scatter <- function(moa_full_df, compound_df, control_df, model, targ
 
 build_rank_plot <- function(rank_df) {
   ggplot(rank_df,
-         aes(x = original_name,
+         aes(x = readable_name,
              y = shuffle_false)) +
     geom_bar(aes(fill = assay, color = to_highlight),
              lwd = 1.25,
@@ -187,8 +187,8 @@ build_compound_explorer_plot <- function(moa_long_df, rank_df, dose_df, compound
   moa_long_subset_df <- moa_long_subset_df %>% dplyr::filter(model %in% models) %>%
       dplyr::as_tibble()
 
-  moa_long_subset_df$original_name <- factor(moa_long_subset_df$original_name,
-                                             levels = rank_df$original_name)
+  moa_long_subset_df$readable_name <- factor(moa_long_subset_df$readable_name,
+                                             levels = rank_df$readable_name)
 
   compound_levels <- c("DMSO", "bortezomib", "MG-132", "other")
   if (compound != "bortezomib") {
@@ -201,7 +201,7 @@ build_compound_explorer_plot <- function(moa_long_df, rank_df, dose_df, compound
   full_boxplot_gg <- ggplot(moa_long_subset_df,
          aes(x = compound_type, y = model_score, fill = compound_type)) +
     geom_boxplot(outlier.size = 0.1) +
-    facet_wrap("~original_name", nrow = length(models)) +
+    facet_wrap("~readable_name", nrow = length(models)) +
     theme_bw() +
     coord_flip() +
     xlab("") +
@@ -215,7 +215,7 @@ build_compound_explorer_plot <- function(moa_long_df, rank_df, dose_df, compound
   compound_dose_gg <- ggplot(compound_details,
                              aes(x = Metadata_dose_recode, y = model_score)) +
     geom_bar(stat="identity") +
-    facet_wrap("~original_name", nrow = length(models), scales = "free") +
+    facet_wrap("~readable_name", nrow = length(models), scales = "free") +
     xlab(paste(compound, "Dose")) +
     ylab("Model Score") +
     theme_bw() +
@@ -274,6 +274,8 @@ load_data <- function(pos_controls=c("bortezomib", "MG-132")) {
   rank_df$target <- factor(rank_df$target, levels = rev(unique(rank_df$target)))
   rank_df$original_name <- factor(rank_df$original_name,
                                   levels = rev(unique(rank_df$original_name)))
+  rank_df$readable_name <- factor(rank_df$readable_name,
+                                  levels = rev(unique(rank_df$readable_name)))
 
   # Load dose Information
   dose_file <- file.path("data", "dose_response_curve_fit_results.tsv.gz")
