@@ -69,7 +69,7 @@ build_cell_health_scatter <- function(
             size = 5,
             pch = 24,
             alpha = 0.7,
-            show.legend = FALSE)+
+            show.legend = FALSE) +
   scale_color_viridis_c(name = "Dose\nLevel") +
   scale_fill_viridis_c(name = "Dose\nLevel") +
   scale_shape_manual(
@@ -238,9 +238,9 @@ build_compound_explorer_plot <- function(moa_long_df, rank_df, dose_df, compound
 }
 
 
-load_data <- function(pos_controls=c("bortezomib", "MG-132")) {
+load_data <- function(pos_controls=c("bortezomib", "MG-132"), path=".") {
   # Load profiles
-  moa_file <- file.path("data", "moa_cell_health_modz.tsv.gz")
+  moa_file <- file.path(path, "data", "moa_cell_health_modz.tsv.gz")
 
   # Set column dtypes for loading with readr
   moa_cols <- readr::cols(
@@ -268,7 +268,7 @@ load_data <- function(pos_controls=c("bortezomib", "MG-132")) {
   dmso_df$pert_iname <- "DMSO"
   pos_controls_df <- moa_df %>% dplyr::filter(pert_iname %in% pos_controls)
 
-  rank_file <- file.path("data", "A549_ranked_models_regression_modz.tsv")
+  rank_file <- file.path(path, "data", "A549_ranked_models_regression_modz.tsv")
   rank_df <- readr::read_tsv(rank_file, col_types = readr::cols()) %>%
     dplyr::filter(shuffle_false > 0)
   rank_df$target <- factor(rank_df$target, levels = rev(unique(rank_df$target)))
@@ -278,7 +278,7 @@ load_data <- function(pos_controls=c("bortezomib", "MG-132")) {
                                   levels = rev(unique(rank_df$readable_name)))
 
   # Load dose Information
-  dose_file <- file.path("data", "dose_response_curve_fit_results.tsv.gz")
+  dose_file <- file.path(path, "data", "dose_response_curve_fit_results.tsv.gz")
 
   dose_cols <- readr::cols(
     .default = readr::col_double(),
