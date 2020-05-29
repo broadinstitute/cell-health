@@ -1,44 +1,7 @@
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(ggplot2))
 
-visualize_model <- function(
-    df,
-    target_variable,
-    legend_title,
-    output_dir,
-    title = "none",
-    dpi = 500,
-    save_figure = TRUE
-) {
-    
-    plot_gg <- ggplot(df, aes(x = umap_x, y = umap_y)) +
-        geom_point(aes_string(color = target_variable),
-                   size = 0.5,
-                   pch = 16,
-                   alpha = 0.6) +
-        theme_bw() +
-        theme(legend.text = element_text(size = 8)) +
-        scale_color_viridis_c(name = legend_title) +
-        xlab("UMAP 1") +
-        ylab("UMAP 2")
-    
-    if (title != "none") {
-        plot_gg <- plot_gg + ggtitle(title)
-    }
-    if (save_figure) {
-        output_file <- file.path(
-            output_dir,
-            paste0(
-                "umap_repurposing_cell_painting_",
-                target_variable,
-                "_consensus.png"
-            )
-        )
-        ggsave(output_file, height = 5, width = 6, dpi = dpi)
-    }
-    
-    print(plot_gg)
-}
+source(file.path("scripts", "visualize_utils.R"))
 
 consensus <- "modz"
 
@@ -133,7 +96,7 @@ map_df <- readr::read_csv(
 print(dim(map_df))
 tail(map_df, 3)
 
-visualize_model(
+visualize_umap(
     cp_embedding_df,
     target_variable = "cell_health_modz_target_vb_num_live_cells",
     legend_title = "Num Live Cells",
@@ -141,7 +104,7 @@ visualize_model(
     save = FALSE
 )
 
-visualize_model(
+visualize_umap(
     cp_embedding_df,
     target_variable = "cell_health_modz_target_vb_live_cell_width_length",
     legend_title = "Live Cell\n(Width:Length)",
@@ -149,7 +112,7 @@ visualize_model(
     save = FALSE
 )
 
-visualize_model(
+visualize_umap(
     cp_embedding_df,
     target_variable = "cell_health_modz_target_vb_live_cell_roundness",
     legend_title = "Live Cell Roundness",
@@ -157,7 +120,7 @@ visualize_model(
     save = FALSE
 )
 
-visualize_model(
+visualize_umap(
     cp_embedding_df,
     target_variable = "cell_health_modz_target_cc_all_n_objects",
     legend_title = "Number of Objects",
@@ -165,7 +128,7 @@ visualize_model(
     save = FALSE
 )
 
-visualize_model(
+visualize_umap(
     cp_embedding_df,
     target_variable = "cell_health_modz_target_vb_live_cell_area",
     legend_title = "Live Cell Area",
@@ -173,7 +136,7 @@ visualize_model(
     save = FALSE
 )
 
-visualize_model(
+visualize_umap(
     cp_embedding_df,
     target_variable = "cell_health_modz_target_cc_cc_n_objects",
     legend_title = "Num Cell\nCycle Objects",
@@ -181,7 +144,7 @@ visualize_model(
     save = FALSE
 )
 
-visualize_model(
+visualize_umap(
     cp_embedding_df,
     target_variable = "cell_health_modz_target_cc_g1_n_objects",
     legend_title = "G1 Objects",
@@ -189,7 +152,7 @@ visualize_model(
     save = FALSE
 )
 
-visualize_model(
+visualize_umap(
     cp_embedding_df,
     target_variable = "cell_health_modz_target_cc_s_intensity_nucleus_area_mean",
     legend_title = "Sum S phase",
@@ -197,7 +160,7 @@ visualize_model(
     save = FALSE
 )
 
-visualize_model(
+visualize_umap(
     cp_embedding_df,
     target_variable = "cell_health_modz_target_vb_ros_back_mean",
     legend_title = "ROS Background",
@@ -219,7 +182,7 @@ pdf_file <- file.path(
 pdf(pdf_file, width = 5, height = 5, onefile = TRUE)
 
 for (cell_health_variable in cell_health_variables) {
-    umap_gg <- visualize_model(
+    umap_gg <- visualize_umap(
         df = cp_embedding_df,
         target_variable = cell_health_variable,
         legend_title = "Prediction:",
