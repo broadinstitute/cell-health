@@ -7,6 +7,7 @@
 
 
 import os
+import pathlib
 import pandas as pd
 from scipy import stats
 
@@ -122,6 +123,9 @@ full_df = (
     )
     .dropna(subset=["depmap_viability"])
 )
+
+output_file = pathlib.Path("results", "depmap_viability_validation.tsv.gz")
+full_df.to_csv(output_file, sep="\t", index=False)
 
 print(full_df.shape)
 full_df.head(3)
