@@ -93,7 +93,7 @@ example_image.load_image_table(get_well=True)
 
 
 # Prep images with a narrow crop
-example_image.prep_images(low_prop=0.1, high_prop=0.3)
+example_image.prep_images(low_prop=0.1, high_prop=0.2)
 
 
 # ## Output an Example Image
