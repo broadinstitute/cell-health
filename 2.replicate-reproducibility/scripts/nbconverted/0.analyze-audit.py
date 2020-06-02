@@ -43,9 +43,22 @@ print(profile_df.shape)
 profile_df.head()
 
 
+# In[4]:
+
+
+# How many replicates per perturbation?
+(
+    profile_df
+    .groupby(["Metadata_cell_line","Metadata_gene_name", "Metadata_pert_name"])
+    ["Metadata_Plate"]
+    .count()
+    .value_counts()
+)
+
+
 # ## Perform Audit of Genes and Guides 
 
-# In[4]:
+# In[5]:
 
 
 audit_gene_groups = ["Metadata_cell_line", "Metadata_gene_name"]
@@ -59,7 +72,7 @@ print(audit_gene_df.shape)
 audit_gene_df.head()
 
 
-# In[5]:
+# In[6]:
 
 
 audit_guide_groups = ["Metadata_cell_line", "Metadata_gene_name", "Metadata_pert_name"]
@@ -75,7 +88,7 @@ audit_guide_df.head()
 
 # ## Get Median Same Gene Guide Correlation
 
-# In[6]:
+# In[7]:
 
 
 same_gene_groupby_cols = audit_gene_groups + ["replicate_type"]
@@ -101,7 +114,7 @@ median_cor_across_same_gene_guides_df.head()
 
 # ## Count Number of Unique Guides per Gene
 
-# In[7]:
+# In[8]:
 
 
 guide_count_df = (
@@ -125,7 +138,7 @@ guide_count_df.head()
 
 # ## Process Data for Plotting
 
-# In[8]:
+# In[9]:
 
 
 summary_corr_df = (
@@ -163,13 +176,13 @@ summary_corr_df.head()
 
 # ## Generate Summary Figures
 
-# In[9]:
+# In[10]:
 
 
 get_ipython().run_cell_magic('R', '-i summary_corr_df -h 3.5 -w 10 --units in -r 300', '\nsuppressPackageStartupMessages(library(dplyr))\nsuppressPackageStartupMessages(library(ggplot2))\nsuppressPackageStartupMessages(library(ggrepel))\n\nsource(file.path("..", "3.train", "scripts", "assay_themes.R"))\n\naxis_title_size <- 10\naxis_text_size <- 9\nstrip_text_size <- 9\nggrepel_label_size <- 1.9\ntitle_text_size <- 10\n\nsummary_corr_df$num_guides_plot <-\n    factor(summary_corr_df$num_guides_plot, levels = c("1", "2", "3", ">4"))\n\naudit_guide_plot_df <- summary_corr_df %>% dplyr::filter(replicate_type == "Replicate")\n\ntext_color_logic <- audit_guide_plot_df$Metadata_gene_name %in% c("LacZ", "Luc", "Chr2")\ncontrol_text_color <- ifelse(text_color_logic, "red", "black")\n\nguide_correlation_gg <-\n    ggplot(audit_guide_plot_df,\n           aes(x=correlation,\n               y=median_same_gene_guide_correlation)) +\n    geom_point(aes(color=Metadata_cell_line,\n                   size=num_guides_plot),\n               alpha=0.4) +\n    geom_text_repel(arrow = arrow(length = unit(0.01, "npc")),\n                    size = ggrepel_label_size,\n                    segment.size = 0.1,\n                    segment.alpha = 0.8,\n                    force = 20,\n                    color = control_text_color,\n                    aes(x = correlation,\n                        y = median_same_gene_guide_correlation,\n                        label = Metadata_gene_name)) +\n    xlab("Correlation of CRISPR Guides Targeting the same Gene") +\n    ylab("Median Correlation of CRISPR Replicates") +\n    facet_grid(~Metadata_cell_line) +\n    scale_color_manual(name="Cell Line",\n                       values=cell_line_colors,\n                       labels=cell_line_labels) +\n    scale_size_manual(name="Number of Guides",\n                      labels=c("1" = "1",\n                               "2" = "2",\n                               "3" = "3",\n                               ">4" = ">4"),\n                      values=c("1" = 1,\n                               "2" = 2,\n                               "3" = 3,\n                               ">4" = 4)) +\n    xlim(c(-0.5, 1)) +\n    theme_bw() +\n    theme(\n        axis.text = element_text(size = axis_text_size),\n        axis.title = element_text(size = axis_title_size),\n        strip.text = element_text(size = strip_text_size),\n        strip.background = element_rect(colour = "black", fill = "#fdfff4")\n    ) +\n    guides(color = guide_legend(order = 1))\n\nfile_base <- file.path("figures", "guide_correlation")\nfor (extension in c(\'.png\', \'.pdf\')) {\n    ggsave(guide_correlation_gg,\n           filename = paste0(file_base, extension),\n           dpi = 300,\n           height = 3.5,\n           width = 10)\n}\n\nguide_correlation_gg')
 
 
-# In[10]:
+# In[11]:
 
 
 gg.options.figure_size=(6.4, 4.8)
