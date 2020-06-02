@@ -271,7 +271,7 @@ cellline_compare_regression_df <- all_regression_metrics_df %>%
                   data_type == "Test",
                   metric == "r_two",
                   shuffle == "Real") %>%
-    dplyr::mutate(outlier = ifelse(value < 0, "R2: > 0", "R2: 0 to 1")) %>%
+    dplyr::mutate(outlier = ifelse(value < 0, "R2: < 0", "R2: 0 to 1")) %>%
     dplyr::left_join(label_df, by = c("target" = "id"))
 
 cellline_compare_regression_df$measurement <-
@@ -298,10 +298,11 @@ rsquared_bar_cellline_gg <- ggplot(cellline_compare_regression_df,
         labels = cell_line_labels,
         values = cell_line_colors
     ) +
+    scale_y_discrete(position = "right") +
     theme(axis.text.x = element_text(size = 8, angle = 90),
           axis.text.y = element_text(size = 5.5),
           axis.title = element_text(size = 10),
-          legend.position = "right",
+          legend.position = "left",
           legend.text = element_text(size = 7),
           legend.title = element_text(size = 9),
           strip.text = element_text(size = 8),
@@ -322,37 +323,36 @@ legend_grob <- cowplot::plot_grid(
     cell_legend,
     regression_legend,
     nrow = 2,
-    rel_heights = c(0.25, 1),
+    rel_heights = c(0.3, 1),
     align = "v"
 )
 
-panel_margin <- margin(l = -0.8, r = 0.5, t = 0.2, b = 0.2, unit="cm")
+left_panel_margin <- margin(l = -0.8, r = 0.5, t = 0.2, b = 0.2, unit = "cm")
+right_panel_margin <- margin(l = 0, r = -0.8, t = 0.2, b = 0.2, unit = "cm")
 
-plot_grob <- cowplot::plot_grid(
+regression_performance_figure <- cowplot::plot_grid(
     rsquared_bar_gg +
         theme(legend.position = 'none',
-              plot.margin = panel_margin) + xlab("") ,
+              plot.margin = left_panel_margin) + xlab(""),
+    legend_grob,
     rsquared_bar_cellline_gg +
         theme(legend.position = 'none',
-              plot.margin = panel_margin) + ylab(""),
-    labels = c("a", "b"),
-    ncol = 2,
+              plot.margin = right_panel_margin) + ylab(""),
+    labels = c("a", "", "b"),
+    ncol = 3,
     nrow = 1,
-    align = "h"
+    align = "h",
+    hjust = c(-0.5, -0.5, 3),
+    rel_widths = c(1, 0.45, 1)
 )
 
-regression_performance_figure = cowplot::plot_grid(
-    plot_grob,
-    legend_grob,
-    ncol = 2,
-    nrow = 1,
-    rel_widths = c(1, 0.2)
-)
 output_file <- file.path(
     figure_dir,
     paste0("regression_performance_figure_", consensus, ".png")
 )
 cowplot::save_plot(output_file, regression_performance_figure, base_width = 10, base_height = 6)
+
+regression_performance_figure
 
 # Split shuffle column for scatter plot
 r2_spread_df <- r2_df %>% tidyr::spread(shuffle, value)

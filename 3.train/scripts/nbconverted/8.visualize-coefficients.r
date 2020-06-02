@@ -100,8 +100,8 @@ coef_plot <- function(
     
     # Now plot
     area_gg <- ggplot(area_df, aes(x = compartment, y = feature_group)) +
-        geom_point(data = area_background, fill="grey", size = 3, pch = 21) +
-        geom_point(aes(fill = abs_max_weight), size = 4, pch = 21) +
+        geom_point(data = area_background, fill="grey", size = 3, pch = 22) +
+        geom_point(aes(fill = abs_max_weight), size = 4, pch = 22) +
         facet_wrap(~shuffle) +
         scale_fill_gradient2(
             name = "Max\nAbs. Weight",
@@ -130,8 +130,8 @@ coef_plot <- function(
     # Now, plot
     compartment_gg <- ggplot(compartment_df,
                              aes(x = channel, y = feature_group)) +
-        geom_point(data = comp_background, fill="grey", size = 3, pch = 21) +
-        geom_point(aes(fill = abs_max_weight), size = 4, pch = 21) +
+        geom_point(data = comp_background, fill="grey", size = 3, pch = 22) +
+        geom_point(aes(fill = abs_max_weight), size = 4, pch = 22) +
         facet_grid(compartment~shuffle) +
         scale_fill_gradient2(
             name = "Max\nAbs. Weight",
@@ -159,8 +159,8 @@ coef_plot <- function(
     # Now, plot
     correlation_gg <- ggplot(correlation_df,
                              aes(x = channel, y = parameter1)) +
-        geom_point(data = corr_background, fill="grey", size = 3, pch = 21) +
-        geom_point(aes(fill = abs_max_weight), size = 4, pch = 21) +
+        geom_point(data = corr_background, fill="grey", size = 3, pch = 22) +
+        geom_point(aes(fill = abs_max_weight), size = 4, pch = 22) +
         facet_wrap(~shuffle) +
         scale_fill_gradient2(
             name = "Max\nAbs. Weight",
@@ -168,8 +168,8 @@ coef_plot <- function(
             high = "blue",
             limits = c(min_gradient, max_gradient)
         ) +
-        ylab("Channel Correlation") +
-        xlab("Channel Correlation") +
+        ylab("Channel Colocalization") +
+        xlab("Channel Colocalization") +
         facet_grid(~compartment) + 
         coord_fixed() +
         geom_text(aes(label = round(abs_max_weight, 2)), size = 1.5) +
@@ -403,6 +403,7 @@ coef_summary_df <- coef_df %>%
 head(coef_summary_df)
 
 min_gradient <- 0
+point_size <- 8
 summary_metrics <- c("abs_mean", "abs_max", "abs_95th")
 
 for (shuffle_option in c("Permuted", "Real")) {
@@ -454,8 +455,8 @@ for (shuffle_option in c("Permuted", "Real")) {
         colnames(corr_background) <- c("compartment", "channel", "parameter1", "shuffle")
 
         correlation_gg <- ggplot(correlation_df, aes(x = channel, y = parameter1)) +
-            geom_point(data = corr_background, fill="grey", size = 4, pch = 21) +
-            geom_point(aes_string(fill = stat_string), size = point_size, pch = 21) +
+            geom_point(data = corr_background, fill="grey", size = 4, pch = 22) +
+            geom_point(aes_string(fill = stat_string), size = point_size, pch = 22) +
             facet_wrap(~shuffle) +
             scale_fill_gradient2(
                 name = legend_name,
@@ -463,8 +464,8 @@ for (shuffle_option in c("Permuted", "Real")) {
                 high = "blue",
                 limits = c(min_gradient, max_gradient)
             ) +
-            ylab("Channel Correlation") +
-            xlab("Channel Correlation") +
+            ylab("Channel Colocalization") +
+            xlab("Channel Colocalization") +
             facet_grid(~compartment) + 
             coord_fixed() +
             geom_text(aes_string(label = paste0(stat_string, "_round")), size = text_label_size) +
@@ -501,8 +502,8 @@ for (shuffle_option in c("Permuted", "Real")) {
         colnames(area_background) <- c("compartment", "feature_group", "shuffle")
 
         area_gg <- ggplot(area_df, aes(x = compartment, y = feature_group)) +
-            geom_point(data = area_background, fill = "grey", size = 4, pch = 21) +
-            geom_point(aes_string(fill = stat_string), size = point_size, pch = 21) +
+            geom_point(data = area_background, fill = "grey", size = 4, pch = 22) +
+            geom_point(aes_string(fill = stat_string), size = point_size, pch = 22) +
             scale_fill_gradient2(
                 name = legend_name,
                 low = "white",
@@ -548,8 +549,8 @@ for (shuffle_option in c("Permuted", "Real")) {
 
         compartment_gg <- ggplot(compartment_df,
                                  aes(x = channel, y = feature_group)) +
-            geom_point(data = comp_background, fill="grey", size = 4, pch = 21) +
-            geom_point(aes_string(fill = stat_string), size = point_size, pch = 21) +
+            geom_point(data = comp_background, fill="grey", size = 4, pch = 22) +
+            geom_point(aes_string(fill = stat_string), size = point_size, pch = 22) +
             geom_text(aes_string(label = paste0(stat_string, "_round")), size = text_label_size) +
             facet_grid(~compartment) +
             scale_fill_gradient2(
