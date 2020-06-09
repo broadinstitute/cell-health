@@ -44,8 +44,8 @@ r_two	cc_g1_high_h2ax	G1 - High number of spots gH2AX - Mean per Well	G1 - % Hig
 r_two	cc_mitosis_n_spots_h2ax_mean	pH3 positive, Hoechst condenced (mitosis) - Number of Spots - Mean per Well	M - # of gH2AX Spots	cell_cycle	dna_damage	hoechst_edu_ph3_gh2ax	In M cells: average number of gH2Ax spots	-0.04974979683792391	0.043438571554608285
 r_two	cc_all_nucleus_roundness_mean	ALL - Nucleus Roundness - Mean per Well	ALL - Nucleus Roundness	cell_cycle	shape	hoechst	Average nucleus roundness	-0.08827823138935487	-0.030997994065252055
 r_two	cc_g2_g1_count	G2/G1	Cell Count - G2/G1	cell_cycle	cell_cycle_count	hoechst_edu_ph3	G2/G1	-0.10292506917895516	-0.2933101805996725
-r_two	cc_infection_percentage	Inf %	Inf %	metadata	metadata	qc	Infection Efficiency in Cell Cycle Assay	-0.10668571333618115	-0.09924400833441882
-r_two	vb_infection_percentage	% Inf	% Inf	metadata	metadata	qc	Infection Efficiency in Viability Assay	-0.10668571333618115	-0.09924400833441882
+r_two	cc_infection_percentage	Inf %	CC - Infection Efficiency	metadata	metadata	qc	Infection Efficiency in Cell Cycle Assay	-0.10668571333618115	-0.09924400833441882
+r_two	vb_infection_percentage	% Inf	VB - Infection Efficiency	metadata	metadata	qc	Infection Efficiency in Viability Assay	-0.10668571333618115	-0.09924400833441882
 r_two	cc_early_mitosis_n_spots_h2ax_per_nucleus_area_mean	G2+pH3 (Early mitiosis) - Number of Spots per Area of Nucleus - Mean per Well	early M - # of gH2AX Spots per Area of Nucleus	cell_cycle	dna_damage	hoechst_edu_ph3_gh2ax	In early M cells: average number of gH2Ax spots per nucleus area	-0.1498603715604967	-0.14177581692285202
 r_two	vb_percent_caspase_dead_only	% Caspase/%Dead Only	% Caspase / % Dead Only	viability	apoptosis	draq_caspase	This is only calculated for strong hits	-0.22707021767768842	-0.00549644725008025
 r_two	cc_cc_n_spots_h2ax_per_nucleus_area_mean	CC - Number of Spots per Area of Nucleus - Mean per Well	CC - # of gH2AX Spots per Area of Nucleus	cell_cycle	dna_damage	hoechst_gh2ax	Within cells selected for cell cycle: average number of gH2AX spots per area of nucleus	-0.23540423291214974	-0.3184604855616857

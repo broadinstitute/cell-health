@@ -30,8 +30,8 @@ aupr	cc_polyploid_n_objects	Large round (polyploid) - Number of Objects	Polyploi
 aupr	cc_polynuclear_n_objects	large not round (polynuclear) - Number of Objects	Polynuclear - # cells	cell_cycle	shape	hoechst	Number of late polynuclear cells	0.14285714285714285	0.5
 aupr	cc_polyploid_n_spots_h2ax_mean	Large round (polyploid) - Number of Spots - Mean per Well	Polyploid - # of gH2AX Spots	cell_cycle	dna_damage	hoechst_gh2ax	In polyploid cells: average number of gH2Ax spots	0.13333333333333333	0.14215686274509803
 aupr	cc_early_mitosis_n_objects	G2+pH3 (Early mitiosis) - Number of Objects	early M - # cells	cell_cycle	early_mitosis	hoechst_edu_ph3	Number of early M cells	0.1	0.25
-aupr	cc_infection_percentage	Inf %	Inf %	metadata	metadata	qc	Infection Efficiency in Cell Cycle Assay	0.07142857142857142	0.125
-aupr	vb_infection_percentage	% Inf	% Inf	metadata	metadata	qc	Infection Efficiency in Viability Assay	0.07142857142857142	0.1
+aupr	cc_infection_percentage	Inf %	CC - Infection Efficiency	metadata	metadata	qc	Infection Efficiency in Cell Cycle Assay	0.07142857142857142	0.125
+aupr	vb_infection_percentage	% Inf	VB - Infection Efficiency	metadata	metadata	qc	Infection Efficiency in Viability Assay	0.07142857142857142	0.1
 aupr	cc_all_high_h2ax	ALL - High number of spots gH2AX - Mean per Well	ALL - % High gH2AX Spots	cell_cycle	dna_damage	hoechst_gh2ax	Within all cells: fraction of cells containing more than 3 gH2AX spots	0	0
 aupr	cc_all_large_notround_polynuclear_mean	ALL - large not round (polynuclear) - Mean per Well	ALL - Polynuclear	cell_cycle	shape	hoechst	Fraction of cells with large non-round nuclei (Polynuclear)	0	0
 aupr	cc_all_large_round_polyploid_mean	ALL - Large round (polyploid) - Mean per Well	ALL - Polyploid	cell_cycle	shape	hoechst	Large and round cells (Polyploid)	0	0
