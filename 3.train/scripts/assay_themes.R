@@ -50,7 +50,7 @@ measurement_labels <- c(
     "apoptosis" = "Apoptosis",
     "death" = "Death",
     "ros" = "Reactive Oxygen Species",
-    "other" = "CRISPR Efficiency"
+    "other" = "Infection Efficiency"
 )
 
 dye_levels <- c(
@@ -95,7 +95,7 @@ dye_labels <- c(
   "draq_caspase" = "DRAQ7 + Caspase",
   'cell_rox' = "CellROX",
   "dpc" = "DPC (Shape)",
-  "qc" = "CRISPR Efficiency"
+  "qc" = "Infection Efficiency"
 )
 
 cell_line_labels <- c(
