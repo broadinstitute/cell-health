@@ -251,8 +251,8 @@ rsquared_bar_gg <- ggplot(r2_df %>% dplyr::filter(shuffle == "Real"),
           axis.text.y = element_text(size = 5.5),
           axis.title = element_text(size = 10),
           legend.position = "right",
-          legend.text = element_text(size = 7),
-          legend.title = element_text(size = 9),
+          legend.text = element_text(size = 6),
+          legend.title = element_text(size = 8),
           strip.text = element_text(size = 8),
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
@@ -302,9 +302,11 @@ rsquared_bar_cellline_gg <- ggplot(cellline_compare_regression_df,
     theme(axis.text.x = element_text(size = 8, angle = 90),
           axis.text.y = element_text(size = 5.5),
           axis.title = element_text(size = 10),
-          legend.position = "left",
-          legend.text = element_text(size = 7),
-          legend.title = element_text(size = 9),
+          legend.position = c(0.15, 0.925),
+          legend.text = element_text(size = 6),
+          legend.title = element_text(size = 8),
+          legend.key = element_rect(size = 4),
+          legend.key.size = unit(0.4, 'lines'),
           strip.text = element_text(size = 8),
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
@@ -317,15 +319,6 @@ ggsave(output_file, rsquared_bar_cellline_gg, dpi = 500, width = 7, height = 6)
 rsquared_bar_cellline_gg
 
 regression_legend <- cowplot::get_legend(rsquared_bar_gg)
-cell_legend <- cowplot::get_legend(rsquared_bar_cellline_gg)
-
-legend_grob <- cowplot::plot_grid(
-    cell_legend,
-    regression_legend,
-    nrow = 2,
-    rel_heights = c(0.3, 1),
-    align = "v"
-)
 
 left_panel_margin <- margin(l = -0.8, r = 0.5, t = 0.2, b = 0.2, unit = "cm")
 right_panel_margin <- margin(l = 0, r = -0.8, t = 0.2, b = 0.2, unit = "cm")
@@ -334,16 +327,15 @@ regression_performance_figure <- cowplot::plot_grid(
     rsquared_bar_gg +
         theme(legend.position = 'none',
               plot.margin = left_panel_margin) + xlab(""),
-    legend_grob,
+    regression_legend,
     rsquared_bar_cellline_gg +
-        theme(legend.position = 'none',
-              plot.margin = right_panel_margin) + ylab(""),
+        theme(plot.margin = right_panel_margin) + ylab(""),
     labels = c("a", "", "b"),
     ncol = 3,
     nrow = 1,
     align = "h",
     hjust = c(-0.5, -0.5, 3),
-    rel_widths = c(1, 0.45, 1)
+    rel_widths = c(1, 0.3, 1)
 )
 
 output_file <- file.path(
