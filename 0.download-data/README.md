@@ -5,7 +5,7 @@
 In this module, we download all single-cell Cell Painting profiles generated for the Cell Health project.
 All of the single cell profiles are publicly available and hosted by [NIH Figshare](https://nih.figshare.com/).
 
-The files are located at https://nih.figshare.com/account/articles/9995672.
+The files are located at https://doi.org/10.35092/yhjc.9995672.
 
 ## Recommendation
 
