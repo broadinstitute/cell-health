@@ -25,8 +25,8 @@ def get_resolution(xml_path, tiff_file):
             for sub_sub_element in sub_element:
                 tag = re.sub("[\{].*?[\}]", "", sub_sub_element.tag)
                 if tag == "URL":
-                    tiff_file = sub_sub_element.text
-                    if tiff_file == os.path.basename(tiff_file):
+                    tiff_file_tag = sub_sub_element.text
+                    if tiff_file_tag == os.path.basename(tiff_file):
                         tiff_attributes = sub_element
                  
     for attrib in tiff_attributes:
@@ -276,11 +276,13 @@ class grabPicture:
         fig, ax = plt.subplots(nrows=1, ncols=len(self.channels), figsize=(10, 2))
         for channel_idx in range(0, len(self.channels)):
             channel = self.channels[channel_idx]
+            image_tiff_file = self.channel_file_dict[channel]
+            
             image_key = "ch{}_{}".format(channel_idx + 1, channel)
             image = image_dict[image_key].copy()
             
             if add_scale_bar:
-                resolution = get_resolution(self.xml_file, image)
+                resolution = get_resolution(self.xml_file, image_tiff_file)
                 scale_bar_length = int(self.scale_bar_size / resolution) + 1
                 image[180:183, 125:125+scale_bar_length] = 255
             
@@ -293,14 +295,16 @@ class grabPicture:
 
     def plot_combined_image(self, cropped=True, color=True, factor=2, add_scale_bar=True):
         image_dict = self.get_image_dict(cropped=cropped, color=color)
-
         combined_image = np.zeros(image_dict["ch1_DNA"].shape)
+
         for image_key in image_dict:
             combined_image += factor * image_dict[image_key].astype(np.uint16)
 
         combined_image = normalize_image(combined_image)
         if add_scale_bar:
-            resolution = get_resolution(self.xml_file, image_dict[image_key])
+            channel = self.channels[0]
+            image_tiff_file = self.channel_file_dict[channel]
+            resolution = get_resolution(self.xml_file, image_tiff_file)
             scale_bar_length = int(self.scale_bar_size / resolution) + 1
             combined_image[180:183, 125:125+scale_bar_length] = 255
 
