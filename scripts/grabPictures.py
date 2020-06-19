@@ -5,9 +5,11 @@ https://github.com/jr0th/segmentation/blob/master/visualization/CellArt.ipynb
 """
 
 import os
+import re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import xml.etree.ElementTree as ET
 
 import skimage.io
 import skimage.exposure
@@ -15,6 +17,28 @@ import skimage.exposure
 from pycytominer.aggregate import AggregateProfiles
 
 
+def get_resolution(xml_path, tiff_file):
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+    for element in root:
+        for sub_element in element:
+            for sub_sub_element in sub_element:
+                tag = re.sub("[\{].*?[\}]", "", sub_sub_element.tag)
+                if tag == "URL":
+                    tiff_file = sub_sub_element.text
+                    if tiff_file == os.path.basename(tiff_file):
+                        tiff_attributes = sub_element
+                 
+    for attrib in tiff_attributes:
+        attrib_strip = re.sub("[\{].*?[\}]", "", attrib.tag)
+        if attrib_strip == "ImageResolutionX":
+            resolution = float(attrib.text)
+            unit = attrib.get("Unit")
+            if unit == "m":
+                 resolution = resolution * 1000000
+    return resolution
+
+                
 class grabPicture:
     def __init__(
         self,
@@ -27,6 +51,8 @@ class grabPicture:
         gene_name,
         pert_name,
         site,
+        xml_file="None",
+        scale_bar_size=20,
         enable_single_cell=False,
         channels=["DNA", "ER", "RNA", "AGP", "Mito"]
     ):
@@ -59,6 +85,8 @@ class grabPicture:
         self.gene_name = gene_name
         self.pert_name = pert_name
         self.site = site
+        self.xml_file = xml_file
+        self.scale_bar_size = scale_bar_size
         self.enable_single_cell = enable_single_cell
 
     def load_image_table(self, get_well=True):
@@ -242,22 +270,28 @@ class grabPicture:
         self.crop_and_normalize_images(low_prop=low_prop, high_prop=high_prop, boxSize=boxSize)
         self.colorize_images()
 
-    def plot_images(self, cropped=True, color=True, add_label=True):
+    def plot_images(self, cropped=True, color=True, add_label=True, add_scale_bar=True):
         image_dict = self.get_image_dict(cropped=cropped, color=color)
 
         fig, ax = plt.subplots(nrows=1, ncols=len(self.channels), figsize=(10, 2))
         for channel_idx in range(0, len(self.channels)):
             channel = self.channels[channel_idx]
             image_key = "ch{}_{}".format(channel_idx + 1, channel)
-
-            ax[channel_idx].imshow(image_dict[image_key], cmap="gray")
+            image = image_dict[image_key].copy()
+            
+            if add_scale_bar:
+                resolution = get_resolution(self.xml_file, image)
+                scale_bar_length = int(self.scale_bar_size / resolution) + 1
+                image[180:183, 125:125+scale_bar_length] = 255
+            
+            ax[channel_idx].imshow(image, cmap="gray")
             ax[channel_idx].axis("off")
             if add_label:
                 ax[channel_idx].set_title(channel)
 
         plt.tight_layout(pad=0)
 
-    def plot_combined_image(self, cropped=True, color=True, factor=2):
+    def plot_combined_image(self, cropped=True, color=True, factor=2, add_scale_bar=True):
         image_dict = self.get_image_dict(cropped=cropped, color=color)
 
         combined_image = np.zeros(image_dict["ch1_DNA"].shape)
@@ -265,6 +299,10 @@ class grabPicture:
             combined_image += factor * image_dict[image_key].astype(np.uint16)
 
         combined_image = normalize_image(combined_image)
+        if add_scale_bar:
+            resolution = get_resolution(self.xml_file, image_dict[image_key])
+            scale_bar_length = int(self.scale_bar_size / resolution) + 1
+            combined_image[180:183, 125:125+scale_bar_length] = 255
 
         plt.figure(figsize=(7, 5))
         plt.imshow(combined_image)
