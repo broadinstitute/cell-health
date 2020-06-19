@@ -8,6 +8,7 @@ consensus <- "modz"
 coef_dir <- file.path("figures", "coefficients")
 figure_dir <- file.path(coef_dir, consensus)
 results_dir <- "results"
+empty_grob <- cowplot::ggdraw()
 
 dir.create(figure_dir, recursive = TRUE, showWarnings = FALSE)
 
@@ -90,6 +91,9 @@ coef_plot <- function(
     min_gradient <- min(subset_coef_df$abs_weight)
     max_gradient <- max(subset_coef_df$abs_weight)
 
+    # Draw an empty plot for later
+    empty_grob <- ggdraw()
+
     # 1st Plot - Area Features
     # First, create an area background to fill missing elements
     area_comparments <- unique(area_df$compartment)
@@ -126,6 +130,14 @@ coef_plot <- function(
     comp_shuffle <- unique(compartment_df$shuffle)
     comp_background <- tidyr::crossing(comp_comparments, comp_channels, comp_feature_groups, comp_shuffle)
     colnames(comp_background) <- c("compartment", "channel", "feature_group", "shuffle")
+    
+    na_legend <- cowplot::get_legend(
+        ggplot(comp_background %>% dplyr::filter(shuffle == "Real"),
+               aes(x = channel, y = compartment)) +
+        geom_point(aes(fill = shuffle), size = 4, pch = 22) +
+        scale_fill_manual(name = "", values = "grey", labels = "N/A") +
+        coef_theme
+        ) 
     
     # Now, plot
     compartment_gg <- ggplot(compartment_df,
@@ -209,7 +221,15 @@ coef_plot <- function(
           hjust = -0.1
       )
     coef_legend <- cowplot::get_legend(correlation_gg)
-
+    full_legend <- cowplot::plot_grid(
+        empty_grob,
+        coef_legend,
+        na_legend,
+        empty_grob,
+        nrow = 4,
+        rel_heights = c(1, 0.4, 0.4, 1)
+    )
+    
     right_panel <- cowplot::plot_grid(
         area_gg + theme(legend.position = "none",
                         plot.margin = margin(1, 1, 1, 1)),
@@ -235,7 +255,7 @@ coef_plot <- function(
 
     coef_full_gg <- cowplot::plot_grid(
         full_panel,
-        coef_legend,
+        full_legend,
         rel_widths = c(1, 0.1)
     )
     
@@ -410,30 +430,31 @@ for (shuffle_option in c("Permuted", "Real")) {
     summary_subset_df <- coef_summary_df %>% dplyr::filter(shuffle == !!shuffle_option)
     
     for (summary_metric in summary_metrics) {
-        
+
         if (summary_metric == "abs_mean") {
             column_choice <- "abs_mean_weight"
             stat_string <- "aggregated_mean"
-            legend_name <- "Mean\nWeighted Coef"
+            legend_name <- "Abs. Mean\nWeighted Coef\n (x100)"
+            max_gradient <- max(summary_subset_df[, column_choice]) * 75
         } else if (summary_metric == "abs_max") {
             column_choice <- "abs_max_weight"
             stat_string <- "aggregated_max"
-            legend_name <- "Max\nWeighted Coef"
+            legend_name <- "Abs. Max\nWeighted Coef"
+            max_gradient <- max(summary_subset_df[, column_choice])
         } else if (summary_metric == "abs_95th") {
             column_choice <- "abs_95percentile"
             stat_string <- "aggregated_95th"
-            legend_name <- "95th Percentile\nWeighted Coef"
+            legend_name <- "Abs. 95th Percent\nWeighted Coef"
+            max_gradient <- max(summary_subset_df[, column_choice])
         }
-        
-        max_gradient <- max(summary_subset_df[, column_choice])
-        
+
         # Process correlation different from other features
         correlation_df <- summary_subset_df %>%
             dplyr::filter(feature_group == "Correlation") %>%
             dplyr::group_by(channel, parameter1, compartment, shuffle) %>%
             dplyr::mutate(
                 aggregated_max = max(abs_max_weight),
-                aggregated_mean = mean(abs_mean_weight),
+                aggregated_mean = mean(abs_mean_weight) * 100,
                 aggregated_95th = quantile(abs_95percentile, 0.95)
             ) %>%
             dplyr::select(
@@ -443,8 +464,8 @@ for (shuffle_option in c("Permuted", "Real")) {
             dplyr::ungroup() %>%
             dplyr::mutate(
                 aggregated_max_round = round(aggregated_max, 2),
-                aggregated_mean_round = round(aggregated_mean * 100, 2),
-                aggregated_95th_round = round(aggregated_95th * 100, 2)
+                aggregated_mean_round = round(aggregated_mean, 2),
+                aggregated_95th_round = round(aggregated_95th, 2)
             )
 
         corr_comparments <- unique(correlation_df$compartment)
@@ -479,7 +500,7 @@ for (shuffle_option in c("Permuted", "Real")) {
             dplyr::group_by(compartment, feature_group, shuffle) %>%
             dplyr::mutate(
                 aggregated_max = max(abs_max_weight),
-                aggregated_mean = mean(abs_mean_weight),
+                aggregated_mean = mean(abs_mean_weight) * 100,
                 aggregated_95th = quantile(abs_95percentile, 0.95)
             ) %>%
             dplyr::select(
@@ -489,12 +510,12 @@ for (shuffle_option in c("Permuted", "Real")) {
             dplyr::ungroup() %>%
             dplyr::mutate(
                 aggregated_max_round = round(aggregated_max, 2),
-                aggregated_mean_round = round(aggregated_mean * 100, 2),
-                aggregated_95th_round = round(aggregated_95th * 100, 2)
+                aggregated_mean_round = round(aggregated_mean, 2),
+                aggregated_95th_round = round(aggregated_95th, 2)
             )
 
         area_df$stat_output <- round(area_df[, stat_string], 2)
-        
+
         area_comparments <- unique(area_df$compartment)
         area_feature_groups <- unique(area_df$feature_group)
         area_shuffle <- unique(area_df$shuffle)
@@ -524,7 +545,7 @@ for (shuffle_option in c("Permuted", "Real")) {
             dplyr::group_by(compartment, channel, feature_group, shuffle) %>%
             dplyr::mutate(
                 aggregated_max = max(abs_max_weight),
-                aggregated_mean = mean(abs_mean_weight),
+                aggregated_mean = mean(abs_mean_weight) * 100,
                 aggregated_95th = quantile(abs_95percentile, 0.95)
             ) %>%
             dplyr::select(
@@ -534,8 +555,8 @@ for (shuffle_option in c("Permuted", "Real")) {
             dplyr::ungroup() %>%
             dplyr::mutate(
                 aggregated_max_round = round(aggregated_max, 2),
-                aggregated_mean_round = round(aggregated_mean * 100, 2),
-                aggregated_95th_round = round(aggregated_95th * 100, 2)
+                aggregated_mean_round = round(aggregated_mean, 2),
+                aggregated_95th_round = round(aggregated_95th, 2)
             )
 
         compartment_df$stat_output <- round(compartment_df[, stat_string], 2)
@@ -547,9 +568,17 @@ for (shuffle_option in c("Permuted", "Real")) {
         comp_background <- tidyr::crossing(comp_comparments, comp_channels, comp_feature_groups, comp_shuffle)
         colnames(comp_background) <- c("compartment", "channel", "feature_group", "shuffle")
 
+        na_legend <- cowplot::get_legend(
+            ggplot(comp_background %>% dplyr::filter(shuffle == "Real"),
+                   aes(x = channel, y = compartment)) +
+            geom_point(aes(fill = shuffle), size = 4, pch = 22) +
+            scale_fill_manual(name = "", values = "grey", labels = "N/A") +
+            coef_theme
+            ) 
+
         compartment_gg <- ggplot(compartment_df,
                                  aes(x = channel, y = feature_group)) +
-            geom_point(data = comp_background, fill="grey", size = 4, pch = 22) +
+            geom_point(data = comp_background, fill = "grey", size = 4, pch = 22) +
             geom_point(aes_string(fill = stat_string), size = point_size, pch = 22) +
             geom_text(aes_string(label = paste0(stat_string, "_round")), size = text_label_size) +
             facet_grid(~compartment) +
@@ -576,7 +605,15 @@ for (shuffle_option in c("Permuted", "Real")) {
             align = "hv"
             )
 
-        legend_gg <- cowplot::get_legend(correlation_gg)
+        main_legend_gg <- cowplot::get_legend(correlation_gg)
+        full_legend <- cowplot::plot_grid(
+            empty_grob,
+            main_legend_gg,
+            na_legend,
+            empty_grob,
+            nrow = 4,
+            rel_heights = c(1, 0.4, 0.4, 1)
+        )
 
         big_fig <- cowplot::plot_grid(
             cowplot::plot_grid(
@@ -585,7 +622,7 @@ for (shuffle_option in c("Permuted", "Real")) {
                 nrow = 2,
                 rel_heights = c(0.3, 1)
             ),
-            legend_gg,
+            full_legend,
             ncol = 2,
             rel_widths = c(1, 0.15)
         )
