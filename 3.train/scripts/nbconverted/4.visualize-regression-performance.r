@@ -454,6 +454,11 @@ for (good_model in c(good_example_models, bad_example_models)) {
             labels = cell_line_labels,
             values = cell_line_colors
         ) +
+        geom_rect(data = sup_fig_good_subset_df %>%
+                    dplyr::filter(data_type == "Test", shuffle == "Real") %>%
+                    dplyr::distinct(data_type, shuffle, .keep_all = TRUE), 
+                  fill = NA, alpha = 1, colour = "red", linetype = "solid", size = 2,
+                  xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf) +
         geom_text(data = r2_df, size = 3, aes(label = paste("R2 =", r2), x = x, y = y)) +
         theme(strip.text = element_text(size = 10),
               strip.background = element_rect(colour = "black",
