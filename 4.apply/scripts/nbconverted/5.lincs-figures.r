@@ -5,7 +5,7 @@ source(file.path("scripts", "visualize_utils.R"))
 source(file.path("repurposing_cellhealth_shiny", "util.R"))
 source(file.path("repurposing_cellhealth_shiny", "dose_utils.R"))
 
-consensus = "modz"
+consensus = "median"
 
 # Load data
 data <- load_data(path="repurposing_cellhealth_shiny/")
@@ -443,8 +443,8 @@ sup_panel_a_gg <- ggplot(cp_embedding_df, aes(x = umap_x, y = umap_y)) +
                           values = scales::rescale(c(1, 0.8, 0.1))) +
     guides(shape = guide_legend(order = 1))
 
-# Panel B - Dose Diferences
-sup_panel_b_gg = ggplot(validation_df,
+# Panel A - Dose Diferences
+sup_panel_a_gg = ggplot(validation_df,
                         aes(y = dose, x = Metadata_mmoles_per_liter)) +
     geom_abline(slope = 1, intercept = 0, alpha = 0.6, lwd = 0.4, linetype = "dashed", color = "red") +
     geom_point(size = 0.3, alpha = 1) +
@@ -466,7 +466,7 @@ result_text = paste0("Spearman = ", stat, "\np = ", pval)
 
 result_text
 
-panel_c_gg = ggplot(validation_df,
+panel_b_gg = ggplot(validation_df,
                     aes(x = cell_health_viability, y = depmap_viability)) +
     geom_point(size = 0.5, alpha = 0.3) +
     theme_bw() +
@@ -478,10 +478,10 @@ panel_c_gg = ggplot(validation_df,
     theme()
 
 # Create multiplot
-panel_b_c <- cowplot::plot_grid(
-    sup_panel_b_gg + figure_theme,
-    panel_c_gg + figure_theme,
-    labels = c("b", "c"),
+panel_ab <- cowplot::plot_grid(
+    sup_panel_a_gg + figure_theme,
+    panel_b_gg + figure_theme,
+    labels = c("a", "b"),
     align = "hv",
     vjust = c(1, 1),
     nrow = 2,
@@ -489,11 +489,11 @@ panel_b_c <- cowplot::plot_grid(
 )
 
 sup_fig <- cowplot::plot_grid(
+    panel_ab,
     preannotation_gg + figure_theme,
-    panel_b_c,
-    labels = c("a", ""),
+    labels = c("", "c"),
     align = "hv",
-    rel_widths = c(1, 0.6)
+    rel_widths = c(0.6, 1)
 )
 
 figure_file <- file.path("figures", "lincs_supplementary_figure.png")
