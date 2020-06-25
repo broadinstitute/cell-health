@@ -101,7 +101,8 @@ visualize_umap(
     target_variable = "cell_health_modz_target_vb_num_live_cells",
     legend_title = "Num Live Cells",
     output_dir = "none",
-    save = FALSE
+    save = FALSE,
+    print_figure = FALSE
 )
 
 visualize_umap(
@@ -109,7 +110,8 @@ visualize_umap(
     target_variable = "cell_health_modz_target_vb_live_cell_width_length",
     legend_title = "Live Cell\n(Width:Length)",
     output_dir = "none",
-    save = FALSE
+    save = FALSE,
+    print_figure = FALSE
 )
 
 visualize_umap(
@@ -117,7 +119,8 @@ visualize_umap(
     target_variable = "cell_health_modz_target_vb_live_cell_roundness",
     legend_title = "Live Cell Roundness",
     output_dir = "none",
-    save = FALSE
+    save = FALSE,
+    print_figure = FALSE
 )
 
 visualize_umap(
@@ -125,7 +128,8 @@ visualize_umap(
     target_variable = "cell_health_modz_target_cc_all_n_objects",
     legend_title = "Number of Objects",
     output_dir = "none",
-    save = FALSE
+    save = FALSE,
+    print_figure = FALSE
 )
 
 visualize_umap(
@@ -133,7 +137,8 @@ visualize_umap(
     target_variable = "cell_health_modz_target_vb_live_cell_area",
     legend_title = "Live Cell Area",
     output_dir = "none",
-    save = FALSE
+    save = FALSE,
+    print_figure = FALSE
 )
 
 visualize_umap(
@@ -141,7 +146,8 @@ visualize_umap(
     target_variable = "cell_health_modz_target_cc_cc_n_objects",
     legend_title = "Num Cell\nCycle Objects",
     output_dir = "none",
-    save = FALSE
+    save = FALSE,
+    print_figure = FALSE
 )
 
 visualize_umap(

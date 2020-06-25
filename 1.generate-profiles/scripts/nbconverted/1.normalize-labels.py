@@ -72,6 +72,13 @@ normalized_label_df.head(2)
 # In[6]:
 
 
+# How many replicates per perturbation?
+normalized_label_df.groupby(["cell_id", "guide"])["plate_name"].count().value_counts()
+
+
+# In[7]:
+
+
 # Write to file
 file = os.path.join("data", "labels", "normalized_cell_health_labels.tsv")
 normalized_label_df.to_csv(file, index=False, sep='\t')
@@ -81,7 +88,7 @@ normalized_label_df.to_csv(file, index=False, sep='\t')
 # 
 # For viewing heatmaps in Morpheus.
 
-# In[7]:
+# In[8]:
 
 
 # Recode metadata variables
@@ -103,7 +110,7 @@ print(normalized_label_df.shape)
 normalized_label_df.head(2)
 
 
-# In[8]:
+# In[9]:
 
 
 # Load feature map
@@ -130,7 +137,7 @@ feature_map = (
 feature_map.head()
 
 
-# In[9]:
+# In[10]:
 
 
 # Build and output gct file

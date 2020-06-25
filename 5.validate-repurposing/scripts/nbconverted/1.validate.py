@@ -81,7 +81,6 @@ cell_health_file = os.path.join(
 
 cell_health_df = (
     pd.read_csv(cell_health_file, sep='\t')
-    #.loc[:, focus_columns]
     .rename(
         {
             cell_health_model: "cell_health_viability"
@@ -134,6 +133,12 @@ full_df.head(3)
 # In[10]:
 
 
+len(full_df.Metadata_broad_sample.unique())
+
+
+# In[11]:
+
+
 dose_differences_gg = (
     gg.ggplot(full_df, gg.aes(x="dose", y="Metadata_mmoles_per_liter")) +
     gg.geom_point(size = 0.5, alpha = 0.6) +
@@ -152,7 +157,7 @@ dose_differences_gg
 
 # ## Obtain Results
 
-# In[11]:
+# In[12]:
 
 
 spearman_cor = stats.spearmanr(full_df.cell_health_viability, full_df.depmap_viability)
@@ -160,7 +165,7 @@ spearman_cor = pd.DataFrame(spearman_cor, index=["stat", "p"]).transpose()
 spearman_cor
 
 
-# In[12]:
+# In[13]:
 
 
 result_text = "Spearman = {0:.2f}\np = {1:.2E}".format(
@@ -171,7 +176,7 @@ result_text = "Spearman = {0:.2f}\np = {1:.2E}".format(
 result_text
 
 
-# In[13]:
+# In[14]:
 
 
 viability_gg = (

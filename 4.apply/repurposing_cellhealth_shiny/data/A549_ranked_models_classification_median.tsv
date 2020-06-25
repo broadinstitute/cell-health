@@ -24,8 +24,8 @@ aupr	cc_late_mitosis_n_spots_h2ax_per_nucleus_area_mean	pH3 neg, Hoechst cond (l
 aupr	cc_late_mitosis_n_spots_h2ax_mean	pH3 neg, Hoechst cond (late mitosis) - Number of Spots - Mean per Well	Late M - # of gH2AX Spots	cell_cycle	dna_damage	hoechst_edu_ph3_gh2ax	In late M cells: average number of gH2Ax spots	0.10427807486631016	0.14583333333333331
 aupr	cc_mitosis_n_spots_h2ax_mean	pH3 positive, Hoechst condenced (mitosis) - Number of Spots - Mean per Well	M - # of gH2AX Spots	cell_cycle	dna_damage	hoechst_edu_ph3_gh2ax	In M cells: average number of gH2Ax spots	0.1	0.1111111111111111
 aupr	cc_mitosis_n_spots_h2ax_per_nucleus_area_mean	pH3 positive, Hoechst condenced (mitosis) - Number of Spots per Area of Nucle...	M - # of gH2AX Spots per Area of Nucleus	cell_cycle	dna_damage	hoechst_edu_ph3_gh2ax	In M cells: average number of gH2Ax spots per nucleus area	0.09090909090909091	0.05555555555555555
-aupr	cc_infection_percentage	Inf %	Inf %	metadata	metadata	qc	Infection Efficiency in Cell Cycle Assay	0.08333333333333333	0.14285714285714285
-aupr	vb_infection_percentage	% Inf	% Inf	metadata	metadata	qc	Infection Efficiency in Viability Assay	0.08333333333333333	0.0625
+aupr	cc_infection_percentage	Inf %	CC - Infection Efficiency	metadata	metadata	qc	Infection Efficiency in Cell Cycle Assay	0.08333333333333333	0.14285714285714285
+aupr	vb_infection_percentage	% Inf	VB - Infection Efficiency	metadata	metadata	qc	Infection Efficiency in Viability Assay	0.08333333333333333	0.0625
 aupr	cc_early_mitosis_n_spots_h2ax_mean	G2+pH3 (Early mitiosis) - Number of Spots - Mean per Well	early M - # of gH2AX Spots	cell_cycle	dna_damage	hoechst_edu_ph3_gh2ax	In early M cells: average number of gH2Ax spots	0.06666666666666667	0.16666666666666666
 aupr	cc_early_mitosis_n_objects	G2+pH3 (Early mitiosis) - Number of Objects	early M - # cells	cell_cycle	early_mitosis	hoechst_edu_ph3	Number of early M cells	0.058823529411764705	0.05555555555555555
 aupr	cc_all_high_h2ax	ALL - High number of spots gH2AX - Mean per Well	ALL - % High gH2AX Spots	cell_cycle	dna_damage	hoechst_gh2ax	Within all cells: fraction of cells containing more than 3 gH2AX spots	0	0

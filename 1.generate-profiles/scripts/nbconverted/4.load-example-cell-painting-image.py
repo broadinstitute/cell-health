@@ -11,6 +11,7 @@
 
 
 import os
+import re
 import sys
 import numpy as np
 import pandas as pd
@@ -70,6 +71,22 @@ site = 1
 # In[7]:
 
 
+# Find XML file to extract resolution
+plate_image_path = [x for x in os.listdir(image_path) if plate in x][0]
+
+xml_path = os.path.join(
+    image_path,
+    plate_image_path,
+    "Images",
+    "Index.idx.xml"
+)
+
+xml_path
+
+
+# In[8]:
+
+
 example_image = grabPicture(
     bucket_path=bucket_path,
     image_path=image_path,
@@ -80,40 +97,33 @@ example_image = grabPicture(
     gene_name=gene_name,
     pert_name=pert_name,
     site=site,
+    xml_file=xml_path,
+    scale_bar_size=20
 )
-
-
-# In[8]:
-
-
-example_image.load_image_table(get_well=True)
 
 
 # In[9]:
 
 
-# Prep images with a narrow crop
-example_image.prep_images(low_prop=0.1, high_prop=0.3)
+# Load the images
+example_image.load_image_table(get_well=True)
 
-
-# ## Output an Example Image
 
 # In[10]:
 
 
-example_image.plot_images(cropped=True, color=False)
+# Prep images with a narrow crop
+example_image.prep_images(low_prop=0.1, high_prop=0.2)
 
-output_file = os.path.join("figures", "example_images", "greyscale_channel.png")
-plt.subplots_adjust(top=0.8)
-plt.savefig(output_file, pad_inches=0.2, dpi=500)
 
+# ## Output an Example Image
 
 # In[11]:
 
 
-example_image.plot_images(cropped=True, color=True)
+example_image.plot_images(cropped=True, color=False, add_scale_bar=True)
 
-output_file = os.path.join("figures", "example_images", "color_channel.png")
+output_file = os.path.join("figures", "example_images", "greyscale_channel.png")
 plt.subplots_adjust(top=0.8)
 plt.savefig(output_file, pad_inches=0.2, dpi=500)
 
@@ -121,7 +131,17 @@ plt.savefig(output_file, pad_inches=0.2, dpi=500)
 # In[12]:
 
 
-example_image.plot_combined_image()
+example_image.plot_images(cropped=True, color=True, add_scale_bar=True)
+
+output_file = os.path.join("figures", "example_images", "color_channel.png")
+plt.subplots_adjust(top=0.8)
+plt.savefig(output_file, pad_inches=0.2, dpi=500)
+
+
+# In[13]:
+
+
+example_image.plot_combined_image(add_scale_bar=True)
 
 output_file = os.path.join("figures", "example_images", "color_merged.png")
 plt.savefig(output_file, dpi=500)

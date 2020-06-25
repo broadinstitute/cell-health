@@ -3,8 +3,8 @@ well_row,Row,Row,metadata,metadata,,,,,,,,,,,
 well_col,Column,Column,metadata,metadata,,,,,,,,,,,
 plate_name,Plate Name,Plate Name,metadata,metadata,,,,,,,,,,,
 guide,sgRNA,sgRNA,metadata,metadata,,,,,,,,,,,
-cc_infection_percentage,Inf %,Inf %,metadata,metadata,,qc,,,,,,,,,Infection Efficiency in Cell Cycle Assay
-vb_infection_percentage,% Inf,% Inf,metadata,metadata,,qc,,,,,,,,,Infection Efficiency in Viability Assay
+cc_infection_percentage,CC - Infection Efficiency,Inf %,metadata,metadata,,qc,,,,,,,,,Infection Efficiency in Cell Cycle Assay
+vb_infection_percentage,VB - Infection Efficiency,% Inf,metadata,metadata,,qc,,,,,,,,,Infection Efficiency in Viability Assay
 vb_percent_live,% Live (DRAQ7-; CASP-),% Live,viability,death,1,draq_caspase,0,0,0,0,1,1,0,0,Fraction of live cells (subtract DRAQ7 and Caspase dyes)
 vb_percent_dead,% All Dead (DRAQ7+),% Dead,viability,death,1,draq,0,0,0,0,0,1,0,0,Fraction of DRAQ7 positive cells
 vb_percent_all_apoptosis,% All Apoptosis (CASP+),% All Apoptosis,viability,apoptosis,0,draq_caspase,0,0,0,0,1,1,0,0,% Early Apop + % Late Apop + % Dead Only

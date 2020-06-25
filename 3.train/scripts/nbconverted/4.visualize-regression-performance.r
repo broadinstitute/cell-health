@@ -229,6 +229,23 @@ r2_df$readable_name <- factor(r2_df$readable_name, levels=target_order$readable_
 # Recode metadata measurent to other
 r2_df$measurement <- dplyr::recode(r2_df$measurement, "metadata" = "other")
 
+r2_df$measurement <- factor(r2_df$measurement, levels = c(
+    "cell_viability",
+    "death",
+    "apoptosis",
+    "ros",
+    "dna_damage",
+    "g1_phase",
+    "s_phase",
+    "g2_phase",
+    "early_mitosis",
+    "mitosis",
+    "late_mitosis",
+    "cell_cycle_count",
+    "shape",
+    "other"
+))
+
 head(r2_df, 4)
 
 rsquared_bar_gg <- ggplot(r2_df %>% dplyr::filter(shuffle == "Real"),
@@ -251,8 +268,8 @@ rsquared_bar_gg <- ggplot(r2_df %>% dplyr::filter(shuffle == "Real"),
           axis.text.y = element_text(size = 5.5),
           axis.title = element_text(size = 10),
           legend.position = "right",
-          legend.text = element_text(size = 7),
-          legend.title = element_text(size = 9),
+          legend.text = element_text(size = 6),
+          legend.title = element_text(size = 8),
           strip.text = element_text(size = 8),
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
@@ -271,7 +288,7 @@ cellline_compare_regression_df <- all_regression_metrics_df %>%
                   data_type == "Test",
                   metric == "r_two",
                   shuffle == "Real") %>%
-    dplyr::mutate(outlier = ifelse(value < 0, "R2: > 0", "R2: 0 to 1")) %>%
+    dplyr::mutate(outlier = ifelse(value < 0, "R2: < 0", "R2: 0 to 1")) %>%
     dplyr::left_join(label_df, by = c("target" = "id"))
 
 cellline_compare_regression_df$measurement <-
@@ -298,12 +315,15 @@ rsquared_bar_cellline_gg <- ggplot(cellline_compare_regression_df,
         labels = cell_line_labels,
         values = cell_line_colors
     ) +
+    scale_y_discrete(position = "right") +
     theme(axis.text.x = element_text(size = 8, angle = 90),
           axis.text.y = element_text(size = 5.5),
           axis.title = element_text(size = 10),
-          legend.position = "right",
-          legend.text = element_text(size = 7),
-          legend.title = element_text(size = 9),
+          legend.position = c(0.15, 0.925),
+          legend.text = element_text(size = 6),
+          legend.title = element_text(size = 8),
+          legend.key = element_rect(size = 4),
+          legend.key.size = unit(0.4, 'lines'),
           strip.text = element_text(size = 8),
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
@@ -316,43 +336,172 @@ ggsave(output_file, rsquared_bar_cellline_gg, dpi = 500, width = 7, height = 6)
 rsquared_bar_cellline_gg
 
 regression_legend <- cowplot::get_legend(rsquared_bar_gg)
-cell_legend <- cowplot::get_legend(rsquared_bar_cellline_gg)
 
-legend_grob <- cowplot::plot_grid(
-    cell_legend,
-    regression_legend,
-    nrow = 2,
-    rel_heights = c(0.25, 1),
-    align = "v"
-)
+left_panel_margin <- margin(l = -0.8, r = 0.5, t = 0.2, b = 0.2, unit = "cm")
+right_panel_margin <- margin(l = 0, r = -0.8, t = 0.2, b = 0.2, unit = "cm")
 
-panel_margin <- margin(l = -0.8, r = 0.5, t = 0.2, b = 0.2, unit="cm")
-
-plot_grob <- cowplot::plot_grid(
+regression_performance_figure <- cowplot::plot_grid(
     rsquared_bar_gg +
         theme(legend.position = 'none',
-              plot.margin = panel_margin) + xlab("") ,
+              plot.margin = left_panel_margin) + xlab(""),
+    regression_legend,
     rsquared_bar_cellline_gg +
-        theme(legend.position = 'none',
-              plot.margin = panel_margin) + ylab(""),
-    labels = c("a", "b"),
-    ncol = 2,
+        theme(plot.margin = right_panel_margin) + ylab(""),
+    labels = c("a", "", "b"),
+    ncol = 3,
     nrow = 1,
-    align = "h"
+    align = "h",
+    hjust = c(-0.5, -0.5, 3),
+    rel_widths = c(1, 0.3, 1)
 )
 
-regression_performance_figure = cowplot::plot_grid(
-    plot_grob,
-    legend_grob,
-    ncol = 2,
-    nrow = 1,
-    rel_widths = c(1, 0.2)
-)
 output_file <- file.path(
     figure_dir,
     paste0("regression_performance_figure_", consensus, ".png")
 )
 cowplot::save_plot(output_file, regression_performance_figure, base_width = 10, base_height = 6)
+
+regression_performance_figure
+
+concise_fig_df <- r2_df %>%
+    dplyr::filter(shuffle == "Real", data_type == "Test") %>%
+    dplyr::select(value, metric, target, data_type, shuffle, y_transform, cell_line, readable_name, measurement)
+
+concise_fig_df$data_fit <- dplyr::recode(
+    concise_fig_df$data_type,
+    "Test" = "Test Set Performance\n(Data not used in training)"
+)
+
+head(concise_fig_df, 2)
+
+cell_line_focus_df <- cellline_compare_regression_df %>%
+    dplyr::select(value, metric, target, data_type, shuffle, y_transform, cell_line, readable_name, measurement) %>%
+    dplyr::distinct() %>%
+    dplyr::mutate(truncated_value = ifelse(value < -1, -1, value))
+
+cell_line_focus_df$data_fit <- dplyr::recode(
+    cell_line_focus_df$data_type,
+    "Test" = "Test Set Performance\n(Data not used in training)"
+)
+
+head(cell_line_focus_df, 2)
+
+measurement_legend <- cowplot::get_legend(
+    ggplot(concise_fig_df,
+       aes(x = readable_name)) +
+    geom_bar(aes(fill = measurement, y = value),
+             stat = "identity",
+             alpha = 0.7,
+             position = position_dodge()) +
+    facet_grid(~data_fit, scales = "free_y") +
+    theme_bw() +
+    coord_flip() +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    ylab(bquote(R^2)) +
+    xlab("Cell Health Target") +
+    scale_fill_manual(name = "Measurement",
+                      values = measurement_colors,
+                      labels = measurement_labels) +
+    theme(axis.text.x = element_text(size = 9, angle = 90),
+          axis.text.y = element_text(size = 6),
+          axis.title = element_text(size = 10),
+          legend.position = "right",
+          legend.text = element_text(size = 7),
+          legend.title = element_text(size = 9),
+          strip.text = element_text(size = 9),
+          strip.background = element_rect(colour = "black",
+                                          fill = "#fdfff4"))
+)
+
+cell_line_legend <- cowplot::get_legend(
+    ggplot(concise_fig_df,
+       aes(x = readable_name)) +
+    geom_point(data = cell_line_focus_df, aes(shape = cell_line, y = truncated_value, fill = measurement)) +
+    facet_grid(~data_fit, scales = "free_y") +
+    theme_bw() +
+    coord_flip() +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    ylab(bquote(R^2)) +
+    xlab("Cell Health Target") +
+    scale_fill_manual(name = "Measurement",
+                      values = measurement_colors,
+                      labels = measurement_labels) +
+    scale_shape_manual(name = "Cell Line",
+                       values = c("A549" = 21, "ES2" = 24, "HCC44" = 22),
+                       labels = c("A549" = "A549", "ES2" = "ES2", "HCC44" = "HCC44")) +
+    theme(axis.text.x = element_text(size = 9, angle = 90),
+          axis.text.y = element_text(size = 6),
+          axis.title = element_text(size = 10),
+          legend.position = "right",
+          legend.text = element_text(size = 7),
+          legend.title = element_text(size = 9),
+          strip.text = element_text(size = 9),
+          strip.background = element_rect(colour = "black",
+                                          fill = "#fdfff4")) +
+    guides(fill = FALSE,
+           shape = guide_legend(order = 1))
+)
+
+concise_legend_gg <- cowplot::plot_grid(
+    cell_line_legend,
+    cowplot::ggdraw(),
+    measurement_legend,
+    cowplot::ggdraw(),
+    nrow = 4,
+    align = "v",
+    axis = "l",
+    rel_heights = c(1, 0.3, 1, 0.7)
+)
+
+concise_gg <- ggplot(concise_fig_df,
+       aes(x = readable_name)) +
+    geom_bar(aes(fill = measurement, y = value),
+             stat = "identity",
+             alpha = 0.7,
+             color = "black",
+             lwd = 0.2,
+             position = position_dodge()) +
+    geom_point(data = cell_line_focus_df, aes(shape = cell_line, y = truncated_value, fill = measurement)) +
+    facet_grid(~data_fit, scales = "free_y") +
+    theme_bw() +
+    coord_flip() +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    ylab(bquote(R^2)) +
+    xlab("Cell Health Target") +
+    scale_fill_manual(name = "Measurement",
+                      values = measurement_colors,
+                      labels = measurement_labels) +
+    scale_shape_manual(name = "Cell Line",
+                       values = c("A549" = 21, "ES2" = 24, "HCC44" = 22),
+                       labels = c("A549" = "A549", "ES2" = "ES2", "HCC44" = "HCC44")) +
+    theme(axis.text.x = element_text(size = 9),
+          axis.text.y = element_text(size = 6),
+          axis.title = element_text(size = 10),
+          legend.position = "none",
+          strip.text = element_text(size = 9),
+          strip.background = element_rect(colour = "black",
+                                          fill = "#fdfff4")) +
+    scale_y_continuous(
+        limits = c(-1, 1),
+        breaks = c(-1.0, -0.5, 0, 0.5, 1.0),
+        labels = c("\u2264 -1.0", "-0.5", "0", "0.5", "1.0")
+        )
+
+output_file <- file.path(
+    figure_dir,
+    paste0("concise_regression_summary_", consensus, ".png")
+)
+
+concise_gg_full <- cowplot::plot_grid(
+    concise_gg,
+    concise_legend_gg,
+    ncol = 2,
+    rel_widths = c(1, 0.3)
+)
+
+cowplot::save_plot(output_file, concise_gg_full, dpi = 600, base_width = 7, base_height = 6)
+
+concise_gg_full
 
 # Split shuffle column for scatter plot
 r2_spread_df <- r2_df %>% tidyr::spread(shuffle, value)
@@ -462,6 +611,11 @@ for (good_model in c(good_example_models, bad_example_models)) {
             labels = cell_line_labels,
             values = cell_line_colors
         ) +
+        geom_rect(data = sup_fig_good_subset_df %>%
+                    dplyr::filter(data_type == "Test", shuffle == "Real") %>%
+                    dplyr::distinct(data_type, shuffle, .keep_all = TRUE), 
+                  fill = NA, alpha = 1, colour = "red", linetype = "solid", size = 2,
+                  xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf) +
         geom_text(data = r2_df, size = 3, aes(label = paste("R2 =", r2), x = x, y = y)) +
         theme(strip.text = element_text(size = 10),
               strip.background = element_rect(colour = "black",

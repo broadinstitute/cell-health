@@ -153,13 +153,12 @@ summary_df$shuffle <- dplyr::recode_factor(
 )
 summary_df$data_type <- dplyr::recode_factor(
     summary_df$data_type,
-    "train" = "Training",
+    "train" = "Train",
     "test" = "Test"
 )
 
 summary_df$shuffle <- factor(summary_df$shuffle, levels = c("Real", "Permuted"))
-summary_df$data_type <- factor(summary_df$data_type, levels = c("Training", "Test"))
-
+summary_df$data_type <- factor(summary_df$data_type, levels = c("Test", "Train"))
 
 summary_df
 

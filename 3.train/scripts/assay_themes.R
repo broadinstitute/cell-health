@@ -20,19 +20,19 @@ measurement_levels <- c(
 )
 
 measurement_colors <- c(
-    "cell_viability"=  "#b2df8a",
-    "dna_damage" = "#fb9a99",
-    "g1_phase" = "#fdbf6f",
-    "s_phase" = "#cab2d6",
-    "g2_phase" = "#ff7f00",
-    "early_mitosis" = "#ccece6",
-    "mitosis" = "#41ae76",
-    "late_mitosis" = "#005824",
-    "cell_cycle_count" = "#1f78b4",
-    "shape" = "#6a3d9a",
-    "apoptosis" = "#a6cee3",
-    "death" = "#33a02c",
-    "ros" = "#e31a1c",
+    "cell_viability"= "#DFECE9", # Blue
+    "dna_damage" = "#E86F32", # Orange
+    "g1_phase" = "#3690c0", # Blue
+    "s_phase" = "#D02545", # Pink
+    "g2_phase" = "#045a8d", # Dark Blue
+    "early_mitosis" = "#84C472", # Light Green
+    "mitosis" = "#41ae76", # Light Green
+    "late_mitosis" = "#005824", # Dark Green
+    "cell_cycle_count" = "#1f78b4", # Blue
+    "shape" = "#cab2d6", # Light Purple
+    "apoptosis" = "#DACB6E", # Light Yellow/Green
+    "death" = "#55243C", # Purple
+    "ros" = "orange",
     "other" = "black"
 )
 
@@ -50,7 +50,7 @@ measurement_labels <- c(
     "apoptosis" = "Apoptosis",
     "death" = "Death",
     "ros" = "Reactive Oxygen Species",
-    "other" = "CRISPR Efficiency"
+    "other" = "Infection Efficiency"
 )
 
 dye_levels <- c(
@@ -95,7 +95,7 @@ dye_labels <- c(
   "draq_caspase" = "DRAQ7 + Caspase",
   'cell_rox' = "CellROX",
   "dpc" = "DPC (Shape)",
-  "qc" = "CRISPR Efficiency"
+  "qc" = "Infection Efficiency"
 )
 
 cell_line_labels <- c(
