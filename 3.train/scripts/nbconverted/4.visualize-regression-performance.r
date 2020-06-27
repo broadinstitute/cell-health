@@ -254,6 +254,7 @@ rsquared_bar_gg <- ggplot(r2_df %>% dplyr::filter(shuffle == "Real"),
     geom_bar(aes(fill = measurement),
              stat = "identity",
              alpha = 0.7,
+             color = "black",
              position = position_dodge()) +
     facet_grid(~data_type, scales = "free_y") +
     coord_flip() +
@@ -302,15 +303,13 @@ cellline_compare_regression_df$readable_name <- factor(
 head(cellline_compare_regression_df, 2)
 
 rsquared_bar_cellline_gg <- ggplot(cellline_compare_regression_df,
-       aes(x = value,
-           y = readable_name,
-           color = cell_line)) +
-    geom_point(alpha = 0.8) +
+                                   aes(x = value, y = readable_name, fill = cell_line)) +
+    geom_point(alpha = 0.8, shape = 21, color = "black") +
     theme_bw() +
     xlab(bquote("Test Set "~R^2~"")) +
     ylab("Cell Health Target") +
     facet_wrap(~outlier, scales="free_x") +
-    scale_color_manual(
+    scale_fill_manual(
         name = "Cell Line",
         labels = cell_line_labels,
         values = cell_line_colors
@@ -855,145 +854,3 @@ for (target in unique(y_plot_df$target)) {
 }
 
 dev.off()
-
- # Subset all dataframes
-y_subset_df <- y_plot_df %>% dplyr::filter(target == !!target)
-
-y_subset_df$shuffle <- y_subset_df$shuffle %>%
-    dplyr::recode_factor("shuffle_false" = "Real",
-                         "shuffle_true" = "Permuted")
-
-coef_subset_df <- full_coef_df %>%
-    dplyr::filter(target == !!target)
-metrics_subset_df <- regression_metrics_df %>%
-    dplyr::filter(target == !!target)
-
-
-y_subset_transform_df <- y_subset_df %>%
-    dplyr::filter(y_transform == !!y_transform)
-
-coef_subset_transform_df <- coef_subset_df %>%
-    dplyr::filter(y_transform == !!y_transform,
-                  shuffle == "shuffle_false") %>%
-    dplyr::mutate(weight_rank = row_number(weight))
-
-metrics_subset_transform_df <- metrics_subset_df %>%
-    dplyr::filter(y_transform == !!y_transform)
-
-pred_scatter_gg <-
-   ggplot(y_subset_transform_df,
-          aes(x = recode_target_value_true,
-              y = recode_target_value_pred)) +
-        geom_point(aes(color = Metadata_cell_line),
-                   size = 0.5, alpha = 0.8) +
-        facet_grid(data_type~shuffle) +
-        theme_bw() +
-        xlab("True Values") +
-        ylab("Predicted Values") +
-        scale_color_manual(
-            name = "Cell Line",
-            labels = cell_line_labels,
-            values = cell_line_colors
-        ) +
-        geom_smooth(method='lm', formula=y~x) +
-        theme(strip.text = element_text(size = 10),
-              strip.background = element_rect(colour = "black",
-                                              fill = "#fdfff4"))
-
-# Setup labeling thresholds
-non_zero_coef <- coef_subset_transform_df$abs_weight[coef_subset_transform_df$abs_weight > 0]
-label_thresh <- quantile(non_zero_coef, label_thresh_value)
-label_logic <- coef_subset_transform_df$abs_weight > label_thresh
-
-coef_gg <-
-    ggplot(coef_subset_transform_df,
-           aes(x = weight_rank,
-               y = weight)) +
-        geom_point(size = 0.2,
-                   alpha = 0.6) +
-        xlab("Weight Rank") +
-        ylab("Weight") +
-        geom_text_repel(
-            data = subset(coef_subset_transform_df, label_logic),
-            arrow = arrow(length = unit(0.01, "npc")),
-            box.padding = 0.4,
-            point.padding = 0.1,
-            segment.size = 0.5,
-            segment.alpha = 0.6,
-            size = 1.5,
-            fontface = "italic",
-            aes(label = feature,
-                x = weight_rank,
-                y = weight)) +
-        theme_bw()
-
- # Build table for plotting performance metrics
-mse_df <- metrics_subset_transform_df %>%
-    dplyr::filter(metric == "mse") %>%
-    dplyr::select(-metric)
-mse_df$value = abs(mse_df$value)
-
-r2_df <- metrics_subset_transform_df %>%
-    dplyr::filter(metric == "r_two") %>%
-    dplyr::rename(r2 = value) %>%
-    dplyr::select(-metric)
-
-metric_table_df <- r2_df %>%
-    dplyr::inner_join(mse_df,
-                      by=c("target", "data_type", "shuffle", "y_transform")) %>%
-    dplyr::select(data_type, shuffle, y_transform, r2, value) %>%
-    dplyr::rename(fit = data_type, transform = y_transform) %>%
-    dplyr::arrange(shuffle)
-
-metric_table_df$shuffle <- dplyr::recode(
-    metric_table_df$shuffle,
-    shuffle_true = "True",
-    shuffle_false = "False"
-)
-
-# Plot all performance metrics together with cowplot
-table_theme <- gridExtra::ttheme_default(
-    core = list(fg_params=list(cex = 0.7)),
-    colhead = list(fg_params=list(cex = 0.8))
-)
-
-table_gg <- gridExtra::tableGrob(metric_table_df,
-                                 theme = table_theme,
-                                 rows = NULL)
-
-bottom_row_gg <- cowplot::plot_grid(
-    table_gg,
-    coef_gg,
-    rel_widths = c(0.8, 1),
-    nrow = 1
-)
-regression_perf_gg <- cowplot::plot_grid(
-    pred_scatter_gg,
-    bottom_row_gg,
-    rel_heights = c(1, 0.8),
-    nrow = 2
-)
-
-target_title <- cowplot::ggdraw() + 
-  cowplot::draw_label(
-    paste("Performance:", target, "\nTransform:", y_transform),
-    fontface = 'bold',
-    x = 0,
-    hjust = 0
-  ) +
-  theme(
-    plot.margin = margin(0, 0, 0, 7)
-  )
-
-regression_perf_gg <- cowplot::plot_grid(
-    target_title,
-    regression_perf_gg,
-    ncol = 1,
-    rel_heights = c(0.1, 1)
-)
-
-# Save figure
-cowplot_file <- file.path(
-    individual_fig_dir,
-    paste0(target, "_", y_transform, "_performance_", consensus, ".png")
-)
