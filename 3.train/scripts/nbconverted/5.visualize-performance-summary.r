@@ -255,9 +255,11 @@ head(r_two_df, 2)
 
 ggplot(r_two_df,
        aes(y = train, x = test)) +
-    geom_point(alpha = 0.6,
+    geom_point(aes(fill = measurement),
+               alpha = 0.65,
                size = 2,
-               aes(color = measurement)) +
+               shape = 21,
+               color = "black") +
     geom_vline(xintercept = 0,
                alpha = 0.5, 
                linetype = "dashed") +
@@ -268,13 +270,13 @@ ggplot(r_two_df,
     ylab("Training R squared") +
     xlab("Testing R squared") +
     geom_abline(intercept = 0,
-            slope = 1,
-            linetype = "dashed",
-            color = "red",
-            alpha = 0.7) +
-    scale_color_manual(name = "Measurement",
-                       values = measurement_colors,
-                       labels = measurement_labels) +
+                slope = 1,
+                linetype = "dashed",
+                color = "red",
+                alpha = 0.7) +
+    scale_fill_manual(name = "Measurement",
+                      values = measurement_colors,
+                      labels = measurement_labels) +
     theme_bw()
 
 file <- file.path(
@@ -285,9 +287,11 @@ ggsave(file, dpi = 300, width = 6, height = 4.25)
 
 ggplot(r_two_df,
        aes(y = train, x = test)) +
-    geom_point(alpha = 0.6,
-               size = 1.7,
-               aes(color = assay)) +
+    geom_point(aes(fill = assay),
+               alpha = 0.72,
+               size = 1.5,
+               shape = 21,
+               color = "black") +
     ylab("Training -  R squared") +
     xlab("Test Set - R squared") +
     geom_vline(xintercept = 0,
@@ -301,9 +305,9 @@ ggplot(r_two_df,
                 color = "red",
                 linetype = "dashed") +
     coord_fixed() +
-    scale_color_manual(name = "Assay",
-                       values = dye_colors,
-                       labels = dye_labels) +
+    scale_fill_manual(name = "Assay",
+                      values = dye_colors,
+                      labels = dye_labels) +
     theme_bw()
 
 file <- file.path(
