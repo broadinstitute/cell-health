@@ -7,6 +7,7 @@ source(file.path("scripts", "assay_themes.R"))
 
 consensus <- "modz"
 
+set.seed(13423)
 results_dir <- "results"
 figure_dir <- file.path("figures", "summary", consensus)
 cytominer_compare_dir <- file.path("figures", "cytominer_comparison", consensus)
@@ -285,7 +286,7 @@ file <- file.path(
 )
 ggsave(file, dpi = 300, width = 6, height = 4.25)
 
-ggplot(r_two_df,
+assay_scatter_gg <- ggplot(r_two_df,
        aes(y = train, x = test)) +
     geom_point(aes(fill = assay),
                alpha = 0.72,
@@ -310,11 +311,72 @@ ggplot(r_two_df,
                       labels = dye_labels) +
     theme_bw()
 
-file <- file.path(
+r_two_df$assay_readable <- dplyr::recode_factor(
+    r_two_df$assay,
+    "hoechst" = 'Hoechst',
+    "edu" = 'EdU',
+    "hoechst_edu" = 'Hoechst + EdU',
+    "hoechst_edu_ph3" = 'Hoechst + EdU + PH3',
+    "hoechst_gh2ax" = 'Hoechst + gH2AX',
+    "hoechst_edu_gh2ax" = 'Hoechst + EdU + gH2AX',
+    "hoechst_edu_ph3_gh2ax" = 'Hoechst + EdU + PH3 + gH2AX',
+    "draq" = 'DRAQ7',
+    "draq_caspase" = 'DRAQ7 + Caspase',
+    "cell_rox" = 'CellROX',
+    "dpc" = 'DPC (Shape)',
+    "qc" = 'Infection Efficiency'
+)
+
+assay_performance_order <- r_two_df %>%
+    dplyr::group_by(assay_readable) %>%
+    dplyr::mutate(median_assay = median(test)) %>%
+    dplyr::select(assay_readable, median_assay) %>%
+    dplyr::distinct() %>%
+    dplyr::arrange(desc(median_assay)) %>%
+    dplyr::pull(assay_readable)
+
+r_two_df$assay_readable <- factor(r_two_df$assay_readable, levels = assay_performance_order)
+
+assay_boxplot_gg <- ggplot(r_two_df,
+       aes(y = test, x = assay_readable)) +
+    geom_boxplot(fill = "grey",
+                 alpha = 0.72,
+                 size = 0.5,
+                 color = "black",
+                 outlier.alpha = 0) +
+ geom_jitter(fill = "black",
+             alpha = 0.72,
+             size = 1.5,
+             shape = 21,
+             width = 0.1,
+             color = "black") +
+    ylab("Test Set - R squared") +
+    xlab("") +
+    geom_hline(yintercept = 0,
+               alpha = 0.5, 
+               linetype = "dashed") +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 8),
+          legend.position = "none")
+
+assay_sup_fig_gg <- cowplot::plot_grid(
+    assay_scatter_gg,
+    assay_boxplot_gg,
+    nrow = 2,
+    align = "v",
+    axis = "l",
+    rel_heights = c(0.8, 1),
+    labels = c("a", "b")
+)
+
+output_file <- file.path(
     figure_dir,
     paste0("performance_summary_rsquared_assay_", consensus, ".png")
 )
-ggsave(file, dpi = 300, width = 6, height = 4.25)
+
+cowplot::save_plot(output_file, assay_sup_fig_gg, base_width = 6, base_height = 8)
+
+assay_sup_fig_gg
 
 # Cytominer results are archived on github
 hash = "26d1095c209d402102494c0c28e978476643e572"
