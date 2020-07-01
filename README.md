@@ -92,7 +92,7 @@ View each module for specific instructions on how to reproduce results.
 
 [`analysis-pipeline.sh`](analysis-pipeline.sh) stores information on how to reproduce all analysis modules.
 
-## Computational Environment
+### Computational Environment
 
 We use conda as a package manager.
 To install conda see [instructions](https://docs.conda.io/en/latest/miniconda.html).
