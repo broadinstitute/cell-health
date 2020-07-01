@@ -14,7 +14,8 @@ The assays were acquired from a CRISPR experiment in which 59 genes were knocked
 
 ## Approach
 
-First, we aggregated data at the _treatment_ level (aggregating replicate wells together) and matched cell health readouts (y) with Cell Painting profiles (X).
+First, we aggregated data at the _treatment_ level (aggregating replicate wells together) forming consensus profiles.
+This procedure results in matched cell health readouts (y) with Cell Painting profiles (X).
 We randomly split the data (n = 357) into 85% training and 15% testing sets.
 
 We then independently trained regression models to predict each of the 70 cell health readouts.
