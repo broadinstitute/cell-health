@@ -41,6 +41,10 @@ This overview figure outlines the Cell Health assay, the Cell Painting assay, an
 
 ## Data
 
+All data are publicly available.
+Single cell profiles are available at https://doi.org/10.35092/yhjc.9995672.
+All processed data are available in this repository (see [`1.generate-profiles`](1.generate-profiles/)).
+
 We collected Cell Painting measurements using CRISPR perturbations.
 The experiment targeted 59 genes, which included 119 unique guides (~2 per gene), across 3 cell lines.
 The cell lines included A549, ES2, and HCC44.
