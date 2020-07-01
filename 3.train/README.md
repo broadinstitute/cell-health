@@ -1,11 +1,8 @@
 # Training Models to Predict Cell Health Phenotypes
 
-**Gregory Way, 2019**
+**Gregory Way, 2020**
 
-In the following module, we test the ability of Cell Painting ([Bray et al. 2016](https://doi.org/10.1038/nprot.2016.105)) to predict cell health assays.
-
-Cell health assays represent 70 image based assays that use various dyes to capture important phenotypes in cell lines.
-These phenotypes include proportion of cells in specific cell cycle stages, the kind of apoptosis initiated, cellular proliferation rates, reactive oxygen species (ROS) present, and many more.
+In the following module, we test the ability of Cell Painting to predict cell health readouts.
 
 The `3.train` analysis module trains all models to predict cell health readouts.
 The module stores data, software, results, figures, interpretations, and computational infrastructure to reproduce the analysis.
@@ -13,43 +10,29 @@ The module stores data, software, results, figures, interpretations, and computa
 ## Data
 
 Both the Cell Painting and Cell Health assays were acquired on the same cell lines (A549, ES2, and HCC44) in the same perturbations.
-The assays were acquired from a CRISPR experiment in which 65 genes and controls were knocked out with, in most cases, 2 different CRISPR guides.
-
-| Cell Line | Primary Site |
-| :-------- | :----------- |
-| A549 | Lung Cancer |
-| ES2 | Ovarian Cancer |
-| HCC44 | Lung Cancer |
+The assays were acquired from a CRISPR experiment in which 59 genes were knocked out with, in most cases, 2 different CRISPR guides.
 
 ## Approach
 
-First, we aggregated data at the _treatment_ level (aggregating replicate wells together) and matched cell health readouts (y) with Cell Painting profiles (X).
+First, we aggregated data at the _treatment_ level (aggregating replicate wells together) forming consensus profiles.
+This procedure results in matched cell health readouts (y) with Cell Painting profiles (X).
 We randomly split the data (n = 357) into 85% training and 15% testing sets.
 
-We then independently trained three different models to predict each of the 70 cell health readouts.
-
-| Model | Data Transformation |
-| :-----| :------------------ |
-| Classification | Binarize Cell Health Data by Median (after z-scoring) |
-| Regression | Raw Cell Health Data (after z-scoring) |
-
-We also trained all of these models again using randomly permuted cell painting data.
+We then independently trained regression models to predict each of the 70 cell health readouts.
+We also trained models again using randomly permuted Cell Painting data.
 
 ## Results
 
-The cell health readouts can be predicted well by both classification and regression algorithms.
+Many cell health readouts can be predicted with high accuracy in a testing set.
 
-![performance summary](https://raw.githubusercontent.com/broadinstitute/cell-health/master/3.train/figures/performance_summary.png)
+![Regression Model Performance](https://raw.githubusercontent.com/broadinstitute/cell-health/master/3.train/figures/regression/modz/regression_performance_figure_modz.png)
 
-> Comparing regression mean squared error (y axis) to classification area under the receiver operating characteristic curve (AUROC) (x axis) in the test set.
-The points represent the various cell health readouts colored by measurement category.
-The shape of the point indicates if a collaborator (Maria Alimova) thought the measurements were particularly interesting.
+Some cell health readouts can be predicted exceptionally well, but others cannot be captured with our current approach.
 
-Cell painting can be used to predict cell health readouts in regression models better than random.
+![Individual Model Performance](https://raw.githubusercontent.com/broadinstitute/cell-health/master/3.train/figures/regression/modz/supplementary_figure_example_distributions.png)
 
-![performance summary](https://raw.githubusercontent.com/broadinstitute/cell-health/master/3.train/figures/mse_comparison_scatter.png)
+Cell painting can be used to predict cell health readouts better than models trained with random.
 
-> Comparing permuted data mean squared error (y axis) to real data mean squared error (x axis) in raw cell health predictions.
-Points above the red line indicate models that predicted cell health phenotypes better than models trained using permuted data.
+![performance summary](https://raw.githubusercontent.com/broadinstitute/cell-health/master/3.train/figures/regression/modz/r_squared_comparison_scatter_modz.png)
 
 More specific results exploring performance for all models and all cell health variables are presented in the `figures/` folder.

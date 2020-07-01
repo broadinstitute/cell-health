@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Gregory Way 2019
+# Gregory Way 2020
 # Predicting Cell Health
 # Complete Analysis Pipeline
 
@@ -26,3 +26,8 @@ bash train-pipeline.sh
 cd ..
 cd 4.apply
 bash apply-models.sh
+
+# Step 5 - Validate predictions from the Drug Repurposing Hub
+cd ..
+cd 5.validate-repurposing
+bash validate-pipeline.sh
