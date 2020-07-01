@@ -24,7 +24,7 @@ Briefly, our pipeline is as follows:
 ## Processing cell health readouts
 
 We also normalize the output cell health readouts from the Cell Health assay.
-We simply take the z-score across all samples.
+We simply take the z-score across features.
 
 ## Generating consensus signatures
 
