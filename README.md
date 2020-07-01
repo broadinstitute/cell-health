@@ -31,6 +31,12 @@ We collected Cell Painting measurements using CRISPR perturbations.
 The experiment targeted 59 genes, which included 119 unique guides (~2 per gene), across 3 cell lines.
 The cell lines included A549, ES2, and HCC44.
 
+| Cell Line | Primary Site |
+| :-------- | :----------- |
+| A549 | Lung Cancer |
+| ES2 | Ovarian Cancer |
+| HCC44 | Lung Cancer |
+
 ![CRISPR Correlation](https://raw.githubusercontent.com/broadinstitute/cell-health/master/2.replicate-reproducibility/figures/guide_correlation.png)
 
 About 60% of all CRISPR guides were reproducible.

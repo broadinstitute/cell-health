@@ -2,10 +2,7 @@
 
 **Gregory Way, 2020**
 
-In the following module, we test the ability of Cell Painting ([Bray et al. 2016](https://doi.org/10.1038/nprot.2016.105)) to predict cell health assays.
-
-Cell health assays represent 70 image based assays that use various dyes to capture important phenotypes in cell lines.
-These phenotypes include proportion of cells in specific cell cycle stages, the kind of apoptosis initiated, cellular proliferation rates, reactive oxygen species (ROS) present, and many more.
+In the following module, we test the ability of Cell Painting to predict cell health readouts.
 
 The `3.train` analysis module trains all models to predict cell health readouts.
 The module stores data, software, results, figures, interpretations, and computational infrastructure to reproduce the analysis.
@@ -14,12 +11,6 @@ The module stores data, software, results, figures, interpretations, and computa
 
 Both the Cell Painting and Cell Health assays were acquired on the same cell lines (A549, ES2, and HCC44) in the same perturbations.
 The assays were acquired from a CRISPR experiment in which 59 genes were knocked out with, in most cases, 2 different CRISPR guides.
-
-| Cell Line | Primary Site |
-| :-------- | :----------- |
-| A549 | Lung Cancer |
-| ES2 | Ovarian Cancer |
-| HCC44 | Lung Cancer |
 
 ## Approach
 
