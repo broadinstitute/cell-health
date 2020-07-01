@@ -32171,7 +32171,7 @@ QAABBBBAIOoC/w8E81ytS+o4aAAAAABJRU5ErkJggg=="
         <span class="n">dplyr</span><span class="o">::</span><span class="nf">mutate</span><span class="p">(</span><span class="n">weight_rank</span> <span class="o">=</span> <span class="nf">row_number</span><span class="p">(</span><span class="n">weight</span><span class="p">))</span>
     
     <span class="c1"># Setup labeling thresholds</span>
-    <span class="n">non_zero_coef</span> <span class="o">&lt;-</span> <span class="n">subset_coef_df</span><span class="o">$</span><span class="n">abs_weight[subset_coef_df</span><span class="o">$</span><span class="n">abs_weight</span> <span class="o">&gt;</span> <span class="m">0</span><span class="n">]</span>
+    <span class="n">non_zero_coef</span> <span class="o">&lt;-</span> <span class="n">subset_coef_df</span><span class="o">$</span><span class="n">abs_weight</span><span class="p">[</span><span class="n">subset_coef_df</span><span class="o">$</span><span class="n">abs_weight</span> <span class="o">&gt;</span> <span class="m">0</span><span class="p">]</span>
     <span class="n">label_thresh</span> <span class="o">&lt;-</span> <span class="nf">quantile</span><span class="p">(</span><span class="n">non_zero_coef</span><span class="p">,</span> <span class="n">label_thresh_value</span><span class="p">)</span>
     <span class="n">label_logic</span> <span class="o">&lt;-</span> <span class="n">subset_coef_df</span><span class="o">$</span><span class="n">abs_weight</span> <span class="o">&gt;</span> <span class="n">label_thresh</span>
 
