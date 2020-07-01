@@ -1,6 +1,6 @@
 # Download Single-Cell Cell Painting Profiles
 
-**Gregory Way, 2019**
+**Gregory Way, 2020**
 
 In this module, we download all single-cell Cell Painting profiles generated for the Cell Health project.
 All of the single cell profiles are publicly available and hosted by [NIH Figshare](https://nih.figshare.com/).

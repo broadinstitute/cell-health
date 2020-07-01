@@ -44,3 +44,18 @@ jupyter nbconvert --to=html \
         --ExecutePreprocessor.kernel_name=python \
         --ExecutePreprocessor.timeout=10000000 \
         --execute 3.perturbation-table.ipynb
+
+# Step 6: Retrieve an example cell painting image
+# Note: This step requires the raw image data!
+#jupyter nbconvert --to=html \
+#        --FilesWriter.build_directory=scripts/html \
+#        --ExecutePreprocessor.kernel_name=python \
+#        --ExecutePreprocessor.timeout=10000000 \
+#        --execute 4.load-example-cell-painting-image.ipynb
+
+# Step 7: Produce a summary of cell counts
+jupyter nbconvert --to=html \
+        --FilesWriter.build_directory=scripts/html \
+        --ExecutePreprocessor.kernel_name=python \
+        --ExecutePreprocessor.timeout=10000000 \
+        --execute 5.cell-count-summary.ipynb

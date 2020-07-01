@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>1.normalize-labels</title>
+<title>5.cell-count-summary</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13077,8 +13077,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Normalize-Cell-Health-Labels">Normalize Cell Health Labels<a class="anchor-link" href="#Normalize-Cell-Health-Labels">&#182;</a></h1><p><strong>Gregory Way, 2019</strong></p>
-
+<h1 id="Describe-Cell-Count-in-the-Cell-Painting-Experiment">Describe Cell Count in the Cell Painting Experiment<a class="anchor-link" href="#Describe-Cell-Count-in-the-Cell-Painting-Experiment">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13087,12 +13086,8 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">median_absolute_deviation</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="kn">from</span> <span class="nn">pycytominer</span> <span class="kn">import</span> <span class="n">write_gct</span>
 </pre></div>
 
     </div>
@@ -13105,42 +13100,19 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-</pre></div>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cell_count_dir</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">)</span>
 
-    </div>
-</div>
-</div>
+<span class="n">cell_count_df</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">cell_count_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s2">&quot;cell_count&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+        <span class="n">plate</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="n">plate</span><span class="p">:</span> <span class="s2">&quot;cell_count&quot;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+        <span class="n">cell_count_df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        
+<span class="n">cell_count_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">cell_count_df</span><span class="p">)</span>
 
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Function to scale cell health target variables</span>
-<span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="n">x_median</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">x_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">x_scale</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x_median</span><span class="p">)</span> <span class="o">/</span> <span class="n">x_std</span>
-    <span class="k">return</span> <span class="n">x_scale</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;labels&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_health_labels.tsv&quot;</span><span class="p">)</span>
-<span class="n">label_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">label_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">label_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cell_count_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">cell_count_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -13157,14 +13129,14 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(2302, 75)
+<pre>(3456, 6)
 </pre>
 </div>
 </div>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[4]:</div>
+    <div class="prompt output_prompt">Out[2]:</div>
 
 
 
@@ -13187,82 +13159,193 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>cell_id</th>
-      <th>guide</th>
-      <th>plate_name</th>
-      <th>well_col</th>
-      <th>well_row</th>
-      <th>cc_all_high_h2ax</th>
-      <th>cc_all_large_notround_polynuclear_mean</th>
-      <th>cc_all_large_round_polyploid_mean</th>
-      <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_h2ax_mean</th>
-      <th>...</th>
-      <th>vb_num_live_cells</th>
-      <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_caspase_dead_only</th>
-      <th>vb_percent_dead</th>
-      <th>vb_percent_dead_only</th>
-      <th>vb_percent_early_apoptosis</th>
-      <th>vb_percent_late_apoptosis</th>
-      <th>vb_percent_live</th>
-      <th>vb_ros_back_mean</th>
-      <th>vb_ros_mean</th>
+      <th>Image_Metadata_Well</th>
+      <th>cell_count</th>
+      <th>gene_name</th>
+      <th>pert_name</th>
+      <th>broad_sample</th>
+      <th>cell_line</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>ES2</td>
-      <td>AKT1-1</td>
-      <td>Plate 1</td>
-      <td>3</td>
-      <td>A</td>
-      <td>0.04287</td>
-      <td>0.007976</td>
-      <td>0.003988</td>
-      <td>1003</td>
-      <td>1.777</td>
-      <td>...</td>
-      <td>1465.0</td>
-      <td>0.02710</td>
-      <td>1.640</td>
-      <td>0.03173</td>
-      <td>0.01652</td>
-      <td>0.01190</td>
-      <td>0.01520</td>
-      <td>0.9683</td>
+      <td>A01</td>
+      <td>4335</td>
+      <td>EMPTY</td>
+      <td>EMPTY</td>
       <td>NaN</td>
-      <td>NaN</td>
+      <td>A549</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>ES2</td>
+      <td>A02</td>
+      <td>4129</td>
+      <td>MCL1</td>
+      <td>MCL1-5</td>
+      <td>NaN</td>
+      <td>A549</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>A03</td>
+      <td>4895</td>
+      <td>AKT1</td>
       <td>AKT1-1</td>
-      <td>Plate 1</td>
-      <td>22</td>
-      <td>O</td>
-      <td>0.02635</td>
-      <td>0.005988</td>
-      <td>0.005988</td>
-      <td>835</td>
-      <td>1.582</td>
-      <td>...</td>
-      <td>1575.0</td>
-      <td>0.03169</td>
-      <td>1.405</td>
-      <td>0.03961</td>
-      <td>0.02255</td>
-      <td>0.01463</td>
-      <td>0.01706</td>
-      <td>0.9598</td>
-      <td>279.6</td>
-      <td>2083.0</td>
+      <td>BRDN0001054908</td>
+      <td>A549</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>A04</td>
+      <td>4261</td>
+      <td>KRAS</td>
+      <td>KRAS-2B</td>
+      <td>NaN</td>
+      <td>A549</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>A05</td>
+      <td>4474</td>
+      <td>AKT1</td>
+      <td>AKT1-2</td>
+      <td>BRDN0001055115</td>
+      <td>A549</td>
     </tr>
   </tbody>
 </table>
-<p>2 rows × 75 columns</p>
 </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Total number of cells</span>
+<span class="n">cell_count_df</span><span class="o">.</span><span class="n">cell_count</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[3]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>8964210</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Count cells by perturbation</span>
+<span class="n">cell_count_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;pert_name&quot;</span><span class="p">)[</span><span class="s2">&quot;cell_count&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[4]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>pert_name
+EMPTY        1463714
+Chr2-4        211271
+PPIB-1        209781
+ORC4-1        200664
+Chr2-5        199379
+ORC4-2        197358
+Chr2-2        194806
+Chr2-6        192870
+Chr2-1        185315
+Chr2-3        183403
+PPIB-2        176050
+Luc-1         142910
+PSMA1-1       140953
+POLR2D-2      109563
+PSMA1-2       108587
+LacZ-2        105392
+LacZ-3        104454
+POLR2D-1       92795
+Luc-2          81260
+EGFR-1         57288
+RAC1-1         56834
+BCL2L2-2       56170
+KRAS-2B        55988
+CTNNB1-2       55812
+DOT1L-2        55738
+PRDX1-1        55607
+HIF1a-2        55189
+AKT1-2         54979
+SMARCB1-2      54574
+PIK3CA-2       53948
+              ...   
+KRAS-2A        45431
+SLC2A1-1       45242
+JAK3-1         44971
+SUZ12-1        44777
+KRAS-1         44356
+BRD4-2         43380
+COX5B-2        43201
+GPX4-2         43167
+CCND1-1        41903
+EGLN1-9        41728
+GLS-2          41450
+CDK2-1         41313
+CCNE1-1        41002
+ATP50-2        40910
+SUZ12-2        40431
+ATF4-2         40300
+CCNE1-2        39392
+GPX4-1         39387
+CDK4-2         38636
+CDK4-1         37772
+CDK4-3         35261
+ATF4-1         32303
+CDK2-2         31298
+MYC-2          30051
+CCND1-2        28303
+ITGAV-1        27842
+MYC-1          26297
+ITGAV-2        24787
+KIF11-1        19631
+KIF11-2        18511
+Name: cell_count, Length: 119, dtype: int64</pre>
 </div>
 
 </div>
@@ -13276,27 +13359,9 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Some infinite values are present, replace them with NA</span>
-<span class="n">label_df</span> <span class="o">=</span> <span class="n">label_df</span><span class="o">.</span><span class="n">replace</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-
-<span class="c1"># Apply normalization by plate</span>
-<span class="n">normalized_label_df</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">label_df</span>
-    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;guide&quot;</span><span class="p">,</span> <span class="s2">&quot;well_col&quot;</span><span class="p">,</span> <span class="s2">&quot;well_row&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;cell_id&quot;</span><span class="p">,</span> <span class="s2">&quot;plate_name&quot;</span><span class="p">])</span>
-    <span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span>
-<span class="p">)</span>
-
-<span class="n">normalized_label_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
-    <span class="p">[</span>
-        <span class="n">label_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;cell_id&quot;</span><span class="p">,</span> <span class="s2">&quot;guide&quot;</span><span class="p">,</span> <span class="s2">&quot;plate_name&quot;</span><span class="p">,</span> <span class="s2">&quot;well_col&quot;</span><span class="p">,</span> <span class="s2">&quot;well_row&quot;</span><span class="p">]],</span>
-        <span class="n">normalized_label_df</span>
-    <span class="p">],</span>
-    <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">normalized_label_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">normalized_label_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Cell count by cell line</span>
+<span class="n">cell_line_groupby</span> <span class="o">=</span> <span class="n">cell_count_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;cell_line&quot;</span><span class="p">)</span>
+<span class="n">cell_line_groupby</span><span class="p">[</span><span class="s2">&quot;cell_count&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -13309,116 +13374,17 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>(2302, 75)
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
     <div class="prompt output_prompt">Out[5]:</div>
 
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>cell_id</th>
-      <th>guide</th>
-      <th>plate_name</th>
-      <th>well_col</th>
-      <th>well_row</th>
-      <th>cc_all_high_h2ax</th>
-      <th>cc_all_large_notround_polynuclear_mean</th>
-      <th>cc_all_large_round_polyploid_mean</th>
-      <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_h2ax_mean</th>
-      <th>...</th>
-      <th>vb_num_live_cells</th>
-      <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_caspase_dead_only</th>
-      <th>vb_percent_dead</th>
-      <th>vb_percent_dead_only</th>
-      <th>vb_percent_early_apoptosis</th>
-      <th>vb_percent_late_apoptosis</th>
-      <th>vb_percent_live</th>
-      <th>vb_ros_back_mean</th>
-      <th>vb_ros_mean</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>ES2</td>
-      <td>AKT1-1</td>
-      <td>Plate 1</td>
-      <td>3</td>
-      <td>A</td>
-      <td>0.655229</td>
-      <td>-0.565658</td>
-      <td>-0.839186</td>
-      <td>-0.513748</td>
-      <td>0.313600</td>
-      <td>...</td>
-      <td>0.281397</td>
-      <td>-0.279051</td>
-      <td>-0.920300</td>
-      <td>-0.139875</td>
-      <td>-0.016549</td>
-      <td>-0.429141</td>
-      <td>-0.177258</td>
-      <td>0.140570</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>ES2</td>
-      <td>AKT1-1</td>
-      <td>Plate 1</td>
-      <td>22</td>
-      <td>O</td>
-      <td>-0.251336</td>
-      <td>-0.816445</td>
-      <td>-0.525940</td>
-      <td>-0.819810</td>
-      <td>-0.450799</td>
-      <td>...</td>
-      <td>0.543716</td>
-      <td>-0.221588</td>
-      <td>-1.070176</td>
-      <td>-0.046783</td>
-      <td>0.268559</td>
-      <td>-0.311041</td>
-      <td>-0.149198</td>
-      <td>0.040163</td>
-      <td>-0.29248</td>
-      <td>0.008339</td>
-    </tr>
-  </tbody>
-</table>
-<p>2 rows × 75 columns</p>
-</div>
+<div class="output_text output_subarea output_execute_result">
+<pre>cell_line
+A549     4318583
+ES2      2182869
+HCC44    2462758
+Name: cell_count, dtype: int64</pre>
 </div>
 
 </div>
@@ -13432,8 +13398,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># How many replicates per perturbation?</span>
-<span class="n">normalized_label_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;cell_id&quot;</span><span class="p">,</span> <span class="s2">&quot;guide&quot;</span><span class="p">])[</span><span class="s2">&quot;plate_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cell_line_groupby</span><span class="p">[</span><span class="s2">&quot;cell_count&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13452,15 +13417,26 @@ div#notebook {
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>4      307
-16      42
-8        6
-10       3
-6        3
-112      1
-111      1
-83       1
-Name: plate_name, dtype: int64</pre>
+<pre>cell_line
+A549     AxesSubplot(0.125,0.125;0.775x0.755)
+ES2      AxesSubplot(0.125,0.125;0.775x0.755)
+HCC44    AxesSubplot(0.125,0.125;0.775x0.755)
+Name: cell_count, dtype: object</pre>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
 </div>
 
 </div>
@@ -13474,46 +13450,16 @@ Name: plate_name, dtype: int64</pre>
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Write to file</span>
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;labels&quot;</span><span class="p">,</span> <span class="s2">&quot;normalized_cell_health_labels.tsv&quot;</span><span class="p">)</span>
-<span class="n">normalized_label_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Build-Cell-Health-Target-Variable-GCT-Files">Build Cell Health Target Variable GCT Files<a class="anchor-link" href="#Build-Cell-Health-Target-Variable-GCT-Files">&#182;</a></h2><p>For viewing heatmaps in Morpheus.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Recode metadata variables</span>
-<span class="n">normalized_label_df</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">normalized_label_df</span>
-    <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;cell_id&quot;</span><span class="p">:</span> <span class="s2">&quot;Metadata_cell_id&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;guide&quot;</span><span class="p">:</span> <span class="s2">&quot;Metadata_guide&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;plate_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Metadata_plate_name&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;well_col&quot;</span><span class="p">:</span> <span class="s2">&quot;Metadata_well_col&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;well_row&quot;</span><span class="p">:</span> <span class="s2">&quot;Metadata_well_row&quot;</span>
-        <span class="p">},</span>
-        <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">normalized_label_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">normalized_label_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Also, how many features?</span>
+<span class="n">profile_dir</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;profiles&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">profile_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
+    <span class="n">plate</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">plate_dir</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">profile_dir</span><span class="p">,</span> <span class="n">plate</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">plate</span> <span class="o">!=</span> <span class="s1">&#39;.DS_Store&#39;</span><span class="p">:</span>
+        <span class="n">profile_file</span> <span class="o">=</span> <span class="n">plate_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">plate</span><span class="si">}</span><span class="s2">.csv.gz&quot;</span>
+        <span class="n">profile_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">profile_file</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">plate</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">profile_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13530,338 +13476,28 @@ Name: plate_name, dtype: int64</pre>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(2302, 75)
+<pre>SQ00014618:
+(384, 1785)
+SQ00014611:
+(384, 1785)
+SQ00014616:
+(384, 1785)
+SQ00014617:
+(384, 1785)
+SQ00014610:
+(384, 1785)
+SQ00014615:
+(384, 1785)
+SQ00014612:
+(384, 1785)
+SQ00014613:
+(384, 1785)
+SQ00014614:
+(384, 1785)
 </pre>
 </div>
 </div>
 
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[8]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Metadata_cell_id</th>
-      <th>Metadata_guide</th>
-      <th>Metadata_plate_name</th>
-      <th>Metadata_well_col</th>
-      <th>Metadata_well_row</th>
-      <th>cc_all_high_h2ax</th>
-      <th>cc_all_large_notround_polynuclear_mean</th>
-      <th>cc_all_large_round_polyploid_mean</th>
-      <th>cc_all_n_objects</th>
-      <th>cc_all_n_spots_h2ax_mean</th>
-      <th>...</th>
-      <th>vb_num_live_cells</th>
-      <th>vb_percent_all_apoptosis</th>
-      <th>vb_percent_caspase_dead_only</th>
-      <th>vb_percent_dead</th>
-      <th>vb_percent_dead_only</th>
-      <th>vb_percent_early_apoptosis</th>
-      <th>vb_percent_late_apoptosis</th>
-      <th>vb_percent_live</th>
-      <th>vb_ros_back_mean</th>
-      <th>vb_ros_mean</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>ES2</td>
-      <td>AKT1-1</td>
-      <td>Plate 1</td>
-      <td>3</td>
-      <td>A</td>
-      <td>0.655229</td>
-      <td>-0.565658</td>
-      <td>-0.839186</td>
-      <td>-0.513748</td>
-      <td>0.313600</td>
-      <td>...</td>
-      <td>0.281397</td>
-      <td>-0.279051</td>
-      <td>-0.920300</td>
-      <td>-0.139875</td>
-      <td>-0.016549</td>
-      <td>-0.429141</td>
-      <td>-0.177258</td>
-      <td>0.140570</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>ES2</td>
-      <td>AKT1-1</td>
-      <td>Plate 1</td>
-      <td>22</td>
-      <td>O</td>
-      <td>-0.251336</td>
-      <td>-0.816445</td>
-      <td>-0.525940</td>
-      <td>-0.819810</td>
-      <td>-0.450799</td>
-      <td>...</td>
-      <td>0.543716</td>
-      <td>-0.221588</td>
-      <td>-1.070176</td>
-      <td>-0.046783</td>
-      <td>0.268559</td>
-      <td>-0.311041</td>
-      <td>-0.149198</td>
-      <td>0.040163</td>
-      <td>-0.29248</td>
-      <td>0.008339</td>
-    </tr>
-  </tbody>
-</table>
-<p>2 rows × 75 columns</p>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Load feature map</span>
-<span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;labels&quot;</span><span class="p">,</span> <span class="s2">&quot;feature_mapping_annotated.csv&quot;</span><span class="p">)</span>
-<span class="n">feature_map</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;variable_name&quot;</span>
-        <span class="p">},</span>
-        <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span>
-    <span class="p">)</span>
-    <span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-    <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span>
-        <span class="p">},</span>
-        <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;rows&quot;</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-
-<span class="n">feature_map</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[9]:</div>
-
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>0</th>
-      <th>1</th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
-      <th>5</th>
-      <th>6</th>
-      <th>7</th>
-      <th>8</th>
-      <th>9</th>
-      <th>10</th>
-      <th>11</th>
-      <th>12</th>
-      <th>13</th>
-      <th>14</th>
-    </tr>
-    <tr>
-      <th>id</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>id</th>
-      <td>readable_name</td>
-      <td>original_name</td>
-      <td>feature_type</td>
-      <td>measurement</td>
-      <td>gate_required</td>
-      <td>assay</td>
-      <td>hoechst</td>
-      <td>edu</td>
-      <td>ph3</td>
-      <td>gh2ax</td>
-      <td>caspase</td>
-      <td>draq7</td>
-      <td>cell_rox</td>
-      <td>dpc</td>
-      <td>description</td>
-    </tr>
-    <tr>
-      <th>well_row</th>
-      <td>Row</td>
-      <td>Row</td>
-      <td>metadata</td>
-      <td>metadata</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>well_col</th>
-      <td>Column</td>
-      <td>Column</td>
-      <td>metadata</td>
-      <td>metadata</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>plate_name</th>
-      <td>Plate Name</td>
-      <td>Plate Name</td>
-      <td>metadata</td>
-      <td>metadata</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>guide</th>
-      <td>sgRNA</td>
-      <td>sgRNA</td>
-      <td>metadata</td>
-      <td>metadata</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Build and output gct file</span>
-<span class="n">cell_health_features</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">normalized_label_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Metadata_&quot;</span><span class="p">)]</span>
-<span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;labels&quot;</span><span class="p">,</span> <span class="s2">&quot;normalized_cell_health_labels.gct&quot;</span><span class="p">)</span>
-
-<span class="n">write_gct</span><span class="p">(</span>
-    <span class="n">profiles</span><span class="o">=</span><span class="n">normalized_label_df</span><span class="p">,</span>
-    <span class="n">output_file</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span>
-    <span class="n">features</span><span class="o">=</span><span class="n">cell_health_features</span><span class="p">,</span>
-    <span class="n">meta_features</span><span class="o">=</span><span class="s2">&quot;infer&quot;</span><span class="p">,</span>
-    <span class="n">feature_metadata</span><span class="o">=</span><span class="n">feature_map</span>
-<span class="p">)</span>
-</pre></div>
-
-    </div>
 </div>
 </div>
 
