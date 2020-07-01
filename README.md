@@ -172,4 +172,6 @@ A single PLK inhibitor (HMN-214) showed a strong dose relationship with predicte
 > We also highlight all PLK inhibitors in the dataset.
 > (d) HMN-214 is an example of a PLK inhibitor that shows strong dose response for G1 cell count predictions.
 
+### Drug Repurposing Hub: Exploratory Tool
+
 We applied all predictions and present them in an easy-to-navigate webapp at https://broad.io/cell-health
