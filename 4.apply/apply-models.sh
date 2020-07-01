@@ -12,7 +12,12 @@ jupyter nbconvert --to=script \
         --FilesWriter.build_directory=scripts/nbconverted \
         *.ipynb
 
-
+# Step 1: Apply the models to the Drug Repurposing Hub
+jupyter nbconvert --to=html \
+        --FilesWriter.build_directory=scripts/html \
+        --ExecutePreprocessor.kernel_name=python3 \
+        --ExecutePreprocessor.timeout=10000000 \
+        --execute 0.apply-models-repurposing.ipynb
 
 # Step 2: Visualize results
 jupyter nbconvert --to=html \
