@@ -1,8 +1,8 @@
 # Predicting cell health phenotypes using image-based morphology profiling
 
-**2020**
-
 **Gregory P. Way, Maria Kost-Alimova, Tsukasa Shibue, William F. Harrington, Stanley Gill, Tim Becker, William C. Hahn, Anne E. Carpenter, Francisca Vazquez, Shantanu Singh**
+
+**2020**
 
 ## Summary
 
