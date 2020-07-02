@@ -45,8 +45,29 @@ This overview figure outlines the Cell Health assay, the Cell Painting assay, an
 
 All data are publicly available.
 
-Single cell profiles are available at https://doi.org/10.35092/yhjc.9995672.
-All processed data are available in this repository (see [`1.generate-profiles`](1.generate-profiles/)).
+#### Cell Painting
+
+| Data | Level | Location | Notes |
+| :---- | :---- | :------ | :---- |
+| Images | 1 | Image Data Resource ([IDR](https://idr.openmicroscopy.org/)) | Accession `idr0080` |
+| SQLite File (single cell profiles ) | 2 | NIH Figshare https://doi.org/10.35092/yhjc.9995672 | `0.download-data/data` (see `0.download-data/README.md`)|
+| Aggregated Profiles with Well Information (metadata) | 3 | `1.generate-profiles/data/profiles` | suffix: `<PLATE>_augmented.csv.gz` |
+| Normalized Aggregated Profiles with Metadata | 4a | `1.generate-profiles/data/profiles` | suffix: `<PLATE>_normalized.csv.gz` |
+| Normalized and Feature Selected Aggregated Profiles with Metadata | 4b | `1.generate-profiles/data/profiles` | suffix: `<PLATE>_normalized_feature_select.csv.gz` |
+| Consensus profiles | 5 | `1.generate-profiles/data/consensus` | Perturbation profiles created by summarizing replicates |
+
+#### Cell Health
+
+| Data | Level | Location | Notes |
+| :--- | :---- | :--------| :---- |
+| Cell health readouts | Raw | `1.generate-profiles/data/raw` | Per cell health panel (cell cycle and viability) per cell line |
+| Cell health readouts | Normalized | `1.generate-profiles/data/raw/normalized_cell_health_labels.tsv` | |
+| Cell health signatures | Consensus | `1.generate-profiles/data/consensus` | |
+
+#### Drug Repurposing Hub
+
+We apply all of our trained cell health models to Cell Painting data from the Drug Repurposing Hub.
+These data are available at https://doi.org/10.5281/zenodo.3928744.
 
 ### Summary
 
