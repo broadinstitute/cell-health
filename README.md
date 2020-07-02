@@ -47,14 +47,14 @@ All data are publicly available.
 
 #### Cell Painting
 
-| Data | Level | Location and Notes |
-| :---- | :---- | :---------------- |
-| Images | Level 1 | Image Data Resource ([IDR](https://idr.openmicroscopy.org/)) Accession `idr0080` |
-| SQLite File (single cell profiles ) | Level 2 | NIH Figshare https://doi.org/10.35092/yhjc.9995672 (or `0.download-data/data`)|
-| Aggregated Profiles with Well Information (metadata) | Level 3 | `1.generate-profiles/data/profiles` with suffix = `<PLATE>_augmented.csv.gz` |
-| Normalized Aggregated Profiles with Metadata | Level 4a | `1.generate-profiles/data/profiles` with suffix = `<PLATE>_normalized.csv.gz` |
-| Normalized and Feature Selected Aggregated Profiles with Metadata | Level 4b | `1.generate-profiles/data/profiles` with suffix = `<PLATE>_normalized_feature_select.csv.gz` |
-| Perturbation Profiles created Summarizing Replicates (Consensus) | Level 5 | `1.generate-profiles/data/consensus` |
+| Data | Level | Location | Notes |
+| :---- | :---- | :------ | :---- |
+| Images | 1 | Image Data Resource ([IDR](https://idr.openmicroscopy.org/)) | Accession `idr0080` |
+| SQLite File (single cell profiles ) | 2 | NIH Figshare https://doi.org/10.35092/yhjc.9995672 | or `0.download-data/data` |
+| Aggregated Profiles with Well Information (metadata) | 3 | `1.generate-profiles/data/profiles` | with suffix = `<PLATE>_augmented.csv.gz` |
+| Normalized Aggregated Profiles with Metadata | 4a | `1.generate-profiles/data/profiles` | with suffix = `<PLATE>_normalized.csv.gz` |
+| Normalized and Feature Selected Aggregated Profiles with Metadata | 4b | `1.generate-profiles/data/profiles` | with suffix = `<PLATE>_normalized_feature_select.csv.gz` |
+| Consensus profiles | 5 | `1.generate-profiles/data/consensus` | Perturbation Profiles created Summarizing Replicates |
 
 #### Cell Health
 
