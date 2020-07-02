@@ -63,7 +63,6 @@ All data are publicly available.
 | Cell health readouts | Raw | [1.generate-profiles/data/raw](1.generate-profiles/data/raw) | Per cell health panel (cell cycle and viability) per cell line |
 | Cell health readouts | Normalized | `1.generate-profiles/data/raw/normalized_cell_health_labels.tsv` | |
 | Cell health signatures | Consensus | [1.generate-profiles/data/consensus](1.generate-profiles/data/consensus) | |
->>>>>>> upstream/master
 
 #### Drug Repurposing Hub
 
