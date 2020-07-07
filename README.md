@@ -6,6 +6,25 @@
 
 **2020**
 
+- [Summary](#summary)
+- [Approach](#approach)
+- [Data](#data)
+  * [Access](#access)
+    + [Cell Painting](#cell-painting)
+    + [Cell Health](#cell-health)
+    + [Drug Repurposing Hub](#drug-repurposing-hub)
+  * [Summary](#summary-1)
+- [Pipeline](#pipeline)
+  * [Computational Environment](#computational-environment)
+- [Machine Learning Approach](#machine-learning-approach)
+- [Results](#results)
+  * [Regression Model Performance](#regression-model-performance)
+  * [Model Interpretation](#model-interpretation)
+  * [Application to Drug Repurposing Hub](#application-to-drug-repurposing-hub)
+  * [Drug Repurposing Hub: Exploratory Tool](#drug-repurposing-hub--exploratory-tool)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 ## Summary
 
 The following repository stores a complete analysis pipeline using Cell Painting data to predict readouts from several cell health assays.
