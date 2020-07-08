@@ -27,6 +27,18 @@
 
 ## Summary
 
+Cell health can be altered by genetic and chemical perturbations.
+An increased understanding of these perturbation mechanisms is directly relevant for drug discovery and personalized medicine.
+Here and in an accompanying paper, we present a novel cell imaging assay to measure 70 different aspects of cell health, such as proliferation, apoptosis, and cell cycle stalling.
+However, this assay requires expensive reagents and does not scale well.
+Therefore, we also developed a machine learning solution to predict cell health readouts directly from the inexpensive and high-throughput Cell Painting imaging assay.
+We predict many cell health indicators with high performance, but other readouts could not be predicted.
+We validated our predictions by using orthogonal readouts and by applying the models to a large set of 1,500 drugs from the Drug Repurposing Hub.
+Cell health predictions for drugs can be browsed at https://broad.io/cell-health-app.
+We confirmed mitotic arrest and reactive oxygen species phenotypes via PLK and proteasome inhibition, respectively.
+In the future, we can use this approach to determine the cell health consequences of any perturbation in cells.
+We conducted this project using open science principles with open data and open source code.
+
 The following repository stores a complete analysis pipeline using Cell Painting data to predict readouts from several cell health assays.
 
 We first developed a customized microscopy assay we call "Cell Health".
@@ -36,12 +48,12 @@ Together, these two panels use reagents which mark different cell health phenoty
 | Assay/Dye | Phenotype | Panel |
 | :-- | :-------- | :---------- |
 | Caspase 3/7 | Apoptosis | Viability |
-| DRAQ7 | Cell Death | Viability |
-| CellROX | Reactive Oxygen Species | Viability
-| EdU | Cellular Profileration | Cell Cycle |
-| Hoechst | DNA Content | Cell Cycle |
-| pH3 | Cell Division | Cell Cycle |
-| gH2Ax | DNA Damage | Cell Cycle |
+| DRAQ7 | Cell death | Viability |
+| CellROX | Reactive oxygen species | Viability
+| EdU | Cellular profileration | Cell cycle |
+| Hoechst | DNA content | Cell cycle |
+| pH3 | Cell division | Cell cycle |
+| gH2Ax | DNA damage | Cell cycle |
 
 We hypothesized that we can use unbiased and high dimensional Cell Painting profiles to predict the readouts of each individual assay.
 
@@ -71,10 +83,10 @@ All data are publicly available.
 | Data | Level | Location | Notes |
 | :---- | :---- | :------ | :---- |
 | Images | 1 | Image Data Resource ([IDR](https://idr.openmicroscopy.org/)) | Accession `idr0080` |
-| SQLite File (single cell profiles ) | 2 | NIH Figshare https://doi.org/10.35092/yhjc.9995672 | `0.download-data/data` (see `0.download-data/README.md`)|
-| Aggregated Profiles with Well Information (metadata) | 3 | [1.generate-profiles/data/profiles](1.generate-profiles/data/profiles) | suffix: `<PLATE>_augmented.csv.gz` |
-| Normalized Aggregated Profiles with Metadata | 4a | [1.generate-profiles/data/profiles](1.generate-profiles/data/profiles) | suffix: `<PLATE>_normalized.csv.gz` |
-| Normalized and Feature Selected Aggregated Profiles with Metadata | 4b | [1.generate-profiles/data/profiles](1.generate-profiles/data/profiles) | suffix: `<PLATE>_normalized_feature_select.csv.gz` |
+| SQLite file (single cell profiles ) | 2 | NIH Figshare https://doi.org/10.35092/yhjc.9995672 | `0.download-data/data` (see `0.download-data/README.md`)|
+| Aggregated profiles with well information (metadata) | 3 | [1.generate-profiles/data/profiles](1.generate-profiles/data/profiles) | suffix: `<PLATE>_augmented.csv.gz` |
+| Normalized aggregated profiles with metadata | 4a | [1.generate-profiles/data/profiles](1.generate-profiles/data/profiles) | suffix: `<PLATE>_normalized.csv.gz` |
+| Normalized and feature selected aggregated profiles with metadata | 4b | [1.generate-profiles/data/profiles](1.generate-profiles/data/profiles) | suffix: `<PLATE>_normalized_feature_select.csv.gz` |
 | Consensus profiles | 5 | [1.generate-profiles/data/consensus](1.generate-profiles/data/consensus) | Perturbation profiles created by summarizing replicates |
 
 #### Cell Health
@@ -98,9 +110,9 @@ The cell lines included A549, ES2, and HCC44.
 
 | Cell Line | Primary Site |
 | :-------- | :----------- |
-| A549 | Lung Cancer |
-| ES2 | Ovarian Cancer |
-| HCC44 | Lung Cancer |
+| A549 | Lung cancer |
+| ES2 | Ovarian cancer |
+| HCC44 | Lung cancer |
 
 About 60% of all CRISPR guides were reproducible.
 This is consistent with previous genetic perturbations ([Rohban et al. 2017](https://doi.org/10.7554/eLife.24060)).
