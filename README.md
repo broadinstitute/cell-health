@@ -27,6 +27,18 @@
 
 ## Summary
 
+Cell health can be altered by genetic and chemical perturbations.
+An increased understanding of these perturbation mechanisms is directly relevant for drug discovery and personalized medicine.
+Here and in an accompanying paper, we present a novel cell imaging assay to measure 70 different aspects of cell health, such as proliferation, apoptosis, and cell cycle stalling.
+However, this assay requires expensive reagents and does not scale well.
+Therefore, we also developed a machine learning solution to predict cell health readouts directly from the inexpensive and high-throughput Cell Painting imaging assay.
+We predict many cell health indicators with high performance, but other readouts could not be predicted.
+We validated our predictions by using orthogonal readouts and by applying the models to a large set of 1,500 drugs from the Drug Repurposing Hub.
+Cell health predictions for drugs can be browsed at https://broad.io/cell-health-app.
+We confirmed mitotic arrest and reactive oxygen species phenotypes via PLK and proteasome inhibition, respectively.
+In the future, we can use this approach to determine the cell health consequences of any perturbation in cells.
+We conducted this project using open science principles with open data and open source code.
+
 The following repository stores a complete analysis pipeline using Cell Painting data to predict readouts from several cell health assays.
 
 We first developed a customized microscopy assay we call "Cell Health".
