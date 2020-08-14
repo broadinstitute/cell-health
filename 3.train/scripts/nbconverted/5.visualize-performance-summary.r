@@ -286,6 +286,51 @@ file <- file.path(
 )
 ggsave(file, dpi = 300, width = 6, height = 4.25)
 
+r_two_df$measurement_ordered <- dplyr::recode_factor(r_two_df$measurement, !!!measurement_labels)
+r_two_df$measurement_ordered <- dplyr::recode_factor(
+    r_two_df$measurement_ordered, `Reactive Oxygen Species` = "ROS", `Infection Efficiency` = "Inf. Efficiency"
+)
+
+assay_measurement_order <- r_two_df %>%
+    dplyr::group_by(measurement_ordered) %>%
+    dplyr::mutate(median_measure = median(test)) %>%
+    dplyr::select(measurement_ordered, median_measure) %>%
+    dplyr::distinct() %>%
+    dplyr::arrange(desc(median_measure)) %>%
+    dplyr::pull(measurement_ordered)
+
+r_two_df$measurement_ordered <- factor(r_two_df$measurement_ordered, levels = assay_measurement_order)
+
+measurement_boxplot_gg <- ggplot(r_two_df,
+       aes(y = test, x = measurement_ordered)) +
+    geom_boxplot(fill = "grey",
+                 alpha = 0.72,
+                 size = 0.5,
+                 color = "black",
+                 outlier.alpha = 0) +
+ geom_jitter(fill = "black",
+             alpha = 0.72,
+             size = 1.5,
+             shape = 21,
+             width = 0.1,
+             color = "black") +
+    ylab("Model Performance\nTest Set - R squared") +
+    xlab("") +
+    geom_hline(yintercept = 0,
+               alpha = 0.5, 
+               linetype = "dashed") +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 8),
+          legend.position = "none")
+
+file <- file.path(
+    figure_dir,
+    paste0("performance_summary_rsquared_measurement_boxplot_", consensus, ".png")
+)
+ggsave(file, dpi = 300, width = 6, height = 3.5)
+
+measurement_boxplot_gg
+
 assay_scatter_gg <- ggplot(r_two_df,
        aes(y = train, x = test)) +
     geom_point(aes(fill = assay),
@@ -311,21 +356,7 @@ assay_scatter_gg <- ggplot(r_two_df,
                       labels = dye_labels) +
     theme_bw()
 
-r_two_df$assay_readable <- dplyr::recode_factor(
-    r_two_df$assay,
-    "hoechst" = 'Hoechst',
-    "edu" = 'EdU',
-    "hoechst_edu" = 'Hoechst + EdU',
-    "hoechst_edu_ph3" = 'Hoechst + EdU + PH3',
-    "hoechst_gh2ax" = 'Hoechst + gH2AX',
-    "hoechst_edu_gh2ax" = 'Hoechst + EdU + gH2AX',
-    "hoechst_edu_ph3_gh2ax" = 'Hoechst + EdU + PH3 + gH2AX',
-    "draq" = 'DRAQ7',
-    "draq_caspase" = 'DRAQ7 + Caspase',
-    "cell_rox" = 'CellROX',
-    "dpc" = 'DPC (Shape)',
-    "qc" = 'Infection Efficiency'
-)
+r_two_df$assay_readable <- dplyr::recode_factor(r_two_df$assay, !!!dye_labels)
 
 assay_performance_order <- r_two_df %>%
     dplyr::group_by(assay_readable) %>%
