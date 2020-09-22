@@ -12,7 +12,7 @@ rank_df <- data[["rank"]]
 shinyUI(
   fluidPage(theme = "bootstrap.min.css",
     # Application title
-    titlePanel("Drug Repurposing Hub Cell Health Predictions"),
+    titlePanel("Predicting Cell Health in the Drug Repurposing Hub"),
     
     # Setup multiple tabs
     tabsetPanel(
@@ -23,8 +23,12 @@ shinyUI(
           
           sidebarPanel(
             p(strong("Getting Started:", style="color:red"),
-              a("Documentation" ,href="https://github.com/broadinstitute/cell-health/tree/master/4.apply/repurposing_cellhealth_shiny/")),
-            helpText("Select compounds and cell health models. The points represent drug perturbation Consensus Profiles."),
+              a("Documentation", href="https://github.com/broadinstitute/cell-health/tree/master/4.apply/repurposing_cellhealth_shiny/")),
+            helpText("Select the data to visualize. If 'Drugs', the points are cell health predictions. If 'CRISPR', then the points are ground truth measurements."),
+            selectInput("data_origin",
+                        label = "Select Perturbations to Visualize",
+                        choices = c("Drugs", "CRISPR"),
+                        selected = "Drugs"),
             selectInput("scatter_type",
                         label = "Select Scatter Plot Type",
                         choices = c("Cell Health", "UMAP"),

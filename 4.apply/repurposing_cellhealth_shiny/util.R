@@ -34,6 +34,18 @@ dye_labels <- c(
   "qc" = "CRISPR Efficiency"
 )
 
+cell_line_labels <- c(
+  "A549" = "A549",
+  "ES2" = "ES2",
+  "HCC44" = "HCC44"
+)
+
+cell_line_colors <- c(
+  "A549" = "#861613",
+  "ES2" = "#1CADA8",
+  "HCC44" = "#2A364D"
+)
+
 get_target <- function(rank, model) {
   target <- rank %>%
     dplyr::filter(target == !!model) %>%
@@ -268,6 +280,11 @@ load_data <- function(pos_controls=c("bortezomib", "MG-132"), path=".") {
   dmso_df$pert_iname <- "DMSO"
   pos_controls_df <- moa_df %>% dplyr::filter(pert_iname %in% pos_controls)
 
+  # Load CRISPR readouts
+  crispr_file <- file.path("data", "profile_umap_with_cell_health_modz.tsv")
+  crispr_df <- readr::read_tsv(crispr_file, col_types = readr::cols())
+  
+  # Load ranking file
   rank_file <- file.path(path, "data", "A549_ranked_models_regression_modz.tsv")
   rank_df <- readr::read_tsv(rank_file, col_types = readr::cols()) %>%
     dplyr::filter(shuffle_false > 0)
@@ -300,7 +317,50 @@ load_data <- function(pos_controls=c("bortezomib", "MG-132"), path=".") {
       "moa" = moa_df,
       "pos_control" = pos_controls_df,
       "dmso" = dmso_df,
-      "dose" = dose_df
+      "dose" = dose_df,
+      "crispr" = crispr_df
     )
   )
+}
+
+build_crispr_scatter <- function(
+  crispr_df,
+  model_y,
+  target_y,
+  model_x = "None",
+  target_x = "None",
+  scatter_type = "UMAP"
+  ) {
+  
+  if (scatter_type == "UMAP") {
+    scatter_gg <- ggplot(crispr_df, aes(x = umap_x, y = umap_y)) +
+      geom_point(aes_string(color = model_y),
+                 size = 2,
+                 pch = 16,
+                 alpha = 0.6) +
+      xlab("UMAP X") +
+      ylab("UMAP Y") +
+      theme_bw() +
+      ggtitle(paste(target_y, "\nClick and Drag to Select Points!")) +
+      scale_color_viridis_c(name = "") 
+  } else {
+    scatter_gg <- ggplot(crispr_df,
+                         aes_string(x = model_x,
+                                    y = model_y)) +
+      xlab(paste("Cell Health Ground Truth:\n", target_x)) +
+      ylab(paste("Cell Health Ground Truth:\n", target_y)) +
+      ggtitle("Click and Drag to Select Points!") +
+      geom_point(aes(color = Metadata_cell_line),
+                 size = 2,
+                 pch = 16,
+                 alpha = 0.6) +
+      theme_bw() +
+      ggtitle(paste(target_y, "\nClick and Drag to Select Points!")) +
+      scale_color_manual(
+        name = "Cell Line",
+        values = cell_line_colors,
+        labels = cell_line_labels
+      ) 
+  }
+
 }
