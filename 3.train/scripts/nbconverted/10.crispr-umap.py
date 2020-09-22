@@ -31,12 +31,13 @@ consensus = "modz"
 data_dir = pathlib.Path("..", "1.generate-profiles", "data", "consensus")
 cell_process_dir = pathlib.Path("..", "1.generate-profiles", "tables")
 results_dir = pathlib.Path("results")
+shiny_app_dir = pathlib.Path("..", "4.apply", "repurposing_cellhealth_shiny", "data")
 
 profile_file = pathlib.Path(data_dir, f"cell_painting_{consensus}.tsv.gz")
 cell_health_file = pathlib.Path(data_dir, f"cell_health_{consensus}.tsv.gz")
 
 cell_process_file = pathlib.Path(cell_process_dir, "supplementary_table_1_perturbation_details.tsv")
-output_file = pathlib.Path(results_dir, f"profile_umap_with_cell_health_{consensus}.tsv")
+output_file = pathlib.Path(shiny_app_dir, f"profile_umap_with_cell_health_{consensus}.tsv")
 
 
 # In[4]:

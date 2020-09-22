@@ -6,6 +6,7 @@ source(file.path("scripts", "assay_themes.R"))
 
 consensus <- "modz"
 results_dir <- file.path("results")
+shiny_app_dir <- file.path("..", "4.apply", "repurposing_cellhealth_shiny", "data")
 
 output_figure_file <- file.path(
     "figures", "summary", "crispr_umap_supplementary_figure.png"
@@ -15,7 +16,7 @@ point_alpha <- 0.7
 point_size <- 0.8
 
 umap_file <- file.path(
-    results_dir, paste0("profile_umap_with_cell_health_", consensus, ".tsv")
+    shiny_app_dir, paste0("profile_umap_with_cell_health_", consensus, ".tsv")
 )
 umap_df <- readr::read_tsv(umap_file, col_types = readr::cols())
 
