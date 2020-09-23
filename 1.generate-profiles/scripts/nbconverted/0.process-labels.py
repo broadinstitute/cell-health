@@ -274,18 +274,28 @@ all_df.to_csv(file, index=False, sep='\t')
 
 # Output only CRISPR infection efficiency
 use_cols = [
-    "cell_id", "guide", "plate_name", "well_col",
-    "cc_infection_percentage", "vb_infection_percentage"
+    "cell_id", "guide", "plate_name", "well_col", "cc_infection_percentage"
 ]
 
 file = os.path.join("data", "labels", "crispr_infection_efficiency_data.tsv")
-eff_df = all_df.loc[:, use_cols]
+eff_df = (
+    all_df
+    .loc[:, use_cols]
+    .rename({"cc_infection_percentage": "ctg_crispr_infection_efficiency"}, axis="columns")
+)
 eff_df.to_csv(file, index=False, sep='\t')
+
+
+# In[13]:
+
+
+eff_df.ctg_crispr_infection_efficiency = eff_df.ctg_crispr_infection_efficiency.astype(float)
+eff_df.query("guide != 'EMPTY'").groupby("cell_id")["ctg_crispr_infection_efficiency"].mean()
 
 
 # ## Track Missingness in the Data
 
-# In[13]:
+# In[14]:
 
 
 all_df.isna().sum().sort_values(ascending=False).head(10)
@@ -293,7 +303,7 @@ all_df.isna().sum().sort_values(ascending=False).head(10)
 
 # ### Missingness across features
 
-# In[14]:
+# In[15]:
 
 
 # Missing data across features
@@ -302,7 +312,7 @@ all_df.isna().sum().hist(bins=20)
 
 # ### Missingness across wells
 
-# In[15]:
+# In[16]:
 
 
 # Some wells have disproportionate amount of missing data
@@ -313,7 +323,7 @@ all_df.isna().sum(axis='columns').hist(bins=20)
 # 
 # Note that this mapping was output and then manually edited by Gregory Way and Maria Alimova. The updated file is named `data/labels/feature_mapping_annotated.csv`.
 
-# In[16]:
+# In[17]:
 
 
 file = os.path.join("data", "labels", "feature_mapping.tsv")
@@ -342,7 +352,7 @@ feature_df.head(2)
 
 # ## Count the Number of Guides for Each Measurement
 
-# In[17]:
+# In[18]:
 
 
 guide_count_df = (
@@ -373,13 +383,13 @@ guide_count_df.to_csv(file, sep='\t', index=False)
 guide_count_df.head(2)
 
 
-# In[18]:
+# In[19]:
 
 
 pd.crosstab(guide_count_df.gene, guide_count_df.cell_id).head()
 
 
-# In[19]:
+# In[20]:
 
 
 len(guide_count_df.gene.unique())
