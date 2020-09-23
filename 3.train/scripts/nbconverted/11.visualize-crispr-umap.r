@@ -14,6 +14,14 @@ output_figure_file <- file.path(
 
 point_alpha <- 0.7
 point_size <- 0.8
+axis_text_size <- 7.5
+legend_text_size <- 7
+
+text_theme <- theme(
+    axis.title = element_text(size = axis_text_size),
+    legend.title = element_text(size = legend_text_size),
+    legend.text = element_text(size = legend_text_size)
+)
 
 umap_file <- file.path(
     shiny_app_dir, paste0("profile_umap_with_cell_health_", consensus, ".tsv")
@@ -32,7 +40,9 @@ cell_line_gg <- ggplot(umap_df, aes(x = umap_x, y = umap_y)) +
         values = cell_line_colors,
         labels = cell_line_labels
     ) +
-    theme_bw()
+    theme_bw() +
+    text_theme
+
 
 cell_line_gg
 
@@ -41,6 +51,8 @@ g1_count_gg <- ggplot(umap_df, aes(x = umap_x, y = umap_y)) +
     xlab("UMAP X") +
     ylab("UMAP Y") +
     theme_bw() +
+    theme(axis.text = element_text(size = axis_text_size),
+          legend.text = element_text(size = legend_text_size)) +
     scale_color_viridis_c(
         name = "G1 Cell\nCount",
         values = scales::rescale(c(1, 0.8, 0.2))
@@ -53,6 +65,8 @@ ros_gg <- ggplot(umap_df, aes(x = umap_x, y = umap_y)) +
     xlab("UMAP X") +
     ylab("UMAP Y") +
     theme_bw() +
+    theme(axis.text = element_text(size = axis_text_size),
+          legend.text = element_text(size = legend_text_size)) +
     scale_color_viridis_c(
         name = "Reactive\nOxygen\nSpecies",
         values = scales::rescale(c(10, 3.5, 2))
@@ -65,6 +79,8 @@ scatter_gg <- ggplot(umap_df, aes(x = cc_g1_n_objects, y = vb_ros_mean)) +
     xlab("G1 Cell Count") +
     ylab("Reactive Oxygen Species") +
     theme_bw() +
+    theme(axis.text = element_text(size = axis_text_size),
+          legend.text = element_text(size = legend_text_size)) +
     scale_color_manual(
         name = "Cell Line",
         values = cell_line_colors,
