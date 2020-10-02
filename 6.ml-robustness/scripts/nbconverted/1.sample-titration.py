@@ -16,9 +16,9 @@
 # 5. Repeat step 1 (different random shuffling 100 times)
 # 6. For each training iteration, collect the test set R2 performance
 # 
-# In total, this results in 70 (models) x 51 (different sample sets) x 15 (different iterations) = 53,550 different model initializations
+# In total, this results in 70 (models) x 25 (different sample sets) x 3 (different iterations) = 5,640 different model initializations
 
-# In[1]:
+# In[9]:
 
 
 import sys
@@ -42,13 +42,13 @@ data_dir = pathlib.Path("../3.train/data")
 output_dir = pathlib.Path("results")
 output_dir.mkdir(exist_ok=True)
 output_file = pathlib.Path(f"{output_dir}/sample_titration_robustness_results_{consensus}.tsv.gz")
-output_dropped_file = pathlib.Path(f"{output_dir}/sample_titration_samples_dropped_{consensus}.tsv.gz")
+output_dropped_file = pathlib.Path(f"{output_dir}/sample_titration_samples_dropped_small_{consensus}.tsv.gz")
 
-num_iterations = 15
-num_sample_titration = 50
+num_iterations = 3
+num_sample_titration = 25
 
 
-# In[ ]:
+# In[3]:
 
 
 # Set ML constants
@@ -67,7 +67,7 @@ estimator = Pipeline(
         "regress",
         ElasticNet(
             random_state=42,
-            max_iter=2000,
+            max_iter=50,
             tol=1e-3
         )
         
@@ -80,7 +80,7 @@ decision_function = False
 model_type = "Regression"
 
 
-# In[ ]:
+# In[4]:
 
 
 # Load data
@@ -93,7 +93,7 @@ cell_health_targets = y_train_df.columns.tolist()
 assert len(cell_health_targets) == 70
 
 
-# In[ ]:
+# In[5]:
 
 
 regression_results_list = []
@@ -170,7 +170,7 @@ for iteration in range(0, num_iterations):
             regression_results_list.append(rtwo_df)
 
 
-# In[ ]:
+# In[6]:
 
 
 # Compile the full regression results
@@ -180,7 +180,7 @@ print(full_regression_results_df.shape)
 full_regression_results_df.head(3)
 
 
-# In[ ]:
+# In[7]:
 
 
 # Compile the samples dropped
@@ -194,7 +194,7 @@ print(samples_dropped_df.shape)
 samples_dropped_df.head()
 
 
-# In[ ]:
+# In[8]:
 
 
 # Save all results
