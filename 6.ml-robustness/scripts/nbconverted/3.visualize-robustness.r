@@ -3,6 +3,9 @@ suppressPackageStartupMessages(library(ggplot2))
 
 source(file.path("..", "3.train", "scripts", "assay_themes.R"))
 
+# Set seed
+set.seed(123)
+
 # Set constants
 consensus <- "modz"
 data_dir <- "results"
@@ -247,7 +250,27 @@ feature_df <- feature_df %>% dplyr::left_join(
     dplyr::mutate(feature_group_difference = value_original - value,
                   feature_group_name = paste0(feature_type_dropped, " (n = ", num_dropped, ")"))
 
+feature_order <- feature_df %>%
+    dplyr::group_by(readable_name) %>%
+    dplyr::mutate(median_measure = mean(feature_group_difference)) %>%
+    dplyr::select(readable_name, median_measure) %>%
+    dplyr::distinct() %>%
+    dplyr::ungroup() %>%
+    dplyr::arrange(median_measure) %>%
+    dplyr::pull(readable_name)
+
+feature_df$readable_name <- factor(
+    feature_df$readable_name, levels = feature_order
+)
+
 head(feature_df, 2)
+
+feature_theme <- theme(
+    axis.title = element_text(size = 7),
+    axis.text.y = element_text(size = 6),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 9)
+)
 
 panel_a_gg <- ggplot(
         feature_df %>% dplyr::filter(feature_category == "feature_group"),
@@ -256,6 +279,7 @@ panel_a_gg <- ggplot(
     coord_flip() +
     geom_boxplot(outlier.size = 0.5) +
     theme_bw() +
+    feature_theme +
     ylim(c(
         min(feature_df$feature_group_difference) - 0.1,
         max(feature_df$feature_group_difference + 0.1)
@@ -271,6 +295,7 @@ panel_b_gg <- ggplot(
     coord_flip() +
     geom_boxplot(outlier.size = 0.5) +
     theme_bw() +
+    feature_theme +
     ylim(c(
         min(feature_df$feature_group_difference) - 0.1,
         max(feature_df$feature_group_difference + 0.1)
@@ -286,6 +311,7 @@ panel_c_gg <- ggplot(
     coord_flip() +
     geom_boxplot(outlier.size = 0.5) +
     theme_bw() +
+    feature_theme +
     geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
     ylim(c(
         min(feature_df$feature_group_difference) - 0.1,
@@ -294,24 +320,43 @@ panel_c_gg <- ggplot(
     xlab("Compartment") +
     ylab("Performance difference\n(Original - Compartment dropped)")
 
-right_panel <- cowplot::plot_grid(
+panel_d_gg <- ggplot(feature_df,
+                     aes(x = readable_name,
+                         y = feature_group_difference,
+                         fill = measurement)) +
+    geom_boxplot(outlier.size = 0.5) +
+    coord_flip() +
+    scale_fill_manual(
+        name = "Measurement",
+        values = measurement_colors,
+        labels = measurement_labels
+    ) +
+    theme_bw() +
+    feature_theme +
+    geom_hline(yintercept=0, color = "red", linetype = "dashed") +
+    ylab("Performance difference\n(Original - Feature group dropped)") +
+    xlab("")
+
+left_panel <- cowplot::plot_grid(
+    panel_a_gg,
     panel_b_gg,
     panel_c_gg,
-    nrow = 2,
-    align = "v",
+    nrow = 3,
+    align = "hv",
     axis = "l",
-    rel_heights = c(0.8, 1),
-    labels = c("b", "c")
+    rel_heights = c(1, 0.75, 0.55),
+    labels = c("a", "b", "c")
 )
 
 feature_removal_gg <- cowplot::plot_grid(
-    panel_a_gg,
-    right_panel,
+    left_panel,
+    panel_d_gg,
     ncol = 2,
-    align = "h",
-    axis = "l",
-    labels = c("a", "")
+    align = "v",
+    axis = "b",
+    rel_widths = c(0.5, 1),
+    labels = c("", "d")
 )
 
-cowplot::save_plot(feature_removal_figure_file, feature_removal_gg, base_width = 8, base_height = 6)
+cowplot::save_plot(feature_removal_figure_file, feature_removal_gg, base_width = 9, base_height = 6)
 feature_removal_gg
