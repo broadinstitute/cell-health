@@ -29,6 +29,7 @@
 
 import sys
 import pathlib
+import numpy as np
 import pandas as pd
 
 from sklearn.linear_model import SGDClassifier, ElasticNet
@@ -76,6 +77,13 @@ shuffle_types = [True, False]
 # In[4]:
 
 
+# Set seed
+np.random.seed(123)
+
+
+# In[5]:
+
+
 # Set ML constants
 # We will optimize each model independently
 
@@ -106,7 +114,7 @@ decision_function = False
 model_type = "Regression"
 
 
-# In[5]:
+# In[6]:
 
 
 # Load X data
@@ -117,7 +125,7 @@ print(x_df.shape)
 x_df.head(2)
 
 
-# In[6]:
+# In[7]:
 
 
 # Load Y data
@@ -132,7 +140,7 @@ print(y_df.shape)
 y_df.head(2)
 
 
-# In[7]:
+# In[8]:
 
 
 regression_results_list = []
@@ -187,7 +195,7 @@ for cell_line in cell_lines:
             regression_results_list.append(pd.concat([metric_rtwo, metric_rtwo_test], axis='rows'))
 
 
-# In[8]:
+# In[9]:
 
 
 full_regression_results_df = pd.concat(regression_results_list).reset_index(drop=True)
@@ -196,7 +204,7 @@ print(full_regression_results_df.shape)
 full_regression_results_df.head(3)
 
 
-# In[9]:
+# In[10]:
 
 
 # Save all results
