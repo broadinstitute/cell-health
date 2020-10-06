@@ -83,9 +83,13 @@ cell_line_df <- cell_line_df %>%
 
 cell_line_df$measurement <- dplyr::recode(cell_line_df$measurement, "metadata" = "other")
 
-cell_line_df$measurement_ordered <- dplyr::recode_factor(cell_line_df$measurement, !!!measurement_labels)
 cell_line_df$measurement_ordered <- dplyr::recode_factor(
-    cell_line_df$measurement_ordered, `Reactive Oxygen Species` = "ROS", `Infection Efficiency` = "Inf. Efficiency"
+    cell_line_df$measurement, !!!measurement_labels
+)
+cell_line_df$measurement_ordered <- dplyr::recode_factor(
+    cell_line_df$measurement_ordered,
+    `Reactive Oxygen Species` = "ROS",
+    `Infection Efficiency` = "Inf. Efficiency"
 )
 
 assay_measurement_order <- cell_line_df %>%
@@ -106,7 +110,7 @@ cell_line_df$cell_line <- cell_line_df$cell_line %>%
         "A549" = "A549 (Holdout)",
         "ES2" = "ES2 (Holdout)",
         "HCC44" = "HCC44 (Holdout)",
-        "all" = "Orig. test set",
+        "all" = "Original test set",
     )
 
 cell_line_gg <- ggplot(cell_line_df,
@@ -140,7 +144,7 @@ cell_line_gg <- ggplot(cell_line_df,
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
 
-ggsave(cell_line_figure_file, cell_line_gg, dpi = 500, width = 7, height = 5)
+ggsave(cell_line_figure_file, cell_line_gg, dpi = 500, width = 8, height = 7)
 cell_line_gg
 
 # Append original results to sample titration
@@ -318,7 +322,7 @@ panel_a_gg <- ggplot(
     )) +
     geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
     xlab("Feature group\ndropped") +
-    ylab("Performance difference\n(Original - feature group dropped)")
+    ylab("Performance difference\n(Original - dropped)")
 
 panel_b_gg <- ggplot(
         feature_df %>% dplyr::filter(feature_category == "channel"),
@@ -334,7 +338,7 @@ panel_b_gg <- ggplot(
     )) +
     geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
     xlab("Channel\ndropped") +
-    ylab("Performance difference\n(Original - channel dropped)")
+    ylab("Performance difference\n(Original - dropped)")
 
 panel_c_gg <- ggplot(
         feature_df %>% dplyr::filter(feature_category == "compartment"),
@@ -350,7 +354,7 @@ panel_c_gg <- ggplot(
         max(feature_df$feature_group_difference + 0.1)
     )) +
     xlab("Compartment\ndropped") +
-    ylab("Performance difference\n(Original - compartment dropped)")
+    ylab("Performance difference\n(Original - dropped)")
 
 panel_d_gg <- ggplot(feature_df,
                      aes(x = readable_name,
@@ -391,6 +395,6 @@ feature_removal_gg <- cowplot::plot_grid(
 )
 
 cowplot::save_plot(
-    feature_removal_figure_file, feature_removal_gg, base_width = 9, base_height = 6
+    feature_removal_figure_file, feature_removal_gg, base_width = 9, base_height = 7
 )
 feature_removal_gg
