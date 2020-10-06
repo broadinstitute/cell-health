@@ -62,14 +62,24 @@ original_df$shuffle <- original_df$shuffle %>%
 label_df <- readr::read_csv(label_file, col_types = readr::cols())
 
 cell_line_df <- cell_line_df %>%
-    dplyr::filter(metric == "r_two", data_fit == "test") %>%
-    dplyr::left_join(label_df, by = c("target" = "id")) 
+    dplyr::filter(metric == "r_two", data_fit == "test") 
 
 cell_line_df$shuffle <- cell_line_df$shuffle %>%
     dplyr::recode_factor(
         "shuffle_false" = "Real",
         "shuffle_true" = "Permuted"
     )
+
+cell_line_df <- cell_line_df %>%
+    dplyr::bind_rows(
+        original_df %>%
+            dplyr::filter(metric == "r_two",
+                          y_transform == "raw",
+                          cell_line == "all",
+                          data_fit == "test")
+    ) %>%
+    dplyr::left_join(label_df, by = c("target" = "id")) %>%
+    dplyr::mutate(truncated_value = ifelse(value < -1, -1, value))
 
 cell_line_df$measurement <- dplyr::recode(cell_line_df$measurement, "metadata" = "other")
 
@@ -91,8 +101,16 @@ cell_line_df$measurement_ordered <- factor(
     cell_line_df$measurement_ordered, levels = assay_measurement_order
 )
 
+cell_line_df$cell_line <- cell_line_df$cell_line %>%
+    dplyr::recode_factor(
+        "A549" = "A549 (Holdout)",
+        "ES2" = "ES2 (Holdout)",
+        "HCC44" = "HCC44 (Holdout)",
+        "all" = "Orig. test set",
+    )
+
 cell_line_gg <- ggplot(cell_line_df,
-       aes(y = value, x = measurement_ordered)) +
+       aes(y = truncated_value, x = measurement_ordered)) +
     geom_boxplot(fill = "grey",
                  alpha = 0.72,
                  size = 0.5,
@@ -104,12 +122,18 @@ cell_line_gg <- ggplot(cell_line_df,
                  shape = 21,
                  width = 0.1,
                  color = "black") +
+    scale_y_continuous(
+        limits = c(-1, 1),
+        breaks = c(-1.0, -0.5, 0, 0.5, 1.0),
+        labels = c("\u2264 -1.0", "-0.5", "0", "0.5", "1.0")
+        ) +
     ylab(bquote("Test Set Model Performance ("~R^2~")")) +
     xlab("") +
     geom_hline(yintercept = 0,
                alpha = 0.5, 
                linetype = "dashed") +
-    facet_grid(cell_line~shuffle, scales = "free_y") +
+    facet_grid(cell_line~shuffle,
+               scales = "free_y") +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 8),
           legend.position = "none",
@@ -120,16 +144,21 @@ ggsave(cell_line_figure_file, cell_line_gg, dpi = 500, width = 7, height = 5)
 cell_line_gg
 
 # Append original results to sample titration
-sample_df <- sample_df %>% dplyr::bind_rows(
-    original_df %>%
-        dplyr::filter(shuffle == "shuffle_false", cell_line == "all") %>%
-        dplyr::mutate(num_samples_dropped = 0, iteration = 0)
-) %>%
+sample_df <- sample_df %>%
+    dplyr::filter(
+        metric == "r_two", shuffle == "shuffle_false", cell_line == "all", data_fit == "test"
+    ) %>%
+    dplyr::bind_rows(
+        original_df %>%
+            dplyr::filter(
+                metric == "r_two", shuffle == "Real", cell_line == "all", data_fit == "test"
+            ) %>%
+            dplyr::mutate(num_samples_dropped = 0, iteration = 0)
+        ) %>%
     dplyr::left_join(label_df, by = c("target" = "id")) %>%
     dplyr::group_by(target, num_samples_dropped) %>%
     dplyr::mutate(mean_value = mean(value)) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(data_fit == "test", metric == "r_two") %>%
     dplyr::arrange(mean_value) %>%
     dplyr::distinct(target, num_samples_dropped, mean_value, readable_name, measurement)
 
@@ -183,8 +212,11 @@ sample_gg <- (
         theme_bw()
     )
 
-avg_drop_gg <- ggplot(avg_results_full_df,
-                   aes(x = num_samples_dropped, y = mean_total_estimate)) +
+avg_drop_gg <- ggplot(
+    avg_results_full_df,
+    aes(x = num_samples_dropped,
+        y = mean_total_estimate)
+    ) +
     geom_point(
         data = ,
         color = "black",
@@ -285,8 +317,8 @@ panel_a_gg <- ggplot(
         max(feature_df$feature_group_difference + 0.1)
     )) +
     geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
-    xlab("Feature Group") +
-    ylab("Performance difference\n(Original - Feature group dropped)")
+    xlab("Feature group\ndropped") +
+    ylab("Performance difference\n(Original - feature group dropped)")
 
 panel_b_gg <- ggplot(
         feature_df %>% dplyr::filter(feature_category == "channel"),
@@ -301,8 +333,8 @@ panel_b_gg <- ggplot(
         max(feature_df$feature_group_difference + 0.1)
     )) +
     geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
-    xlab("Channel") +
-    ylab("Performance difference\n(Original - Channel dropped)")
+    xlab("Channel\ndropped") +
+    ylab("Performance difference\n(Original - channel dropped)")
 
 panel_c_gg <- ggplot(
         feature_df %>% dplyr::filter(feature_category == "compartment"),
@@ -317,8 +349,8 @@ panel_c_gg <- ggplot(
         min(feature_df$feature_group_difference) - 0.1,
         max(feature_df$feature_group_difference + 0.1)
     )) +
-    xlab("Compartment") +
-    ylab("Performance difference\n(Original - Compartment dropped)")
+    xlab("Compartment\ndropped") +
+    ylab("Performance difference\n(Original - compartment dropped)")
 
 panel_d_gg <- ggplot(feature_df,
                      aes(x = readable_name,
@@ -334,7 +366,7 @@ panel_d_gg <- ggplot(feature_df,
     theme_bw() +
     feature_theme +
     geom_hline(yintercept=0, color = "red", linetype = "dashed") +
-    ylab("Performance difference\n(Original - Feature group dropped)") +
+    ylab("Performance difference\n(Original - dropped)") +
     xlab("")
 
 left_panel <- cowplot::plot_grid(
@@ -358,5 +390,7 @@ feature_removal_gg <- cowplot::plot_grid(
     labels = c("", "d")
 )
 
-cowplot::save_plot(feature_removal_figure_file, feature_removal_gg, base_width = 9, base_height = 6)
+cowplot::save_plot(
+    feature_removal_figure_file, feature_removal_gg, base_width = 9, base_height = 6
+)
 feature_removal_gg
