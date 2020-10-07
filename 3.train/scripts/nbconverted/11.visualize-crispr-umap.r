@@ -36,7 +36,7 @@ cell_line_gg <- ggplot(umap_df, aes(x = umap_x, y = umap_y)) +
     xlab("UMAP X") +
     ylab("UMAP Y") +
     scale_color_manual(
-        name = "Cell Line",
+        name = "Cell line",
         values = cell_line_colors,
         labels = cell_line_labels
     ) +
@@ -51,10 +51,9 @@ g1_count_gg <- ggplot(umap_df, aes(x = umap_x, y = umap_y)) +
     xlab("UMAP X") +
     ylab("UMAP Y") +
     theme_bw() +
-    theme(axis.text = element_text(size = axis_text_size),
-          legend.text = element_text(size = legend_text_size)) +
+    text_theme +
     scale_color_viridis_c(
-        name = "G1 Cell\nCount",
+        name = "G1 cell count\n(ground truth)",
         values = scales::rescale(c(1, 0.8, 0.2))
     )
 
@@ -65,10 +64,9 @@ ros_gg <- ggplot(umap_df, aes(x = umap_x, y = umap_y)) +
     xlab("UMAP X") +
     ylab("UMAP Y") +
     theme_bw() +
-    theme(axis.text = element_text(size = axis_text_size),
-          legend.text = element_text(size = legend_text_size)) +
+    text_theme +
     scale_color_viridis_c(
-        name = "Reactive\nOxygen\nSpecies",
+        name = "Reactive\noxygen\nspecies\n(ground truth)",
         values = scales::rescale(c(10, 3.5, 2))
     )
 
@@ -76,13 +74,12 @@ ros_gg
 
 scatter_gg <- ggplot(umap_df, aes(x = cc_g1_n_objects, y = vb_ros_mean)) +
     geom_point(aes(color = Metadata_cell_line), alpha = point_alpha, size = point_size) +
-    xlab("G1 Cell Count") +
-    ylab("Reactive Oxygen Species") +
+    xlab("G1 cell count\n(ground truth)") +
+    ylab("Reactive oxygen species\n(ground truth)") +
     theme_bw() +
-    theme(axis.text = element_text(size = axis_text_size),
-          legend.text = element_text(size = legend_text_size)) +
+    text_theme +
     scale_color_manual(
-        name = "Cell Line",
+        name = "Cell line",
         values = cell_line_colors,
         labels = cell_line_labels
     )
