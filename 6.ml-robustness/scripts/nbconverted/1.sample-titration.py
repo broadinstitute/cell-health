@@ -12,17 +12,18 @@
 # 1. Randomly shuffle the index (aka the order) of the training set samples
 # 2. Train cell health model using all samples in the training set
 # 3. Remove the top ordered sample from the training set and retrain
-# 4. Repeat step 3 after removing up to 50 samples from training
-# 5. Repeat step 1 (different random shuffling 100 times)
+# 4. Repeat step 3 after removing up to 75 samples from training
+# 5. Repeat step 1 (different random shuffling 10 times)
 # 6. For each training iteration, collect the test set R2 performance
 # 
-# In total, this results in 70 (models) x 25 (different sample sets) x 3 (different iterations) = 5,640 different model initializations
+# In total, this results in 70 (models) x 18 (different sample sets) x 25 (different iterations) = 31,500 different model initializations
 
 # In[1]:
 
 
 import sys
 import pathlib
+import numpy as np
 import pandas as pd
 
 from sklearn.linear_model import SGDClassifier, ElasticNet
@@ -44,11 +45,17 @@ output_dir.mkdir(exist_ok=True)
 output_file = pathlib.Path(f"{output_dir}/sample_titration_robustness_results_{consensus}.tsv.gz")
 output_dropped_file = pathlib.Path(f"{output_dir}/sample_titration_samples_dropped_small_{consensus}.tsv.gz")
 
-num_iterations = 3
-num_sample_titration = 25
+num_iterations = 25
+num_sample_titration = 80
 
 
 # In[3]:
+
+
+np.random.seed(123)
+
+
+# In[4]:
 
 
 # Set ML constants
@@ -80,7 +87,7 @@ decision_function = False
 model_type = "Regression"
 
 
-# In[4]:
+# In[5]:
 
 
 # Load data
@@ -93,14 +100,21 @@ cell_health_targets = y_train_df.columns.tolist()
 assert len(cell_health_targets) == 70
 
 
-# In[5]:
+# In[6]:
+
+
+num_samples_to_titrate = [1, 2, 3, 4] + [x for x in range(5, num_sample_titration, 5)]
+num_samples_to_titrate
+
+
+# In[ ]:
 
 
 regression_results_list = []
 samples_dropped = []
 for iteration in range(0, num_iterations):
-    x_sample_df = x_train_df.sample(frac=1)
-    for drop_sample_high in range(1, num_sample_titration+1):
+    for drop_sample_high in num_samples_to_titrate:
+        x_sample_df = x_train_df.sample(frac=1)
         drop_samples = x_sample_df.iloc[range(0, drop_sample_high), :].index.tolist()
         
         x_train_subset_df = x_sample_df.drop(drop_samples, axis="index")
@@ -170,7 +184,7 @@ for iteration in range(0, num_iterations):
             regression_results_list.append(rtwo_df)
 
 
-# In[6]:
+# In[ ]:
 
 
 # Compile the full regression results
@@ -180,7 +194,7 @@ print(full_regression_results_df.shape)
 full_regression_results_df.head(3)
 
 
-# In[7]:
+# In[ ]:
 
 
 # Compile the samples dropped
@@ -194,7 +208,7 @@ print(samples_dropped_df.shape)
 samples_dropped_df.head()
 
 
-# In[8]:
+# In[ ]:
 
 
 # Save all results
