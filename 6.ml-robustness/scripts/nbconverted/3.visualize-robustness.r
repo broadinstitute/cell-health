@@ -147,36 +147,45 @@ cell_line_gg <- ggplot(cell_line_df,
 ggsave(cell_line_figure_file, cell_line_gg, dpi = 500, width = 8, height = 7)
 cell_line_gg
 
+original_sample_subset <- original_df %>%
+    dplyr::filter(
+        metric == "r_two", shuffle == "Real", cell_line == "all", data_fit == "test"
+    ) %>%
+    dplyr::mutate(num_samples_dropped = 0, iteration = 0)
+
+top_performer_df <- original_sample_subset %>% dplyr::select(target) %>% dplyr::mutate(performer = "low")
+
+top_performer_cut <- as.numeric(paste(quantile(original_sample_subset$value, 0.66)))
+mid_performer_cut <- as.numeric(paste(quantile(original_sample_subset$value, 0.33)))
+
+top_performer_df[original_sample_subset$value > mid_performer_cut, "performer"] = "mid"
+top_performer_df[original_sample_subset$value > top_performer_cut, "performer"] = "high"
+
 # Append original results to sample titration
-sample_df <- sample_df %>%
+updated_sample_df <- sample_df %>%
     dplyr::filter(
         metric == "r_two", shuffle == "shuffle_false", cell_line == "all", data_fit == "test"
     ) %>%
-    dplyr::bind_rows(
-        original_df %>%
-            dplyr::filter(
-                metric == "r_two", shuffle == "Real", cell_line == "all", data_fit == "test"
-            ) %>%
-            dplyr::mutate(num_samples_dropped = 0, iteration = 0)
-        ) %>%
+    dplyr::bind_rows(original_sample_subset) %>%
     dplyr::left_join(label_df, by = c("target" = "id")) %>%
     dplyr::group_by(target, num_samples_dropped) %>%
     dplyr::mutate(mean_value = mean(value)) %>%
     dplyr::ungroup() %>%
     dplyr::arrange(mean_value) %>%
-    dplyr::distinct(target, num_samples_dropped, mean_value, readable_name, measurement)
+    dplyr::distinct(target, num_samples_dropped, value, mean_value, readable_name, measurement) %>%
+    dplyr::left_join(top_performer_df, by = "target")
 
-target_order <- sample_df %>%
+target_order <- updated_sample_df %>%
     dplyr::arrange(desc(mean_value)) %>%
     dplyr::distinct(readable_name) %>%
     dplyr::pull(readable_name)
 
-sample_df$readable_name <- factor(sample_df$readable_name, levels=target_order)
+updated_sample_df$readable_name <- factor(updated_sample_df$readable_name, levels=target_order)
 
 # Recode metadata measurent to other
-sample_df$measurement <- dplyr::recode(sample_df$measurement, "metadata" = "other")
+updated_sample_df$measurement <- dplyr::recode(updated_sample_df$measurement, "metadata" = "other")
 
-sample_df$measurement <- factor(sample_df$measurement, levels = c(
+updated_sample_df$measurement <- factor(updated_sample_df$measurement, levels = c(
     "cell_viability",
     "death",
     "apoptosis",
@@ -193,19 +202,30 @@ sample_df$measurement <- factor(sample_df$measurement, levels = c(
     "other"
 ))
 
-print(dim(sample_df))
-head(sample_df, 3)
+print(dim(updated_sample_df))
+head(updated_sample_df, 3)
 
-avg_results_full_df <- sample_df %>%
-    dplyr::group_by(num_samples_dropped) %>%
+avg_results_full_df <- updated_sample_df %>%
+    dplyr::group_by(num_samples_dropped, performer) %>%
     dplyr::mutate(mean_total_estimate = mean(mean_value)) %>%
     dplyr::distinct(num_samples_dropped, mean_total_estimate)
 
+avg_results_full_df$performer <- factor(avg_results_full_df$performer, levels = c("high", "mid", "low"))
+
 head(avg_results_full_df)
 
+plot_df <- updated_sample_df %>%
+    dplyr::left_join(avg_results_full_df, by = c("num_samples_dropped", "performer"))
+
+plot_df$performer <- factor(plot_df$performer, levels = c("high", "mid", "low"))
+
+head(plot_df)
+
+append_perform <- function(string) paste("Performance:", string)
+
 sample_gg <- (
-    ggplot(sample_df, aes(x = num_samples_dropped, y = mean_value)) +
-        geom_line(aes(color = measurement, group = target)) +
+    ggplot(plot_df, aes(x = num_samples_dropped)) +
+        geom_line(aes(y = mean_value, color = measurement, group = target), alpha = 0.4) +
         ylab(bquote("Test set "~R^2~"")) +
         xlab("Number of samples\ndropped from training") +
         scale_color_manual(
@@ -213,38 +233,78 @@ sample_gg <- (
             values = measurement_colors,
             labels = measurement_labels
         ) +
-        theme_bw()
+        theme_bw() +
+        theme(
+            legend.key = element_rect(size = 10),
+            legend.key.size = unit(0.2, "cm"),
+            strip.background = element_rect(colour = "black", fill = "#fdfff4")
+        ) +
+        facet_wrap("~performer",
+                   ncol = 3,
+                   scales = "fixed",
+                   labeller = labeller(performer = as_labeller(append_perform))) +
+        geom_point(
+            data = avg_results_full_df,
+            aes(y = mean_total_estimate),
+            color = "black",
+            size = 1.5)  +
+        geom_line(
+            data = avg_results_full_df,
+            aes(y = mean_total_estimate),
+            color = "black",
+            size = 0.75
+        )
     )
 
+sample_legend_gg <- cowplot::get_legend(sample_gg)
+
 avg_drop_gg <- ggplot(
-    avg_results_full_df,
+    avg_results_full_df %>% dplyr::mutate(label="black"),
     aes(x = num_samples_dropped,
-        y = mean_total_estimate)
+        y = mean_total_estimate,
+        color = label)
     ) +
-    geom_point(
-        data = ,
-        color = "black",
-        size = 1.5)  +
-    geom_line(
-        data = avg_results_full_df,
-        color = "black",
-        size = 0.75
-    ) +
+    geom_point(size = 1.5)  +
+    geom_line(size = 0.75) +
+    scale_color_manual(name = "",
+                       values = "black",
+                       labels = "Average\nperformance") +
     theme_bw() +
+    facet_wrap("~performer", ncol = 3, scales = "fixed") +
     xlab("Number of samples\ndropped from training") +
-    ylab(bquote("Test set "~R^2~"\n(Mean for all Cell Health targets)"))
+    ylab(bquote("Test set "~R^2~"\n(Mean for all targets)"))
+
+avg_line_legend <- cowplot::get_legend(avg_drop_gg)
+
+sample_legend <- cowplot::plot_grid(
+    cowplot::ggdraw(),
+    avg_line_legend,
+    cowplot::plot_grid(
+        cowplot::ggdraw(),
+        sample_legend_gg,
+        ncol = 2,
+        rel_widths = c(0.1, 1)
+    ),
+    cowplot::ggdraw(),
+    nrow = 4,
+    rel_heights = c(0.05, 0.2, 0.6, 0.4),
+    align = "hv",
+    axis = "l"
+)
 
 sample_titration_gg <- cowplot::plot_grid(
-    sample_gg,
-    avg_drop_gg,
+    sample_gg + theme(legend.position = "none"),
+    sample_legend,
     ncol = 2,
     align = "h",
     axis = "l",
-    rel_widths = c(1, 0.7),
-    labels = c("a", "b")
+    rel_widths = c(1, 0.2),
+    labels = c("", "")
 )
 
-cowplot::save_plot(sample_titration_figure_file, sample_titration_gg, base_width = 10, base_height = 6)
+cowplot::save_plot(
+    sample_titration_figure_file, sample_titration_gg, base_width = 10, base_height = 6
+)
 sample_titration_gg
 
 feature_df <- feature_df %>%
