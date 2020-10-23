@@ -16,7 +16,7 @@
 # 5. Repeat step 1 (different random shuffling 10 times)
 # 6. For each training iteration, collect the test set R2 performance
 # 
-# In total, this results in 70 (models) x 18 (different sample sets) x 25 (different iterations) = 31,500 different model initializations
+# In total, this results in 70 (models) x 11 (different sample sets) x 10 (different iterations) = 7,700 different model initializations
 
 # In[1]:
 
@@ -43,10 +43,11 @@ data_dir = pathlib.Path("../3.train/data")
 output_dir = pathlib.Path("results")
 output_dir.mkdir(exist_ok=True)
 output_file = pathlib.Path(f"{output_dir}/sample_titration_robustness_results_{consensus}.tsv.gz")
-output_dropped_file = pathlib.Path(f"{output_dir}/sample_titration_samples_dropped_small_{consensus}.tsv.gz")
+output_dropped_file = pathlib.Path(f"{output_dir}/sample_titration_samples_dropped_{consensus}.tsv.gz")
 
-num_iterations = 25
-num_sample_titration = 80
+num_iterations = 5
+num_sample_titration_mid = 100
+num_sample_titration_high = 250
 
 
 # In[3]:
@@ -103,30 +104,34 @@ assert len(cell_health_targets) == 70
 # In[6]:
 
 
-num_samples_to_titrate = [1, 2, 3, 4] + [x for x in range(5, num_sample_titration, 5)]
+num_samples_to_titrate = (
+    [5] +
+    [x for x in range(10, num_sample_titration_mid, 15)] +
+    [x for x in range(num_sample_titration_mid, num_sample_titration_high, 50)] +
+    [275]
+)
 num_samples_to_titrate
 
 
-# In[ ]:
+# In[7]:
 
 
 regression_results_list = []
 samples_dropped = []
 for iteration in range(0, num_iterations):
     for drop_sample_high in num_samples_to_titrate:
-        x_sample_df = x_train_df.sample(frac=1)
-        drop_samples = x_sample_df.iloc[range(0, drop_sample_high), :].index.tolist()
-        
-        x_train_subset_df = x_sample_df.drop(drop_samples, axis="index")
-        y_train_subset_df = y_train_df.reindex(x_train_subset_df.index, axis="index")
-        
-        # Store knowledge of which samples were dropped per iteration
-        drop_sampels_str = ";".join(drop_samples)
-        samples_dropped.append(pd.Series([iteration, drop_sample_high, drop_sampels_str]))
-        
         for cell_health_target in cell_health_targets:
+            # Randomly shuffle the samples to drop for each model training
+            x_sample_df = x_train_df.sample(frac=1)
+            drop_samples = x_sample_df.iloc[range(0, drop_sample_high), :].index.tolist()
+
+            x_train_subset_df = x_sample_df.drop(drop_samples, axis="index")
+            y_train_subset_df = y_train_df.reindex(x_train_subset_df.index, axis="index")
+
+            # Print status
             print(f"Now Training Target: {cell_health_target}")
             print(f"[Class] Titration: {len(drop_samples)}; Iteration: {iteration}\n")
+
             # Initialize class
             chp = CellHealthPredict(
                 x_df=x_train_subset_df,
@@ -184,7 +189,7 @@ for iteration in range(0, num_iterations):
             regression_results_list.append(rtwo_df)
 
 
-# In[ ]:
+# In[8]:
 
 
 # Compile the full regression results
@@ -194,24 +199,9 @@ print(full_regression_results_df.shape)
 full_regression_results_df.head(3)
 
 
-# In[ ]:
+# In[9]:
 
 
-# Compile the samples dropped
-samples_dropped_df = (
-    pd.concat([pd.DataFrame(x).transpose() for x in samples_dropped])
-    .reset_index(drop=True)
-)
-samples_dropped_df.columns = ["iteration", "num_dropped", "samples_dropped"]
-
-print(samples_dropped_df.shape)
-samples_dropped_df.head()
-
-
-# In[ ]:
-
-
-# Save all results
+# Save results
 full_regression_results_df.to_csv(output_file, sep="\t", index=False, compression="gzip")
-samples_dropped_df.to_csv(output_dropped_file, sep="\t", index=False, compression="gzip")
 
