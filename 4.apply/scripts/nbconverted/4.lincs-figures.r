@@ -201,8 +201,8 @@ panel_a_gg = ggplot(
     geom_abline(slope = 1, intercept = 0, alpha = 0.6, lwd = 0.4, linetype = "dashed", color = "red") +
     geom_point(size = 0.3, alpha = 1) +
     theme_bw() +
-    ylab("PRISM Dose\n(mmoles per liter)") +
-    xlab("Drug Repurposing Dose\n(mmoles per liter)") +
+    ylab("PRISM Dose\n(micromoles per liter)") +
+    xlab("Drug Repurposing Dose\n(micromoles per liter)") +
     coord_fixed()
 
 # Generate text for panel B
