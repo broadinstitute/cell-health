@@ -228,4 +228,4 @@ A single PLK inhibitor (HMN-214) showed a strong dose relationship with predicte
 
 ### Drug Repurposing Hub: Exploratory Tool
 
-We applied all predictions and present them in an easy-to-navigate webapp at https://broad.io/cell-health
+We applied all predictions and present them in an easy-to-navigate webapp at https://broad.io/cell-health-app

@@ -153,9 +153,36 @@ print(full_df.shape)
 full_df.head()
 
 
-# ## Output Supplementary Table
+# ## Load CRISPR efficiency readouts and merge with perturbation descriptions
 
 # In[9]:
+
+
+file = os.path.join("data", "labels", "crispr_infection_efficiency_data.tsv")
+eff_df = pd.read_csv(file, sep="\t")
+
+eff_df = (
+    eff_df
+    .pivot_table(index="guide", columns="cell_id", values="ctg_crispr_infection_efficiency")
+)
+
+eff_df.columns = [f"{x}_ctg_efficiency" for x in eff_df.columns]
+eff_df = eff_df.reset_index()
+
+
+full_df = (
+    full_df
+    .merge(eff_df, left_on="pert_name", right_on="guide", how="left")
+    .drop("guide", axis="columns")
+)
+
+print(full_df.shape)
+full_df.head()
+
+
+# ## Output Supplementary Table
+
+# In[10]:
 
 
 output_file = os.path.join("tables", "supplementary_table_1_perturbation_details.tsv")
