@@ -64,12 +64,12 @@ This overview figure outlines the Cell Health assay, the Cell Painting assay, an
 ![approach](https://raw.githubusercontent.com/broadinstitute/cell-health/master/media/approach.png)
 
 > Data processing and modeling approach.
-> (a) 70 different readouts from the Cell Health imaging assay.
-> The assay consists of two customized reagent panels, which use measurements from seven different targeted reagents and one channel based on digital phase contrast (DPC) imaging; shown are five toy examples to demonstrate that individual cells are isolated into subpopulations by various gating strategies to define the cell health readouts.
-> (b) Example Cell Painting image across five channels, plus a merged representation across channels.
-> The example image is cropped from a larger image and shows ES2 cells.
-> Scale bars are 20 µm.
-> Below are the steps applied in an image-based profiling pipeline, after image-based features have been extracted from each cell’s image.
+> (a) Example images and workflow from the Cell Health assay.
+> We apply a series of manual gating strategies (see Methods) to isolate cell subpopulations and to generate cell health readouts for each perturbation.
+> (top) In the “Cell Cycle” panel, in each nucleus we measure Hoechst, EdU, PH3, and gH2AX.
+> (bottom) In the “Cell Viability” panel, we capture digital phase contrast images, measure Caspase 3/7, DRAQ7, CellROX, and (b) Example Cell Painting image across five channels, plus a merged representation across channels.
+> The image is cropped from a larger image and shows ES2 cells.
+> Below are the steps applied in an image-based profiling pipeline, after features have been extracted from each cell’s image.
 > (c) Modeling approach where we fit 70 different regression models using CellProfiler features derived from Cell Painting images to predict Cell Health readouts.
 
 ## Data
