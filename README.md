@@ -2,7 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/72009902.svg)](https://zenodo.org/badge/latestdoi/72009902)
 
-**Gregory P. Way, Maria Kost-Alimova, Tsukasa Shibue, William F. Harrington, Stanley Gill, Tim Becker, William C. Hahn, Anne E. Carpenter, Francisca Vazquez, Shantanu Singh**
+**Gregory P. Way, Maria Kost-Alimova, Tsukasa Shibue, William F. Harrington, Stanley Gill, Federica Piccioni, Tim Becker, Hamdah Shafqat-Abbasi, William C. Hahn, Anne E. Carpenter, Francisca Vazquez, Shantanu Singh**
 
 **2020**
 
