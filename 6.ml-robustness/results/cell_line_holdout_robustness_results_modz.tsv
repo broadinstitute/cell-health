@@ -1,0 +1,5 @@
+value	metric	target	data_fit	shuffle	y_transform	cell_line
+0.6506764028439853	mse	vb_ros_mean	train	shuffle_false	raw	HCC44
+0.3965527140377704	mse	vb_ros_mean	test	shuffle_false	raw	HCC44
+0.13691528844595435	r_two	vb_ros_mean	train	shuffle_false	raw	HCC44
+-0.11995114317570876	r_two	vb_ros_mean	test	shuffle_false	raw	HCC44

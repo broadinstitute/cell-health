@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 
 from sklearn.cluster import KMeans
+from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import minmax_scale
 from sklearn.metrics import (
     mean_squared_error,
@@ -17,7 +18,6 @@ from sklearn.metrics import (
     average_precision_score,
 )
 from joblib import dump, load
-from dask_ml.model_selection import GridSearchCV
 
 
 class CellHealthPredict:
