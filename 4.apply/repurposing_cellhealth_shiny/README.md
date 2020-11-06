@@ -48,6 +48,19 @@ This view focuses on three main plots.
 The left side panel provides several options to interact with the compound perturbations and cell health predictions.
 [Click here](https://github.com/broadinstitute/cell-health/blob/master/1.generate-profiles/data/labels/feature_mapping_annotated.csv) for a detailed description of each cell health measurement.
 
+### Select Perturbations to Visualize
+
+There are two different datasets to explore:
+
+1. Drugs [default]
+    * These data are consensus Cell Painting profiles from the Drug Repurposing Hub project.
+    * More information on how these data were processed can be found here: https://github.com/broadinstitute/lincs-cell-painting
+    * The Cell Health information provided for these data represent predictions.
+2. CRISPR
+    * These data are Cell Painting profiles collected as training data from the Cell Health project (this repo).
+    * More information on how these data were processed can be found here: https://github.com/broadinstitute/cell-health/tree/master/1.generate-profiles
+    * The Cell Health information provided for these data represent ground truth readouts (not predictions!).
+
 ### Select Scatter Plot Type
 
 There are two different scatter plot views available:

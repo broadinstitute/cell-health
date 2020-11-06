@@ -17,6 +17,7 @@ dmso_df <- data[["dmso"]]
 pos_control_df <- data[["pos_control"]]
 rank_df <- data[["rank"]]
 dose_df <- data[["dose"]]
+crispr_df <- data[["crispr"]]
 
 all_control_df <- dplyr::bind_rows(dmso_df, pos_control_df)
 
@@ -57,6 +58,16 @@ moa_long_df <- moa_long_df %>%
 shinyServer(function(input, output) {
   
   # Set reactive elements
+  # Which data type to visualize
+  data_origin <- reactive({
+    paste(input$data_origin)
+  })
+  
+  # Which scatter plot to visualize
+  scatter_type <- reactive({
+    paste(input$scatter_type)
+  })
+  
   # Compound to focus on
   compound <- reactive({
     paste(input$compound)
@@ -78,11 +89,6 @@ shinyServer(function(input, output) {
       dplyr::filter(readable_name == !!target_name) %>%
       dplyr::pull(target)
     paste(target)
-  })
-
-  # Which scatter plot to visualize
-  scatter_type <- reactive({
-    paste(input$scatter_type)
   })
   
   # Determine if the click and drag should remove
@@ -259,10 +265,11 @@ shinyServer(function(input, output) {
   output$scatter_plot <- renderPlot(
     {
       # Load reactive variables
-      compound_select <- compound() 
+      data_domain_select <- data_origin()
+      scatter_plot_type <- scatter_type()
       cell_health_model_select_y <- cell_health_model_y()
       cell_health_model_select_x <- cell_health_model_x()
-      scatter_plot_type <- scatter_type()
+      compound_select <- compound() 
 
       # Pull cell health model of interest
       target_y <- get_target(rank_df, cell_health_model_select_y)
@@ -273,24 +280,35 @@ shinyServer(function(input, output) {
           dplyr::filter(pert_iname == !!compound_select)
       
       # Now, visualize cell health models
-      if (scatter_plot_type == "Cell Health") {
-        scatter_gg <- build_cell_health_scatter(
-          moa_df,
-          moa_compound_df,
-          all_control_df,
-          cell_health_model_select_y,
-          cell_health_model_select_x,
-          target_y,
-          target_x
-        )
-      } else {
-        scatter_gg <- build_umap_scatter(
-          moa_df,
-          moa_compound_df,
-          all_control_df, 
-          cell_health_model_select_y,
-          target_y
-        )
+      if (data_domain_select == "Drugs") {
+        if (scatter_plot_type == "Cell Health") {
+          scatter_gg <- build_cell_health_scatter(
+            moa_df,
+            moa_compound_df,
+            all_control_df,
+            cell_health_model_select_y,
+            cell_health_model_select_x,
+            target_y,
+            target_x
+          )
+        } else {
+          scatter_gg <- build_umap_scatter(
+            moa_df,
+            moa_compound_df,
+            all_control_df, 
+            cell_health_model_select_y,
+            target_y
+          )
+        }
+      } else if (data_domain_select == "CRISPR") {
+        scatter_gg <- build_crispr_scatter(
+          crispr_df = crispr_df,
+          model_y = cell_health_model_select_y,
+          target_y = target_y,
+          model_x = cell_health_model_select_x,
+          target_x = target_x,
+          scatter_type = scatter_plot_type
+          )
       }
       scatter_gg
     }
@@ -366,6 +384,7 @@ shinyServer(function(input, output) {
     cell_health_model_select_x <- cell_health_model_x()
     
     scatter_plot_type <- scatter_type()
+    data_domain_select <- data_origin()
     remove_controls <- remove_controls()
   
     if (remove_controls) {
@@ -376,38 +395,75 @@ shinyServer(function(input, output) {
       output_df <- moa_df
     }
     # Select which columns to display
-    if (scatter_plot_type == "Cell Health") {
-      output_df <- output_df %>%
-        dplyr::select(
-          pert_iname,
-          moa,
-          target,
-          clinical_phase,
-          Metadata_broad_sample,
-          Metadata_dose_recode,
-          !!cell_health_model_select_y,
-          !!cell_health_model_select_x) %>%
+    if (data_domain_select == "Drugs") {
+      if (scatter_plot_type == "Cell Health") {
+        output_df <- output_df %>%
+          dplyr::select(
+            pert_iname,
+            moa,
+            target,
+            clinical_phase,
+            Metadata_broad_sample,
+            Metadata_dose_recode,
+            !!cell_health_model_select_y,
+            !!cell_health_model_select_x) %>%
           dplyr::arrange(desc(!!sym(cell_health_model_select_y)))
-    } else {
+      } else {
+        output_df <- output_df %>%
+          dplyr::select(
+            pert_iname,
+            moa,
+            target,
+            clinical_phase,
+            Metadata_broad_sample,
+            umap_x,
+            umap_y,
+            Metadata_dose_recode,
+            !!cell_health_model_select_y,
+            !!cell_health_model_select_x
+            ) %>%
+          dplyr::arrange(desc(!!sym(cell_health_model_select_y)))
+      }
+      
       output_df <- output_df %>%
-        dplyr::select(pert_iname,
-                      moa,
-                      target,
-                      clinical_phase,
-                      Metadata_broad_sample,
-                      umap_x,
-                      umap_y,
-                      Metadata_dose_recode,
-                      !!cell_health_model_select_y,
-                      !!cell_health_model_select_x) %>%
-        dplyr::arrange(desc(!!sym(cell_health_model_select_y)))
-    }
-    
-    output_df <- output_df %>%
         dplyr::rename(perturbation = pert_iname,
                       sample = Metadata_broad_sample,
                       dose = Metadata_dose_recode) %>%
-      mutate_if(is.numeric, round, 3)
+        mutate_if(is.numeric, round, 3)
+    } else {
+      if (scatter_plot_type == "Cell Health") {
+        output_df <- crispr_df %>%
+          dplyr::select(
+            Metadata_cell_line,
+            Metadata_gene_name,
+            Metadata_pert_name,
+            Metadata_cell_process,
+            !!cell_health_model_select_y,
+            !!cell_health_model_select_x
+            ) %>%
+          dplyr::arrange(desc(!!sym(cell_health_model_select_y)))
+      } else {
+        output_df <- crispr_df %>%
+          dplyr::select(
+            Metadata_cell_line,
+            Metadata_gene_name,
+            Metadata_pert_name,
+            Metadata_cell_process,
+            umap_x,
+            umap_y,
+            !!cell_health_model_select_y,
+            !!cell_health_model_select_x
+            ) %>%
+          dplyr::arrange(desc(!!sym(cell_health_model_select_y)))
+      }
+      output_df <- output_df %>%
+        dplyr::rename(perturbation = Metadata_pert_name,
+                      gene = Metadata_gene_name,
+                      process = Metadata_cell_process,
+                      cell_line = Metadata_cell_line) %>%
+        mutate_if(is.numeric, round, 3)
+    }
+    
     
     brushedPoints(output_df, input$plot_brush)
     })
