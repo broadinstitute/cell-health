@@ -29,20 +29,21 @@
 
 Cell health can be altered by genetic and chemical perturbations.
 An increased understanding of these perturbation mechanisms is directly relevant for drug discovery and personalized medicine.
-Here and in an accompanying paper, we present a novel cell imaging assay to measure 70 different aspects of cell health, such as proliferation, apoptosis, and cell cycle stalling.
-However, this assay requires expensive reagents and does not scale well.
-Therefore, we also developed a machine learning solution to predict cell health readouts directly from the inexpensive and high-throughput Cell Painting imaging assay.
+Here and in an accompanying paper, we present two novel cell imaging assays that together measure 70 different aspects of cell health, such as proliferation, apoptosis, and cell cycle stalling.
+However, these assays require expensive reagents and do not scale well.
+Therefore, we also developed a machine learning solution to predict cell health readouts directly from a separate assay, known as Cell Painting.
+In contrast to the Cell Health assays, Cell Painting is inexpensive, high-throughput, and unbiased (reagents are not targeted).
 We predict many cell health indicators with high performance, but other readouts could not be predicted.
 We validated our predictions by using orthogonal readouts and by applying the models to a large set of 1,500 drugs from the Drug Repurposing Hub.
 Cell health predictions for drugs can be browsed at https://broad.io/cell-health-app.
-We confirmed mitotic arrest and reactive oxygen species phenotypes via PLK and proteasome inhibition, respectively.
+We confirmed mitotic arrest, reactive oxygen species, and DNA damage in G1 cell cycle based phenotypes via PLK, proteasome, and aurora kinase/tubulin inhibition, respectively.
 In the future, we can use this approach to determine the cell health consequences of any perturbation in cells.
 We conducted this project using open science principles with open data and open source code.
 
-The following repository stores a complete analysis pipeline using Cell Painting data to predict readouts from several cell health assays.
+The following repository stores a complete analysis pipeline using Cell Painting data to predict readouts from the Cell Health assays.
 
-We first developed a customized microscopy assay we call "Cell Health".
-The Cell Health assay is comprised of two different reagent panels: "Cell cycle" and "viability".
+We first developed the customized microscopy assays we collectively call "Cell Health".
+The Cell Health assays are comprised of two different reagent panels: "Cell cycle" and "viability".
 Together, these two panels use reagents which mark different cell health phenotypes.
 
 | Assay/Dye | Phenotype | Panel |
@@ -55,16 +56,16 @@ Together, these two panels use reagents which mark different cell health phenoty
 | pH3 | Cell division | Cell cycle |
 | gH2Ax | DNA damage | Cell cycle |
 
-We hypothesized that we can use unbiased and high dimensional Cell Painting profiles to predict the readouts of each individual assay.
+We hypothesized that we can use unbiased and high dimensional Cell Painting profiles to predict cell health readouts.
 
 ## Approach
 
-This overview figure outlines the Cell Health assay, the Cell Painting assay, and our machine learning approach.
+This overview figure outlines the Cell Health assays, the Cell Painting assay, and our machine learning approach.
 
 ![approach](https://raw.githubusercontent.com/broadinstitute/cell-health/master/media/approach.png)
 
 > Data processing and modeling approach.
-> (a) Example images and workflow from the Cell Health assay.
+> (a) Example images and workflow from the Cell Health assays.
 > We apply a series of manual gating strategies (see Methods) to isolate cell subpopulations and to generate cell health readouts for each perturbation.
 > (top) In the “Cell Cycle” panel, in each nucleus we measure Hoechst, EdU, PH3, and gH2AX.
 > (bottom) In the “Cell Viability” panel, we capture digital phase contrast images, measure Caspase 3/7, DRAQ7, CellROX, and (b) Example Cell Painting image across five channels, plus a merged representation across channels.
@@ -94,7 +95,7 @@ All data are publicly available.
 | Data | Level | Location | Notes |
 | :--- | :---- | :--------| :---- |
 | Cell health readouts | Raw | [1.generate-profiles/data/raw](1.generate-profiles/data/raw) | Per cell health panel (cell cycle and viability) per cell line |
-| Cell health readouts | Normalized | `1.generate-profiles/data/raw/normalized_cell_health_labels.tsv` | |
+| Cell health readouts | Normalized | [1.generate-profiles/data/raw/normalized_cell_health_labels.tsv](1.generate-profiles/data/raw) | |
 | Cell health signatures | Consensus | [1.generate-profiles/data/consensus](1.generate-profiles/data/consensus) | |
 
 #### Drug Repurposing Hub
@@ -134,12 +135,13 @@ The full analysis pipeline consists of the following steps:
 
 | Order | Module | Description |
 | :---- | :----- | :---------- |
-| 0 | Download cell painting data | Retrieve single cell profiles archived on Figshare |
-| 1 | Generate profiles | Generate and process cell painting and cell health assay readouts |
-| 2 | Determine replicate reproducibility | Determine the extent to which the CRISPR perturbations result in reproducible signatures |
-| 3 | Train machine learning models to predict cell health assays | Train and visualize regression models using cell painting data to predict cell health assay readouts |
-| 4 | Apply the models | Apply the trained models to the Drug Repurposing Hub data to predict drug perturbation effect |
-| 5 | Validate the models | Use orthogonal readouts to validate the Drug Repurposing Hub predictions |
+| [0.download-data](0.download-data/) | Download cell painting data | Retrieve single cell profiles archived on Figshare |
+| [1.generate-profiles](1.generate-profiles/) | Generate profiles | Generate and process cell painting and cell health assay readouts |
+| [2.replicate-reproducibility](2.replicate-reproducibility/) | Determine replicate reproducibility | Determine the extent to which the CRISPR perturbations result in reproducible signatures |
+| [3.train](3.train/) | Train machine learning models to predict cell health assays | Train and visualize regression models using cell painting data to predict cell health assay readouts |
+| [4.apply](4.apply/) | Apply the models | Apply the trained models to the Drug Repurposing Hub data to predict drug perturbation effect |
+| [5.validate-repurposing](5.validate-repurposing/) | Validate the models | Use orthogonal readouts to validate the Drug Repurposing Hub predictions |
+| [6.ml-robustness](6.ml-robustness) | Interrogate robustness of ML predictions | Assess sample size, feature groups, and cell line holdouts to probe ML robustness |
 
 Each analysis module should be run in order.
 View each module for specific instructions on how to reproduce results.
@@ -189,7 +191,7 @@ However, there are many cell line specific differences.
 ### Model Interpretation
 
 Because we used a logistic regression classifier, we can readily interpret the output features.
-These features were derived from CellProfiler and represent different measurements of cell morphology
+These features were derived from CellProfiler and represent different measurements of cell morphology.
 Shown above is a summary of coefficients from all 70 cell health models.
 We observed that each contribute to classifying various facets of cell health.
 Many different categories of cell morphology features contribute to cell health predictions.
@@ -211,20 +213,22 @@ These data represent ~1,500 compound perturbations in ~6 dose points in A549 cel
 Collapsing the Drug Repurposing Hub Cell Painting data into UMAP coordinates, we observed many associated Cell Health predictions.
 For example, predicted G1 Cell Count and predicted ROS had clear gradients in UMAP space.
 However, there is not exactly a 1-1 relationship.
-The control proteasome inhibitors (DMSO and Bortezomib) are known to induce ROS, while PLK inhibitors are known to induce cell death by blocking mitosis entry.
+The proteasome inhibitors (DMSO and Bortezomib) are known to induce ROS, while PLK inhibitors are known to induce cell death by blocking mitosis entry.
 A single PLK inhibitor (HMN-214) showed a strong dose relationship with predicted G1 count.
 
 ![lincs](https://raw.githubusercontent.com/broadinstitute/cell-health/master/4.apply/figures/lincs_main_figure_4.png)
 
-> Applying cell health models to Cell Painting data from The Drug Repurposing Hub.
-> (a) We apply a Uniform Manifold Approximation (UMAP) to Drug Repurposing Hub consensus profiles of 1,571 compounds across 6 doses.
-> The models were not trained using the Drug Repurposing Hub data.
-> The point color represents the output of the cell health model trained to predict the number of cells in G1 phase (G1 cell count).
-> (b) The same UMAP dimensions, but colored by the output of the Cell Health model trained to predict reactive oxygen species (ROS).
+> Validating Cell Health models to Cell Painting data from The Drug Repurposing Hub.
+> (a) The results of the dose alignment between the PRISM assay and the Drug Repurposing Hub data.
+> This view indicates that there was not a one-to-one matching between perturbation doses.
+> (b) Comparing viability estimates from the PRISM assay to the predicted number of live cells in the Drug Repurposing Hub.
+> The PRISM assay estimates viability by measuring barcoded A549 cells after an incubation period.
 > (c) Drug Repurposing Hub profiles stratified by G1 cell count and ROS predictions.
 > Bortezomib and MG-132 are proteasome inhibitors and are used as positive controls; DMSO is a negative control.
 > We also highlight all PLK inhibitors in the dataset.
 > (d) HMN-214 is an example of a PLK inhibitor that shows strong dose response for G1 cell count predictions.
+> (e) Tubulin and aurora kinase inhibitors are predicted to have high Number of gH2AX spots in G1 cells compared to other compounds and controls.
+> (f) Barasertib (AZD1152) is an aurora kinase inhibitor that is predicted to have a strong dose response for Number of gH2AX spots in G1 cells predictions.
 
 ### Drug Repurposing Hub: Exploratory Tool
 
