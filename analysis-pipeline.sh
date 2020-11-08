@@ -31,3 +31,8 @@ bash apply-models.sh
 cd ..
 cd 5.validate-repurposing
 bash validate-pipeline.sh
+
+# Step 6 - Probe machine learning robustness
+cd ..
+cd 6.ml-robustness
+bash ml-robustness-pipeline.sh
