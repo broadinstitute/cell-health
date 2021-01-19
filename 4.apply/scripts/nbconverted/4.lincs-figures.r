@@ -227,9 +227,9 @@ result_text = paste0("Spearman = ", stat, "\n", pval)
 result_text
 
 # Panel B - Dose Correlation
-panel_b_gg = ggplot(validation_df,
+panel_b_gg <- ggplot(validation_df,
                     aes(x = cell_health_viability, y = depmap_viability)) +
-    geom_point(size = 0.5, alpha = 0.3) +
+    geom_point(size = 0.2, alpha = 0.3) +
     theme_bw() +
     geom_smooth(method = "lm", formula = y~x) +
     annotate("text", label = result_text, x = -2, y = -8.5, size = 2.5) +
@@ -269,7 +269,7 @@ panel_c_gg <- ggplot(compound_df,
     geom_point(
         aes(shape = Metadata_Controls),
         data = compound_df %>% dplyr::filter(moa != "PLK inhibitor"),
-        size = 0.5,
+        size = 0.3,
         alpha = 0.6
     ) +
     geom_point(
@@ -277,7 +277,7 @@ panel_c_gg <- ggplot(compound_df,
         aes(shape = Metadata_Controls),
         fill = "red",
         color = "black",
-        size = 1,
+        size = 0.7,
         alpha = 0.4,
     ) +
     geom_point(
@@ -317,7 +317,7 @@ dose_rank_fill_legend <- cowplot::get_legend(
                alpha = 0.6) +
     scale_color_continuous(name = "Dose Rank") +
     figure_theme +
-    theme(legend.key.size = unit(0.5, "lines"))
+    theme(legend.key.size = unit(0.4, "lines"))
 )
 
 control_point_label_legend <- cowplot::get_legend(
@@ -342,7 +342,7 @@ control_point_label_legend <- cowplot::get_legend(
                                   "MG-132" = "MG-132")) +
     theme_bw() +
     figure_theme +
-    theme(legend.key.size = unit(0.4, "lines"))
+    theme(legend.key.size = unit(0.3, "lines"))
     )
 
 compound_point_label_legend <- cowplot::get_legend(
@@ -367,7 +367,7 @@ compound_point_label_legend <- cowplot::get_legend(
         override.aes = list(size = c(0.5, 2))
     ))  +
     figure_theme +
-    theme(legend.key.size = unit(0.4, "lines"))
+    theme(legend.key.size = unit(0.3, "lines"))
 )
 
 # Put everything together into a single figure
@@ -376,13 +376,13 @@ panel_c_with_legend <- cowplot::ggdraw(
     theme(legend.position = "none") +
     figure_theme +
     cowplot::draw_plot(
-        control_point_label_legend, x = 0.8, y = 50
+        control_point_label_legend, x = 0.78, y = 47
         ) +
     cowplot::draw_plot(
-        compound_point_label_legend, x = 0.8, y = 37
+        compound_point_label_legend, x = 0.78, y = 34
         ) +
     cowplot::draw_plot(
-        dose_rank_fill_legend, x = 0.65, y = 22
+        dose_rank_fill_legend, x = 0.63, y = 17
         ) 
 )
 
@@ -464,11 +464,14 @@ result <- fisher.test(contingency_mat, alternative = "greater")
 result
 
 # Panel E - DNA Damage in G1 Cell Count
-panel_e_gg <- ggplot(dna_damage_g1_density_df, aes_string(x = model)) +
+panel_e_gg <- ggplot(
+    dna_damage_g1_density_df,
+    aes_string(x = model)
+    ) +
     geom_density(aes(fill = density_class), alpha = 0.5) +
     theme_bw() +
     figure_theme +
-    theme(legend.position = c(0.75, 0.8), legend.key.size = unit(0.7, "lines")) +
+    theme(legend.position = c(0.72, 0.75), legend.key.size = unit(0.7, "lines")) +
     geom_vline(xintercept = midway_point, color = "red", linetype = "dashed") +
     scale_fill_manual(name = "Compound class",
                       labels = dna_damage_labels,
@@ -538,17 +541,17 @@ figure_4_gg <- cowplot::plot_grid(
     align = "hv",
     axis = "b",
     nrow = 2,
-    rel_heights = c(0.4, 1)
+    rel_heights = c(0.55, 1)
 )
 
-figure_file <- file.path("figures", "lincs_main_figure_4.png")
+figure_file <- file.path("figures", "lincs_main_figure_4.pdf")
 
 cowplot::save_plot(
     filename = figure_file,
     plot = figure_4_gg,
     dpi = 500,
-    base_width = 8,
-    base_height = 8
+    base_width = 6.9,
+    base_height = 7.1
 )
 
 figure_4_gg
