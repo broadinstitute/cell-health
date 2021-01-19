@@ -281,9 +281,9 @@ load_data <- function(pos_controls=c("bortezomib", "MG-132"), path=".") {
   pos_controls_df <- moa_df %>% dplyr::filter(pert_iname %in% pos_controls)
 
   # Load CRISPR readouts
-  crispr_file <- file.path("data", "profile_umap_with_cell_health_modz.tsv")
+  crispr_file <- file.path(path, "data", "profile_umap_with_cell_health_modz.tsv")
   crispr_df <- readr::read_tsv(crispr_file, col_types = readr::cols())
-  
+
   # Load ranking file
   rank_file <- file.path(path, "data", "A549_ranked_models_regression_modz.tsv")
   rank_df <- readr::read_tsv(rank_file, col_types = readr::cols()) %>%
@@ -331,7 +331,7 @@ build_crispr_scatter <- function(
   target_x = "None",
   scatter_type = "UMAP"
   ) {
-  
+
   if (scatter_type == "UMAP") {
     scatter_gg <- ggplot(crispr_df, aes(x = umap_x, y = umap_y)) +
       geom_point(aes_string(color = model_y),
@@ -342,7 +342,7 @@ build_crispr_scatter <- function(
       ylab("UMAP Y") +
       theme_bw() +
       ggtitle(paste(target_y, "\nClick and Drag to Select Points!")) +
-      scale_color_viridis_c(name = "") 
+      scale_color_viridis_c(name = "")
   } else {
     scatter_gg <- ggplot(crispr_df,
                          aes_string(x = model_x,
@@ -360,7 +360,7 @@ build_crispr_scatter <- function(
         name = "Cell Line",
         values = cell_line_colors,
         labels = cell_line_labels
-      ) 
+      )
   }
 
 }
