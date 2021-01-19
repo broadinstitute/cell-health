@@ -411,7 +411,7 @@ head(coef_summary_df)
 
 min_gradient <- 0
 point_size <- 9
-summary_metrics <- c("abs_mean", "abs_max", "abs_95th")
+summary_metrics <- c("abs_95th", "abs_max", "abs_mean")
 
 for (shuffle_option in c("Permuted", "Real")) {
     summary_subset_df <- coef_summary_df %>% dplyr::filter(shuffle == !!shuffle_option)
@@ -625,3 +625,263 @@ for (shuffle_option in c("Permuted", "Real")) {
         cowplot::save_plot(output_file, big_fig, base_height = 4, base_width = 6, dpi = 500)
     }
 }
+
+summary_metric <- "abs_mean"
+shuffle_option <- "Real"
+
+summary_subset_df <- coef_summary_df %>%
+    dplyr::filter(shuffle == !!shuffle_option)
+
+if (summary_metric == "abs_mean") {
+    column_choice <- "abs_mean_weight"
+    stat_string <- "aggregated_mean"
+    legend_name <- "Weighted Coeffients\nAbs. Mean (x100)"
+} else if (summary_metric == "abs_max") {
+    column_choice <- "abs_max_weight"
+    stat_string <- "aggregated_max"
+    legend_name <- "Weighted Coeffients\nAbs. Max"
+} else if (summary_metric == "abs_95th") {
+    column_choice <- "abs_95percentile"
+    stat_string <- "aggregated_95th"
+    legend_name <- "Weighted Coeffients\nAbs. 95th Percent"
+}
+
+# Process area different from other features
+area_df <- summary_subset_df %>%
+    dplyr::filter(feature_group %in% c("AreaShape", "Neighbors")) %>%
+    dplyr::group_by(compartment, feature_group, shuffle) %>%
+    dplyr::mutate(
+        aggregated_max = max(abs_max_weight),
+        aggregated_mean = mean(abs_mean_weight) * 100,
+        aggregated_95th = quantile(abs_95percentile, 0.95),
+        feature_count = dplyr::n()
+    ) %>%
+    dplyr::select(
+        compartment, feature_group, shuffle, aggregated_max, aggregated_mean, aggregated_95th, feature_count
+    ) %>%
+    dplyr::distinct() %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+        aggregated_max_round = round(aggregated_max, 2),
+        aggregated_mean_round = round(aggregated_mean, 2),
+        aggregated_95th_round = round(aggregated_95th, 2)
+    ) %>%
+    dplyr::group_by(feature_group) %>%
+    dplyr::mutate(
+        feature_group_count = sum(feature_count)
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(feature_group = paste0(feature_group, " (n = ", feature_group_count, ")"))
+
+area_df <- area_df %>%
+    dplyr::mutate(weight_text = round(area_df[, stat_string], 2) %>% dplyr::pull(stat_string))
+
+area_comparments <- unique(area_df$compartment)
+area_feature_groups <- unique(area_df$feature_group)
+area_shuffle <- unique(area_df$shuffle)
+area_background <- tidyr::crossing(area_comparments, area_feature_groups, area_shuffle) %>%
+    dplyr::mutate(weight_text = "N/A")
+colnames(area_background) <- c("compartment", "feature_group", "shuffle", "weight_text")
+
+# Process correlation different from other features
+corr_feature_group <- summary_subset_df %>%
+    dplyr::filter(feature_group == "Correlation")
+
+corr_feature_count <- dim(corr_feature_group)[1]
+
+correlation_df <- corr_feature_group %>%
+    dplyr::group_by(channel, compartment, shuffle) %>%
+    dplyr::mutate(
+        aggregated_max = max(abs_max_weight),
+        aggregated_mean = mean(abs_mean_weight) * 100,
+        aggregated_95th = quantile(abs_95percentile, 0.95),
+    ) %>%
+    dplyr::select(
+        channel, compartment, shuffle, aggregated_max, aggregated_mean, aggregated_95th
+    ) %>%
+    dplyr::distinct() %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+        aggregated_max_round = round(aggregated_max, 2),
+        aggregated_mean_round = round(aggregated_mean, 2),
+        aggregated_95th_round = round(aggregated_95th, 2),
+    ) %>%
+    dplyr::mutate(feature_group_count = corr_feature_count,
+                  feature_group = paste0("Colocalization (n = ", corr_feature_count, ")"))
+
+correlation_df <- correlation_df %>%
+    dplyr::mutate(weight_text = round(correlation_df[, stat_string], 2) %>% dplyr::pull(stat_string)) 
+
+# Process compartment features different from other features
+compartment_df <- summary_subset_df %>%
+    dplyr::filter(feature_group %in% !!compartment_features) %>%
+    dplyr::group_by(compartment, channel, feature_group, shuffle) %>%
+    dplyr::mutate(
+        aggregated_max = max(abs_max_weight),
+        aggregated_mean = mean(abs_mean_weight) * 100,
+        aggregated_95th = quantile(abs_95percentile, 0.95),
+        feature_count = dplyr::n()
+    ) %>%
+    dplyr::select(
+        compartment,
+        channel,
+        feature_group,
+        shuffle,
+        aggregated_max,
+        aggregated_mean,
+        aggregated_95th,
+        feature_count
+    ) %>%
+    dplyr::distinct() %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+        aggregated_max_round = round(aggregated_max, 2),
+        aggregated_mean_round = round(aggregated_mean, 2),
+        aggregated_95th_round = round(aggregated_95th, 2)
+    ) %>%
+    dplyr::group_by(feature_group) %>%
+    dplyr::mutate(
+        feature_group_count = sum(feature_count)
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(feature_group = paste0(feature_group, " (n = ", feature_group_count, ")"))
+
+compartment_df <- compartment_df %>%
+    dplyr::mutate(weight_text = round(compartment_df[, stat_string], 2) %>% dplyr::pull(stat_string)) 
+
+# Merge compartments with correlation data summary
+compartment_df <- dplyr::bind_rows(compartment_df, correlation_df)
+
+comp_comparments <- unique(compartment_df$compartment)
+comp_channels <- unique(compartment_df$channel)
+comp_feature_groups <- unique(compartment_df$feature_group)
+comp_shuffle <- unique(compartment_df$shuffle)
+comp_background <- tidyr::crossing(comp_comparments, comp_channels, comp_feature_groups, comp_shuffle) %>%
+    dplyr::mutate(weight_text = "N/A")
+colnames(comp_background) <- c("compartment", "channel", "feature_group", "shuffle", "weight_text")
+
+max_gradient <- max(
+    max(compartment_df %>% dplyr::pull(stat_string)),
+    max(area_df %>% dplyr::pull(stat_string))
+)
+
+area_gg <- ggplot(area_df, aes(x = compartment, y = feature_group)) +
+    geom_point(
+        data = area_background,
+        fill = "grey",
+        size = point_size,
+        pch = 22,
+        stroke = 0.25
+    ) +
+    scale_fill_gradient2(
+        name = legend_name,
+        low = "white",
+        high = "blue",
+        limits = c(min_gradient, max_gradient)
+    ) +
+    ylab("Feature Group") +
+    xlab("Compartment") +
+    geom_text(
+        aes(label = weight_text),
+        size = 2,
+        data = area_background
+    ) +
+    geom_point(
+        aes_string(fill = stat_string),
+        size = point_size,
+        pch = 22,
+        stroke = 0.25
+    ) +
+    geom_text(
+        aes(label = weight_text),
+        size = 2
+    ) +
+    theme_bw() +
+    coord_fixed() +
+    summary_coef_theme +
+    theme(
+        axis.text.x = element_text(size = 6),
+        axis.text.y = element_text(size = 5),
+        axis.title = element_text(size = 7)
+    )
+
+compartment_gg <- ggplot(compartment_df,
+                         aes(x = channel, y = feature_group)) +
+    geom_point(
+        data = comp_background,
+        fill = "grey",
+        size = 5,
+        pch = 22,
+        stroke = 0.25
+    ) +
+    geom_text(
+        aes(label = weight_text),
+        size = 1.5,
+        data = comp_background
+    ) +
+    geom_point(
+        aes_string(fill = stat_string),
+        size = 5,
+        pch = 22,
+        stroke = 0.25
+    ) +
+    geom_text(
+        aes(label = weight_text),
+        size = 1.5
+    ) +
+    facet_grid(~compartment) +
+    scale_fill_gradient2(
+        name = legend_name,
+        low = "white",
+        high = "blue",
+        limits = c(min_gradient, max_gradient)
+    ) +
+    ylab("Feature Group") +
+    xlab("Channel") +
+    coord_fixed() +
+    theme_bw() +
+    summary_coef_theme +
+    theme(
+        axis.text.x = element_text(angle = 90, size = 6),
+        axis.text.y = element_text(size = 5),
+        axis.title = element_text(size = 7),
+        strip.text = element_text(size = 6),
+        legend.margin = margin(c(55, 5, 5, -10)),
+        legend.title = element_text(size = 7),
+        legend.text = element_text(size = 5)
+    )
+
+# Compile full panel plot
+bottom_panel <- cowplot::plot_grid(
+    compartment_gg + theme(legend.position = "none",
+                           plot.margin = margin(-20, 1.3, -50, 1.3))
+    )
+
+main_legend_gg <- cowplot::get_legend(compartment_gg)
+
+top_panel <- cowplot::plot_grid(
+    area_gg + theme(legend.position = "none",
+                    plot.margin = margin(-30, 1.3, -100, 1.3)),
+    main_legend_gg,
+    ncol = 2,
+    rel_widths = c(1.5, 1.5)
+)
+big_fig <- cowplot::plot_grid(
+    top_panel,
+    bottom_panel,
+    nrow = 2,
+    rel_heights = c(0.7, 1),
+    align = "hv",
+    axis = "l"
+)
+
+print(big_fig)
+
+output_file <- file.path(
+    coef_dir,
+    paste0(
+        "figure_3_", shuffle_option, "_", consensus, "_", summary_metric, ".pdf"
+    )
+)
+
+cowplot::save_plot(output_file, big_fig, base_height = 3.5, base_width = 4, dpi = 500)

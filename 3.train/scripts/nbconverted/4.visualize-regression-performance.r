@@ -385,8 +385,7 @@ cell_line_focus_df$data_fit <- dplyr::recode(
 
 head(cell_line_focus_df, 2)
 
-measurement_legend <- cowplot::get_legend(
-    ggplot(concise_fig_df,
+measurement_legend_gg <- ggplot(concise_fig_df,
        aes(x = readable_name)) +
     geom_bar(aes(fill = measurement, y = value),
              stat = "identity",
@@ -410,10 +409,8 @@ measurement_legend <- cowplot::get_legend(
           strip.text = element_text(size = 9),
           strip.background = element_rect(colour = "black",
                                           fill = "#fdfff4"))
-)
 
-cell_line_legend <- cowplot::get_legend(
-    ggplot(concise_fig_df,
+cell_line_legend_gg <- ggplot(concise_fig_df,
        aes(x = readable_name)) +
     geom_point(data = cell_line_focus_df, aes(shape = cell_line, y = truncated_value, fill = measurement)) +
     facet_grid(~data_fit, scales = "free_y") +
@@ -439,7 +436,9 @@ cell_line_legend <- cowplot::get_legend(
                                           fill = "#fdfff4")) +
     guides(fill = FALSE,
            shape = guide_legend(order = 1))
-)
+
+measurement_legend <- cowplot::get_legend(measurement_legend_gg)
+cell_line_legend <- cowplot::get_legend(cell_line_legend_gg)
 
 concise_legend_gg <- cowplot::plot_grid(
     cell_line_legend,
@@ -458,9 +457,10 @@ concise_gg <- ggplot(concise_fig_df,
              stat = "identity",
              alpha = 0.7,
              color = "black",
-             lwd = 0.2,
+             lwd = 0.1,
              position = position_dodge()) +
-    geom_point(data = cell_line_focus_df, aes(shape = cell_line, y = truncated_value, fill = measurement)) +
+    geom_point(data = cell_line_focus_df, size = 0.85, stroke = 0.2,
+               aes(shape = cell_line, y = truncated_value, fill = measurement)) +
     facet_grid(~data_fit, scales = "free_y") +
     theme_bw() +
     coord_flip() +
@@ -501,6 +501,69 @@ concise_gg_full <- cowplot::plot_grid(
 cowplot::save_plot(output_file, concise_gg_full, dpi = 600, base_width = 7, base_height = 6)
 
 concise_gg_full
+
+# Figure 2 - Concise regression performance summary
+# Tweak the theme
+mboc_theme <- theme(
+    axis.text.y = element_text(size = 4),
+    axis.text.x = element_text(size = 7),
+    axis.title = element_text(size = 9),
+    strip.text = element_text(size = 9),
+    panel.grid.minor = element_line(size = 0.2),
+    panel.grid.major = element_line(size = 0.4)
+)
+
+mboc_legend_theme <- theme(
+    legend.position = "right",
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 8),
+    legend.key.size = unit(0.3, "cm")
+)
+
+measurement_legend <- cowplot::get_legend(
+    measurement_legend_gg + mboc_legend_theme
+)
+cell_line_legend <- cowplot::get_legend(
+    cell_line_legend_gg + mboc_legend_theme
+)
+
+concise_legend_gg <- cowplot::plot_grid(
+    cell_line_legend,
+    cowplot::ggdraw(),
+    cowplot::plot_grid(
+        cowplot::ggdraw(),
+        measurement_legend,
+        ncol = 2,
+        rel_widths = c(0.3, 1)
+        ),
+    cowplot::ggdraw(),
+    nrow = 4,
+    align = "v",
+    axis = "l",
+    rel_heights = c(1, 0.1, 1, 0.9)
+)
+
+concise_gg_full <- cowplot::plot_grid(
+    concise_gg + mboc_theme + theme(axis.title.y = element_text(margin = margin(t = 0, r = -20, b = 0, l = 0))),
+    concise_legend_gg + mboc_legend_theme,
+    ncol = 2,
+    rel_widths = c(1, 0.3)
+)
+
+
+output_file <- file.path(
+    figure_dir,
+    paste0("figure_2_", consensus, ".pdf")
+)
+
+cowplot::save_plot(
+    output_file,
+    concise_gg_full,
+    device=cairo_pdf,
+    dpi = 600,
+    base_width = 4.5,
+    base_height = 4
+)
 
 # Split shuffle column for scatter plot
 r2_spread_df <- r2_df %>% tidyr::spread(shuffle, value)
