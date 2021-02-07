@@ -31,18 +31,36 @@ cell_count_df.head()
 # In[3]:
 
 
+# Output a cell line by perturbation count file
+pert_count_summary_df = (
+    cell_count_df
+    .groupby(["gene_name", "pert_name", "broad_sample", "cell_line"])
+    ["cell_count"]
+    .sum()
+    .reset_index()
+)
+
+output_file = pathlib.Path("tables/cell_count_summary.tsv")
+pert_count_summary_df.to_csv(output_file, sep="\t", index=False)
+
+pert_count_summary_df.sort_values(by="cell_count", ascending=False)
+
+
+# In[4]:
+
+
 # Total number of cells
 cell_count_df.cell_count.sum()
 
 
-# In[4]:
+# In[5]:
 
 
 # Count cells by perturbation
 cell_count_df.groupby("pert_name")["cell_count"].sum().sort_values(ascending=False)
 
 
-# In[5]:
+# In[6]:
 
 
 # Cell count by cell line
@@ -50,13 +68,13 @@ cell_line_groupby = cell_count_df.groupby("cell_line")
 cell_line_groupby["cell_count"].sum()
 
 
-# In[6]:
+# In[7]:
 
 
 cell_line_groupby["cell_count"].hist(bins=30)
 
 
-# In[7]:
+# In[8]:
 
 
 # Also, how many features?
