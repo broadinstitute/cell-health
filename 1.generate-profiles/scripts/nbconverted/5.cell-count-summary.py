@@ -34,7 +34,7 @@ cell_count_df.head()
 # Output a cell line by perturbation count file
 pert_count_summary_df = (
     cell_count_df
-    .groupby(["gene_name", "pert_name", "broad_sample", "cell_line"])
+    .groupby(["gene_name", "pert_name", "cell_line"])
     ["cell_count"]
     .sum()
     .reset_index()
