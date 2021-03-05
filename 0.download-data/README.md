@@ -14,7 +14,7 @@ The size of the single cell profile data is ~130GB.
 There is no need to download the single cell profiles.
 We provide documentation here to access, if there are specific questions that only the single cell data can answer.
 
-Instead, all processed data used for all downstream analyses is located in [1.generate-profiles/data/profiles/CRISPR_PILOT_B1/](https://github.com/broadinstitute/cell-health/tree/master/1.generate-profiles/data/profiles/CRISPR_PILOT_B1).
+Instead, all processed data used for all downstream analyses is located in [1.generate-profiles/data/profiles/](https://github.com/broadinstitute/cell-health/tree/master/1.generate-profiles/data/profiles).
 
 ## Download
 
