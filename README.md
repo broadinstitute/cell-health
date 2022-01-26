@@ -22,6 +22,7 @@
   * [Model Interpretation](#model-interpretation)
   * [Application to Drug Repurposing Hub](#application-to-drug-repurposing-hub)
   * [Drug Repurposing Hub: Exploratory Tool](#drug-repurposing-hub--exploratory-tool)
+- [Citation](#citation)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -233,3 +234,9 @@ A single PLK inhibitor (HMN-214) showed a strong dose relationship with predicte
 ### Drug Repurposing Hub: Exploratory Tool
 
 We applied all predictions and present them in an easy-to-navigate webapp at https://broad.io/cell-health-app
+
+## Citation
+
+> Predicting cell health phenotypes using image-based morphology profiling
+> Gregory P. Way, Maria Kost-Alimova, Tsukasa Shibue, William F. Harrington, Stanley Gill, Federica Piccioni, Tim Becker, Hamdah Shafqat-Abbasi, William C. Hahn, Anne E. Carpenter, Francisca Vazquez, and Shantanu Singh
+> Molecular Biology of the Cell 2021 32:9, 995-1005. DOI: https://doi.org/10.1091/mbc.E20-12-0784
