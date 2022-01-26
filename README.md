@@ -237,6 +237,18 @@ We applied all predictions and present them in an easy-to-navigate webapp at htt
 
 ## Citation
 
+If you use data, results, or insights from this repository, please consider citing our publication:
+
 > Gregory P. Way, Maria Kost-Alimova, Tsukasa Shibue, William F. Harrington, Stanley Gill, Federica Piccioni, Tim Becker, Hamdah Shafqat-Abbasi, William C. Hahn, Anne E. Carpenter, Francisca Vazquez, and Shantanu Singh.
 > Predicting cell health phenotypes using image-based morphology profiling.
-> Molecular Biology of the Cell 2021 32:9, 995-1005. DOI: https://doi.org/10.1091/mbc.E20-12-0784
+> Molecular Biology of the Cell 2021 32:9, 995-1005. DOI: https://doi.org/10.1091/mbc.E20-12-0784.
+
+If you use the Cell Painting images, please also consider citing our public data set on IDR:
+
+> Gregory P. Way, Maria Kost-Alimova, Tsukasa Shibue, William F. Harrington, Stanley Gill, Federica Piccioni, Tim Becker, Hamdah Shafqat-Abbasi, William C. Hahn, Anne E. Carpenter, Francisca Vazquez, and Shantanu Singh.
+> Cell health phenotypes can be predicted from unbiased image-based morphology readouts.
+> Image Data Resource 2020, screen 2701:accession 0080. https://doi.org/10.17867/10000153.
+
+If you use the single cell profiles of CellProfiler features, please also consider citing our public dataset on Figshare:
+
+> Gregory P. Way, Maria Kost-Alimova, Tsukasa Shibue, William F. Harrington, Stanley Gill, Federica Piccioni, Tim Becker et al. (2019): Cell Health - Cell Painting Single Cell Profiles. The NIH Figshare Archive. Dataset. https://doi.org/10.35092/yhjc.9995672.v5
